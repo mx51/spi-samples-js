@@ -2,6 +2,16 @@
 
 This is a set of SPI client samples for JavaScript.
 
+All changes to this repository are automatically deployed to [acmepos-js.herokuapp.com](http://acmepos-js.herokuapp.com).
+
+## Welcome to AcmePos
+
+AcmePos is a web-based POS.
+
+Its purpose is to demonstrate to a POS software developer how they might integrate with a PIN pad (card payment terminal) using Assembly Payment's SPI (Simple Payments Integration) as documented at [harness.simplepaymentapi.com](http://harness.simplepaymentapi.com).
+
+This project is sample code that implements the SPI protocol. It is not complete and is up to you to enhance and change to make it work on your target platform.
+
 # Disclaimer
 
 This source code is provided “as is“ or “as available“ and Assembly makes no representations or warranties, express or implied, regarding the source code, that the source code will meet your requirements, or that this source code will be error-free. Assembly expressly disclaims any and all express and implied warranties, including, but not limited to, the implied warranties of merchantability, fitness for a particular purpose, and non-infringement. Without limiting the generality of the foregoing, Assembly does not warrant, endorse, guarantee, or assume responsibility for this source code.   
