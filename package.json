@@ -18,6 +18,6 @@
     "http-server": "^0.10.0"
   },
   "dependencies": {
-    "@assemblypayments/spi-client-js": "^2.0.0"
+    "@assemblypayments/spi-client-js": "^2.0.3"
   }
 }
