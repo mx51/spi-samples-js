@@ -14,14 +14,16 @@
 /// </summary>
 class KebabPos
 {
-    constructor(log, printer) {
+    constructor(log, receipt, flow_msg) {
         this._spi = null;
         this._posId = "KEBABPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.1';
+        this._version = '2.1.0';
+
         this._log = log;
-        this._printer = printer;
+        this._receipt = receipt;
+        this._flow_msg = flow_msg;
     }
 
     Start()
@@ -38,14 +40,10 @@ class KebabPos
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
         this._spi.Start();
 
-        // Where to print out the receipts
-
-        this._flow_msg = document.getElementById('flow_msg');
-
         // And Now we just accept user input and display to the user what is happening.
 
-        this._log.Clear();
-        this._log.Info("# Welcome to KebabPos !");
+        this._log.clear();
+        this._log.info("# Welcome to KebabPos !");
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
@@ -70,11 +68,11 @@ class KebabPos
         this._spiSecrets = secrets;
         if (secrets != null)
         {
-            this._log.WriteLine(`# I Have Secrets: ${secrets.EncKey}${secrets.HmacKey}. Persist them Securely.`);
+            this._log.info(`# I Have Secrets: ${secrets.EncKey}${secrets.HmacKey}. Persist them Securely.`);
         }
         else
         {
-            this._log.WriteLine(`# I Have Lost the Secrets, i.e. Unpaired. Destroy the persisted secrets.`);
+            this._log.info(`# I Have Lost the Secrets, i.e. Unpaired. Destroy the persisted secrets.`);
         }
     }
 
@@ -86,7 +84,7 @@ class KebabPos
     OnSpiStatusChanged(spiStatus)
     {
         this._log.Clear();
-        this._log.WriteLine(`# --> SPI Status Changed: ${status.SpiStatus}`);
+        this._log.info(`# --> SPI Status Changed: ${status.SpiStatus}`);
         this.PrintStatusAndActions();
     }
 
@@ -104,71 +102,69 @@ class KebabPos
         switch (this._spi.CurrentFlow)
         {
             case SpiFlow.Pairing:
-                var pairingState = _spi.CurrentPairingFlowState;
-                this._printerWriteLine("### PAIRING PROCESS UPDATE ###");
-                this._printerWriteLine($"# {pairingState.Message}");
-                this._printerWriteLine($"# Finished? {pairingState.Finished}");
-                this._printerWriteLine($"# Successful? {pairingState.Successful}");
-                this._printerWriteLine($"# Confirmation Code: {pairingState.ConfirmationCode}");
-                this._printerWriteLine($"# Waiting Confirm from Eftpos? {pairingState.AwaitingCheckFromEftpos}");
-                this._printerWriteLine($"# Waiting Confirm from POS? {pairingState.AwaitingCheckFromPos}");
+                var pairingState = this._spi.CurrentPairingFlowState;
+                this._flow_msg.Info("### PAIRING PROCESS UPDATE ###");
+                this._flow_msg.Info(`# ${pairingState.Message}`);
+                this._flow_msg.Info(`# Finished? ${pairingState.Finished}`);
+                this._flow_msg.Info(`# Successful? ${pairingState.Successful}`);
+                this._flow_msg.Info(`# Confirmation Code: ${pairingState.ConfirmationCode}`);
+                this._flow_msg.Info(`# Waiting Confirm from Eftpos? ${pairingState.AwaitingCheckFromEftpos}`);
+                this._flow_msg.Info(`# Waiting Confirm from POS? ${pairingState.AwaitingCheckFromPos}`);
                 break;
 
             case SpiFlow.Transaction:
-                var txState = _spi.CurrentTxFlowState;
-                this._printerWriteLine("### TX PROCESS UPDATE ###");
-                this._printerWriteLine($"# {txState.DisplayMessage}");
-                this._printerWriteLine($"# Id: {txState.PosRefId}");
-                this._printerWriteLine($"# Type: {txState.Type}");
-                this._printerWriteLine($"# Amount: ${txState.AmountCents / 100.0}");
-                this._printerWriteLine($"# Waiting For Signature: {txState.AwaitingSignatureCheck}");
-                this._printerWriteLine($"# Attempting to Cancel : {txState.AttemptingToCancel}");
-                this._printerWriteLine($"# Finished: {txState.Finished}");
-                this._printerWriteLine($"# Success: {txState.Success}");
+                var txState = this._spi.CurrentTxFlowState;
+                this._flow_msg.Info("### TX PROCESS UPDATE ###");
+                this._flow_msg.Info(`# ${txState.DisplayMessage}`);
+                this._flow_msg.Info(`# Id: ${txState.PosRefId}`);
+                this._flow_msg.Info(`# Type: ${txState.Type}`);
+                this._flow_msg.Info(`# Amount: ${txState.AmountCents / 100.0}`);
+                this._flow_msg.Info(`# Waiting For Signature: ${txState.AwaitingSignatureCheck}`);
+                this._flow_msg.Info(`# Attempting to Cancel : ${txState.AttemptingToCancel}`);
+                this._flow_msg.Info(`# Finished: ${txState.Finished}`);
+                this._flow_msg.Info(`# Success: ${txState.Success}`);
 
                 if (txState.AwaitingSignatureCheck)
                 {
                     // We need to print the receipt for the customer to sign.
-                    this._printerWriteLine($"# RECEIPT TO PRINT FOR SIGNATURE");
-                    this._printerWriteLine(txState.SignatureRequiredMessage.GetMerchantReceipt().TrimEnd());
+                    this._flow_msg.Info(`# RECEIPT TO PRINT FOR SIGNATURE`);
+                    this._flow_msg.Info(txState.SignatureRequiredMessage.GetMerchantReceipt().trim());
                 }
 
                 if (txState.AwaitingPhoneForAuth)
                 {
-                    this._printerWriteLine($"# PHONE FOR AUTH DETAILS:");
-                    this._printerWriteLine($"# CALL: {txState.PhoneForAuthRequiredMessage.GetPhoneNumber()}");
-                    this._printerWriteLine($"# QUOTE: Merchant Id: {txState.PhoneForAuthRequiredMessage.GetMerchantId()}");
+                    this._flow_msg.Info(`# PHONE FOR AUTH DETAILS:`);
+                    this._flow_msg.Info(`# CALL: ${txState.PhoneForAuthRequiredMessage.GetPhoneNumber()}`);
+                    this._flow_msg.Info(`# QUOTE: Merchant Id: ${txState.PhoneForAuthRequiredMessage.GetMerchantId()}`);
                 }
 
                 if (txState.Finished)
                 {
-                    this._printerWriteLine($"");
                     switch (txState.Type)
                     {
                         case TransactionType.Purchase:
-                            HandleFinishedPurchase(txState);
+                            this.HandleFinishedPurchase(txState);
                             break;
                         case TransactionType.Refund:
-                            HandleFinishedRefund(txState);
+                            this.HandleFinishedRefund(txState);
                             break;
                         case TransactionType.CashoutOnly:
-                            HandleFinishedCashout(txState);
+                            this.HandleFinishedCashout(txState);
                             break;
                         case TransactionType.MOTO:
-                            HandleFinishedMoto(txState);
+                            this.HandleFinishedMoto(txState);
                             break;
                         case TransactionType.Settle:
-                            HandleFinishedSettle(txState);
+                            this.HandleFinishedSettle(txState);
                             break;
                         case TransactionType.SettlementEnquiry:
-                            HandleFinishedSettlementEnquiry(txState);
+                            this.HandleFinishedSettlementEnquiry(txState);
                             break;
-
                         case TransactionType.GetLastTransaction:
-                            HandleFinishedGetLastTransaction(txState);
+                            this.HandleFinishedGetLastTransaction(txState);
                             break;
                         default:
-                            this._printerWriteLine($"# CAN'T HANDLE TX TYPE: {txState.Type}");
+                            this._flow_msg.Error(`# CAN'T HANDLE TX TYPE: ${txState.Type}`);
                             break;
                     }
                 }
@@ -176,11 +172,9 @@ class KebabPos
             case SpiFlow.Idle:
                 break;
         }
-
-        this._printerWriteLine("");
     }
 
-    private void HandleFinishedPurchase(TransactionFlowState txState)
+    HandleFinishedPurchase(txState)
     {
         PurchaseResponse purchaseResponse;
         switch (txState.Success)
@@ -790,9 +784,10 @@ class KebabPos
 document.addEventListener('DOMContentLoaded', () => {
 
     try {
-        let log     = console;
-        let printer = new Printer(document.getElementById('receipt_output'));
-        let pos     = new KebabPos(log, printer);
+        let log         = console;
+        let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
+        let flow_msg    = new Log(document.getElementById('flow_msg'));
+        let pos         = new KebabPos(log, receipt, flow_msg);
         pos.Start();
     } catch(err) {
         console.error(err);
