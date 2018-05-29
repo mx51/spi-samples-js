@@ -1,17 +1,16 @@
-/// <summary>
-/// NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
-///  
-/// This is your POS. To integrate with SPI, you need to instantiate a Spi object
-/// and interact with it.
-/// 
-/// Primarily you need to implement 3 things.
-/// 1. Settings Screen
-/// 2. Pairing Flow Screen
-/// 3. Transaction Flow screen
-/// 
-/// To see logs from spi, you need to create a SPIClient.dll.config file next to your binary, 
-/// that contains log4net configuration, similar to what is inside app.config in this project.
-/// </summary>
+// <summary>
+// NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
+//  
+// This is your POS. To integrate with SPI, you need to instantiate a Spi object
+// and interact with it.
+// 
+// Primarily you need to implement 3 things.
+// 1. Settings Screen
+// 2. Pairing Flow Screen
+// 3. Transaction Flow screen
+// 
+// To see logs from spi, check the console
+// </summary>
 class KebabPos
 {
     constructor(log, receipt, flow_msg) {
@@ -176,255 +175,254 @@ class KebabPos
 
     HandleFinishedPurchase(txState)
     {
-        PurchaseResponse purchaseResponse;
+        var purchaseResponse;
         switch (txState.Success)
         {
-            case Message.SuccessState.Success:
-                this._printerWriteLine($"# WOOHOO - WE GOT PAID!");
+            case SuccessState.Success:
+                this._flow_msg.Info(`# WOOHOO - WE GOT PAID!`);
                 purchaseResponse = new PurchaseResponse(txState.Response);
-                this._printerWriteLine("# Response: {0}", purchaseResponse.GetResponseText());
-                this._printerWriteLine("# RRN: {0}", purchaseResponse.GetRRN());
-                this._printerWriteLine("# Scheme: {0}", purchaseResponse.SchemeName);
-                this._printerWriteLine("# Customer Receipt:");
-                this._printerWriteLine(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().TrimEnd() : "# PRINTED FROM EFTPOS");
-                this._printerWriteLine("# PURCHASE: {0}", purchaseResponse.GetPurchaseAmount());
-                this._printerWriteLine("# TIP: {0}", purchaseResponse.GetTipAmount());
-                this._printerWriteLine("# CASHOUT: {0}", purchaseResponse.GetCashoutAmount());
-                this._printerWriteLine("# BANKED NON-CASH AMOUNT: {0}", purchaseResponse.GetBankNonCashAmount());
-                this._printerWriteLine("# BANKED CASH AMOUNT: {0}", purchaseResponse.GetBankCashAmount());
-
+                this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+                this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+                this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+                this._flow_msg.Info(`# Customer Receipt:`);
+                this._flow_msg.Info(purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
+                this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
+                this._flow_msg.Info(`# TIP: ${purchaseResponse.GetTipAmount()}`);
+                this._flow_msg.Info(`# CASHOUT: ${purchaseResponse.GetCashoutAmount()}`);
+                this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
+                this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
                 break;
-            case Message.SuccessState.Failed:
-                this._printerWriteLine($"# WE DID NOT GET PAID :(");
-                this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-                this._printerWriteLine("# Error Detail: {0}", txState.Response.GetErrorDetail());
+            case SuccessState.Failed:
+                this._flow_msg.Info(`# WE DID NOT GET PAID :(`);
+                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     purchaseResponse = new PurchaseResponse(txState.Response);
-                    this._printerWriteLine("# Response: {0}", purchaseResponse.GetResponseText());
-                    this._printerWriteLine("# RRN: {0}", purchaseResponse.GetRRN());
-                    this._printerWriteLine("# Scheme: {0}", purchaseResponse.SchemeName);
-                    this._printerWriteLine("# Customer Receipt:");
-                    this._printerWriteLine(!purchaseResponse.WasCustomerReceiptPrinted()
-                        ? purchaseResponse.GetCustomerReceipt().TrimEnd()
-                        : "# PRINTED FROM EFTPOS");
+                    this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+                    this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+                    this._flow_msg.Info(`# Customer Receipt:`);
+                    this._flow_msg.Info(purchaseResponse.WasCustomerReceiptPrinted()
+                        ? purchaseResponse.GetCustomerReceipt().trim()
+                        : `# PRINTED FROM EFTPOS`);
                 }
                 break;
-            case Message.SuccessState.Unknown:
-                this._printerWriteLine($"# WE'RE NOT QUITE SURE WHETHER WE GOT PAID OR NOT :/");
-                this._printerWriteLine($"# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
-                this._printerWriteLine($"# IF YOU CONFIRM THAT THE CUSTOMER PAID, CLOSE THE ORDER.");
-                this._printerWriteLine($"# OTHERWISE, RETRY THE PAYMENT FROM SCRATCH.");
+            case SuccessState.Unknown:
+                this._flow_msg.Info(`# WE'RE NOT QUITE SURE WHETHER WE GOT PAID OR NOT :/`);
+                this._flow_msg.Info(`# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.`);
+                this._flow_msg.Info(`# IF YOU CONFIRM THAT THE CUSTOMER PAID, CLOSE THE ORDER.`);
+                this._flow_msg.Info(`# OTHERWISE, RETRY THE PAYMENT FROM SCRATCH.`);
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new Error('Unknown transaction state');
         }
     }
 
-    private void HandleFinishedRefund(TransactionFlowState txState)
+    HandleFinishedRefund(txState)
     {
-        RefundResponse refundResponse;
+        var refundResponse;
         switch (txState.Success)
         {
-            case Message.SuccessState.Success:
-                this._printerWriteLine($"# REFUND GIVEN- OH WELL!");
+            case SuccessState.Success:
+                this._flow_msg.Info(`# REFUND GIVEN- OH WELL!`);
                 refundResponse = new RefundResponse(txState.Response);
-                this._printerWriteLine("# Response: {0}", refundResponse.GetResponseText());
-                this._printerWriteLine("# RRN: {0}", refundResponse.GetRRN());
-                this._printerWriteLine("# Scheme: {0}", refundResponse.SchemeName);
-                this._printerWriteLine("# Customer Receipt:");
-                this._printerWriteLine(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().TrimEnd() : "# PRINTED FROM EFTPOS");
-                this._printerWriteLine("# REFUNDED AMOUNT: {0}", refundResponse.GetRefundAmount());
+                this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
+                this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
+                this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
+                this._flow_msg.Info(`# Customer Receipt:`);
+                this._flow_msg.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
+                this._flow_msg.Info(`# REFUNDED AMOUNT: ${refundResponse.GetRefundAmount()}`);
                 break;
-            case Message.SuccessState.Failed:
-                this._printerWriteLine($"# REFUND FAILED!");
-                this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-                this._printerWriteLine("# Error Detail: {0}", txState.Response.GetErrorDetail());
+            case SuccessState.Failed:
+                this._flow_msg.Info(`# REFUND FAILED!`);
+                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     refundResponse = new RefundResponse(txState.Response);
-                    this._printerWriteLine("# Response: {0}", refundResponse.GetResponseText());
-                    this._printerWriteLine("# RRN: {0}", refundResponse.GetRRN());
-                    this._printerWriteLine("# Scheme: {0}", refundResponse.SchemeName);
-                    this._printerWriteLine("# Customer Receipt:");
-                    this._printerWriteLine(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().TrimEnd() : "# PRINTED FROM EFTPOS");
+                    this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
+                    this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
+                    this._flow_msg.Info(`# Customer Receipt:`);
+                    this._flow_msg.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
                 }
                 break;
-            case Message.SuccessState.Unknown:
-                this._printerWriteLine($"# WE'RE NOT QUITE SURE WHETHER THE REFUND WENT THROUGH OR NOT :/");
-                this._printerWriteLine($"# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
-                this._printerWriteLine($"# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
+            case SuccessState.Unknown:
+                this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER THE REFUND WENT THROUGH OR NOT :/");
+                this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
+                this._flow_msg.Info("# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new Error('Unknown transaction state');
         }
     }
 
-    private void HandleFinishedCashout(TransactionFlowState txState)
+    HandleFinishedCashout(txState)
     {
-        CashoutOnlyResponse cashoutResponse;
+        var cashoutResponse;
         switch (txState.Success)
         {
-            case Message.SuccessState.Success:
-                this._printerWriteLine($"# CASH-OUT SUCCESSFUL - HAND THEM THE CASH!");
+            case SuccessState.Success:
+                this._flow_msg.Info(`# CASH-OUT SUCCESSFUL - HAND THEM THE CASH!`);
                 cashoutResponse = new CashoutOnlyResponse(txState.Response);
-                this._printerWriteLine("# Response: {0}", cashoutResponse.GetResponseText());
-                this._printerWriteLine("# RRN: {0}", cashoutResponse.GetRRN());
-                this._printerWriteLine("# Scheme: {0}", cashoutResponse.SchemeName);
-                this._printerWriteLine("# Customer Receipt:");
-                this._printerWriteLine(!cashoutResponse.WasCustomerReceiptPrinted() ? cashoutResponse.GetCustomerReceipt().TrimEnd() : "# PRINTED FROM EFTPOS");
-                this._printerWriteLine("# CASHOUT: {0}", cashoutResponse.GetCashoutAmount());
-                this._printerWriteLine("# BANKED NON-CASH AMOUNT: {0}", cashoutResponse.GetBankNonCashAmount());
-                this._printerWriteLine("# BANKED CASH AMOUNT: {0}", cashoutResponse.GetBankCashAmount());
+                this._flow_msg.Info(`# Response: ${cashoutResponse.GetResponseText()}`);
+                this._flow_msg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
+                this._flow_msg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);
+                this._flow_msg.Info(`# Customer Receipt:`);
+                this._flow_msg.Info(!cashoutResponse.WasCustomerReceiptPrinted() ? cashoutResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
+                this._flow_msg.Info(`# CASHOUT: ${cashoutResponse.GetCashoutAmount()}`);
+                this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${cashoutResponse.GetBankNonCashAmount()}`);
+                this._flow_msg.Info(`# BANKED CASH AMOUNT: ${cashoutResponse.GetBankCashAmount()}`);
                 break;
-            case Message.SuccessState.Failed:
-                this._printerWriteLine($"# CASHOUT FAILED!");
-                this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-                this._printerWriteLine("# Error Detail: {0}", txState.Response.GetErrorDetail());
+            case SuccessState.Failed:
+                this._flow_msg.Info(`# CASHOUT FAILED!`);
+                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     cashoutResponse = new CashoutOnlyResponse(txState.Response);
-                    this._printerWriteLine("# Response: {0}", cashoutResponse.GetResponseText());
-                    this._printerWriteLine("# RRN: {0}", cashoutResponse.GetRRN());
-                    this._printerWriteLine("# Scheme: {0}", cashoutResponse.SchemeName);
-                    this._printerWriteLine("# Customer Receipt:");
-                    this._printerWriteLine(cashoutResponse.GetCustomerReceipt().TrimEnd());
+                    this._flow_msg.Info(`# Response: ${cashoutResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
+                    this._flow_msg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);
+                    this._flow_msg.Info(`# Customer Receipt:`);
+                    this._flow_msg.Info(cashoutResponse.GetCustomerReceipt().trim());
                 }
                 break;
-            case Message.SuccessState.Unknown:
-                this._printerWriteLine($"# WE'RE NOT QUITE SURE WHETHER THE CASHOUT WENT THROUGH OR NOT :/");
-                this._printerWriteLine($"# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
-                this._printerWriteLine($"# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
+            case SuccessState.Unknown:
+                this._flow_msg.Info(`# WE'RE NOT QUITE SURE WHETHER THE CASHOUT WENT THROUGH OR NOT :/`);
+                this._flow_msg.Info(`# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.`);
+                this._flow_msg.Info(`# YOU CAN THE TAKE THE APPROPRIATE ACTION.`);
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new Error('Unknown transaction state');
         }
     }
 
-    private void HandleFinishedMoto(TransactionFlowState txState)
+    HandleFinishedMoto(txState)
     {
-        MotoPurchaseResponse motoResponse;
-        PurchaseResponse purchaseResponse;
+        var motoResponse;
+        var purchaseResponse;
         switch (txState.Success)
         {
-            case Message.SuccessState.Success:
-                this._printerWriteLine($"# WOOHOO - WE GOT MOTO-PAID!");
+            case SuccessState.Success:
+                this._flow_msg.Info("# WOOHOO - WE GOT MOTO-PAID!");
                 motoResponse = new MotoPurchaseResponse(txState.Response);
                 purchaseResponse = motoResponse.PurchaseResponse;
-                this._printerWriteLine("# Response: {0}", purchaseResponse.GetResponseText());
-                this._printerWriteLine("# RRN: {0}", purchaseResponse.GetRRN());
-                this._printerWriteLine("# Scheme: {0}", purchaseResponse.SchemeName);
-                this._printerWriteLine("# Card Entry: {0}", purchaseResponse.GetCardEntry());
-                this._printerWriteLine("# Customer Receipt:");
-                this._printerWriteLine(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().TrimEnd() : "# PRINTED FROM EFTPOS");
-                this._printerWriteLine("# PURCHASE: {0}", purchaseResponse.GetPurchaseAmount());
-                this._printerWriteLine("# BANKED NON-CASH AMOUNT: {0}", purchaseResponse.GetBankNonCashAmount());
-                this._printerWriteLine("# BANKED CASH AMOUNT: {0}", purchaseResponse.GetBankCashAmount());
+                this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+                this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+                this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+                this._flow_msg.Info(`# Card Entry: ${purchaseResponse.GetCardEntry()}`);
+                this._flow_msg.Info(`# Customer Receipt:`);
+                this._flow_msg.Info(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
+                this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
+                this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
+                this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
                 break;
-            case Message.SuccessState.Failed:
-                this._printerWriteLine($"# WE DID NOT GET MOTO-PAID :(");
-                this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-                this._printerWriteLine("# Error Detail: {0}", txState.Response.GetErrorDetail());
+            case SuccessState.Failed:
+                this._flow_msg.Info(`# WE DID NOT GET MOTO-PAID :(`);
+                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     motoResponse = new MotoPurchaseResponse(txState.Response);
                     purchaseResponse = motoResponse.PurchaseResponse;
-                    this._printerWriteLine("# Response: {0}", purchaseResponse.GetResponseText());
-                    this._printerWriteLine("# RRN: {0}", purchaseResponse.GetRRN());
-                    this._printerWriteLine("# Scheme: {0}", purchaseResponse.SchemeName);
-                    this._printerWriteLine("# Customer Receipt:");
-                    this._printerWriteLine(purchaseResponse.GetCustomerReceipt().TrimEnd());
+                    this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+                    this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+                    this._flow_msg.Info(`# Customer Receipt:`);
+                    this._flow_msg.Info(purchaseResponse.GetCustomerReceipt().trim());
                 }
                 break;
-            case Message.SuccessState.Unknown:
-                this._printerWriteLine($"# WE'RE NOT QUITE SURE WHETHER THE MOTO WENT THROUGH OR NOT :/");
-                this._printerWriteLine($"# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
-                this._printerWriteLine($"# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
+            case SuccessState.Unknown:
+                this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER THE MOTO WENT THROUGH OR NOT :/");
+                this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
+                this._flow_msg.Info("# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new Error('Unknown transaction state');
         }
     }
 
-    private void HandleFinishedGetLastTransaction(TransactionFlowState txState)
+    HandleFinishedGetLastTransaction(txState)
     {
         if (txState.Response != null)
         {
             var gltResponse = new GetLastTransactionResponse(txState.Response);
 
-            if (_lastCmd.Length > 1) {
+            if (this._lastCmd.length > 1) {
                 // User specified that he intended to retrieve a specific tx by pos_ref_id
                 // This is how you can use a handy function to match it.
-                var success = _spi.GltMatch(gltResponse, _lastCmd[1]);
-                if (success == Message.SuccessState.Unknown)
+                var success = this._spi.GltMatch(gltResponse, this._lastCmd[1]);
+                if (success == SuccessState.Unknown)
                 {
-                    this._printerWriteLine("# Did not retrieve Expected Transaction. Here is what we got:");
+                    this._flow_msg.Info("# Did not retrieve Expected Transaction. Here is what we got:");
                 } else {
-                    this._printerWriteLine("# Tx Matched Expected Purchase Request.");
+                    this._flow_msg.Info("# Tx Matched Expected Purchase Request.");
                 }
             }
 
             var purchaseResponse = new PurchaseResponse(txState.Response);
-            this._printerWriteLine("# Scheme: {0}", purchaseResponse.SchemeName);
-            this._printerWriteLine("# Response: {0}", purchaseResponse.GetResponseText());
-            this._printerWriteLine("# RRN: {0}", purchaseResponse.GetRRN());
-            this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-            this._printerWriteLine("# Customer Receipt:");
-            this._printerWriteLine(purchaseResponse.GetCustomerReceipt().TrimEnd());
+            this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+            this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+            this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+            this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+            this._flow_msg.Info(`# Customer Receipt:`);
+            this._flow_msg.Info(purchaseResponse.GetCustomerReceipt().trim());
         }
         else
         {
             // We did not even get a response, like in the case of a time-out.
-            this._printerWriteLine("# Could Not Retrieve Last Transaction.");
+            this._flow_msg.Info("# Could Not Retrieve Last Transaction.");
         }
     }
 
-    private static void HandleFinishedSettle(TransactionFlowState txState)
+    HandleFinishedSettle(txState)
     {
         switch (txState.Success)
         {
-            case Message.SuccessState.Success:
-                this._printerWriteLine($"# SETTLEMENT SUCCESSFUL!");
+            case SuccessState.Success:
+                this._flow_msg.Info("# SETTLEMENT SUCCESSFUL!");
                 if (txState.Response != null)
                 {
                     var settleResponse = new Settlement(txState.Response);
-                    this._printerWriteLine("# Response: {0}", settleResponse.GetResponseText());
-                    this._printerWriteLine("# Merchant Receipt:");
-                    this._printerWriteLine(settleResponse.GetReceipt().TrimEnd());
-                    this._printerWriteLine("# Period Start: " + settleResponse.GetPeriodStartTime());
-                    this._printerWriteLine("# Period End: " + settleResponse.GetPeriodEndTime());
-                    this._printerWriteLine("# Settlement Time: " + settleResponse.GetTriggeredTime());
-                    this._printerWriteLine("# Transaction Range: " + settleResponse.GetTransactionRange());
-                    this._printerWriteLine("# Terminal Id: " + settleResponse.GetTerminalId());
-                    this._printerWriteLine("# Total TX Count: " + settleResponse.GetTotalCount());
-                    this._printerWriteLine($"# Total TX Value: {settleResponse.GetTotalValue() / 100.0}");
-                    this._printerWriteLine("# By Aquirer TX Count: " + settleResponse.GetSettleByAquirerCount());
-                    this._printerWriteLine($"# By Aquirer TX Value: {settleResponse.GetSettleByAquirerValue() / 100.0}");
-                    this._printerWriteLine("# SCHEME SETTLEMENTS:");
+                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
+                    this._flow_msg.Info("# Merchant Receipt:");
+                    this._flow_msg.Info(settleResponse.GetReceipt().trim());
+                    this._flow_msg.Info("# Period Start: " + settleResponse.GetPeriodStartTime());
+                    this._flow_msg.Info("# Period End: " + settleResponse.GetPeriodEndTime());
+                    this._flow_msg.Info("# Settlement Time: " + settleResponse.GetTriggeredTime());
+                    this._flow_msg.Info("# Transaction Range: " + settleResponse.GetTransactionRange());
+                    this._flow_msg.Info("# Terminal Id: " + settleResponse.GetTerminalId());
+                    this._flow_msg.Info("# Total TX Count: " + settleResponse.GetTotalCount());
+                    this._flow_msg.Info(`# Total TX Value: ${settleResponse.GetTotalValue() / 100.0}`);
+                    this._flow_msg.Info("# By Aquirer TX Count: " + settleResponse.GetSettleByAquirerCount());
+                    this._flow_msg.Info(`# By Aquirer TX Value: ${settleResponse.GetSettleByAquirerValue() / 100.0}`);
+                    this._flow_msg.Info("# SCHEME SETTLEMENTS:");
                     var schemes = settleResponse.GetSchemeSettlementEntries();
-                    foreach (var s in schemes)
+                    for (var s in schemes)
                     {
-                        this._printerWriteLine("# " + s);
+                        this._flow_msg.Info("# " + s);
                     }
 
                 }
                 break;
-            case Message.SuccessState.Failed:
-                this._printerWriteLine($"# SETTLEMENT FAILED!");
+            case SuccessState.Failed:
+                this._flow_msg.Info("# SETTLEMENT FAILED!");
                 if (txState.Response != null)
                 {
                     var settleResponse = new Settlement(txState.Response);
-                    this._printerWriteLine("# Response: {0}", settleResponse.GetResponseText());
-                    this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-                    this._printerWriteLine("# Merchant Receipt:");
-                    this._printerWriteLine(settleResponse.GetReceipt().TrimEnd());
+                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                    this._flow_msg.Info("# Merchant Receipt:");
+                    this._flow_msg.Info(settleResponse.GetReceipt().trim());
                 }
                 break;
-            case Message.SuccessState.Unknown:
-                this._printerWriteLine($"# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
+            case SuccessState.Unknown:
+                this._flow_msg.Info("# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new Error('Unknown state');
         }
     }
 
@@ -433,133 +431,133 @@ class KebabPos
         switch (txState.Success)
         {
             case Message.SuccessState.Success:
-                this._printerWriteLine($"# SETTLEMENT ENQUIRY SUCCESSFUL!");
+                this._flow_msg.Info($"# SETTLEMENT ENQUIRY SUCCESSFUL!");
                 if (txState.Response != null)
                 {
                     var settleResponse = new Settlement(txState.Response);
-                    this._printerWriteLine("# Response: {0}", settleResponse.GetResponseText());
-                    this._printerWriteLine("# Merchant Receipt:");
-                    this._printerWriteLine(settleResponse.GetReceipt().TrimEnd());
-                    this._printerWriteLine("# Period Start: " + settleResponse.GetPeriodStartTime());
-                    this._printerWriteLine("# Period End: " + settleResponse.GetPeriodEndTime());
-                    this._printerWriteLine("# Settlement Time: " + settleResponse.GetTriggeredTime());
-                    this._printerWriteLine("# Transaction Range: " + settleResponse.GetTransactionRange());
-                    this._printerWriteLine("# Terminal Id: " + settleResponse.GetTerminalId());
-                    this._printerWriteLine("# Total TX Count: " + settleResponse.GetTotalCount());
-                    this._printerWriteLine($"# Total TX Value: {settleResponse.GetTotalValue() / 100.0}");
-                    this._printerWriteLine("# By Aquirer TX Count: " + settleResponse.GetSettleByAquirerCount());
-                    this._printerWriteLine($"# By Aquirere TX Value: {settleResponse.GetSettleByAquirerValue() / 100.0}");
-                    this._printerWriteLine("# SCHEME SETTLEMENTS:");
+                    this._flow_msg.Info("# Response: {0}", settleResponse.GetResponseText());
+                    this._flow_msg.Info("# Merchant Receipt:");
+                    this._flow_msg.Info(settleResponse.GetReceipt().TrimEnd());
+                    this._flow_msg.Info("# Period Start: " + settleResponse.GetPeriodStartTime());
+                    this._flow_msg.Info("# Period End: " + settleResponse.GetPeriodEndTime());
+                    this._flow_msg.Info("# Settlement Time: " + settleResponse.GetTriggeredTime());
+                    this._flow_msg.Info("# Transaction Range: " + settleResponse.GetTransactionRange());
+                    this._flow_msg.Info("# Terminal Id: " + settleResponse.GetTerminalId());
+                    this._flow_msg.Info("# Total TX Count: " + settleResponse.GetTotalCount());
+                    this._flow_msg.Info($"# Total TX Value: {settleResponse.GetTotalValue() / 100.0}");
+                    this._flow_msg.Info("# By Aquirer TX Count: " + settleResponse.GetSettleByAquirerCount());
+                    this._flow_msg.Info($"# By Aquirere TX Value: {settleResponse.GetSettleByAquirerValue() / 100.0}");
+                    this._flow_msg.Info("# SCHEME SETTLEMENTS:");
                     var schemes = settleResponse.GetSchemeSettlementEntries();
                     foreach (var s in schemes)
                     {
-                        this._printerWriteLine("# " + s);
+                        this._flow_msg.Info("# " + s);
                     }
                 }
                 break;
             case Message.SuccessState.Failed:
-                this._printerWriteLine($"# SETTLEMENT ENQUIRY FAILED!");
+                this._flow_msg.Info($"# SETTLEMENT ENQUIRY FAILED!");
                 if (txState.Response != null)
                 {
                     var settleResponse = new Settlement(txState.Response);
-                    this._printerWriteLine("# Response: {0}", settleResponse.GetResponseText());
-                    this._printerWriteLine("# Error: {0}", txState.Response.GetError());
-                    this._printerWriteLine("# Merchant Receipt:");
-                    this._printerWriteLine(settleResponse.GetReceipt().TrimEnd());
+                    this._flow_msg.Info("# Response: {0}", settleResponse.GetResponseText());
+                    this._flow_msg.Info("# Error: {0}", txState.Response.GetError());
+                    this._flow_msg.Info("# Merchant Receipt:");
+                    this._flow_msg.Info(settleResponse.GetReceipt().TrimEnd());
                 }
                 break;
             case Message.SuccessState.Unknown:
-                this._printerWriteLine($"# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
+                this._flow_msg.Info($"# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
                 break;
             default:
                 throw new ArgumentOutOfRangeException();
         }
     }
 
-    private void PrintActions()
+    PrintActions()
     {
-        this._printerWriteLine("# ----------- AVAILABLE ACTIONS ------------");
+        this._flow_msg.Info("# ----------- AVAILABLE ACTIONS ------------");
 
-        if (_spi.CurrentFlow == SpiFlow.Idle)
+        if (this._spi.CurrentFlow == SpiFlow.Idle)
         {
-            this._printerWriteLine("# [kebab:1200:100:500:false] - [kebab:price:tip:cashout:promptForCash] Charge for kebab with extras!");
-            this._printerWriteLine("# [13kebab:1300] - MOTO - Accept Payment Over the phone");
-            this._printerWriteLine("# [yuck:500] - hand out a refund of $5.00!");
-            this._printerWriteLine("# [cashout:5000] - do a cashout only transaction");
-            this._printerWriteLine("# [settle] - Initiate Settlement");
-            this._printerWriteLine("# [settle_enq] - Settlment Enquiry");
-            this._printerWriteLine("#");
-            this._printerWriteLine("# [recover:prchs1] - Attempt State Recovery for pos_ref_id 'prchs1'");
-            this._printerWriteLine("# [glt:prchs1] - Get Last Transaction - Expect it to be posRefId 'prchs1'");
-            this._printerWriteLine("#");
-            this._printerWriteLine("# [rcpt_from_eftpos:true] - Offer Customer Receipt From Eftpos");
-            this._printerWriteLine("# [sig_flow_from_eftpos:true] - Signature Flow to be handled by Eftpos");
-            this._printerWriteLine("#");
+            this._flow_msg.Info("# [kebab:1200:100:500:false] - [kebab:price:tip:cashout:promptForCash] Charge for kebab with extras!");
+            this._flow_msg.Info("# [13kebab:1300] - MOTO - Accept Payment Over the phone");
+            this._flow_msg.Info("# [yuck:500] - hand out a refund of $5.00!");
+            this._flow_msg.Info("# [cashout:5000] - do a cashout only transaction");
+            this._flow_msg.Info("# [settle] - Initiate Settlement");
+            this._flow_msg.Info("# [settle_enq] - Settlment Enquiry");
+            this._flow_msg.Info("#");
+            this._flow_msg.Info("# [recover:prchs1] - Attempt State Recovery for pos_ref_id 'prchs1'");
+            this._flow_msg.Info("# [glt:prchs1] - Get Last Transaction - Expect it to be posRefId 'prchs1'");
+            this._flow_msg.Info("#");
+            this._flow_msg.Info("# [rcpt_from_eftpos:true] - Offer Customer Receipt From Eftpos");
+            this._flow_msg.Info("# [sig_flow_from_eftpos:true] - Signature Flow to be handled by Eftpos");
+            this._flow_msg.Info("#");
         }
 
-        if (_spi.CurrentStatus == SpiStatus.Unpaired && _spi.CurrentFlow == SpiFlow.Idle)
+        if (this._spi.CurrentStatus == SpiStatus.Unpaired && this._spi.CurrentFlow == SpiFlow.Idle)
         {
-            this._printerWriteLine("# [pos_id:CITYKEBAB1] - Set the POS ID");
+            this._flow_msg.Info("# [pos_id:CITYKEBAB1] - Set the POS ID");
         }
 
-        if (_spi.CurrentStatus == SpiStatus.Unpaired || _spi.CurrentStatus == SpiStatus.PairedConnecting)
+        if (this._spi.CurrentStatus == SpiStatus.Unpaired || this._spi.CurrentStatus == SpiStatus.PairedConnecting)
         {
-            this._printerWriteLine("# [eftpos_address:10.161.104.104] - Set the EFTPOS ADDRESS");
+            this._flow_msg.Info("# [eftpos_address:10.161.104.104] - Set the EFTPOS ADDRESS");
         }
 
-        if (_spi.CurrentStatus == SpiStatus.Unpaired && _spi.CurrentFlow == SpiFlow.Idle)
-            this._printerWriteLine("# [pair] - Pair with Eftpos");
+        if (this._spi.CurrentStatus == SpiStatus.Unpaired && this._spi.CurrentFlow == SpiFlow.Idle)
+            this._flow_msg.Info("# [pair] - Pair with Eftpos");
 
-        if (_spi.CurrentStatus != SpiStatus.Unpaired && _spi.CurrentFlow == SpiFlow.Idle)
-            this._printerWriteLine("# [unpair] - Unpair and Disconnect");
+        if (this._spi.CurrentStatus != SpiStatus.Unpaired && this._spi.CurrentFlow == SpiFlow.Idle)
+            this._flow_msg.Info("# [unpair] - Unpair and Disconnect");
 
-        if (_spi.CurrentFlow == SpiFlow.Pairing)
+        if (this._spi.CurrentFlow == SpiFlow.Pairing)
         {
-            if (_spi.CurrentPairingFlowState.AwaitingCheckFromPos)
-                this._printerWriteLine("# [pair_confirm] - Confirm Pairing Code");
+            if (this._spi.CurrentPairingFlowState.AwaitingCheckFromPos)
+                this._flow_msg.Info("# [pair_confirm] - Confirm Pairing Code");
 
-            if (!_spi.CurrentPairingFlowState.Finished)
-                this._printerWriteLine("# [pair_cancel] - Cancel Pairing");
+            if (!this._spi.CurrentPairingFlowState.Finished)
+                this._flow_msg.Info("# [pair_cancel] - Cancel Pairing");
 
-            if (_spi.CurrentPairingFlowState.Finished)
-                this._printerWriteLine("# [ok] - acknowledge final");
+            if (this._spi.CurrentPairingFlowState.Finished)
+                this._flow_msg.Info("# [ok] - acknowledge final");
         }
 
-        if (_spi.CurrentFlow == SpiFlow.Transaction)
+        if (this._spi.CurrentFlow == SpiFlow.Transaction)
         {
-            var txState = _spi.CurrentTxFlowState;
+            var txState = this._spi.CurrentTxFlowState;
 
             if (txState.AwaitingSignatureCheck)
             {
-                this._printerWriteLine("# [tx_sign_accept] - Accept Signature");
-                this._printerWriteLine("# [tx_sign_decline] - Decline Signature");
+                this._flow_msg.Info("# [tx_sign_accept] - Accept Signature");
+                this._flow_msg.Info("# [tx_sign_decline] - Decline Signature");
             }
 
             if (txState.AwaitingPhoneForAuth)
             {
-                this._printerWriteLine("# [tx_auth_code:123456] - Submit Phone For Auth Code");
+                this._flow_msg.Info("# [tx_auth_code:123456] - Submit Phone For Auth Code");
             }
 
             if (!txState.Finished && !txState.AttemptingToCancel)
-                this._printerWriteLine("# [tx_cancel] - Attempt to Cancel Tx");
+                this._flow_msg.Info("# [tx_cancel] - Attempt to Cancel Tx");
 
             if (txState.Finished)
-                this._printerWriteLine("# [ok] - acknowledge final");
+                this._flow_msg.Info("# [ok] - acknowledge final");
         }
 
-        this._printerWriteLine("# [status] - reprint buttons/status");
-        this._printerWriteLine("# [bye] - exit");
-        this._printerWriteLine();
+        this._flow_msg.Info("# [status] - reprint buttons/status");
+        this._flow_msg.Info("# [bye] - exit");
+        this._flow_msg.Info();
     }
 
-    private void PrintPairingStatus()
+    PrintPairingStatus()
     {
-        this._printerWriteLine("# --------------- STATUS ------------------");
-        this._printerWriteLine($"# {_posId} <-> Eftpos: {_eftposAddress} #");
-        this._printerWriteLine($"# SPI STATUS: {_spi.CurrentStatus}     FLOW: {_spi.CurrentFlow} #");
-        this._printerWriteLine($"# SPI CONFIG: {_spi.Config}");
-        this._printerWriteLine("# -----------------------------------------");
-        this._printerWriteLine($"# POS: v{_version} Spi: v{Spi.GetVersion()}");
+        this._flow_msg.Info(`# --------------- STATUS ------------------`);
+        this._flow_msg.Info(`# ${this._posId} <-> Eftpos: ${this._eftposAddress} #`);
+        this._flow_msg.Info(`# SPI STATUS: ${this._spi.CurrentStatus}     FLOW: ${this._spi.CurrentFlow} #`);
+        this._flow_msg.Info(`# SPI CONFIG: ${this._spi.Config}`);
+        this._flow_msg.Info(`# -----------------------------------------`);
+        this._flow_msg.Info(`# POS: v${this._version} Spi: v${Spi.GetVersion()}`);
 
     }
 
@@ -578,17 +576,17 @@ class KebabPos
             }
             catch (SystemException e)
             {
-                this._printerWriteLine("Could Not Process Input. " + e.Message);
-                this._printerWriteLine("Try Again.");
+                this._flow_msg.Info("Could Not Process Input. " + e.Message);
+                this._flow_msg.Info("Try Again.");
                 this._printerWrite("> ");
             }
         }
-        this._printerWriteLine("# BaBye!");
+        this._flow_msg.Info("# BaBye!");
         if (_spiSecrets != null)
-            this._printerWriteLine($"{_posId}:{_eftposAddress}:{_spiSecrets.EncKey}:{_spiSecrets.HmacKey}");
+            this._flow_msg.Info($"{_posId}:{_eftposAddress}:{_spiSecrets.EncKey}:{_spiSecrets.HmacKey}");
     }
 
-    private bool ProcessInput(string[] spInput)
+    ProcessInput(spInput)
     {
         switch (spInput[0].ToLower())
         {
@@ -605,7 +603,7 @@ class KebabPos
                 var pres = _spi.InitiatePurchaseTxV2(posRefId, int.Parse(spInput[1]), tipAmount, cashoutAmount, promptForCashout);
                 if (!pres.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate purchase: {pres.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate purchase: {pres.Message}. Please Retry.");
                 }
                 break;
             case "refund":
@@ -613,21 +611,21 @@ class KebabPos
                 var yuckres = _spi.InitiateRefundTx("yuck-" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"), int.Parse(spInput[1]));
                 if (!yuckres.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate refund: {yuckres.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate refund: {yuckres.Message}. Please Retry.");
                 }
                 break;
             case "cashout":
                 var coRes = _spi.InitiateCashoutOnlyTx("launder-" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"), int.Parse(spInput[1]));
                 if (!coRes.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate cashout: {coRes.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate cashout: {coRes.Message}. Please Retry.");
                 }
                 break;
             case "13kebab":
                 var motoRed = _spi.InitiateMotoPurchaseTx("kebab-" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"), int.Parse(spInput[1]));
                 if (!motoRed.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate moto purchase: {motoRed.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate moto purchase: {motoRed.Message}. Please Retry.");
                 }
                 break;
 
@@ -636,11 +634,11 @@ class KebabPos
                 if (_spi.SetPosId(spInput[1]))
                 {
                     _posId = spInput[1];
-                    this._printerWriteLine($"## -> POS ID now set to {_posId}");
+                    this._flow_msg.Info($"## -> POS ID now set to {_posId}");
                 }
                 else
                 {
-                    this._printerWriteLine($"## -> Could not set POS ID");
+                    this._flow_msg.Info($"## -> Could not set POS ID");
                 }
                 ;
                 PrintStatusAndActions();
@@ -651,11 +649,11 @@ class KebabPos
                 if (_spi.SetEftposAddress(spInput[1]))
                 {
                     _eftposAddress = spInput[1];
-                    this._printerWriteLine($"## -> Eftpos Address now set to {_eftposAddress}");
+                    this._flow_msg.Info($"## -> Eftpos Address now set to {_eftposAddress}");
                 }
                 else
                 {
-                    this._printerWriteLine($"## -> Could not set Eftpos Address");
+                    this._flow_msg.Info($"## -> Could not set Eftpos Address");
                 }
                 ;
                 PrintStatusAndActions();
@@ -664,7 +662,7 @@ class KebabPos
 
             case "pair":
                 var pairingInited = _spi.Pair();
-                if (!pairingInited) this._printerWriteLine($"## -> Could not Start Pairing. Check Settings.");
+                if (!pairingInited) this._flow_msg.Info($"## -> Could not Start Pairing. Check Settings.");
                 break;
             case "pair_cancel":
                 _spi.PairingCancel();
@@ -690,7 +688,7 @@ class KebabPos
                 var sacRes = _spi.SubmitAuthCode(spInput[1]);
                 if (!sacRes.ValidFormat)
                 {
-                    this._printerWriteLine($"Ivalid Code Format. {sacRes.Message}. Try Again.");
+                    this._flow_msg.Info($"Ivalid Code Format. {sacRes.Message}. Try Again.");
                 }
                 break;
 
@@ -698,14 +696,14 @@ class KebabPos
                 var settleres = _spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
                 if (!settleres.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate settlement: {settleres.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate settlement: {settleres.Message}. Please Retry.");
                 }
                 break;
             case "settle_enq":
                 var senqres = _spi.InitiateSettlementEnquiry(RequestIdHelper.Id("stlenq"));
                 if (!senqres.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate settlement enquiry: {senqres.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate settlement enquiry: {senqres.Message}. Please Retry.");
                 }
                 break;
 
@@ -729,13 +727,13 @@ class KebabPos
                 var rres = _spi.InitiateRecovery(spInput[1], TransactionType.Purchase);
                 if (!rres.Initiated)
                 {
-                    this._printerWriteLine($"# Could not initiate recovery. {rres.Message}. Please Retry.");
+                    this._flow_msg.Info($"# Could not initiate recovery. {rres.Message}. Please Retry.");
                 }
                 break;
 
             case "glt":
                 var gltres = _spi.InitiateGetLastTx();
-                this._printerWriteLine(gltres.Initiated ? "# GLT Initiated. Will be updated with Progress." : $"# Could not initiate GLT: {gltres.Message}. Please Retry.");
+                this._flow_msg.Info(gltres.Initiated ? "# GLT Initiated. Will be updated with Progress." : $"# Could not initiate GLT: {gltres.Message}. Please Retry.");
                 break;
 
             case "status":
@@ -749,7 +747,7 @@ class KebabPos
                 break;
 
             default:
-                this._printerWriteLine("# I don't understand. Sorry.");
+                this._flow_msg.Info("# I don't understand. Sorry.");
                 this._printerWrite("> ");
                 break;
         }
