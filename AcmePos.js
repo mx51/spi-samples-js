@@ -33,8 +33,6 @@ class AcmePos {
         this._spi._conn.SpiProtocol = localStorage.getItem('SpiProtocol') || SPI_PROTOCOL;
         // -------
 
-        this._spi.Start();
-
         // Where to print out the receipts
         
         this._flow_msg = document.getElementById('flow_msg');

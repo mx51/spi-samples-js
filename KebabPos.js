@@ -68,10 +68,14 @@ class KebabPos
         if (secrets != null)
         {
             this._log.info(`# I Have Secrets: ${secrets.EncKey}${secrets.HmacKey}. Persist them Securely.`);
+            localStorage.setItem('EncKey', secrets.EncKey);
+            localStorage.setItem('HmacKey', secrets.HmacKey);
         }
         else
         {
             this._log.info(`# I Have Lost the Secrets, i.e. Unpaired. Destroy the persisted secrets.`);
+            localStorage.removeItem('EncKey');
+            localStorage.removeItem('HmacKey');
         }
     }
 
@@ -82,7 +86,7 @@ class KebabPos
     /// <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
-        this._log.Clear();
+        this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${status.SpiStatus}`);
         this.PrintStatusAndActions();
     }
@@ -426,73 +430,73 @@ class KebabPos
         }
     }
 
-    private static void HandleFinishedSettlementEnquiry(TransactionFlowState txState)
+    HandleFinishedSettlementEnquiry(txState)
     {
         switch (txState.Success)
         {
-            case Message.SuccessState.Success:
-                this._flow_msg.Info($"# SETTLEMENT ENQUIRY SUCCESSFUL!");
+            case SuccessState.Success:
+                this._flow_msg.Info("# SETTLEMENT ENQUIRY SUCCESSFUL!");
                 if (txState.Response != null)
                 {
                     var settleResponse = new Settlement(txState.Response);
-                    this._flow_msg.Info("# Response: {0}", settleResponse.GetResponseText());
-                    this._flow_msg.Info("# Merchant Receipt:");
-                    this._flow_msg.Info(settleResponse.GetReceipt().TrimEnd());
-                    this._flow_msg.Info("# Period Start: " + settleResponse.GetPeriodStartTime());
-                    this._flow_msg.Info("# Period End: " + settleResponse.GetPeriodEndTime());
-                    this._flow_msg.Info("# Settlement Time: " + settleResponse.GetTriggeredTime());
-                    this._flow_msg.Info("# Transaction Range: " + settleResponse.GetTransactionRange());
-                    this._flow_msg.Info("# Terminal Id: " + settleResponse.GetTerminalId());
-                    this._flow_msg.Info("# Total TX Count: " + settleResponse.GetTotalCount());
-                    this._flow_msg.Info($"# Total TX Value: {settleResponse.GetTotalValue() / 100.0}");
-                    this._flow_msg.Info("# By Aquirer TX Count: " + settleResponse.GetSettleByAquirerCount());
-                    this._flow_msg.Info($"# By Aquirere TX Value: {settleResponse.GetSettleByAquirerValue() / 100.0}");
-                    this._flow_msg.Info("# SCHEME SETTLEMENTS:");
+                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# Merchant Receipt:`);
+                    this._flow_msg.Info(settleResponse.GetReceipt().trim());
+                    this._flow_msg.Info(`# Period Start: ` + settleResponse.GetPeriodStartTime());
+                    this._flow_msg.Info(`# Period End: ` + settleResponse.GetPeriodEndTime());
+                    this._flow_msg.Info(`# Settlement Time: ` + settleResponse.GetTriggeredTime());
+                    this._flow_msg.Info(`# Transaction Range: ` + settleResponse.GetTransactionRange());
+                    this._flow_msg.Info(`# Terminal Id: ` + settleResponse.GetTerminalId());
+                    this._flow_msg.Info(`# Total TX Count: ` + settleResponse.GetTotalCount());
+                    this._flow_msg.Info(`# Total TX Value: ${settleResponse.GetTotalValue() / 100.0}`);
+                    this._flow_msg.Info(`# By Aquirer TX Count: ` + settleResponse.GetSettleByAquirerCount());
+                    this._flow_msg.Info(`# By Aquirere TX Value: ${settleResponse.GetSettleByAquirerValue() / 100.0}`);
+                    this._flow_msg.Info(`# SCHEME SETTLEMENTS:`);
                     var schemes = settleResponse.GetSchemeSettlementEntries();
-                    foreach (var s in schemes)
+                    for (s in schemes)
                     {
-                        this._flow_msg.Info("# " + s);
+                        this._flow_msg.Info(`# ` + s);
                     }
                 }
                 break;
-            case Message.SuccessState.Failed:
-                this._flow_msg.Info($"# SETTLEMENT ENQUIRY FAILED!");
+            case SuccessState.Failed:
+                this._flow_msg.Info("# SETTLEMENT ENQUIRY FAILED!");
                 if (txState.Response != null)
                 {
                     var settleResponse = new Settlement(txState.Response);
-                    this._flow_msg.Info("# Response: {0}", settleResponse.GetResponseText());
-                    this._flow_msg.Info("# Error: {0}", txState.Response.GetError());
-                    this._flow_msg.Info("# Merchant Receipt:");
-                    this._flow_msg.Info(settleResponse.GetReceipt().TrimEnd());
+                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
+                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                    this._flow_msg.Info(`# Merchant Receipt:`);
+                    this._flow_msg.Info(settleResponse.GetReceipt().trim());
                 }
                 break;
-            case Message.SuccessState.Unknown:
-                this._flow_msg.Info($"# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
+            case SuccessState.Unknown:
+                this._flow_msg.Info("# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new Error('Unknown Transaction state');
         }
     }
 
     PrintActions()
     {
-        this._flow_msg.Info("# ----------- AVAILABLE ACTIONS ------------");
+        this._flow_msg.Info(`# ----------- AVAILABLE ACTIONS ------------`);
 
         if (this._spi.CurrentFlow == SpiFlow.Idle)
         {
-            this._flow_msg.Info("# [kebab:1200:100:500:false] - [kebab:price:tip:cashout:promptForCash] Charge for kebab with extras!");
-            this._flow_msg.Info("# [13kebab:1300] - MOTO - Accept Payment Over the phone");
-            this._flow_msg.Info("# [yuck:500] - hand out a refund of $5.00!");
-            this._flow_msg.Info("# [cashout:5000] - do a cashout only transaction");
-            this._flow_msg.Info("# [settle] - Initiate Settlement");
-            this._flow_msg.Info("# [settle_enq] - Settlment Enquiry");
-            this._flow_msg.Info("#");
-            this._flow_msg.Info("# [recover:prchs1] - Attempt State Recovery for pos_ref_id 'prchs1'");
-            this._flow_msg.Info("# [glt:prchs1] - Get Last Transaction - Expect it to be posRefId 'prchs1'");
-            this._flow_msg.Info("#");
-            this._flow_msg.Info("# [rcpt_from_eftpos:true] - Offer Customer Receipt From Eftpos");
-            this._flow_msg.Info("# [sig_flow_from_eftpos:true] - Signature Flow to be handled by Eftpos");
-            this._flow_msg.Info("#");
+            this._flow_msg.Info(`# [kebab:1200:100:500:false] - [kebab:price:tip:cashout:promptForCash] Charge for kebab with extras!`);
+            this._flow_msg.Info(`# [13kebab:1300] - MOTO - Accept Payment Over the phone`);
+            this._flow_msg.Info(`# [yuck:500] - hand out a refund of $5.00!`);
+            this._flow_msg.Info(`# [cashout:5000] - do a cashout only transaction`);
+            this._flow_msg.Info(`# [settle] - Initiate Settlement`);
+            this._flow_msg.Info(`# [settle_enq] - Settlment Enquiry`);
+            this._flow_msg.Info(`#`);
+            this._flow_msg.Info(`# [recover:prchs1] - Attempt State Recovery for pos_ref_id 'prchs1'`);
+            this._flow_msg.Info(`# [glt:prchs1] - Get Last Transaction - Expect it to be posRefId 'prchs1'`);
+            this._flow_msg.Info(`#`);
+            this._flow_msg.Info(`# [rcpt_from_eftpos:true] - Offer Customer Receipt From Eftpos`);
+            this._flow_msg.Info(`# [sig_flow_from_eftpos:true] - Signature Flow to be handled by Eftpos`);
+            this._flow_msg.Info(`#`);
         }
 
         if (this._spi.CurrentStatus == SpiStatus.Unpaired && this._spi.CurrentFlow == SpiFlow.Idle)
@@ -561,29 +565,9 @@ class KebabPos
 
     }
 
-    private void AcceptUserInput()
+    AcceptUserInput()
     {
-        var bye = false;
-        while (!bye)
-        {
-            var input = this._printerReadLine();
-            if (string.IsNullOrEmpty(input)) { this._printerWrite("> "); continue; }
-            var spInput = input.Split(':');
-            _lastCmd = spInput;
-            try
-            {
-                bye = ProcessInput(spInput);
-            }
-            catch (SystemException e)
-            {
-                this._flow_msg.Info("Could Not Process Input. " + e.Message);
-                this._flow_msg.Info("Try Again.");
-                this._printerWrite("> ");
-            }
-        }
-        this._flow_msg.Info("# BaBye!");
-        if (_spiSecrets != null)
-            this._flow_msg.Info($"{_posId}:{_eftposAddress}:{_spiSecrets.EncKey}:{_spiSecrets.HmacKey}");
+
     }
 
     ProcessInput(spInput)
@@ -603,7 +587,7 @@ class KebabPos
                 var pres = _spi.InitiatePurchaseTxV2(posRefId, int.Parse(spInput[1]), tipAmount, cashoutAmount, promptForCashout);
                 if (!pres.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate purchase: {pres.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate purchase: {pres.Message}. Please Retry.");
                 }
                 break;
             case "refund":
@@ -611,21 +595,21 @@ class KebabPos
                 var yuckres = _spi.InitiateRefundTx("yuck-" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"), int.Parse(spInput[1]));
                 if (!yuckres.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate refund: {yuckres.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate refund: {yuckres.Message}. Please Retry.");
                 }
                 break;
             case "cashout":
                 var coRes = _spi.InitiateCashoutOnlyTx("launder-" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"), int.Parse(spInput[1]));
                 if (!coRes.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate cashout: {coRes.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate cashout: {coRes.Message}. Please Retry.");
                 }
                 break;
             case "13kebab":
                 var motoRed = _spi.InitiateMotoPurchaseTx("kebab-" + DateTime.Now.ToString("dd-MM-yyyy-HH-mm-ss"), int.Parse(spInput[1]));
                 if (!motoRed.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate moto purchase: {motoRed.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate moto purchase: {motoRed.Message}. Please Retry.");
                 }
                 break;
 
@@ -634,11 +618,11 @@ class KebabPos
                 if (_spi.SetPosId(spInput[1]))
                 {
                     _posId = spInput[1];
-                    this._flow_msg.Info($"## -> POS ID now set to {_posId}");
+                    this._flow_msg.Info("## -> POS ID now set to {_posId}");
                 }
                 else
                 {
-                    this._flow_msg.Info($"## -> Could not set POS ID");
+                    this._flow_msg.Info("## -> Could not set POS ID");
                 }
                 ;
                 PrintStatusAndActions();
@@ -649,11 +633,11 @@ class KebabPos
                 if (_spi.SetEftposAddress(spInput[1]))
                 {
                     _eftposAddress = spInput[1];
-                    this._flow_msg.Info($"## -> Eftpos Address now set to {_eftposAddress}");
+                    this._flow_msg.Info("## -> Eftpos Address now set to {_eftposAddress}");
                 }
                 else
                 {
-                    this._flow_msg.Info($"## -> Could not set Eftpos Address");
+                    this._flow_msg.Info("## -> Could not set Eftpos Address");
                 }
                 ;
                 PrintStatusAndActions();
@@ -688,7 +672,7 @@ class KebabPos
                 var sacRes = _spi.SubmitAuthCode(spInput[1]);
                 if (!sacRes.ValidFormat)
                 {
-                    this._flow_msg.Info($"Ivalid Code Format. {sacRes.Message}. Try Again.");
+                    this._flow_msg.Info("Ivalid Code Format. {sacRes.Message}. Try Again.");
                 }
                 break;
 
@@ -696,14 +680,14 @@ class KebabPos
                 var settleres = _spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
                 if (!settleres.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate settlement: {settleres.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate settlement: {settleres.Message}. Please Retry.");
                 }
                 break;
             case "settle_enq":
                 var senqres = _spi.InitiateSettlementEnquiry(RequestIdHelper.Id("stlenq"));
                 if (!senqres.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate settlement enquiry: {senqres.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate settlement enquiry: {senqres.Message}. Please Retry.");
                 }
                 break;
 
@@ -727,13 +711,13 @@ class KebabPos
                 var rres = _spi.InitiateRecovery(spInput[1], TransactionType.Purchase);
                 if (!rres.Initiated)
                 {
-                    this._flow_msg.Info($"# Could not initiate recovery. {rres.Message}. Please Retry.");
+                    this._flow_msg.Info("# Could not initiate recovery. {rres.Message}. Please Retry.");
                 }
                 break;
 
             case "glt":
                 var gltres = _spi.InitiateGetLastTx();
-                this._flow_msg.Info(gltres.Initiated ? "# GLT Initiated. Will be updated with Progress." : $"# Could not initiate GLT: {gltres.Message}. Please Retry.");
+                this._flow_msg.Info(gltres.Initiated ? "# GLT Initiated. Will be updated with Progress." : "# Could not initiate GLT: {gltres.Message}. Please Retry.");
                 break;
 
             case "status":
