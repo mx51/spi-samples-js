@@ -459,7 +459,7 @@ class KebabPos
                     this._flow_msg.Info(`# By Aquirere TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info(`# SCHEME SETTLEMENTS:`);
                     var schemes = settleResponse.GetSchemeSettlementEntries();
-                    for (s in schemes)
+                    for (var s in schemes)
                     {
                         this._flow_msg.Info(`# ` + s);
                     }
@@ -554,6 +554,7 @@ class KebabPos
                         inputsEnabled.push('cashout_amount_input');
                         inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
+                        inputsEnabled.push('save_settings');
 
                         inputsEnabled.push('purchase');
                         inputsEnabled.push('moto');
@@ -643,21 +644,25 @@ class KebabPos
     {
         document.getElementById('save_settings').addEventListener('click', () => {
 
-            this._posId         = document.getElementById('pos_id').value;
-            this._eftposAddress = document.getElementById('eftpos_address').value;
+            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) {
+                this._posId         = document.getElementById('pos_id').value;
+                this._eftposAddress = document.getElementById('eftpos_address').value;
+
+                this._spi.SetPosId(this._posId);
+                this._spi.SetEftposAddress(this._eftposAddress);
+
+                localStorage.setItem('pos_id', this._posId);
+                localStorage.setItem('eftpos_address', this._eftposAddress);
+                this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+            }
 
             this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
             this._spi.Config.SignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
 
-            this._spi.SetPosId(this._posId);
-            this._spi.SetEftposAddress(this._eftposAddress);
-
-            localStorage.setItem('pos_id', this._posId);
-            localStorage.setItem('eftpos_address', this._eftposAddress);
             localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
             localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
 
-            this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+            this.PrintPairingStatus();
         });
 
         document.getElementById('pair').addEventListener('click', () => {
@@ -698,6 +703,12 @@ class KebabPos
 
         document.getElementById('cashout').addEventListener('click', () => {
             let amount      = parseInt(document.getElementById('cashout_amount').value,10);
+
+            if(!amount > 0) {
+                this._log.info('Cashout amount must be greater than 0');
+                return;
+            }
+
             let posRefId    = `cashout-${new Date().toISOString()}`; 
             let res         = this._spi.InitiateCashoutOnlyTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# Cashout Initiated. Will be updated with Progress." : `# Could not initiate cashout: ${res.Message}. Please Retry.`);
