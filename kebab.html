@@ -37,11 +37,11 @@
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
                     </tr>
                     <tr>
                         <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
-                        <td><input type="checkbox" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -97,10 +97,10 @@
                     <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
                     <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
                     <button type="button" class="input" id="tx_cancel">Cancel</button>
+                    <button type="button" class="input" id="tx_auth_code">Phone Auth</button>
                     <button type="button" class="input" id="recover">Recover</button>
                     <button type="button" class="input" id="ok">Ok</button>
                     <button type="button" class="input" id="ok_cancel">Cancel</button>
-                    <button type="button" class="input" id="ok_override_paid">Override as Paid</button>
                 </p>
 
                 <fieldset id="amount_input" class="input">
@@ -118,6 +118,14 @@
                 <fieldset id="prompt_for_cash_input" class="input">
                     <label for="prompt_for_cash">Prompt for Cash?: </label>
                     <input type="checkbox" id="prompt_for_cash" name="prompt_for_cash" value="false">
+                </fieldset>
+                <fieldset id="pos_ref_id_input" class="input">
+                    <label for="pos_ref_id">Pos Ref ID: </label>
+                    <input type="text" id="pos_ref_id" name="pos_ref_id" placeholder="Pos Ref ID" value="">
+                </fieldset>
+                <fieldset id="auth_code_input" class="input">
+                    <label for="auth_code">Auth Code: </label>
+                    <input type="tel" id="auth_code" name="auth_code" placeholder="Submit Phone For Auth Code" value="">
                 </fieldset>
             </div>
         </td>
