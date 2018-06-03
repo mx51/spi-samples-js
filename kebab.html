@@ -15,6 +15,7 @@
     <script src="lib/spi-client-js.js"></script>
     <!-- End Vendor -->
     
+    <script src="lib/Log.js"></script>
     <script src="KebabPos.js"></script>
 
 </head>
@@ -33,6 +34,14 @@
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
                         <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="emulator-prod.herokuapp.com" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
+                        <td><input type="checkbox" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
+                        <td><input type="checkbox" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -79,14 +88,17 @@
                     <button type="button" class="input" id="pair_confirm">Confirm Code</button>
                     <button type="button" class="input" id="pair_cancel">Cancel Pairing</button>
                     <button type="button" class="input" id="purchase">Purchase</button>
+                    <button type="button" class="input" id="moto">Moto</button>
+                    <button type="button" class="input" id="cashout">Cashout</button>
                     <button type="button" class="input" id="refund">Refund</button>
                     <button type="button" class="input" id="settle">Settle</button>
+                    <button type="button" class="input" id="settle_enq">Settle Enquiry</button>
                     <button type="button" class="input" id="glt">Get Last Transaction</button>
                     <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
                     <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
                     <button type="button" class="input" id="tx_cancel">Cancel</button>
+                    <button type="button" class="input" id="recover">Recover</button>
                     <button type="button" class="input" id="ok">Ok</button>
-                    <button type="button" class="input" id="ok_retry">Retry</button>
                     <button type="button" class="input" id="ok_cancel">Cancel</button>
                     <button type="button" class="input" id="ok_override_paid">Override as Paid</button>
                 </p>
@@ -94,6 +106,18 @@
                 <fieldset id="amount_input" class="input">
                     <label for="amount">Amount (cents): </label>
                     <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)">
+                </fieldset>
+                <fieldset id="tip_amount_input" class="input">
+                    <label for="tip_amount">Tip Amount (cents): </label>
+                    <input type="number" id="tip_amount" name="tip_amount" value="0" placeholder="Tip Amount (cents)">
+                </fieldset>
+                <fieldset id="cashout_amount_input" class="input">
+                    <label for="cashout_amount">Cash out amount (cents): </label>
+                    <input type="number" id="cashout_amount" name="cashout_amount" value="0" placeholder="Cash out Amount (cents)">
+                </fieldset>
+                <fieldset id="prompt_for_cash_input" class="input">
+                    <label for="prompt_for_cash">Prompt for Cash?: </label>
+                    <input type="checkbox" id="prompt_for_cash" name="prompt_for_cash" value="false">
                 </fieldset>
             </div>
         </td>
