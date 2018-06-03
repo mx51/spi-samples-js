@@ -91,7 +91,7 @@ class KebabPos
     /// <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
-        // this._log.clear();
+        this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${status.SpiStatus}`);
         this.PrintStatusAndActions();
     }
@@ -126,7 +126,7 @@ class KebabPos
                 this._flow_msg.Info(`# ${txState.DisplayMessage}`);
                 this._flow_msg.Info(`# Id: ${txState.PosRefId}`);
                 this._flow_msg.Info(`# Type: ${txState.Type}`);
-                this._flow_msg.Info(`# Amount: ${txState.AmountCents / 100.0}`);
+                this._flow_msg.Info(`# Amount: $${(txState.AmountCents / 100.0).toFixed(2)}`);
                 this._flow_msg.Info(`# Waiting For Signature: ${txState.AwaitingSignatureCheck}`);
                 this._flow_msg.Info(`# Attempting to Cancel : ${txState.AttemptingToCancel}`);
                 this._flow_msg.Info(`# Finished: ${txState.Finished}`);
@@ -358,11 +358,12 @@ class KebabPos
         if (txState.Response != null)
         {
             var gltResponse = new GetLastTransactionResponse(txState.Response);
+            var pos_ref_id  = document.getElementById('pos_ref_id').value;
 
-            if (this._lastCmd.length > 1) {
+            if (pos_ref_id.length > 1) {
                 // User specified that he intended to retrieve a specific tx by pos_ref_id
                 // This is how you can use a handy function to match it.
-                var success = this._spi.GltMatch(gltResponse, this._lastCmd[1]);
+                var success = this._spi.GltMatch(gltResponse, pos_ref_id);
                 if (success == SuccessState.Unknown)
                 {
                     this._flow_msg.Info("# Did not retrieve Expected Transaction. Here is what we got:");
@@ -404,9 +405,9 @@ class KebabPos
                     this._flow_msg.Info("# Transaction Range: " + settleResponse.GetTransactionRange());
                     this._flow_msg.Info("# Terminal Id: " + settleResponse.GetTerminalId());
                     this._flow_msg.Info("# Total TX Count: " + settleResponse.GetTotalCount());
-                    this._flow_msg.Info(`# Total TX Value: ${settleResponse.GetTotalValue() / 100.0}`);
+                    this._flow_msg.Info(`# Total TX Value: $${(settleResponse.GetTotalValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info("# By Aquirer TX Count: " + settleResponse.GetSettleByAcquirerCount());
-                    this._flow_msg.Info(`# By Aquirer TX Value: ${settleResponse.GetSettleByAcquirerValue() / 100.0}`);
+                    this._flow_msg.Info(`# By Aquirer TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info("# SCHEME SETTLEMENTS:");
                     var schemes = settleResponse.GetSchemeSettlementEntries();
                     for (var s in schemes)
@@ -453,9 +454,9 @@ class KebabPos
                     this._flow_msg.Info(`# Transaction Range: ` + settleResponse.GetTransactionRange());
                     this._flow_msg.Info(`# Terminal Id: ` + settleResponse.GetTerminalId());
                     this._flow_msg.Info(`# Total TX Count: ` + settleResponse.GetTotalCount());
-                    this._flow_msg.Info(`# Total TX Value: ${settleResponse.GetTotalValue() / 100.0}`);
+                    this._flow_msg.Info(`# Total TX Value: $${(settleResponse.GetTotalValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info(`# By Aquirer TX Count: ` + settleResponse.GetSettleByAcquirerCount());
-                    this._flow_msg.Info(`# By Aquirere TX Value: ${settleResponse.GetSettleByAcquirerValue() / 100.0}`);
+                    this._flow_msg.Info(`# By Aquirere TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info(`# SCHEME SETTLEMENTS:`);
                     var schemes = settleResponse.GetSchemeSettlementEntries();
                     for (s in schemes)
