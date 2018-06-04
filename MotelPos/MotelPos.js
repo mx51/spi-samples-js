@@ -13,7 +13,8 @@
 // </summary>
 class MotelPos
 {
-    constructor(log, receipt, flow_msg) {
+    constructor(log, receipt, flow_msg) 
+    {
         this._spi = null;
         this._spiPreauth = null;
         this._posId = "MOTELPOS1";
@@ -94,7 +95,7 @@ class MotelPos
     OnSpiStatusChanged(spiStatus)
     {
         this._log.clear();
-        this._log.info(`# --> SPI Status Changed: ${status.SpiStatus}`);
+        this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
 
@@ -143,14 +144,96 @@ class MotelPos
 
                 if (txState.Finished)
                 {
-                   switch(txState.Success) {
-                       case SuccessState.Success:
+                   switch(txState.Success) 
+                   {
+                        case SuccessState.Success:
+                            switch (txState.Type)
+                            {
+                                case TransactionType.Preauth:
+                                    this._flow_msg.Info("# PREAUTH RESULT - SUCCESS");
+                                    var preauthResponse = new PreauthResponse(txState.Response);
+                                    this._flow_msg.Info("# PREAUTH-ID:", preauthResponse.PreauthId);
+                                    this._flow_msg.Info("# NEW BALANCE AMOUNT:", preauthResponse.GetBalanceAmount());
+                                    this._flow_msg.Info("# PREV BALANCE AMOUNT:", preauthResponse.GetPreviousBalanceAmount());
+                                    this._flow_msg.Info("# COMPLETION AMOUNT:", preauthResponse.GetCompletionAmount());
 
+                                    var details = preauthResponse.Details;
+                                    this._flow_msg.Info("# Response:", details.GetResponseText());
+                                    this._flow_msg.Info("# RRN:", details.GetRRN());
+                                    this._flow_msg.Info("# Scheme:", details.SchemeName);
+                                    this._flow_msg.Info("# Customer Receipt:");
+                                    this._receipt.Info(details.GetCustomerReceipt().trim());
+                                    break;
+                                case TransactionType.AccountVerify:
+                                    this._flow_msg.Info("# ACCOUNT VERIFICATION SUCCESS");
+                                    var acctVerifyResponse = new AccountVerifyResponse(txState.Response);
+                                    var details = acctVerifyResponse.Details;
+                                    this._flow_msg.Info("# Response:", details.GetResponseText());
+                                    this._flow_msg.Info("# RRN:", details.GetRRN());
+                                    this._flow_msg.Info("# Scheme:", details.SchemeName);
+                                    this._flow_msg.Info("# Merchant Receipt:");
+                                    this._receipt.Info(details.GetMerchantReceipt().trim());
+                                    break;
+                                default:
+                                    this._flow_msg.Info("# MOTEL POS DOESN'T KNOW WHAT TO DO WITH THIS TX TYPE WHEN IT SUCCEEDS");
+                                    break;
+                            }
                         break;
-                   }
+                        case SuccessState.Failed:
+                            switch (txState.Type)
+                            {
+                                case TransactionType.Preauth:
+                                    this._flow_msg.Info("# PREAUTH TRANSACTION FAILED :(");
+                                    this._flow_msg.Info("# Error:", txState.Response.GetError());
+                                    this._flow_msg.Info("# Error Detail:", txState.Response.GetErrorDetail());
+                                    if (txState.Response != null)
+                                    {
+                                        var purchaseResponse = new PurchaseResponse(txState.Response);
+                                        this._flow_msg.Info("# Response:", purchaseResponse.GetResponseText());
+                                        this._flow_msg.Info("# RRN:", purchaseResponse.GetRRN());
+                                        this._flow_msg.Info("# Scheme:", purchaseResponse.SchemeName);
+                                        this._flow_msg.Info("# Customer Receipt:");
+                                        this._receipt.Info(purchaseResponse.GetCustomerReceipt().trim());
+                                    }
+                                    break;
+                                case TransactionType.AccountVerify:
+                                    this._flow_msg.Info("# ACCOUNT VERIFICATION FAILED :(");
+                                    this._flow_msg.Info("# Error:", txState.Response.GetError());
+                                    this._flow_msg.Info("# Error Detail:", txState.Response.GetErrorDetail());
+                                    if (txState.Response != null)
+                                    {
+                                        var acctVerifyResponse = new AccountVerifyResponse(txState.Response);
+                                        var details = acctVerifyResponse.Details;
+                                        this._receipt.Info(details.GetCustomerReceipt().trim());
+                                    }
+                                    break;
+                                default:
+                                    this._flow_msg.Info("# MOTEL POS DOESN'T KNOW WHAT TO DO WITH THIS TX TYPE WHEN IT FAILS");
+                                    break;
+                            }
+                            break;
+                        case SuccessState.Unknown:
+                            switch (txState.Type)
+                            {
+                                case TransactionType.Preauth:
+                                    this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER PREAUTH TRANSACTION WENT THROUGH OR NOT:/");
+                                    this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
+                                    this._flow_msg.Info("# IF YOU CONFIRM THAT THE CUSTOMER PAID, CLOSE THE ORDER.");
+                                    this._flow_msg.Info("# OTHERWISE, RETRY THE PAYMENT FROM SCRATCH.");
+                                    break;
+                                case TransactionType.AccountVerify:
+                                    this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER ACCOUNT VERIFICATION WENT THROUGH OR NOT:/");
+                                    this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
+                                    this._flow_msg.Info("# IF YOU CONFIRM THAT THE CUSTOMER PAID, CLOSE THE ORDER.");
+                                    this._flow_msg.Info("# OTHERWISE, RETRY THE PAYMENT FROM SCRATCH.");
+                                    break;
+                                default:
+                                    this._flow_msg.Info("# MOTEL POS DOESN'T KNOW WHAT TO DO WITH THIS TX TYPE WHEN IT's UNKNOWN");
+                                    break;
+                            }
+                            break;
+                    }
                 }
-                break;
-            case SpiFlow.Idle:
                 break;
         }
     }
@@ -233,7 +316,6 @@ class MotelPos
                         inputsEnabled.push('preauth_cancel');
 
                         inputsEnabled.push('unpair');
-                        inputsEnabled.push('glt');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         break;
@@ -272,11 +354,13 @@ class MotelPos
 
         // Configure buttons / inputs
         let inputs = document.querySelectorAll('.input');
-        for(let i = 0; i < inputs.length; i++) {
+        for(let i = 0; i < inputs.length; i++) 
+        {
             inputs[i].disabled = true;
         }
 
-        inputsEnabled.forEach((input) => {
+        inputsEnabled.forEach((input) => 
+        {
             document.getElementById(input).disabled = false;
         });
 
@@ -298,7 +382,8 @@ class MotelPos
     {
         document.getElementById('save_settings').addEventListener('click', () => {
 
-            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) {
+            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
+            {
                 this._posId         = document.getElementById('pos_id').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
 
@@ -319,36 +404,43 @@ class MotelPos
             this.PrintPairingStatus();
         });
 
-        document.getElementById('pair').addEventListener('click', () => {
+        document.getElementById('pair').addEventListener('click', () => 
+        {
             this._spi.Pair();
         });
 
-        document.getElementById('pair_confirm').addEventListener('click', () => {
+        document.getElementById('pair_confirm').addEventListener('click', () => 
+        {
             this._spi.PairingConfirmCode();
         });
 
-        document.getElementById('pair_cancel').addEventListener('click', () => {
+        document.getElementById('pair_cancel').addEventListener('click', () => 
+        {
             this._spi.PairingCancel();
         });
 
-        document.getElementById('unpair').addEventListener('click', () => {
+        document.getElementById('unpair').addEventListener('click', () => 
+        {
             this._spi.Unpair();
         });
 
-        document.getElementById('acct_verify').addEventListener('click', () => {
+        document.getElementById('acct_verify').addEventListener('click', () => 
+        {
             let posRefId    = `actvfy-${new Date().toISOString()}`; 
             let res         = this._spiPreauth.InitiateAccountVerifyTx(posRefId);
             this._flow_msg.Info(res.Initiated ? "# Verify Initiated. Will be updated with Progress." : `# Could not initiate account verify request: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('preauth_open').addEventListener('click', () => {
+        document.getElementById('preauth_open').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let posRefId    = `propen-${new Date().toISOString()}`; 
             let res         = this._spiPreauth.InitiateOpenTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# Preauth Initiated. Will be updated with Progress." : `# Could not initiate preauth request: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('preauth_topup').addEventListener('click', () => {
+        document.getElementById('preauth_topup').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let preauthId   = document.getElementById('preauth_ref').value; 
             let ref         = `prtopup-${preauthId}-${new Date().toISOString()}`; 
@@ -356,7 +448,8 @@ class MotelPos
             this._flow_msg.Info(res.Initiated ? "# Preauth topup Initiated. Will be updated with Progress." : `# Could not initiate preauth topup request: ${res.Message}. Please Retry.`);
         });
         
-        document.getElementById('preauth_topdown').addEventListener('click', () => {
+        document.getElementById('preauth_topdown').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let preauthId   = document.getElementById('preauth_ref').value; 
             let ref         = `prtopd-${preauthId}-${new Date().toISOString()}`; 
@@ -364,21 +457,24 @@ class MotelPos
             this._flow_msg.Info(res.Initiated ? "# Preauth topdown Initiated. Will be updated with Progress." : `# Could not initiate preauth topdown request: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('preauth_extend').addEventListener('click', () => {
+        document.getElementById('preauth_extend').addEventListener('click', () => 
+        {
             let preauthId   = document.getElementById('preauth_ref').value; 
             let ref         = `prext-${preauthId}-${new Date().toISOString()}`; 
             let res         = this._spiPreauth.InitiateExtendTx(ref, preauthId);
             this._flow_msg.Info(res.Initiated ? "# Preauth extend Initiated. Will be updated with Progress." : `# Could not initiate preauth extend request: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('preauth_cancel').addEventListener('click', () => {
+        document.getElementById('preauth_cancel').addEventListener('click', () => 
+        {
             let preauthId   = document.getElementById('preauth_ref').value; 
             let ref         = `prcancel-${preauthId}-${new Date().toISOString()}`; 
             let res         = this._spiPreauth.InitiateCancelTx(ref, preauthId);
             this._flow_msg.Info(res.Initiated ? "# Preauth cancel Initiated. Will be updated with Progress." : `# Could not initiate preauth cancel request: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('preauth_complete').addEventListener('click', () => {
+        document.getElementById('preauth_complete').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let preauthId   = document.getElementById('preauth_ref').value; 
             let ref         = `prcomp-${preauthId}-${new Date().toISOString()}`; 
@@ -386,31 +482,31 @@ class MotelPos
             this._flow_msg.Info(res.Initiated ? "# Preauth complete Initiated. Will be updated with Progress." : `# Could not initiate preauth complete request: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('tx_sign_accept').addEventListener('click', () => {
+        document.getElementById('tx_sign_accept').addEventListener('click', () => 
+        {
             this._spi.AcceptSignature(true);
         });
 
-        document.getElementById('tx_sign_decline').addEventListener('click', () => {
+        document.getElementById('tx_sign_decline').addEventListener('click', () => 
+        {
             this._spi.AcceptSignature(false);
         });
 
-        document.getElementById('tx_cancel').addEventListener('click', () => {
+        document.getElementById('tx_cancel').addEventListener('click', () => 
+        {
             this._spi.CancelTransaction();
         });
 
-        document.getElementById('ok').addEventListener('click', () => {
+        document.getElementById('ok').addEventListener('click', () => 
+        {
             this._spi.AckFlowEndedAndBackToIdle();
             this._flow_msg.Clear();
             this._flow_msg.innerHTML = "Select from the options below";
             this.PrintStatusAndActions();
         });
 
-        document.getElementById('glt').addEventListener('click', () => {
-            let res = this._spi.InitiateGetLastTx();
-            this._flow_msg.Info(res.Initiated ? "# GLT Initiated. Will be updated with Progress." : `# Could not initiate GLT: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('ok_cancel').addEventListener('click', () => {
+        document.getElementById('ok_cancel').addEventListener('click', () => 
+        {
             this._spi.AckFlowEndedAndBackToIdle();
             this._log.clear();
             this._flow_msg.innerHTML = "Order Cancelled";
@@ -420,24 +516,31 @@ class MotelPos
 
     LoadPersistedState()
     {
-        if(localStorage.getItem('pos_id')) {
+        if(localStorage.getItem('pos_id')) 
+        {
             this._posId = localStorage.getItem('pos_id');
             document.getElementById('pos_id').value = this._posId;
-        } else {
+        } 
+        else 
+        {
             this._posId = document.getElementById('pos_id').value;
         }
 
-        if(localStorage.getItem('eftpos_address')) {
+        if(localStorage.getItem('eftpos_address')) 
+        {
             this._eftposAddress = localStorage.getItem('eftpos_address');
             document.getElementById('eftpos_address').value = this._eftposAddress;
-        } else {
+        } 
+        else 
+        {
             this._eftposAddress = document.getElementById('eftpos_address').value;
         }
 
         this._rcpt_from_eftpos = document.getElementById('rcpt_from_eftpos').checked = localStorage.getItem('rcpt_from_eftpos') === 'true' || false;
         this._sig_flow_from_eftpos = document.getElementById('sig_flow_from_eftpos').checked = localStorage.getItem('sig_flow_from_eftpos') === 'true' || false;
 
-        if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) {
+        if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) 
+        {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
     }
@@ -446,15 +549,18 @@ class MotelPos
 /**
  * Start the POS
  */
-document.addEventListener('DOMContentLoaded', () => {
-
-    try {
+document.addEventListener('DOMContentLoaded', () => 
+{
+    try 
+    {
         let log         = console;
         let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
         let flow_msg    = new Log(document.getElementById('flow_msg'));
         let pos         = new MotelPos(log, receipt, flow_msg);
         pos.Start();
-    } catch(err) {
+    } 
+    catch(err) 
+    {
         console.error(err);
     }
 });

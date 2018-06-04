@@ -13,7 +13,8 @@
 // </summary>
 class KebabPos
 {
-    constructor(log, receipt, flow_msg) {
+    constructor(log, receipt, flow_msg) 
+    {
         this._spi = null;
         this._posId = "KEBABPOS1";
         this._eftposAddress = "192.168.1.1";
@@ -92,7 +93,7 @@ class KebabPos
     OnSpiStatusChanged(spiStatus)
     {
         this._log.clear();
-        this._log.info(`# --> SPI Status Changed: ${status.SpiStatus}`);
+        this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
 
@@ -176,8 +177,6 @@ class KebabPos
                             break;
                     }
                 }
-                break;
-            case SpiFlow.Idle:
                 break;
         }
     }
@@ -360,7 +359,8 @@ class KebabPos
             var gltResponse = new GetLastTransactionResponse(txState.Response);
             var pos_ref_id  = document.getElementById('pos_ref_id').value;
 
-            if (pos_ref_id.length > 1) {
+            if (pos_ref_id.length > 1) 
+            {
                 // User specified that he intended to retrieve a specific tx by pos_ref_id
                 // This is how you can use a handy function to match it.
                 var success = this._spi.GltMatch(gltResponse, pos_ref_id);
@@ -587,7 +587,8 @@ class KebabPos
                         }
                         else
                         {
-                            switch (this._spi.CurrentTxFlowState.Success) {
+                            switch (this._spi.CurrentTxFlowState.Success) 
+                            {
                                 case SuccessState.Success:
                                     inputsEnabled.push('ok');
                                     break;
@@ -618,11 +619,13 @@ class KebabPos
 
         // Configure buttons / inputs
         let inputs = document.querySelectorAll('.input');
-        for(let i = 0; i < inputs.length; i++) {
+        for(let i = 0; i < inputs.length; i++) 
+        {
             inputs[i].disabled = true;
         }
 
-        inputsEnabled.forEach((input) => {
+        inputsEnabled.forEach((input) => 
+        {
             document.getElementById(input).disabled = false;
         });
 
@@ -642,9 +645,10 @@ class KebabPos
 
     AcceptUserInput()
     {
-        document.getElementById('save_settings').addEventListener('click', () => {
-
-            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) {
+        document.getElementById('save_settings').addEventListener('click', () => 
+        {
+            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
+            {
                 this._posId         = document.getElementById('pos_id').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
 
@@ -665,23 +669,28 @@ class KebabPos
             this.PrintPairingStatus();
         });
 
-        document.getElementById('pair').addEventListener('click', () => {
+        document.getElementById('pair').addEventListener('click', () => 
+        {
             this._spi.Pair();
         });
 
-        document.getElementById('pair_confirm').addEventListener('click', () => {
+        document.getElementById('pair_confirm').addEventListener('click', () => 
+        {
             this._spi.PairingConfirmCode();
         });
 
-        document.getElementById('pair_cancel').addEventListener('click', () => {
+        document.getElementById('pair_cancel').addEventListener('click', () => 
+        {
             this._spi.PairingCancel();
         });
 
-        document.getElementById('unpair').addEventListener('click', () => {
+        document.getElementById('unpair').addEventListener('click', () => 
+        {
             this._spi.Unpair();
         });
 
-        document.getElementById('purchase').addEventListener('click', () => {
+        document.getElementById('purchase').addEventListener('click', () => 
+        {
             let posRefId        = `purchase-${new Date().toISOString()}`; 
             let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
             let tipAmount       = parseInt(document.getElementById('tip_amount').value,10);
@@ -694,17 +703,20 @@ class KebabPos
             }
         });
 
-        document.getElementById('refund').addEventListener('click', () => {
+        document.getElementById('refund').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let posRefId    = `refund-${new Date().toISOString()}`; 
             let res         = this._spi.InitiateRefundTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('cashout').addEventListener('click', () => {
+        document.getElementById('cashout').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('cashout_amount').value,10);
 
-            if(!amount > 0) {
+            if(!amount > 0) 
+            {
                 this._log.info('Cashout amount must be greater than 0');
                 return;
             }
@@ -714,61 +726,72 @@ class KebabPos
             this._flow_msg.Info(res.Initiated ? "# Cashout Initiated. Will be updated with Progress." : `# Could not initiate cashout: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('moto').addEventListener('click', () => {
+        document.getElementById('moto').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let posRefId    = `cashout-${new Date().toISOString()}`; 
             let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# MOTO purchase Initiated. Will be updated with Progress." : `# Could not initiate moto purchase: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('tx_sign_accept').addEventListener('click', () => {
+        document.getElementById('tx_sign_accept').addEventListener('click', () => 
+        {
             this._spi.AcceptSignature(true);
         });
 
-        document.getElementById('tx_sign_decline').addEventListener('click', () => {
+        document.getElementById('tx_sign_decline').addEventListener('click', () => 
+        {
             this._spi.AcceptSignature(false);
         });
 
-        document.getElementById('tx_cancel').addEventListener('click', () => {
+        document.getElementById('tx_cancel').addEventListener('click', () => 
+        {
             this._spi.CancelTransaction();
         });
 
-        document.getElementById('tx_auth_code').addEventListener('click', () => {
+        document.getElementById('tx_auth_code').addEventListener('click', () => 
+        {
             var authCode = document.getElementById('auth_code').value;
             var res = this._spi.SubmitAuthCode(authCode);
             this._flow_msg.Info(res.ValidFormat ? `# Auth code submitted` : `# Invalid Code Format. ${res.Message}. Try Again.`);
         });
 
-        document.getElementById('settle').addEventListener('click', () => {
+        document.getElementById('settle').addEventListener('click', () => 
+        {
             let res = this._spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
             this._flow_msg.Info(res.Initiated ? "# Settle Initiated. Will be updated with Progress." : `# Could not initiate settle: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('settle_enq').addEventListener('click', () => {
+        document.getElementById('settle_enq').addEventListener('click', () => 
+        {
             let res = this._spi.InitiateSettlementEnquiry(RequestIdHelper.Id("stlenq"));
             this._flow_msg.Info(res.Initiated ? "# Settle enquiry Initiated. Will be updated with Progress." : `# Could not initiate settle enquiry: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('ok').addEventListener('click', () => {
+        document.getElementById('ok').addEventListener('click', () => 
+        {
             this._spi.AckFlowEndedAndBackToIdle();
             this._flow_msg.Clear();
             this._flow_msg.innerHTML = "Select from the options below";
             this.PrintStatusAndActions();
         });
 
-        document.getElementById('recover').addEventListener('click', () => {
+        document.getElementById('recover').addEventListener('click', () => 
+        {
             this._flow_msg.Clear();
             var posRefId = document.getElementById('pos_ref_id').value;
             var res = this._spi.InitiateRecovery(posRefId, TransactionType.Purchase);
             this._flow_msg.Info(res.Initiated ? "# Recovery Initiated. Will be updated with Progress." : `# Could not initiate recovery. ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('glt').addEventListener('click', () => {
+        document.getElementById('glt').addEventListener('click', () => 
+        {
             let res = this._spi.InitiateGetLastTx();
             this._flow_msg.Info(res.Initiated ? "# GLT Initiated. Will be updated with Progress." : `# Could not initiate GLT: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('ok_cancel').addEventListener('click', () => {
+        document.getElementById('ok_cancel').addEventListener('click', () => 
+        {
             this._spi.AckFlowEndedAndBackToIdle();
             this._log.clear();
             this._flow_msg.innerHTML = "Order Cancelled";
@@ -778,24 +801,31 @@ class KebabPos
 
     LoadPersistedState()
     {
-        if(localStorage.getItem('pos_id')) {
+        if(localStorage.getItem('pos_id')) 
+        {
             this._posId = localStorage.getItem('pos_id');
             document.getElementById('pos_id').value = this._posId;
-        } else {
+        } 
+        else 
+        {
             this._posId = document.getElementById('pos_id').value;
         }
 
-        if(localStorage.getItem('eftpos_address')) {
+        if(localStorage.getItem('eftpos_address')) 
+        {
             this._eftposAddress = localStorage.getItem('eftpos_address');
             document.getElementById('eftpos_address').value = this._eftposAddress;
-        } else {
+        } 
+        else 
+        {
             this._eftposAddress = document.getElementById('eftpos_address').value;
         }
 
         this._rcpt_from_eftpos = document.getElementById('rcpt_from_eftpos').checked = localStorage.getItem('rcpt_from_eftpos') === 'true' || false;
         this._sig_flow_from_eftpos = document.getElementById('sig_flow_from_eftpos').checked = localStorage.getItem('sig_flow_from_eftpos') === 'true' || false;
 
-        if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) {
+        if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) 
+        {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
     }
@@ -804,15 +834,18 @@ class KebabPos
 /**
  * Start the POS
  */
-document.addEventListener('DOMContentLoaded', () => {
-
-    try {
+document.addEventListener('DOMContentLoaded', () => 
+{
+    try 
+    {
         let log         = console;
         let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
         let flow_msg    = new Log(document.getElementById('flow_msg'));
         let pos         = new KebabPos(log, receipt, flow_msg);
         pos.Start();
-    } catch(err) {
+    } 
+    catch(err) 
+    {
         console.error(err);
     }
 });
