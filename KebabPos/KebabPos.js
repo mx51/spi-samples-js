@@ -406,8 +406,8 @@ class KebabPos
                     this._flow_msg.Info("# Terminal Id: " + settleResponse.GetTerminalId());
                     this._flow_msg.Info("# Total TX Count: " + settleResponse.GetTotalCount());
                     this._flow_msg.Info(`# Total TX Value: $${(settleResponse.GetTotalValue() / 100.0).toFixed(2)}`);
-                    this._flow_msg.Info("# By Aquirer TX Count: " + settleResponse.GetSettleByAcquirerCount());
-                    this._flow_msg.Info(`# By Aquirer TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
+                    this._flow_msg.Info("# By Acquirer TX Count: " + settleResponse.GetSettleByAcquirerCount());
+                    this._flow_msg.Info(`# By Acquirer TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info("# SCHEME SETTLEMENTS:");
                     var schemes = settleResponse.GetSchemeSettlementEntries();
                     for (var s in schemes)
@@ -455,8 +455,8 @@ class KebabPos
                     this._flow_msg.Info(`# Terminal Id: ` + settleResponse.GetTerminalId());
                     this._flow_msg.Info(`# Total TX Count: ` + settleResponse.GetTotalCount());
                     this._flow_msg.Info(`# Total TX Value: $${(settleResponse.GetTotalValue() / 100.0).toFixed(2)}`);
-                    this._flow_msg.Info(`# By Aquirer TX Count: ` + settleResponse.GetSettleByAcquirerCount());
-                    this._flow_msg.Info(`# By Aquirere TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
+                    this._flow_msg.Info(`# By Acquirer TX Count: ` + settleResponse.GetSettleByAcquirerCount());
+                    this._flow_msg.Info(`# By Acquirer TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
                     this._flow_msg.Info(`# SCHEME SETTLEMENTS:`);
                     var schemes = settleResponse.GetSchemeSettlementEntries();
                     for (var s in schemes)
