@@ -87,11 +87,11 @@ class MotelPos
         }
     }
 
-    /// <summary>
-    /// Called when we received a Status Update i.e. Unpaired/PairedConnecting/PairedConnected
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="spiStatus"></param>
+    // <summary>
+    // Called when we received a Status Update i.e. Unpaired/PairedConnecting/PairedConnected
+    // </summary>
+    // <param name="sender"></param>
+    // <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
         this._log.clear();
