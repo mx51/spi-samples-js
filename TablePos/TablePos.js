@@ -13,7 +13,8 @@
 // </summary>
 class TablePos
 {
-    constructor(log, receipt, flow_msg) {
+    constructor(log, receipt, flow_msg) 
+    {
         this._spi = null;
         this._posId = "TABLEPOS1";
         this._eftposAddress = "192.168.1.1";
@@ -21,6 +22,24 @@ class TablePos
         this._version = '2.1.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
+
+        // My Bills Store.
+        // Key = BillId
+        // Value = Bill 
+        this.billsStore = [];
+
+        // Lookup dictionary of table -> current order
+        // Key = TableId
+        // Value = BillId
+        this.tableToBillMapping = [];
+
+        // Assembly Payments Integration asks us to persist some data on their behalf
+        // So that the eftpos terminal can recover state.
+        // Key = BillId
+        // Value = Assembly Payments Bill Data
+        this.assemblyBillDataStore = [];
+
+        this._pat = null;
 
         this._log = log;
         this._receipt = receipt;
@@ -42,6 +61,11 @@ class TablePos
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
+
+        this._pat = this._spi.EnablePayAtTable();
+        this._pat.Config.LabelTableId = "Table Number";
+        this._pat.GetBillStatus = this.PayAtTableGetBillDetails;
+        this._pat.BillPaymentReceived = this.PayAtTableBillPaymentReceived;
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -84,17 +108,100 @@ class TablePos
         }
     }
 
-    /// <summary>
-    /// Called when we received a Status Update i.e. Unpaired/PairedConnecting/PairedConnected
-    /// </summary>
-    /// <param name="sender"></param>
-    /// <param name="spiStatus"></param>
+    // <summary>
+    // Called when we received a Status Update i.e. Unpaired/PairedConnecting/PairedConnected
+    // </summary>
+    // <param name="sender"></param>
+    // <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
         this._log.clear();
-        this._log.info(`# --> SPI Status Changed: ${status.SpiStatus}`);
+        this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
+
+    // region PayAtTable Delegates
+
+    // <param name="billId"></param>
+    // <param name="tableId"></param>
+    // <param name="operatorId"></param>
+    // <returns></returns>
+    PayAtTableGetBillDetails(billId, tableId, operatorId)
+    {
+        if (!billId)
+        {
+            // We were not given a billId, just a tableId.
+            // This means that we are being asked for the bill by its table number.
+
+            // Let's see if we have it.
+            if (!this.tableToBillMapping.includes(tableId))
+            {
+                // We didn't find a bill for this table.
+                // We just tell the Eftpos that.
+                return Object.assign(new BillStatusResponse(), { Result: BillRetrievalResult.INVALID_TABLE_ID });
+            }
+
+            // We have a billId for this Table.
+            // Let's set it so we can retrieve it.
+            billId = this.tableToBillMapping[tableId];
+        }
+
+        if (!this.billsStore.includes(billId))
+        {
+            // We could not find the billId that was asked for.
+            // We just tell the Eftpos that.
+            return Object.assign(new BillStatusResponse(), { Result: BillRetrievalResult.INVALID_BILL_ID });
+        }
+
+        var myBill = this.billsStore[billId];
+
+        var response = Object.assign(new BillStatusResponse(),
+        {
+            Result: BillRetrievalResult.SUCCESS,
+            BillId: billId,
+            TableId: tableId,
+            TotalAmount: myBill.TotalAmount,
+            OutstandingAmount: myBill.OutstandingAmount
+        });
+
+        billData = this.assemblyBillDataStore.billId;
+
+        response.BillData = billData;
+        return response;
+    }
+
+    // <param name="billPayment"></param>
+    // <param name="updatedBillData"></param>
+    PayAtTableBillPaymentReceived(billPayment, updatedBillData)
+    {
+        if (!billsStore.includes(billPayment.BillId))
+        {
+            // We cannot find this bill.
+            return Object.assign(new BillStatusResponse(), { Result: BillRetrievalResult.INVALID_BILL_ID });
+        }
+
+        this._flow_msg.Info(`# Got a ${billPayment.PaymentType} Payment against bill ${billPayment.BillId} for table ${billPayment.TableId}`);
+        var bill = this.billsStore[billPayment.BillId];
+        bill.OutstandingAmount -= billPayment.PurchaseAmount;
+        bill.tippedAmount += billPayment.TipAmount;
+        this._flow_msg.Info(`Updated Bill: ${bill}`);
+
+        // Here you can access other data that you might want to store from this payment, for example the merchant receipt.
+        // billPayment.PurchaseResponse.GetMerchantReceipt();
+
+        // It is important that we persist this data on behalf of assembly.
+        this.assemblyBillDataStore[billPayment.BillId] = updatedBillData;
+
+        return Object.assign(new BillStatusResponse(),
+        {
+            Result: BillRetrievalResult.SUCCESS,
+            OutstandingAmount: bill.OutstandingAmount,
+            TotalAmount: bill.TotalAmount
+        });
+    }
+
+
+    // endregion
 
     PrintStatusAndActions()
     {
@@ -126,361 +233,120 @@ class TablePos
                 this._flow_msg.Info(`# ${txState.DisplayMessage}`);
                 this._flow_msg.Info(`# Id: ${txState.PosRefId}`);
                 this._flow_msg.Info(`# Type: ${txState.Type}`);
-                this._flow_msg.Info(`# Amount: $${(txState.AmountCents / 100.0).toFixed(2)}`);
+                this._flow_msg.Info(`# Request Amount: $${(txState.AmountCents / 100.0).toFixed(2)}`);
                 this._flow_msg.Info(`# Waiting For Signature: ${txState.AwaitingSignatureCheck}`);
                 this._flow_msg.Info(`# Attempting to Cancel : ${txState.AttemptingToCancel}`);
                 this._flow_msg.Info(`# Finished: ${txState.Finished}`);
                 this._flow_msg.Info(`# Success: ${txState.Success}`);
 
-                if (txState.AwaitingSignatureCheck)
-                {
-                    // We need to print the receipt for the customer to sign.
-                    this._flow_msg.Info(`# RECEIPT TO PRINT FOR SIGNATURE`);
-                    this._receipt.Info(txState.SignatureRequiredMessage.GetMerchantReceipt().trim());
-                }
-
-                if (txState.AwaitingPhoneForAuth)
-                {
-                    this._flow_msg.Info(`# PHONE FOR AUTH DETAILS:`);
-                    this._flow_msg.Info(`# CALL: ${txState.PhoneForAuthRequiredMessage.GetPhoneNumber()}`);
-                    this._flow_msg.Info(`# QUOTE: Merchant Id: ${txState.PhoneForAuthRequiredMessage.GetMerchantId()}`);
-                }
-
                 if (txState.Finished)
                 {
-                    switch (txState.Type)
-                    {
-                        case TransactionType.Purchase:
-                            this.HandleFinishedPurchase(txState);
+                   switch(txState.Success) 
+                   {
+                        case SuccessState.Success:
+                            switch (txState.Type)
+                            {
+                                case TransactionType.Purchase:
+                                    this._flow_msg.Info(`# WOOHOO - WE GOT PAID!`);
+                                    purchaseResponse = new PurchaseResponse(txState.Response);
+                                    this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+                                    this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+                                    this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+                                    this._flow_msg.Info(`# Customer Receipt:`);
+                                    this._receipt.Info(purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
+                                    this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
+                                    this._flow_msg.Info(`# TIP: ${purchaseResponse.GetTipAmount()}`);
+                                    this._flow_msg.Info(`# CASHOUT: ${purchaseResponse.GetCashoutAmount()}`);
+                                    this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
+                                    this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
+                                    break;
+                                case TransactionType.Refund:
+                                    this._flow_msg.Info(`# REFUND GIVEN- OH WELL!`);
+                                    refundResponse = new RefundResponse(txState.Response);
+                                    this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
+                                    this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
+                                    this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
+                                    this._flow_msg.Info(`# Customer Receipt:`);
+                                    this._flow_msg.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
+                                    this._flow_msg.Info(`# REFUNDED AMOUNT: ${refundResponse.GetRefundAmount()}`);
+                                    break;
+                                case TransactionType.Settle:
+                                    this._flow_msg.Info("# SETTLEMENT SUCCESSFUL!");
+                                    if (txState.Response != null)
+                                    {
+                                        var settleResponse = new Settlement(txState.Response);
+                                        this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
+                                        this._flow_msg.Info("# Merchant Receipt:");
+                                        this._receipt.Info(settleResponse.GetReceipt().trim());
+                                    }
+                                    break;
+                            }
+                        break;
+                        case SuccessState.Failed:
+                            switch (txState.Type)
+                            {
+                                case TransactionType.Purchase:
+                                    this._flow_msg.Info(`# WE DID NOT GET PAID :(`);
+                                    if (txState.Response != null)
+                                    {
+                                        purchaseResponse = new PurchaseResponse(txState.Response);
+                                        this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                                        this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+                                        this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+                                        this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+                                        this._flow_msg.Info(`# Customer Receipt:`);
+                                        this._receipt.Info(purchaseResponse.WasCustomerReceiptPrinted()
+                                            ? purchaseResponse.GetCustomerReceipt().trim()
+                                            : `# PRINTED FROM EFTPOS`);
+                                    }
+                                    break;
+                                case TransactionType.Refund:
+                                    this._flow_msg.Info(`# REFUND FAILED!`);
+                                    if (txState.Response != null)
+                                    {
+                                        refundResponse = new RefundResponse(txState.Response);
+                                        this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
+                                        this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
+                                        this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
+                                        this._flow_msg.Info(`# Customer Receipt:`);
+                                        this._receipt.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
+                                    }
+                                    break;
+                                case TransactionType.Settle:
+                                    this._flow_msg.Info("# SETTLEMENT FAILED!");
+                                    if (txState.Response != null)
+                                    {
+                                        var settleResponse = new Settlement(txState.Response);
+                                        this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
+                                        this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                                        this._flow_msg.Info("# Merchant Receipt:");
+                                        this._receipt.Info(settleResponse.GetReceipt().trim());
+                                    }
+                                    break;
+                                default:
+                                    this._flow_msg.Info("# MOTEL POS DOESN'T KNOW WHAT TO DO WITH THIS TX TYPE WHEN IT FAILS");
+                                    break;
+                            }
                             break;
-                        case TransactionType.Refund:
-                            this.HandleFinishedRefund(txState);
-                            break;
-                        case TransactionType.CashoutOnly:
-                            this.HandleFinishedCashout(txState);
-                            break;
-                        case TransactionType.MOTO:
-                            this.HandleFinishedMoto(txState);
-                            break;
-                        case TransactionType.Settle:
-                            this.HandleFinishedSettle(txState);
-                            break;
-                        case TransactionType.SettlementEnquiry:
-                            this.HandleFinishedSettlementEnquiry(txState);
-                            break;
-                        case TransactionType.GetLastTransaction:
-                            this.HandleFinishedGetLastTransaction(txState);
-                            break;
-                        default:
-                            this._flow_msg.Error(`# CAN'T HANDLE TX TYPE: ${txState.Type}`);
+                        case SuccessState.Unknown:
+                            switch (txState.Type)
+                            {
+                                case TransactionType.Purchase:
+                                    this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER WE GOT PAID OR NOT :/");
+                                    this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
+                                    this._flow_msg.Info("# IF YOU CONFIRM THAT THE CUSTOMER PAID, CLOSE THE ORDER.");
+                                    this._flow_msg.Info("# OTHERWISE, RETRY THE PAYMENT FROM SCRATCH.");
+                                    break;
+                                case TransactionType.Refund:
+                                    this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER THE REFUND WENT THROUGH OR NOT :/");
+                                    this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
+                                    this._flow_msg.Info("# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
+                                    break;
+                            }
                             break;
                     }
                 }
                 break;
-            case SpiFlow.Idle:
-                break;
-        }
-    }
-
-    HandleFinishedPurchase(txState)
-    {
-        var purchaseResponse;
-        switch (txState.Success)
-        {
-            case SuccessState.Success:
-                this._flow_msg.Info(`# WOOHOO - WE GOT PAID!`);
-                purchaseResponse = new PurchaseResponse(txState.Response);
-                this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
-                this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
-                this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
-                this._flow_msg.Info(`# Customer Receipt:`);
-                this._receipt.Info(purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
-                this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
-                this._flow_msg.Info(`# TIP: ${purchaseResponse.GetTipAmount()}`);
-                this._flow_msg.Info(`# CASHOUT: ${purchaseResponse.GetCashoutAmount()}`);
-                this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
-                this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
-                break;
-            case SuccessState.Failed:
-                this._flow_msg.Info(`# WE DID NOT GET PAID :(`);
-                if (txState.Response != null)
-                {
-                    purchaseResponse = new PurchaseResponse(txState.Response);
-                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                    this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
-                    this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
-                    this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
-                    this._flow_msg.Info(`# Customer Receipt:`);
-                    this._receipt.Info(purchaseResponse.WasCustomerReceiptPrinted()
-                        ? purchaseResponse.GetCustomerReceipt().trim()
-                        : `# PRINTED FROM EFTPOS`);
-                }
-                break;
-            case SuccessState.Unknown:
-                this._flow_msg.Info(`# WE'RE NOT QUITE SURE WHETHER WE GOT PAID OR NOT :/`);
-                this._flow_msg.Info(`# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.`);
-                this._flow_msg.Info(`# IF YOU CONFIRM THAT THE CUSTOMER PAID, CLOSE THE ORDER.`);
-                this._flow_msg.Info(`# OTHERWISE, RETRY THE PAYMENT FROM SCRATCH.`);
-                break;
-            default:
-                throw new Error('Unknown transaction state');
-        }
-    }
-
-    HandleFinishedRefund(txState)
-    {
-        var refundResponse;
-        switch (txState.Success)
-        {
-            case SuccessState.Success:
-                this._flow_msg.Info(`# REFUND GIVEN- OH WELL!`);
-                refundResponse = new RefundResponse(txState.Response);
-                this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
-                this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
-                this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
-                this._flow_msg.Info(`# Customer Receipt:`);
-                this._flow_msg.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
-                this._flow_msg.Info(`# REFUNDED AMOUNT: ${refundResponse.GetRefundAmount()}`);
-                break;
-            case SuccessState.Failed:
-                this._flow_msg.Info(`# REFUND FAILED!`);
-                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
-                if (txState.Response != null)
-                {
-                    refundResponse = new RefundResponse(txState.Response);
-                    this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
-                    this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
-                    this._flow_msg.Info(`# Customer Receipt:`);
-                    this._receipt.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
-                }
-                break;
-            case SuccessState.Unknown:
-                this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER THE REFUND WENT THROUGH OR NOT :/");
-                this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
-                this._flow_msg.Info("# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
-                break;
-            default:
-                throw new Error('Unknown transaction state');
-        }
-    }
-
-    HandleFinishedCashout(txState)
-    {
-        var cashoutResponse;
-        switch (txState.Success)
-        {
-            case SuccessState.Success:
-                this._flow_msg.Info(`# CASH-OUT SUCCESSFUL - HAND THEM THE CASH!`);
-                cashoutResponse = new CashoutOnlyResponse(txState.Response);
-                this._flow_msg.Info(`# Response: ${cashoutResponse.GetResponseText()}`);
-                this._flow_msg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
-                this._flow_msg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);
-                this._flow_msg.Info(`# Customer Receipt:`);
-                this._receipt.Info(!cashoutResponse.WasCustomerReceiptPrinted() ? cashoutResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
-                this._flow_msg.Info(`# CASHOUT: ${cashoutResponse.GetCashoutAmount()}`);
-                this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${cashoutResponse.GetBankNonCashAmount()}`);
-                this._flow_msg.Info(`# BANKED CASH AMOUNT: ${cashoutResponse.GetBankCashAmount()}`);
-                break;
-            case SuccessState.Failed:
-                this._flow_msg.Info(`# CASHOUT FAILED!`);
-                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
-                if (txState.Response != null)
-                {
-                    cashoutResponse = new CashoutOnlyResponse(txState.Response);
-                    this._flow_msg.Info(`# Response: ${cashoutResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
-                    this._flow_msg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);
-                    this._flow_msg.Info(`# Customer Receipt:`);
-                    this._receipt.Info(cashoutResponse.GetCustomerReceipt().trim());
-                }
-                break;
-            case SuccessState.Unknown:
-                this._flow_msg.Info(`# WE'RE NOT QUITE SURE WHETHER THE CASHOUT WENT THROUGH OR NOT :/`);
-                this._flow_msg.Info(`# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.`);
-                this._flow_msg.Info(`# YOU CAN THE TAKE THE APPROPRIATE ACTION.`);
-                break;
-            default:
-                throw new Error('Unknown transaction state');
-        }
-    }
-
-    HandleFinishedMoto(txState)
-    {
-        var motoResponse;
-        var purchaseResponse;
-        switch (txState.Success)
-        {
-            case SuccessState.Success:
-                this._flow_msg.Info("# WOOHOO - WE GOT MOTO-PAID!");
-                motoResponse = new MotoPurchaseResponse(txState.Response);
-                purchaseResponse = motoResponse.PurchaseResponse;
-                this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
-                this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
-                this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
-                this._flow_msg.Info(`# Card Entry: ${purchaseResponse.GetCardEntry()}`);
-                this._flow_msg.Info(`# Customer Receipt:`);
-                this._receipt.Info(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
-                this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
-                this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
-                this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
-                break;
-            case SuccessState.Failed:
-                this._flow_msg.Info(`# WE DID NOT GET MOTO-PAID :(`);
-                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
-                if (txState.Response != null)
-                {
-                    motoResponse = new MotoPurchaseResponse(txState.Response);
-                    purchaseResponse = motoResponse.PurchaseResponse;
-                    this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
-                    this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
-                    this._flow_msg.Info(`# Customer Receipt:`);
-                    this._receipt.Info(purchaseResponse.GetCustomerReceipt().trim());
-                }
-                break;
-            case SuccessState.Unknown:
-                this._flow_msg.Info("# WE'RE NOT QUITE SURE WHETHER THE MOTO WENT THROUGH OR NOT :/");
-                this._flow_msg.Info("# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.");
-                this._flow_msg.Info("# YOU CAN THE TAKE THE APPROPRIATE ACTION.");
-                break;
-            default:
-                throw new Error('Unknown transaction state');
-        }
-    }
-
-    HandleFinishedGetLastTransaction(txState)
-    {
-        if (txState.Response != null)
-        {
-            var gltResponse = new GetLastTransactionResponse(txState.Response);
-            var pos_ref_id  = document.getElementById('pos_ref_id').value;
-
-            if (pos_ref_id.length > 1) {
-                // User specified that he intended to retrieve a specific tx by pos_ref_id
-                // This is how you can use a handy function to match it.
-                var success = this._spi.GltMatch(gltResponse, pos_ref_id);
-                if (success == SuccessState.Unknown)
-                {
-                    this._flow_msg.Info("# Did not retrieve Expected Transaction. Here is what we got:");
-                } else {
-                    this._flow_msg.Info("# Tx Matched Expected Purchase Request.");
-                }
-            }
-
-            var purchaseResponse = new PurchaseResponse(txState.Response);
-            this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
-            this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
-            this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
-            this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-            this._flow_msg.Info(`# Customer Receipt:`);
-            this._receipt.Info(purchaseResponse.GetCustomerReceipt().trim());
-        }
-        else
-        {
-            // We did not even get a response, like in the case of a time-out.
-            this._flow_msg.Info("# Could Not Retrieve Last Transaction.");
-        }
-    }
-
-    HandleFinishedSettle(txState)
-    {
-        switch (txState.Success)
-        {
-            case SuccessState.Success:
-                this._flow_msg.Info("# SETTLEMENT SUCCESSFUL!");
-                if (txState.Response != null)
-                {
-                    var settleResponse = new Settlement(txState.Response);
-                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
-                    this._flow_msg.Info("# Merchant Receipt:");
-                    this._receipt.Info(settleResponse.GetReceipt().trim());
-                    this._flow_msg.Info("# Period Start: " + settleResponse.GetPeriodStartTime());
-                    this._flow_msg.Info("# Period End: " + settleResponse.GetPeriodEndTime());
-                    this._flow_msg.Info("# Settlement Time: " + settleResponse.GetTriggeredTime());
-                    this._flow_msg.Info("# Transaction Range: " + settleResponse.GetTransactionRange());
-                    this._flow_msg.Info("# Terminal Id: " + settleResponse.GetTerminalId());
-                    this._flow_msg.Info("# Total TX Count: " + settleResponse.GetTotalCount());
-                    this._flow_msg.Info(`# Total TX Value: $${(settleResponse.GetTotalValue() / 100.0).toFixed(2)}`);
-                    this._flow_msg.Info("# By Aquirer TX Count: " + settleResponse.GetSettleByAcquirerCount());
-                    this._flow_msg.Info(`# By Aquirer TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
-                    this._flow_msg.Info("# SCHEME SETTLEMENTS:");
-                    var schemes = settleResponse.GetSchemeSettlementEntries();
-                    for (var s in schemes)
-                    {
-                        this._flow_msg.Info("# " + s);
-                    }
-
-                }
-                break;
-            case SuccessState.Failed:
-                this._flow_msg.Info("# SETTLEMENT FAILED!");
-                if (txState.Response != null)
-                {
-                    var settleResponse = new Settlement(txState.Response);
-                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                    this._flow_msg.Info("# Merchant Receipt:");
-                    this._receipt.Info(settleResponse.GetReceipt().trim());
-                }
-                break;
-            case SuccessState.Unknown:
-                this._flow_msg.Info("# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
-                break;
-            default:
-                throw new Error('Unknown state');
-        }
-    }
-
-    HandleFinishedSettlementEnquiry(txState)
-    {
-        switch (txState.Success)
-        {
-            case SuccessState.Success:
-                this._flow_msg.Info("# SETTLEMENT ENQUIRY SUCCESSFUL!");
-                if (txState.Response != null)
-                {
-                    var settleResponse = new Settlement(txState.Response);
-                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# Merchant Receipt:`);
-                    this._receipt.Info(settleResponse.GetReceipt().trim());
-                    this._flow_msg.Info(`# Period Start: ` + settleResponse.GetPeriodStartTime());
-                    this._flow_msg.Info(`# Period End: ` + settleResponse.GetPeriodEndTime());
-                    this._flow_msg.Info(`# Settlement Time: ` + settleResponse.GetTriggeredTime());
-                    this._flow_msg.Info(`# Transaction Range: ` + settleResponse.GetTransactionRange());
-                    this._flow_msg.Info(`# Terminal Id: ` + settleResponse.GetTerminalId());
-                    this._flow_msg.Info(`# Total TX Count: ` + settleResponse.GetTotalCount());
-                    this._flow_msg.Info(`# Total TX Value: $${(settleResponse.GetTotalValue() / 100.0).toFixed(2)}`);
-                    this._flow_msg.Info(`# By Aquirer TX Count: ` + settleResponse.GetSettleByAcquirerCount());
-                    this._flow_msg.Info(`# By Aquirere TX Value: $${(settleResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
-                    this._flow_msg.Info(`# SCHEME SETTLEMENTS:`);
-                    var schemes = settleResponse.GetSchemeSettlementEntries();
-                    for (var s in schemes)
-                    {
-                        this._flow_msg.Info(`# ` + s);
-                    }
-                }
-                break;
-            case SuccessState.Failed:
-                this._flow_msg.Info("# SETTLEMENT ENQUIRY FAILED!");
-                if (txState.Response != null)
-                {
-                    var settleResponse = new Settlement(txState.Response);
-                    this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
-                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                    this._flow_msg.Info(`# Merchant Receipt:`);
-                    this._receipt.Info(settleResponse.GetReceipt().trim());
-                }
-                break;
-            case SuccessState.Unknown:
-                this._flow_msg.Info("# SETTLEMENT ENQUIRY RESULT UNKNOWN!");
-                break;
-            default:
-                throw new Error('Unknown Transaction state');
         }
     }
 
@@ -550,21 +416,22 @@ class TablePos
                 {
                     case SpiFlow.Idle: // Paired, Idle
                         inputsEnabled.push('amount_input');
-                        inputsEnabled.push('tip_amount_input');
-                        inputsEnabled.push('cashout_amount_input');
-                        inputsEnabled.push('prompt_for_cash');
-                        inputsEnabled.push('pos_ref_id_input');
+                        inputsEnabled.push('table_input');
+                        inputsEnabled.push('bill_id_input');
                         inputsEnabled.push('save_settings');
 
+                        inputsEnabled.push('open');
+                        inputsEnabled.push('add');
+                        inputsEnabled.push('close');
+                        inputsEnabled.push('tables');
+                        inputsEnabled.push('table');
+                        inputsEnabled.push('bill');
+
                         inputsEnabled.push('purchase');
-                        inputsEnabled.push('moto');
                         inputsEnabled.push('refund');
-                        inputsEnabled.push('cashout');
                         inputsEnabled.push('settle');
-                        inputsEnabled.push('settle_enq');
-                        inputsEnabled.push('recover');
+
                         inputsEnabled.push('unpair');
-                        inputsEnabled.push('glt');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         break;
@@ -575,31 +442,16 @@ class TablePos
                             inputsEnabled.push('tx_sign_decline');
                         }
 
-                        if(this._spi.CurrentTxFlowState.AwaitingPhoneForAuth)
-                        {
-                            inputsEnabled.push('tx_auth_code');
-                            inputsEnabled.push('auth_code_input');
-                        }
-
                         if (!this._spi.CurrentTxFlowState.Finished && !this._spi.CurrentTxFlowState.AttemptingToCancel)
                         {
                             inputsEnabled.push('tx_cancel');
                         }
-                        else
+
+                        if(this._spi.CurrentTxFlowState.Finished) 
                         {
-                            switch (this._spi.CurrentTxFlowState.Success) {
-                                case SuccessState.Success:
-                                    inputsEnabled.push('ok');
-                                    break;
-                                case SuccessState.Failed:
-                                    inputsEnabled.push('ok_cancel');
-                                    break;
-                                default:
-                                    // Unknown
-                                    inputsEnabled.push('ok_cancel');
-                                    break;
-                            }
+                            inputsEnabled.push('ok');
                         }
+                                   
                         break;
                     case SpiFlow.Pairing: // Paired, Pairing - we have just finished the pairing flow. OK to ack.
                         inputsEnabled.push('ok');
@@ -618,11 +470,13 @@ class TablePos
 
         // Configure buttons / inputs
         let inputs = document.querySelectorAll('.input');
-        for(let i = 0; i < inputs.length; i++) {
+        for(let i = 0; i < inputs.length; i++) 
+        {
             inputs[i].disabled = true;
         }
 
-        inputsEnabled.forEach((input) => {
+        inputsEnabled.forEach((input) => 
+        {
             document.getElementById(input).disabled = false;
         });
 
@@ -635,16 +489,20 @@ class TablePos
         this._flow_msg.Info(`# ${this._posId} <-> Eftpos: ${this._eftposAddress} #`);
         this._flow_msg.Info(`# SPI STATUS: ${this._spi.CurrentStatus}     FLOW: ${this._spi.CurrentFlow} #`);
         this._flow_msg.Info(`# SPI CONFIG: ${JSON.stringify(this._spi.Config)}`);
+        this._flow_msg.Info("# ----------------TABLES-------------------");
+        this._flow_msg.Info(`#    Open Tables: ${this.tableToBillMapping.length}`);
+        this._flow_msg.Info(`# Bills in Store: ${this.billsStore.length}`);
+        this._flow_msg.Info(`# Assembly Bills: ${this.assemblyBillDataStore.length}`);
         this._flow_msg.Info(`# -----------------------------------------`);
         this._flow_msg.Info(`# POS: v${this._version} Spi: v${Spi.GetVersion()}`);
-
     }
 
     AcceptUserInput()
     {
         document.getElementById('save_settings').addEventListener('click', () => {
 
-            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) {
+            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
+            {
                 this._posId         = document.getElementById('pos_id').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
 
@@ -653,7 +511,6 @@ class TablePos
 
                 localStorage.setItem('pos_id', this._posId);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
-                this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
             }
 
             this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
@@ -662,113 +519,120 @@ class TablePos
             localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
             localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
 
+            this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+
             this.PrintPairingStatus();
         });
 
-        document.getElementById('pair').addEventListener('click', () => {
+        document.getElementById('pair').addEventListener('click', () => 
+        {
             this._spi.Pair();
         });
 
-        document.getElementById('pair_confirm').addEventListener('click', () => {
+        document.getElementById('pair_confirm').addEventListener('click', () => 
+        {
             this._spi.PairingConfirmCode();
         });
 
-        document.getElementById('pair_cancel').addEventListener('click', () => {
+        document.getElementById('pair_cancel').addEventListener('click', () => 
+        {
             this._spi.PairingCancel();
         });
 
-        document.getElementById('unpair').addEventListener('click', () => {
+        document.getElementById('unpair').addEventListener('click', () => 
+        {
             this._spi.Unpair();
         });
 
-        document.getElementById('purchase').addEventListener('click', () => {
+        document.getElementById('open').addEventListener('click', () => 
+        {
+            let table = document.getElementById('table').value;
+            this.openTable(table);
+        });
+
+        document.getElementById('close').addEventListener('click', () => 
+        {
+            let table = document.getElementById('table').value;
+            this.closeTable(table);
+        });
+
+        document.getElementById('add').addEventListener('click', () => 
+        {
+            let table   = document.getElementById('table').value;
+            let amount  = parseInt(document.getElementById('amount').value,10);
+            this.addToTable(table, amount);
+        });
+        
+        document.getElementById('table').addEventListener('click', () => 
+        {
+            let table = document.getElementById('table').value;
+            this.printTable(table);
+        });
+
+        document.getElementById('bill').addEventListener('click', () => 
+        {
+            let table = document.getElementById('table').value;
+            this.printBill(table);
+        });
+
+        document.getElementById('tables').addEventListener('click', () => 
+        {
+            this.printTables();
+        });
+
+        document.getElementById('purchase').addEventListener('click', () => 
+        {
             let posRefId        = `purchase-${new Date().toISOString()}`; 
             let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
-            let tipAmount       = parseInt(document.getElementById('tip_amount').value,10);
-            let cashoutAmount   = parseInt(document.getElementById('cashout_amount').value,10);
-            let promptForCashout = document.getElementById('prompt_for_cash').checked;
+            let tipAmount       = 0;
+            let cashoutAmount   = 0;
+            let promptForCashout = false;
             let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout);
             if (!res.Initiated)
             {
                 this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
             }
         });
-
-        document.getElementById('refund').addEventListener('click', () => {
+    
+        document.getElementById('refund').addEventListener('click', () => 
+        {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let posRefId    = `refund-${new Date().toISOString()}`; 
             let res         = this._spi.InitiateRefundTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('cashout').addEventListener('click', () => {
-            let amount      = parseInt(document.getElementById('cashout_amount').value,10);
-
-            if(!amount > 0) {
-                this._log.info('Cashout amount must be greater than 0');
-                return;
-            }
-
-            let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateCashoutOnlyTx(posRefId, amount);
-            this._flow_msg.Info(res.Initiated ? "# Cashout Initiated. Will be updated with Progress." : `# Could not initiate cashout: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('moto').addEventListener('click', () => {
-            let amount      = parseInt(document.getElementById('amount').value,10);
-            let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount);
-            this._flow_msg.Info(res.Initiated ? "# MOTO purchase Initiated. Will be updated with Progress." : `# Could not initiate moto purchase: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('tx_sign_accept').addEventListener('click', () => {
+        document.getElementById('tx_sign_accept').addEventListener('click', () => 
+        {
             this._spi.AcceptSignature(true);
         });
 
-        document.getElementById('tx_sign_decline').addEventListener('click', () => {
+        document.getElementById('tx_sign_decline').addEventListener('click', () => 
+        {
             this._spi.AcceptSignature(false);
         });
 
-        document.getElementById('tx_cancel').addEventListener('click', () => {
+        document.getElementById('tx_cancel').addEventListener('click', () => 
+        {
             this._spi.CancelTransaction();
         });
 
-        document.getElementById('tx_auth_code').addEventListener('click', () => {
-            var authCode = document.getElementById('auth_code').value;
-            var res = this._spi.SubmitAuthCode(authCode);
-            this._flow_msg.Info(res.ValidFormat ? `# Auth code submitted` : `# Invalid Code Format. ${res.Message}. Try Again.`);
-        });
-
-        document.getElementById('settle').addEventListener('click', () => {
+        document.getElementById('settle').addEventListener('click', () => 
+        {
             let res = this._spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
             this._flow_msg.Info(res.Initiated ? "# Settle Initiated. Will be updated with Progress." : `# Could not initiate settle: ${res.Message}. Please Retry.`);
         });
 
-        document.getElementById('settle_enq').addEventListener('click', () => {
-            let res = this._spi.InitiateSettlementEnquiry(RequestIdHelper.Id("stlenq"));
-            this._flow_msg.Info(res.Initiated ? "# Settle enquiry Initiated. Will be updated with Progress." : `# Could not initiate settle enquiry: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('ok').addEventListener('click', () => {
+        document.getElementById('ok').addEventListener('click', () => 
+        {
             this._spi.AckFlowEndedAndBackToIdle();
             this._flow_msg.Clear();
             this._flow_msg.innerHTML = "Select from the options below";
             this.PrintStatusAndActions();
         });
 
-        document.getElementById('recover').addEventListener('click', () => {
-            this._flow_msg.Clear();
-            var posRefId = document.getElementById('pos_ref_id').value;
-            var res = this._spi.InitiateRecovery(posRefId, TransactionType.Purchase);
-            this._flow_msg.Info(res.Initiated ? "# Recovery Initiated. Will be updated with Progress." : `# Could not initiate recovery. ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('glt').addEventListener('click', () => {
-            let res = this._spi.InitiateGetLastTx();
-            this._flow_msg.Info(res.Initiated ? "# GLT Initiated. Will be updated with Progress." : `# Could not initiate GLT: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('ok_cancel').addEventListener('click', () => {
+        document.getElementById('ok_cancel').addEventListener('click', () => 
+        {
             this._spi.AckFlowEndedAndBackToIdle();
             this._log.clear();
             this._flow_msg.innerHTML = "Order Cancelled";
@@ -776,43 +640,182 @@ class TablePos
         });
     }
 
+    // region My Pos Functions
+
+    openTable(tableId)
+    {
+        if (this.tableToBillMapping.includes(tableId))
+        {
+            this._flow_msg.Info(`Table Already Open: ${this.billsStore[this.tableToBillMapping[tableId]]}`);
+            return;
+        }
+
+        let newBill = Object.assign(new Bill(), { BillId: this.newBillId(), TableId: tableId });
+        this.billsStore[newBill.BillId] = newBill;
+        this.tableToBillMapping[newBill.TableId] = newBill.BillId;
+        this.SaveBillState();
+        this._flow_msg.Info(`Opened: ${JSON.stringify(newBill)}`);
+    }
+
+    addToTable(tableId, amountCents)
+    {
+        if (!this.tableToBillMapping.includes(tableId))
+        {
+            this._flow_msg.Info("Table not Open.");
+            return;
+        }
+        let bill = this.billsStore[this.tableToBillMapping[tableId]];
+        bill.TotalAmount += amountCents;
+        bill.OutstandingAmount += amountCents;
+        this.SaveBillState();
+        this._flow_msg.Info(`Updated: ${JSON.stringify(bill)}`);
+    }
+
+    closeTable(tableId)
+    {
+        if (!this.tableToBillMapping.includes(tableId))
+        {
+            this._flow_msg.Info("Table not Open.");
+            return;
+        }
+        var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        if (bill.OutstandingAmount > 0)
+        {
+            this._flow_msg.Info(`Bill not Paid Yet: ${JSON.stringify(bill)}`);
+            return;
+        }
+        this.tableToBillMapping = this.tableToBillMapping.filter(item => item !== tableId);
+        this.assemblyBillDataStore = this.assemblyBillDataStore.filter(bill => bill !== bill.BillId);
+        this.SaveBillState();
+        this._flow_msg.Info(`Closed: ${JSON.stringify(bill)}`);
+    }
+
+    printTable(tableId)
+    {
+        if (!this.tableToBillMapping.includes(tableId))
+        {
+            this._flow_msg.Info("Table not Open.");
+            return;
+        }
+        this.printBill(this.tableToBillMapping[tableId]);
+    }
+
+    printTables()
+    {
+        if (this.tableToBillMapping.length > 0) 
+        { 
+            this._flow_msg.Info("# Open Tables: " + this.tableToBillMapping.map((i, j) => i + "," + j).join(' ')); 
+        } 
+        else 
+        {  
+            this._flow_msg.Info("# No Open Tables."); 
+        }
+
+        if (this.billsStore.length > 0) 
+        {
+            this._flow_msg.Info("# My Bills Store: " + this.billsStore.map((i, j) => i + "," + j).join(' '));
+        }
+
+        if (this.assemblyBillDataStore.length > 0) 
+        {
+            this._flow_msg.Info("# Assembly Bills Data: " + this.assemblyBillDataStore.map((i, j) => i + "," + j).join(' '));
+        }
+    }
+
+    printBill(billId)
+    {
+        if (!billsStore.includes(billId))
+        {
+            this._flow_msg.Info("Bill Not Found.");
+            return;
+        }
+        this._flow_msg.Info(`Bill: ${billsStore[billId]}`);
+    }
+
+    newBillId()
+    {
+        return ((Date.now() * 1000) + new Date().getMilliseconds()).toString();
+    }
+
+    // endregion
+
+
+    SaveBillState() 
+    {
+        localStorage.setItem('tableToBillMapping', JSON.stringify(this.tableToBillMapping));
+        localStorage.setItem('billsStore', JSON.stringify(this.billsStore));
+        localStorage.setItem('assemblyBillDataStore', JSON.stringify(this.assemblyBillDataStore));
+    }
+
     LoadPersistedState()
     {
-        if(localStorage.getItem('pos_id')) {
+        if(localStorage.getItem('pos_id')) 
+        {
             this._posId = localStorage.getItem('pos_id');
             document.getElementById('pos_id').value = this._posId;
-        } else {
+        } 
+        else 
+        {
             this._posId = document.getElementById('pos_id').value;
         }
 
-        if(localStorage.getItem('eftpos_address')) {
+        if(localStorage.getItem('eftpos_address')) 
+        {
             this._eftposAddress = localStorage.getItem('eftpos_address');
             document.getElementById('eftpos_address').value = this._eftposAddress;
-        } else {
+        } 
+        else 
+        {
             this._eftposAddress = document.getElementById('eftpos_address').value;
         }
 
         this._rcpt_from_eftpos = document.getElementById('rcpt_from_eftpos').checked = localStorage.getItem('rcpt_from_eftpos') === 'true' || false;
         this._sig_flow_from_eftpos = document.getElementById('sig_flow_from_eftpos').checked = localStorage.getItem('sig_flow_from_eftpos') === 'true' || false;
 
-        if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) {
+        if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) 
+        {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
+
+        this.tableToBillMapping     = JSON.parse(localStorage.getItem('tableToBillMapping') || '[]');
+        this.billsStore             = JSON.parse(localStorage.getItem('billsStore') || '[]');
+        this.assemblyBillDataStore  = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '[]');
+    }
+}
+
+
+class Bill
+{
+    constructor() 
+    {
+        this.BillId = null;
+        this.TableId = null;
+        this.TotalAmount = 0;
+        this.OutstandingAmount = 0;
+        this.tippedAmount = 0;
+    }
+
+    ToString()
+    {
+        return `${BillId} - Table:${TableId} Total:$${(TotalAmount / 100).toFixed(2)} Outstanding:$${(OutstandingAmount / 100).toFixed(2)} Tips:$${(tippedAmount / 100).toFixed(2)}`;
     }
 }
 
 /**
  * Start the POS
  */
-document.addEventListener('DOMContentLoaded', () => {
-
-    try {
+document.addEventListener('DOMContentLoaded', () => 
+{
+    try 
+    {
         let log         = console;
         let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
         let flow_msg    = new Log(document.getElementById('flow_msg'));
         let pos         = new TablePos(log, receipt, flow_msg);
         pos.Start();
-    } catch(err) {
+    } 
+    catch(err) 
+    {
         console.error(err);
     }
 });
