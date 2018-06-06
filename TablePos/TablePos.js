@@ -26,18 +26,18 @@ class TablePos
         // My Bills Store.
         // Key = BillId
         // Value = Bill 
-        this.billsStore = [];
+        this.billsStore = {};
 
         // Lookup dictionary of table -> current order
         // Key = TableId
         // Value = BillId
-        this.tableToBillMapping = [];
+        this.tableToBillMapping = {};
 
         // Assembly Payments Integration asks us to persist some data on their behalf
         // So that the eftpos terminal can recover state.
         // Key = BillId
         // Value = Assembly Payments Bill Data
-        this.assemblyBillDataStore = [];
+        this.assemblyBillDataStore = {};
 
         this._pat = null;
 
@@ -64,8 +64,8 @@ class TablePos
 
         this._pat = this._spi.EnablePayAtTable();
         this._pat.Config.LabelTableId = "Table Number";
-        this._pat.GetBillStatus = this.PayAtTableGetBillDetails;
-        this._pat.BillPaymentReceived = this.PayAtTableBillPaymentReceived;
+        this._pat.GetBillStatus = this.PayAtTableGetBillDetails.bind(this);
+        this._pat.BillPaymentReceived = this.PayAtTableBillPaymentReceived.bind(this);
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -134,7 +134,7 @@ class TablePos
             // This means that we are being asked for the bill by its table number.
 
             // Let's see if we have it.
-            if (!this.tableToBillMapping.includes(tableId))
+            if (!this.tableToBillMapping[tableId])
             {
                 // We didn't find a bill for this table.
                 // We just tell the Eftpos that.
@@ -146,7 +146,7 @@ class TablePos
             billId = this.tableToBillMapping[tableId];
         }
 
-        if (!this.billsStore.includes(billId))
+        if (!this.billsStore[billId])
         {
             // We could not find the billId that was asked for.
             // We just tell the Eftpos that.
@@ -164,7 +164,7 @@ class TablePos
             OutstandingAmount: myBill.OutstandingAmount
         });
 
-        billData = this.assemblyBillDataStore.billId;
+        let billData = this.assemblyBillDataStore.billId;
 
         response.BillData = billData;
         return response;
@@ -174,7 +174,7 @@ class TablePos
     // <param name="updatedBillData"></param>
     PayAtTableBillPaymentReceived(billPayment, updatedBillData)
     {
-        if (!billsStore.includes(billPayment.BillId))
+        if (!this.billsStore[billPayment.BillId])
         {
             // We cannot find this bill.
             return Object.assign(new BillStatusResponse(), { Result: BillRetrievalResult.INVALID_BILL_ID });
@@ -184,7 +184,7 @@ class TablePos
         var bill = this.billsStore[billPayment.BillId];
         bill.OutstandingAmount -= billPayment.PurchaseAmount;
         bill.tippedAmount += billPayment.TipAmount;
-        this._flow_msg.Info(`Updated Bill: ${bill}`);
+        this._flow_msg.Info(`Updated Bill: ${JSON.stringify(bill)}`);
 
         // Here you can access other data that you might want to store from this payment, for example the merchant receipt.
         // billPayment.PurchaseResponse.GetMerchantReceipt();
@@ -248,7 +248,7 @@ class TablePos
                             {
                                 case TransactionType.Purchase:
                                     this._flow_msg.Info(`# WOOHOO - WE GOT PAID!`);
-                                    purchaseResponse = new PurchaseResponse(txState.Response);
+                                    let purchaseResponse = new PurchaseResponse(txState.Response);
                                     this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
                                     this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
                                     this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
@@ -262,7 +262,7 @@ class TablePos
                                     break;
                                 case TransactionType.Refund:
                                     this._flow_msg.Info(`# REFUND GIVEN- OH WELL!`);
-                                    refundResponse = new RefundResponse(txState.Response);
+                                    let refundResponse = new RefundResponse(txState.Response);
                                     this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
                                     this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
                                     this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
@@ -274,7 +274,7 @@ class TablePos
                                     this._flow_msg.Info("# SETTLEMENT SUCCESSFUL!");
                                     if (txState.Response != null)
                                     {
-                                        var settleResponse = new Settlement(txState.Response);
+                                        let settleResponse = new Settlement(txState.Response);
                                         this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
                                         this._flow_msg.Info("# Merchant Receipt:");
                                         this._receipt.Info(settleResponse.GetReceipt().trim());
@@ -289,7 +289,7 @@ class TablePos
                                     this._flow_msg.Info(`# WE DID NOT GET PAID :(`);
                                     if (txState.Response != null)
                                     {
-                                        purchaseResponse = new PurchaseResponse(txState.Response);
+                                        let purchaseResponse = new PurchaseResponse(txState.Response);
                                         this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
                                         this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
                                         this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
@@ -304,7 +304,7 @@ class TablePos
                                     this._flow_msg.Info(`# REFUND FAILED!`);
                                     if (txState.Response != null)
                                     {
-                                        refundResponse = new RefundResponse(txState.Response);
+                                        let refundResponse = new RefundResponse(txState.Response);
                                         this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
                                         this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
                                         this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
@@ -316,7 +316,7 @@ class TablePos
                                     this._flow_msg.Info("# SETTLEMENT FAILED!");
                                     if (txState.Response != null)
                                     {
-                                        var settleResponse = new Settlement(txState.Response);
+                                        let settleResponse = new Settlement(txState.Response);
                                         this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
                                         this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
                                         this._flow_msg.Info("# Merchant Receipt:");
@@ -490,9 +490,9 @@ class TablePos
         this._flow_msg.Info(`# SPI STATUS: ${this._spi.CurrentStatus}     FLOW: ${this._spi.CurrentFlow} #`);
         this._flow_msg.Info(`# SPI CONFIG: ${JSON.stringify(this._spi.Config)}`);
         this._flow_msg.Info("# ----------------TABLES-------------------");
-        this._flow_msg.Info(`#    Open Tables: ${this.tableToBillMapping.length}`);
-        this._flow_msg.Info(`# Bills in Store: ${this.billsStore.length}`);
-        this._flow_msg.Info(`# Assembly Bills: ${this.assemblyBillDataStore.length}`);
+        this._flow_msg.Info(`#    Open Tables: ${Object.keys(this.tableToBillMapping).length}`);
+        this._flow_msg.Info(`# Bills in Store: ${Object.keys(this.billsStore).length}`);
+        this._flow_msg.Info(`# Assembly Bills: ${Object.keys(this.assemblyBillDataStore).length}`);
         this._flow_msg.Info(`# -----------------------------------------`);
         this._flow_msg.Info(`# POS: v${this._version} Spi: v${Spi.GetVersion()}`);
     }
@@ -546,33 +546,33 @@ class TablePos
 
         document.getElementById('open').addEventListener('click', () => 
         {
-            let table = document.getElementById('table').value;
+            let table = document.getElementById('table_number').value;
             this.openTable(table);
         });
 
         document.getElementById('close').addEventListener('click', () => 
         {
-            let table = document.getElementById('table').value;
+            let table = document.getElementById('table_number').value;
             this.closeTable(table);
         });
 
         document.getElementById('add').addEventListener('click', () => 
         {
-            let table   = document.getElementById('table').value;
+            let table   = document.getElementById('table_number').value;
             let amount  = parseInt(document.getElementById('amount').value,10);
             this.addToTable(table, amount);
         });
         
         document.getElementById('table').addEventListener('click', () => 
         {
-            let table = document.getElementById('table').value;
+            let table = document.getElementById('table_number').value;
             this.printTable(table);
         });
 
         document.getElementById('bill').addEventListener('click', () => 
         {
-            let table = document.getElementById('table').value;
-            this.printBill(table);
+            let billId = document.getElementById('bill_id').value;
+            this.printBill(billId);
         });
 
         document.getElementById('tables').addEventListener('click', () => 
@@ -644,7 +644,7 @@ class TablePos
 
     openTable(tableId)
     {
-        if (this.tableToBillMapping.includes(tableId))
+        if (this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info(`Table Already Open: ${this.billsStore[this.tableToBillMapping[tableId]]}`);
             return;
@@ -659,7 +659,7 @@ class TablePos
 
     addToTable(tableId, amountCents)
     {
-        if (!this.tableToBillMapping.includes(tableId))
+        if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
@@ -673,7 +673,7 @@ class TablePos
 
     closeTable(tableId)
     {
-        if (!this.tableToBillMapping.includes(tableId))
+        if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
@@ -684,15 +684,15 @@ class TablePos
             this._flow_msg.Info(`Bill not Paid Yet: ${JSON.stringify(bill)}`);
             return;
         }
-        this.tableToBillMapping = this.tableToBillMapping.filter(item => item !== tableId);
-        this.assemblyBillDataStore = this.assemblyBillDataStore.filter(bill => bill !== bill.BillId);
+        delete this.tableToBillMapping[tableId];
+        delete this.assemblyBillDataStore[bill.BillId];
         this.SaveBillState();
         this._flow_msg.Info(`Closed: ${JSON.stringify(bill)}`);
     }
 
     printTable(tableId)
     {
-        if (!this.tableToBillMapping.includes(tableId))
+        if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
@@ -702,34 +702,34 @@ class TablePos
 
     printTables()
     {
-        if (this.tableToBillMapping.length > 0) 
+        if (Object.keys(this.tableToBillMapping).length > 0) 
         { 
-            this._flow_msg.Info("# Open Tables: " + this.tableToBillMapping.map((i, j) => i + "," + j).join(' ')); 
+            this._flow_msg.Info("# Open Tables: " + JSON.stringify(this.tableToBillMapping)); 
         } 
         else 
         {  
             this._flow_msg.Info("# No Open Tables."); 
         }
 
-        if (this.billsStore.length > 0) 
+        if (Object.keys(this.billsStore).length > 0) 
         {
-            this._flow_msg.Info("# My Bills Store: " + this.billsStore.map((i, j) => i + "," + j).join(' '));
+            this._flow_msg.Info("# My Bills Store: " + JSON.stringify(this.billsStore));
         }
 
-        if (this.assemblyBillDataStore.length > 0) 
+        if (Object.keys(this.assemblyBillDataStore).length > 0) 
         {
-            this._flow_msg.Info("# Assembly Bills Data: " + this.assemblyBillDataStore.map((i, j) => i + "," + j).join(' '));
+            this._flow_msg.Info("# Assembly Bills Data: " + JSON.stringify(this.assemblyBillDataStore));
         }
     }
 
     printBill(billId)
     {
-        if (!billsStore.includes(billId))
+        if (!this.billsStore[billId])
         {
             this._flow_msg.Info("Bill Not Found.");
             return;
         }
-        this._flow_msg.Info(`Bill: ${billsStore[billId]}`);
+        this._flow_msg.Info(`Bill: ${JSON.stringify(this.billsStore[billId])}`);
     }
 
     newBillId()
@@ -777,9 +777,9 @@ class TablePos
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
 
-        this.tableToBillMapping     = JSON.parse(localStorage.getItem('tableToBillMapping') || '[]');
-        this.billsStore             = JSON.parse(localStorage.getItem('billsStore') || '[]');
-        this.assemblyBillDataStore  = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '[]');
+        this.tableToBillMapping     = JSON.parse(localStorage.getItem('tableToBillMapping') || '{}');
+        this.billsStore             = JSON.parse(localStorage.getItem('billsStore') || '{}');
+        this.assemblyBillDataStore  = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '{}');
     }
 }
 
