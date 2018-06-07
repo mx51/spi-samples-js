@@ -547,12 +547,23 @@ class TablePos
         document.getElementById('open').addEventListener('click', () => 
         {
             let table = document.getElementById('table_number').value;
+            if(!table) 
+            {
+                this._flow_msg.Info('# Please give a table number');
+                return false;
+            }
+
             this.openTable(table);
         });
 
         document.getElementById('close').addEventListener('click', () => 
         {
             let table = document.getElementById('table_number').value;
+            if(!table) 
+            {
+                this._flow_msg.Info('# Please give a table number');
+                return false;
+            }
             this.closeTable(table);
         });
 
@@ -560,18 +571,38 @@ class TablePos
         {
             let table   = document.getElementById('table_number').value;
             let amount  = parseInt(document.getElementById('amount').value,10);
+            if(!table) 
+            {
+                this._flow_msg.Info('# Please give a table number');
+                return false;
+            }
+            if(!amount) 
+            {
+                this._flow_msg.Info('# Please enter an amount');
+                return false;
+            }
             this.addToTable(table, amount);
         });
         
         document.getElementById('table').addEventListener('click', () => 
         {
             let table = document.getElementById('table_number').value;
+            if(!table) 
+            {
+                this._flow_msg.Info('# Please give a table number');
+                return false;
+            }
             this.printTable(table);
         });
 
         document.getElementById('bill').addEventListener('click', () => 
         {
             let billId = document.getElementById('bill_id').value;
+            if(!billId) 
+            {
+                this._flow_msg.Info('# Please give a bill number');
+                return false;
+            }
             this.printBill(billId);
         });
 
@@ -640,13 +671,13 @@ class TablePos
         });
     }
 
-    // region My Pos Functions
+    //region My Pos Functions
 
     openTable(tableId)
     {
         if (this.tableToBillMapping[tableId])
         {
-            this._flow_msg.Info(`Table Already Open: ${this.billsStore[this.tableToBillMapping[tableId]]}`);
+            this._flow_msg.Info(`Table Already Open: ${JSON.stringify(this.billsStore[this.tableToBillMapping[tableId]])}`);
             return;
         }
 
