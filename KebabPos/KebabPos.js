@@ -294,7 +294,7 @@ class KebabPos
                     this._flow_msg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
                     this._flow_msg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);
                     this._flow_msg.Info(`# Customer Receipt:`);
-                    this._receipt.Info(cashoutResponse.GetCustomerReceipt().trim());
+                    this._receipt.Info(cashoutResponse.GetCustomerReceipt());
                 }
                 break;
             case SuccessState.Unknown:
@@ -793,7 +793,7 @@ class KebabPos
         document.getElementById('ok_cancel').addEventListener('click', () => 
         {
             this._spi.AckFlowEndedAndBackToIdle();
-            this._log.clear();
+            this._flow_msg.Clear();
             this._flow_msg.innerHTML = "Order Cancelled";
             this.PrintStatusAndActions();
         });
