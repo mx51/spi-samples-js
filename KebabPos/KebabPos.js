@@ -424,7 +424,7 @@ class KebabPos
                     this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
                     this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
                     this._flow_msg.Info("# Merchant Receipt:");
-                    this._receipt.Info(settleResponse.GetReceipt().trim());
+                    this._receipt.Info(settleResponse.GetReceipt());
                 }
                 break;
             case SuccessState.Unknown:
@@ -472,7 +472,7 @@ class KebabPos
                     this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
                     this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
                     this._flow_msg.Info(`# Merchant Receipt:`);
-                    this._receipt.Info(settleResponse.GetReceipt().trim());
+                    this._receipt.Info(settleResponse.GetReceipt());
                 }
                 break;
             case SuccessState.Unknown:
