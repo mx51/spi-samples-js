@@ -320,7 +320,7 @@ class TablePos
                                         this._flow_msg.Info(`# Response: ${settleResponse.GetResponseText()}`);
                                         this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
                                         this._flow_msg.Info("# Merchant Receipt:");
-                                        this._receipt.Info(settleResponse.GetReceipt().trim());
+                                        this._receipt.Info(settleResponse.GetReceipt());
                                     }
                                     break;
                                 default:
@@ -735,7 +735,11 @@ class TablePos
     {
         if (Object.keys(this.tableToBillMapping).length > 0) 
         { 
-            this._flow_msg.Info("# Open Tables: " + JSON.stringify(this.tableToBillMapping)); 
+            this._flow_msg.Info("# Open Tables: " + this.tableToBillMapping); 
+            for(table in this.tableToBillMapping)
+            {
+                this._flow_msg.Info(`# Table #${table}, Bill #${this.tableToBillMapping[table]}`);
+            }
         } 
         else 
         {  
@@ -744,7 +748,12 @@ class TablePos
 
         if (Object.keys(this.billsStore).length > 0) 
         {
-            this._flow_msg.Info("# My Bills Store: " + JSON.stringify(this.billsStore));
+            this._flow_msg.Info("# My Bills Store: ");
+
+            for(bill in this.billsStore)
+            {
+                this._flow_msg.Info("# " + this.billsStore[bill].toString());
+            }
         }
 
         if (Object.keys(this.assemblyBillDataStore).length > 0) 
@@ -760,7 +769,7 @@ class TablePos
             this._flow_msg.Info("Bill Not Found.");
             return;
         }
-        this._flow_msg.Info(`Bill: ${JSON.stringify(this.billsStore[billId])}`);
+        this._flow_msg.Info(`Bill: ${this.billsStore[billId].toString()}`);
     }
 
     newBillId()
@@ -826,7 +835,7 @@ class Bill
         this.tippedAmount = 0;
     }
 
-    ToString()
+    toString()
     {
         return `${BillId} - Table:${TableId} Total:$${(TotalAmount / 100).toFixed(2)} Outstanding:$${(OutstandingAmount / 100).toFixed(2)} Tips:$${(tippedAmount / 100).toFixed(2)}`;
     }
