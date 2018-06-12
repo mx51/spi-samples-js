@@ -127,7 +127,7 @@ class MotelPos
                 var txState = this._spi.CurrentTxFlowState;
                 this._flow_msg.Info("### TX PROCESS UPDATE ###");
                 this._flow_msg.Info(`# ${txState.DisplayMessage}`);
-                this._flow_msg.Info(`# Id: ${txState.PosRefId}`);
+                this._flow_msg.Info(`# PosRefId: ${txState.PosRefId}`);
                 this._flow_msg.Info(`# Type: ${txState.Type}`);
                 this._flow_msg.Info(`# Request Amount: $${(txState.AmountCents / 100.0).toFixed(2)}`);
                 this._flow_msg.Info(`# Waiting For Signature: ${txState.AwaitingSignatureCheck}`);

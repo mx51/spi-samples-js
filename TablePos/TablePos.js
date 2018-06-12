@@ -231,7 +231,7 @@ class TablePos
                 var txState = this._spi.CurrentTxFlowState;
                 this._flow_msg.Info("### TX PROCESS UPDATE ###");
                 this._flow_msg.Info(`# ${txState.DisplayMessage}`);
-                this._flow_msg.Info(`# Id: ${txState.PosRefId}`);
+                this._flow_msg.Info(`# PosRefId: ${txState.PosRefId}`);
                 this._flow_msg.Info(`# Type: ${txState.Type}`);
                 this._flow_msg.Info(`# Request Amount: $${(txState.AmountCents / 100.0).toFixed(2)}`);
                 this._flow_msg.Info(`# Waiting For Signature: ${txState.AwaitingSignatureCheck}`);
@@ -253,7 +253,7 @@ class TablePos
                                     this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
                                     this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
                                     this._flow_msg.Info(`# Customer Receipt:`);
-                                    this._receipt.Info(purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
+                                    this._receipt.Info(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
                                     this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
                                     this._flow_msg.Info(`# TIP: ${purchaseResponse.GetTipAmount()}`);
                                     this._flow_msg.Info(`# CASHOUT: ${purchaseResponse.GetCashoutAmount()}`);
@@ -267,7 +267,7 @@ class TablePos
                                     this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
                                     this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
                                     this._flow_msg.Info(`# Customer Receipt:`);
-                                    this._flow_msg.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
+                                    this._receipt.Info(!refundResponse.WasCustomerReceiptPrinted() ? refundResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
                                     this._flow_msg.Info(`# REFUNDED AMOUNT: ${refundResponse.GetRefundAmount()}`);
                                     break;
                                 case TransactionType.Settle:
@@ -295,7 +295,7 @@ class TablePos
                                         this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
                                         this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
                                         this._flow_msg.Info(`# Customer Receipt:`);
-                                        this._receipt.Info(purchaseResponse.WasCustomerReceiptPrinted()
+                                        this._receipt.Info(!purchaseResponse.WasCustomerReceiptPrinted()
                                             ? purchaseResponse.GetCustomerReceipt().trim()
                                             : `# PRINTED FROM EFTPOS`);
                                     }
