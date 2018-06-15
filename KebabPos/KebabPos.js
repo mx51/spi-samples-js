@@ -244,11 +244,11 @@ class KebabPos
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# REFUND FAILED!`);
-                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     refundResponse = new RefundResponse(txState.Response);
+                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                    this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                     this._flow_msg.Info(`# Response: ${refundResponse.GetResponseText()}`);
                     this._flow_msg.Info(`# RRN: ${refundResponse.GetRRN()}`);
                     this._flow_msg.Info(`# Scheme: ${refundResponse.SchemeName}`);
@@ -285,11 +285,11 @@ class KebabPos
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# CASHOUT FAILED!`);
-                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     cashoutResponse = new CashoutOnlyResponse(txState.Response);
+                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                    this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                     this._flow_msg.Info(`# Response: ${cashoutResponse.GetResponseText()}`);
                     this._flow_msg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
                     this._flow_msg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);
@@ -329,12 +329,12 @@ class KebabPos
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# WE DID NOT GET MOTO-PAID :(`);
-                this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
-                this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                 if (txState.Response != null)
                 {
                     motoResponse = new MotoPurchaseResponse(txState.Response);
                     purchaseResponse = motoResponse.PurchaseResponse;
+                    this._flow_msg.Info(`# Error: ${txState.Response.GetError()}`);
+                    this._flow_msg.Info(`# Error Detail: ${txState.Response.GetErrorDetail()}`);
                     this._flow_msg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
                     this._flow_msg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
                     this._flow_msg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
