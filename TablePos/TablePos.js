@@ -735,8 +735,8 @@ class TablePos
     {
         if (Object.keys(this.tableToBillMapping).length > 0) 
         { 
-            this._flow_msg.Info("# Open Tables: " + this.tableToBillMapping); 
-            for(table in this.tableToBillMapping)
+            this._flow_msg.Info("# Open Tables: "); 
+            for(let table in this.tableToBillMapping)
             {
                 this._flow_msg.Info(`# Table #${table}, Bill #${this.tableToBillMapping[table]}`);
             }
@@ -750,7 +750,7 @@ class TablePos
         {
             this._flow_msg.Info("# My Bills Store: ");
 
-            for(bill in this.billsStore)
+            for(let bill in this.billsStore)
             {
                 this._flow_msg.Info("# " + this.billsStore[bill].toString());
             }
@@ -818,8 +818,13 @@ class TablePos
         }
 
         this.tableToBillMapping     = JSON.parse(localStorage.getItem('tableToBillMapping') || '{}');
-        this.billsStore             = JSON.parse(localStorage.getItem('billsStore') || '{}');
         this.assemblyBillDataStore  = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '{}');
+        let savedBillData           = JSON.parse(localStorage.getItem('billsStore') || '{}');
+
+        for(let bill in savedBillData)
+        {
+            this.billsStore[bill] = Object.assign(new Bill(), savedBillData[bill]);
+        }
     }
 }
 
@@ -834,11 +839,10 @@ class Bill
         this.OutstandingAmount = 0;
         this.tippedAmount = 0;
     }
-
-    toString()
-    {
-        return `${BillId} - Table:${TableId} Total:$${(TotalAmount / 100).toFixed(2)} Outstanding:$${(OutstandingAmount / 100).toFixed(2)} Tips:$${(tippedAmount / 100).toFixed(2)}`;
-    }
+}
+Bill.prototype.toString = function() 
+{
+    return `${this.BillId} - Table:${this.TableId} Total:$${(this.TotalAmount / 100).toFixed(2)} Outstanding:$${(this.OutstandingAmount / 100).toFixed(2)} Tips:$${(this.tippedAmount / 100).toFixed(2)}`;
 }
 
 /**
