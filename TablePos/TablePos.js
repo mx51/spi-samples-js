@@ -164,7 +164,7 @@ class TablePos
             OutstandingAmount: myBill.OutstandingAmount
         });
 
-        let billData = this.assemblyBillDataStore.billId;
+        let billData = this.assemblyBillDataStore[billId];
 
         response.BillData = billData;
         return response;
