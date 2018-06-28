@@ -715,6 +715,8 @@ class TablePos
             this._flow_msg.Info(`Bill not Paid Yet: ${JSON.stringify(bill)}`);
             return;
         }
+        
+        delete this.billsStore[this.tableToBillMapping[tableId]];
         delete this.tableToBillMapping[tableId];
         delete this.assemblyBillDataStore[bill.BillId];
         this.SaveBillState();
