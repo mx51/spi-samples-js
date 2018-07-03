@@ -1,23 +1,22 @@
 {
-  "name": "acmepos",
+  "name": "spi-samples-js",
   "version": "1.0.0",
-  "description": "",
-  "main": "Pos.js",
+  "description": "Point of service samples which integrate with assembly payments spi module",
+  "main": "index.html",
   "author": "",
   "license": "Apache-2.0",
   "homepage": "https://github.com/AssemblyPayments/acmepos-js",
   "scripts": {
-    "start": "http-server",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AssemblyPayments/acmepos-js.git"
+    "url": "git+https://github.com/AssemblyPayments/spi-samples-js.git"
   },
   "devDependencies": {
     "http-server": "^0.10.0"
   },
   "dependencies": {
-    "@assemblypayments/spi-client-js": "^2.0.4"
+    "@assemblypayments/spi-client-js": "^2.1.0"
   }
 }
