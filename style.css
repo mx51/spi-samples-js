@@ -54,7 +54,7 @@ h1 {
     height: 400px;
 }
 
-.flow #log {
+#flow_msg {
     font-size: 12px;
     overflow-y: scroll;
     max-height: 300px;
