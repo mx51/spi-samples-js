@@ -50,6 +50,13 @@ h1 {
     overflow-y: scroll;
 }
 
+#bottom_left {
+    position: fixed;
+    bottom: 2%;
+    left: 2%;
+    color: red;
+}
+
 .col.flow {
     height: 400px;
 }
