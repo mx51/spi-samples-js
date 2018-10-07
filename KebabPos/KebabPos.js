@@ -19,7 +19,8 @@ class KebabPos
         this._posId = "KEBABPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.1.0';
+        this._options = null;
+        this._version = '2.4.5';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -33,16 +34,33 @@ class KebabPos
         this._log.info("Starting KebabPos...");
         this.LoadPersistedState();
 
-        // region Spi Setup
-        // This is how you instantiate Spi.
-        this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
-        this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
-        this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        try
+        {
+            this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+            this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
+            this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+
+            this._spi.SetPosInfo("assembly", this._version);
+            this._options = new TransactionOptions();
+            this._options.SetCustomerReceiptHeader("");
+            this._options.SetCustomerReceiptFooter("");
+            this._options.SetMerchantReceiptHeader("");
+            this._options.SetMerchantReceiptFooter("");
+        }
+        catch (e)
+        {
+            this._log.info(e.Message);
+            return;
+        }
 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
+        
+        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
+        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
+        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -94,6 +112,46 @@ class KebabPos
     {
         this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
+        this.PrintStatusAndActions();
+    }
+
+    HandlePrintingResponse(message)
+    {
+        this._log.Clear();
+        var printingResponse = new PrintingResponse(message);
+
+        if (printingResponse.IsSuccess())
+        {
+            this._log.Info("# --> Printing Response: Printing Receipt successful");
+        }
+        else
+        {
+            this._log.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
+        }
+
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleTerminalStatusResponse(message)
+    {
+        this._log.Clear();
+        var terminalStatusResponse = new TerminalStatusResponse(message);
+        this._log.Info("# Terminal Status Response #");
+        this._log.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._log.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._log.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleBatteryLevelChanged(message)
+    {
+        this._log.Clear();
+        var terminalBattery = new TerminalBattery(message);
+        this._log.Info("# Battery Level Changed #");
+        this._log.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
@@ -196,6 +254,7 @@ class KebabPos
                 this._receipt.Info(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
                 this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
                 this._flow_msg.Info(`# TIP: ${purchaseResponse.GetTipAmount()}`);
+                this._flow_msg.Info(`# SURCHARGE: ${purchaseResponse.GetSurchargeAmount()}`);
                 this._flow_msg.Info(`# CASHOUT: ${purchaseResponse.GetCashoutAmount()}`);
                 this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
                 this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
@@ -367,7 +426,9 @@ class KebabPos
                 if (success == SuccessState.Unknown)
                 {
                     this._flow_msg.Info("# Did not retrieve Expected Transaction. Here is what we got:");
-                } else {
+                } 
+                else 
+                {
                     this._flow_msg.Info("# Tx Matched Expected Purchase Request.");
                 }
             }
@@ -506,11 +567,20 @@ class KebabPos
                 {
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
-                        inputsEnabled.push('eftpos_address');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
+                        inputsEnabled.push('print_merchant_copy');
+                        inputsEnabled.push('receipt_header');
+                        inputsEnabled.push('receipt_footer');
+                        inputsEnabled.push('print');
+                        inputsEnabled.push('terminal_status');
+
+                        if(!this.IsUnknownStatus())
+                        {
+                            inputsEnabled.push('eftpos_address');
+                        }
                         break;
                         
                     case SpiFlow.Pairing: // Unpaired, PairingFlow
@@ -537,12 +607,16 @@ class KebabPos
                 break;
             case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
                 // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
-                inputsEnabled.push('eftpos_address');
                 inputsEnabled.push('rcpt_from_eftpos');
                 inputsEnabled.push('sig_flow_from_eftpos');
                 inputsEnabled.push('save_settings');
                 // .. but otherwise we give the same options as PairedConnected
                 // goto case SpiStatus.PairedConnected;
+
+                if(!this.IsUnknownStatus())
+                {
+                    inputsEnabled.push('eftpos_address');
+                }
 
             case SpiStatus.PairedConnected:
                 switch (this._spi.CurrentFlow)
@@ -578,6 +652,13 @@ class KebabPos
                         {
                             inputsEnabled.push('tx_auth_code');
                             inputsEnabled.push('auth_code_input');
+                        }
+
+                        if(this.IsUnknownStatus())
+                        {
+                            inputsEnabled.push('ok_retry');
+                            inputsEnabled.push('ok_override_paid');
+                            inputsEnabled.push('ok_cancel');
                         }
 
                         if (!this._spi.CurrentTxFlowState.Finished && !this._spi.CurrentTxFlowState.AttemptingToCancel)
@@ -629,6 +710,19 @@ class KebabPos
         });
 
         this._flow_msg.Info();
+    }
+
+    IsUnknownStatus()
+    {
+        if (this._spi.CurrentFlow == SpiFlow.Transaction) 
+        {
+            if (this._spi.CurrentTxFlowState.Finished && this._spi.CurrentTxFlowState.Success == SuccessState.Unknown)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     PrintPairingStatus()
