@@ -341,6 +341,7 @@ class KebabPos
                 this._flow_msg.Info(`# CASHOUT: ${cashoutResponse.GetCashoutAmount()}`);
                 this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${cashoutResponse.GetBankNonCashAmount()}`);
                 this._flow_msg.Info(`# BANKED CASH AMOUNT: ${cashoutResponse.GetBankCashAmount()}`);
+                this._flow_msg.Info(`# SURCHARGE: ${cashoutResponse.GetSurchargeAmount()}`);
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# CASHOUT FAILED!`);
@@ -385,6 +386,7 @@ class KebabPos
                 this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
                 this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
                 this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
+                this._flow_msg.Info(`# SURCHARGE: ${purchaseResponse.GetSurchargeAmount()}`);
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# WE DID NOT GET MOTO-PAID :(`);
@@ -624,6 +626,8 @@ class KebabPos
                     case SpiFlow.Idle: // Paired, Idle
                         inputsEnabled.push('amount_input');
                         inputsEnabled.push('tip_amount_input');
+                        inputsEnabled.push('surcharge_amount');
+                        inputsEnabled.push('suppress_merchant_password');
                         inputsEnabled.push('cashout_amount_input');
                         inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
@@ -788,8 +792,9 @@ class KebabPos
             let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
             let tipAmount       = parseInt(document.getElementById('tip_amount').value,10);
             let cashoutAmount   = parseInt(document.getElementById('cashout_amount').value,10);
+            let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
             let promptForCashout = document.getElementById('prompt_for_cash').checked;
-            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout);
+            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, surchargeAmount, promptForCashout, this._options);
             if (!res.Initiated)
             {
                 this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
@@ -799,14 +804,16 @@ class KebabPos
         document.getElementById('refund').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
+            let suppressMerchantPassword = document.getElementById('suppress_merchant_password').checked;
             let posRefId    = `refund-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateRefundTx(posRefId, amount);
+            let res         = this._spi.InitiateRefundTx(posRefId, amount, suppressMerchantPassword);
             this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
         });
 
         document.getElementById('cashout').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('cashout_amount').value,10);
+            let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
 
             if(!amount > 0) 
             {
@@ -815,15 +822,16 @@ class KebabPos
             }
 
             let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateCashoutOnlyTx(posRefId, amount);
+            let res         = this._spi.InitiateCashoutOnlyTx(posRefId, amount, surchargeAmount);
             this._flow_msg.Info(res.Initiated ? "# Cashout Initiated. Will be updated with Progress." : `# Could not initiate cashout: ${res.Message}. Please Retry.`);
         });
 
         document.getElementById('moto').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
+            let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
             let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount);
+            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount, surchargeAmount);
             this._flow_msg.Info(res.Initiated ? "# MOTO purchase Initiated. Will be updated with Progress." : `# Could not initiate moto purchase: ${res.Message}. Please Retry.`);
         });
 
@@ -859,6 +867,45 @@ class KebabPos
         {
             let res = this._spi.InitiateSettlementEnquiry(RequestIdHelper.Id("stlenq"));
             this._flow_msg.Info(res.Initiated ? "# Settle enquiry Initiated. Will be updated with Progress." : `# Could not initiate settle enquiry: ${res.Message}. Please Retry.`);
+        });
+
+        document.getElementById('print_merchant_copy').addEventListener('click', () => 
+        {
+            this._spi.Config.PrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
+            this._flow_msg.Clear();
+            this._spi.AckFlowEndedAndBackToIdle();
+            this.PrintStatusAndActions();
+        });
+
+        document.getElementById('receipt_header').addEventListener('click', () => 
+        {
+            this._options.SetCustomerReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
+            this._options.SetMerchantReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
+            this._flow_msg.Clear();
+            this._spi.AckFlowEndedAndBackToIdle();
+            this.PrintStatusAndActions();
+        });
+
+        document.getElementById('receipt_footer').addEventListener('click', () => 
+        {
+            this._options.SetCustomerReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
+            this._options.SetMerchantReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
+            this._flow_msg.Clear();
+            this._spi.AckFlowEndedAndBackToIdle();
+            this.PrintStatusAndActions();
+        });
+
+        document.getElementById('print').addEventListener('click', () => 
+        {
+            let posvendor_key   = document.getElementById('posvendor_key').value;
+            let payload         = document.getElementById('payload').value;
+
+            this._spi.PrintReceipt(posvendor_key, this.SanitizePrintText(payload));
+        });
+
+        document.getElementById('terminal_status').addEventListener('click', () => 
+        {
+            this._spi.GetTerminalStatus();
         });
 
         document.getElementById('ok').addEventListener('click', () => 
@@ -921,6 +968,13 @@ class KebabPos
         {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
+    }
+
+    SanitizePrintText(printText)
+    {
+        printText = printText.replace("\\emphasis", "\emphasis");
+        printText = printText.replace("\\clear", "\clear");
+        return printText.replace("\r\n", "\n");
     }
 }
 
