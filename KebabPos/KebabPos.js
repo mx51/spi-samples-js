@@ -794,7 +794,7 @@ class KebabPos
             let cashoutAmount   = parseInt(document.getElementById('cashout_amount').value,10);
             let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
             let promptForCashout = document.getElementById('prompt_for_cash').checked;
-            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, surchargeAmount, promptForCashout, this._options);
+            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout, this._options, surchargeAmount);
             if (!res.Initiated)
             {
                 this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
