@@ -24,6 +24,10 @@ class RamenPos
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
+        this.ApiKey         = "RamenPosDeviceIpApiKey";
+        this.SerialNumber   = "";
+        this.AutoIpResolutionEnable  = false;
+
         this._log = log;
         this._receipt = receipt;
         this._flow_msg = flow_msg;
@@ -53,6 +57,7 @@ class RamenPos
             return;
         }
 
+        document.addEventListener('DeviceIpAddressChanged', (e) => this.OnDeviceIpAddressChanged(e.detail)); 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
@@ -70,6 +75,14 @@ class RamenPos
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
+    }
+
+    DeviceIpAddressRequest()
+    {
+        return {
+            ApiKey: this.ApiKey,
+            SerialNumber: this.SerialNumber
+        };
     }
 
     OnTxFlowStateChanged(txState)
@@ -113,6 +126,14 @@ class RamenPos
         this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
+    }
+
+    OnDeviceIpAddressChanged(deviceIpAddressStatus)
+    {
+        var eftposAddress = document.getElementById('eftpos_address');
+
+        eftposAddress.value = deviceIpAddressStatus.Ip;
+        this._eftposAddress = deviceIpAddressStatus.Ip;
     }
 
     HandlePrintingResponse(message)
@@ -569,6 +590,8 @@ class RamenPos
                 {
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
+                        inputsEnabled.push('serial_number');
+                        inputsEnabled.push('auto_ip_address');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
@@ -576,8 +599,10 @@ class RamenPos
                         inputsEnabled.push('print_merchant_copy');
                         inputsEnabled.push('receipt_header');
                         inputsEnabled.push('receipt_footer');
+                        inputsEnabled.push('save_receipt');
                         inputsEnabled.push('print');
                         inputsEnabled.push('terminal_status');
+                        inputsEnabled.push('posvendor_key');
 
                         if(!this.IsUnknownStatus())
                         {
@@ -716,6 +741,18 @@ class RamenPos
         this._flow_msg.Info();
     }
 
+    GetDeviceIpAddress(deviceIpAddressRequest)
+    {
+        var autoIpAddress = document.getElementById('auto_ip_address');
+
+        if (!autoIpAddress.checked)
+            return;
+
+        this._spi.AutoIpResolutionEnable = true;
+        this._spi.GetDeviceIpAddress(deviceIpAddressRequest);
+        this._spi.SetEftposAddress(this._eftposAddress);
+    }
+
     IsUnknownStatus()
     {
         if (this._spi.CurrentFlow == SpiFlow.Transaction) 
@@ -754,6 +791,7 @@ class RamenPos
 
                 localStorage.setItem('pos_id', this._posId);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
+                localStorage.setItem('auto_ip_address', this.AutoIpResolutionEnable);
                 this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
             }
 
@@ -764,6 +802,39 @@ class RamenPos
             localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
 
             this.PrintPairingStatus();
+        });
+
+        document.getElementById('auto_ip_address').addEventListener('change', () => 
+        {
+            var eftposAddress       = document.getElementById('eftpos_address');
+            var autoIpAddress       = document.getElementById('auto_ip_address');
+            var resolveIpAddress    = document.getElementById('resolve_ip_address');
+
+            eftposAddress.value = '';
+
+            if (autoIpAddress.checked)
+            {
+                eftposAddress.disabled = true;
+                resolveIpAddress.disabled = false;
+            }
+            else
+            {
+                eftposAddress.disabled = false;
+                resolveIpAddress.disabled = true;
+            }
+        });
+
+        document.getElementById('resolve_ip_address').addEventListener('click', () => 
+        {
+            this._spi.AutoIpResolutionEnable    = document.getElementById('auto_ip_address').checked;
+            this.SerialNumber                   = document.getElementById('serial_number').value;
+
+            if(this._spi.AutoIpResolutionEnable)
+            {
+                var deviceIpAddressRequest = this.DeviceIpAddressRequest();
+
+                this.GetDeviceIpAddress(deviceIpAddressRequest);
+            }
         });
 
         document.getElementById('pair').addEventListener('click', () => 
@@ -877,19 +948,14 @@ class RamenPos
             this.PrintStatusAndActions();
         });
 
-        document.getElementById('receipt_header').addEventListener('click', () => 
+        document.getElementById('save_receipt').addEventListener('click', () => 
         {
             this._options.SetCustomerReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
             this._options.SetMerchantReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
-            this._flow_msg.Clear();
-            this._spi.AckFlowEndedAndBackToIdle();
-            this.PrintStatusAndActions();
-        });
 
-        document.getElementById('receipt_footer').addEventListener('click', () => 
-        {
             this._options.SetCustomerReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
             this._options.SetMerchantReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
+
             this._flow_msg.Clear();
             this._spi.AckFlowEndedAndBackToIdle();
             this.PrintStatusAndActions();
