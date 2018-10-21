@@ -1,5 +1,24 @@
+import {
+    Spi, 
+    Logger, 
+    Secrets, 
+    TransactionOptions,
+    TransactionType,
+    PrintingResponse,
+    RefundResponse,
+    TerminalStatusResponse,
+    TerminalBattery,
+    CashoutOnlyResponse,
+    MotoPurchaseResponse,
+    GetLastTransactionResponse,
+    PurchaseResponse,
+    Settlement,
+    SuccessState,
+    SpiFlow,
+    SpiStatus} from '../lib/spi-client-js';
+
 // <summary>
-// NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
+// NOTE: THIS PROJECT USES THE 2.4.x of the SPI Client Library
 //  
 // This is your POS. To integrate with SPI, you need to instantiate a Spi object
 // and interact with it.
@@ -11,7 +30,7 @@
 // 
 // To see logs from spi, check the console
 // </summary>
-class RamenPos
+export class RamenPos
 {
     constructor(log, receipt, flow_msg) 
     {
@@ -20,12 +39,13 @@ class RamenPos
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
         this._options = null;
-        this._version = '2.4.5';
+        this._version = '2.4.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
         this.ApiKey         = "RamenPosDeviceIpApiKey";
         this.SerialNumber   = "";
+        this.ApiUrl         = "/api/v1/ip?${serialNumber}"; // null | 
         this.AutoIpResolutionEnable  = false;
 
         this._log = log;
@@ -81,7 +101,8 @@ class RamenPos
     {
         return {
             ApiKey: this.ApiKey,
-            SerialNumber: this.SerialNumber
+            SerialNumber: this.SerialNumber,
+            ApiUrl: this.ApiUrl
         };
     }
 
@@ -749,8 +770,12 @@ class RamenPos
             return;
 
         this._spi.AutoIpResolutionEnable = true;
-        this._spi.GetDeviceIpAddress(deviceIpAddressRequest);
-        this._spi.SetEftposAddress(this._eftposAddress);
+        this._log.info(`Calling service to fetch latest IP address`);
+        this._spi.GetDeviceIpAddress(deviceIpAddressRequest).then((currentDeviceStatus) => {
+            this._spi.SetEftposAddress(currentDeviceStatus.Ip);
+
+            this._log.info(`New IP address resolved to ${currentDeviceStatus.Ip}`);
+        });
     }
 
     IsUnknownStatus()
@@ -1052,8 +1077,8 @@ document.addEventListener('DOMContentLoaded', () =>
     try 
     {
         let log         = console;
-        let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
-        let flow_msg    = new Log(document.getElementById('flow_msg'));
+        let receipt     = new Logger(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
+        let flow_msg    = new Logger(document.getElementById('flow_msg'));
         let pos         = new RamenPos(log, receipt, flow_msg);
         pos.Start();
     } 

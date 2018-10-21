@@ -1,3 +1,22 @@
+import {
+    Spi, 
+    Logger, 
+    Secrets, 
+    TransactionOptions,
+    TransactionType,
+    PrintingResponse,
+    RefundResponse,
+    TerminalStatusResponse,
+    TerminalBattery,
+    CashoutOnlyResponse,
+    MotoPurchaseResponse,
+    GetLastTransactionResponse,
+    PurchaseResponse,
+    Settlement,
+    SuccessState,
+    SpiFlow,
+    SpiStatus} from '../lib/spi-client-js';
+
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
 //  
@@ -986,8 +1005,8 @@ document.addEventListener('DOMContentLoaded', () =>
     try 
     {
         let log         = console;
-        let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
-        let flow_msg    = new Log(document.getElementById('flow_msg'));
+        let receipt     = new Logger(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
+        let flow_msg    = new Logger(document.getElementById('flow_msg'));
         let pos         = new KebabPos(log, receipt, flow_msg);
         pos.Start();
     } 

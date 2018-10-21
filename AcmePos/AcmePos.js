@@ -1,3 +1,16 @@
+import {
+    Spi, 
+    Logger, 
+    Secrets, 
+    TransactionType,
+    RefundResponse,
+    GetLastTransactionResponse,
+    PurchaseResponse,
+    Settlement,
+    SuccessState,
+    SpiFlow,
+    SpiStatus} from '../lib/spi-client-js';
+
 /// <summary>
 /// This is your POS. To integrate with SPI, you need to instantiate a Spi object
 /// and interact with it.
