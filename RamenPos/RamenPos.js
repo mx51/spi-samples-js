@@ -77,7 +77,7 @@ export class RamenPos
             return;
         }
 
-        document.addEventListener('DeviceIpAddressChanged', (e) => this.OnDeviceIpAddressChanged(e.detail)); 
+        document.addEventListener('DeviceAddressChanged', (e) => this.OnDeviceAddressChanged(e.detail)); 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
@@ -149,12 +149,12 @@ export class RamenPos
         this.PrintStatusAndActions();
     }
 
-    OnDeviceIpAddressChanged(deviceIpAddressStatus)
+    OnDeviceAddressChanged(deviceIpAddressStatus)
     {
         var eftposAddress = document.getElementById('eftpos_address');
 
-        eftposAddress.value = deviceIpAddressStatus.Ip;
-        this._eftposAddress = deviceIpAddressStatus.Ip;
+        eftposAddress.value = deviceIpAddressStatus.Address;
+        this._eftposAddress = deviceIpAddressStatus.Address;
     }
 
     HandlePrintingResponse(message)
