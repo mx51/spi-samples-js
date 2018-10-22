@@ -7,7 +7,6 @@ import {
     PrintingResponse,
     RefundResponse,
     TerminalStatusResponse,
-    TerminalBattery,
     CashoutOnlyResponse,
     MotoPurchaseResponse,
     GetLastTransactionResponse,
@@ -43,10 +42,10 @@ export class RamenPos
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
-        this.ApiKey         = "RamenPosDeviceIpApiKey";
-        this.SerialNumber   = "";
-        this.ApiUrl         = "/api/v1/ip?${serialNumber}"; // null | 
-        this.AutoIpResolutionEnable  = false;
+        this._apiKey         = "RamenPosDeviceIpApiKey";
+        this._serialNumber   = "";
+        this._autoResolveEftposAddress  = false;
+        this._testMode       = true;
 
         this._log = log;
         this._receipt = receipt;
@@ -60,11 +59,11 @@ export class RamenPos
 
         try
         {
-            this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+            this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
             this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
             this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
-            this._spi.SetPosInfo("assembly", this._version);
+            this._spi.SetTestMode(this._testMode);
             this._options = new TransactionOptions();
             this._options.SetCustomerReceiptHeader("");
             this._options.SetCustomerReceiptFooter("");
@@ -83,9 +82,6 @@ export class RamenPos
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
         
-        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
-        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
-        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -149,52 +145,12 @@ export class RamenPos
         this.PrintStatusAndActions();
     }
 
-    OnDeviceAddressChanged(deviceIpAddressStatus)
+    OnDeviceAddressChanged(deviceAddressStatus)
     {
         var eftposAddress = document.getElementById('eftpos_address');
 
-        eftposAddress.value = deviceIpAddressStatus.Address;
-        this._eftposAddress = deviceIpAddressStatus.Address;
-    }
-
-    HandlePrintingResponse(message)
-    {
-        this._log.Clear();
-        var printingResponse = new PrintingResponse(message);
-
-        if (printingResponse.IsSuccess())
-        {
-            this._log.Info("# --> Printing Response: Printing Receipt successful");
-        }
-        else
-        {
-            this._log.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
-        }
-
-        this._spi.AckFlowEndedAndBackToIdle();
-        this.PrintStatusAndActions();
-    }
-
-    HandleTerminalStatusResponse(message)
-    {
-        this._log.Clear();
-        var terminalStatusResponse = new TerminalStatusResponse(message);
-        this._log.Info("# Terminal Status Response #");
-        this._log.Info("# Status: " + terminalStatusResponse.GetStatus());
-        this._log.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
-        this._log.Info("# Charging: " + terminalStatusResponse.IsCharging());
-        this._spi.AckFlowEndedAndBackToIdle();
-        this.PrintStatusAndActions();
-    }
-
-    HandleBatteryLevelChanged(message)
-    {
-        this._log.Clear();
-        var terminalBattery = new TerminalBattery(message);
-        this._log.Info("# Battery Level Changed #");
-        this._log.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
-        this._spi.AckFlowEndedAndBackToIdle();
-        this.PrintStatusAndActions();
+        eftposAddress.value = deviceAddressStatus.Address;
+        this._eftposAddress = deviceAddressStatus.Address;
     }
 
     PrintStatusAndActions()
@@ -612,7 +568,9 @@ export class RamenPos
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
                         inputsEnabled.push('serial_number');
-                        inputsEnabled.push('auto_ip_address');
+                        inputsEnabled.push('auto_resolve_eftpos_address');
+                        inputsEnabled.push('resolve_eftpos_address');
+                        inputsEnabled.push('test_mode');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
@@ -762,22 +720,6 @@ export class RamenPos
         this._flow_msg.Info();
     }
 
-    GetDeviceIpAddress(deviceIpAddressRequest)
-    {
-        var autoIpAddress = document.getElementById('auto_ip_address');
-
-        if (!autoIpAddress.checked)
-            return;
-
-        this._spi.AutoIpResolutionEnable = true;
-        this._log.info(`Calling service to fetch latest IP address`);
-        this._spi.GetDeviceIpAddress(deviceIpAddressRequest).then((currentDeviceStatus) => {
-            this._spi.SetEftposAddress(currentDeviceStatus.Ip);
-
-            this._log.info(`New IP address resolved to ${currentDeviceStatus.Ip}`);
-        });
-    }
-
     IsUnknownStatus()
     {
         if (this._spi.CurrentFlow == SpiFlow.Transaction) 
@@ -816,8 +758,10 @@ export class RamenPos
 
                 localStorage.setItem('pos_id', this._posId);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
-                localStorage.setItem('auto_ip_address', this.AutoIpResolutionEnable);
-                this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+                localStorage.setItem('auto_resolve_eftpos_address', this._autoResolveEftposAddress);
+                localStorage.setItem('serial_number', this._serialNumber);
+                localStorage.setItem('test_mode', this._testMode);
+                this._log.info(`Saved settings`);
             }
 
             this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
@@ -829,37 +773,33 @@ export class RamenPos
             this.PrintPairingStatus();
         });
 
-        document.getElementById('auto_ip_address').addEventListener('change', () => 
+        document.getElementById('auto_resolve_eftpos_address').addEventListener('change', () => 
         {
             var eftposAddress       = document.getElementById('eftpos_address');
-            var autoIpAddress       = document.getElementById('auto_ip_address');
-            var resolveIpAddress    = document.getElementById('resolve_ip_address');
+            var autoResolveEftposAddress = document.getElementById('auto_resolve_eftpos_address');
+            var resolveEftposAddress    = document.getElementById('resolve_eftpos_address');
 
             eftposAddress.value = '';
 
-            if (autoIpAddress.checked)
+            if (autoResolveEftposAddress.checked)
             {
                 eftposAddress.disabled = true;
-                resolveIpAddress.disabled = false;
+                resolveEftposAddress.disabled = false;
             }
             else
             {
                 eftposAddress.disabled = false;
-                resolveIpAddress.disabled = true;
+                resolveEftposAddress.disabled = true;
             }
         });
 
-        document.getElementById('resolve_ip_address').addEventListener('click', () => 
+        document.getElementById('resolve_eftpos_address').addEventListener('click', () => 
         {
-            this._spi.AutoIpResolutionEnable    = document.getElementById('auto_ip_address').checked;
-            this.SerialNumber                   = document.getElementById('serial_number').value;
+            this._autoResolveEftposAddress    = document.getElementById('auto_resolve_eftpos_address').checked;
+            this._serialNumber                = document.getElementById('serial_number').value;
 
-            if(this._spi.AutoIpResolutionEnable)
-            {
-                var deviceIpAddressRequest = this.DeviceIpAddressRequest();
-
-                this.GetDeviceIpAddress(deviceIpAddressRequest);
-            }
+            this._spi.SetSerialNumber(this._serialNumber);
+            this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
         });
 
         document.getElementById('pair').addEventListener('click', () => 
@@ -1059,6 +999,20 @@ export class RamenPos
         {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
+
+        if(localStorage.getItem('serial_number')) 
+        {
+            this._serialNumber = localStorage.getItem('serial_number');
+            document.getElementById('serial_number').value = this._serialNumber;
+        } 
+
+        if(localStorage.getItem('auto_resolve_eftpos_address')) 
+        {
+            this._autoResolveEftposAddress = localStorage.getItem('auto_resolve_eftpos_address');
+            document.getElementById('auto_resolve_eftpos_address').value = this._autoResolveEftposAddress;
+        } 
+
+        this._testMode = document.getElementById('test_mode').checked = localStorage.getItem('test_mode') === 'true' || false;
     }
 
     SanitizePrintText(printText)

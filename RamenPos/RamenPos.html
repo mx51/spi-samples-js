@@ -15,7 +15,10 @@
             <h1>Settings</h1>
             <div class="padding-1">
                 <form name="settings" onSubmit="return false;">
-                    <table class="form">
+                    <tr>
+                        <th><label for="test_mode">Test mode:</label></th>
+                        <td><input type="checkbox" class="input" id="test_mode" name="test_mode" value="false"></td>
+                    </tr>
                     <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
                         <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="Pos ID" value="RAMENPOS1" required /></td>
@@ -29,12 +32,12 @@
                         <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
                     </tr>
                     <tr>
-                        <th><label for="auto_ip_address">Auto IP:</label></th>
-                        <td><input type="checkbox" class="input" id="auto_ip_address" name="auto_ip_address" value="false"></td>
+                        <th><label for="auto_resolve_eftpos_address">Auto IP:</label></th>
+                        <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="false"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><button type="button" class="input no-hide" id="resolve_ip_address">Resolve IP</button></td>
+                        <td><button type="button" class="input no-hide" id="resolve_eftpos_address">Resolve Address</button></td>
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
