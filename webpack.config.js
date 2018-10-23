@@ -2,7 +2,7 @@ const path                          = require('path');
 const fs                            = require("fs");
 const webpack                       = require('webpack');
 const apiMocker                     = require('connect-api-mocker');
-
+const htmlWebpackPlugin             = require('html-webpack-plugin');
 
 const sourcePath    = path.resolve(__dirname,'src');
 const outputPath    = path.resolve(__dirname,'dist');
@@ -15,9 +15,9 @@ const config = {
 
     entry: {
         RamenPos: './RamenPos/RamenPos.js',
-        KebabPos: './KebabPos/KebabPos.js',
-        MotelPos: './MotelPos/MotelPos.js',
-        TablePos: './TablePos/TablePos.js'
+        //KebabPos: './KebabPos/KebabPos.js',
+        //MotelPos: './MotelPos/MotelPos.js',
+        //TablePos: './TablePos/TablePos.js'
     },
     
     output: {
@@ -58,7 +58,9 @@ const config = {
         }
       ]
     },
-    plugins: []
+    plugins: [
+        new htmlWebpackPlugin({template: 'index.html'})
+    ]
 };
 
 if(isProd) {

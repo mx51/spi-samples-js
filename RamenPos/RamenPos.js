@@ -45,6 +45,7 @@ export class RamenPos
 
         this._apiKey         = "RamenPosDeviceIpApiKey";
         this._serialNumber   = "";
+        this._acquirerCode   = "wbc";
         this._autoResolveEftposAddress  = false;
         this._testMode       = true;
 
@@ -65,7 +66,9 @@ export class RamenPos
             this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
             this._spi.SetPosInfo("assembly", this._version);
-            this._spi.SetTestMode(this._testMode);
+            this._spi.SetAcquirerCode(this._acquirerCode);
+            this._spi.SetDeviceApiKey(this._apiKey);
+            
             this._options = new TransactionOptions();
             this._options.SetCustomerReceiptHeader("");
             this._options.SetCustomerReceiptFooter("");
@@ -89,6 +92,7 @@ export class RamenPos
         this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
 
         this._spi.Start();
+        this._spi.SetTestMode(this._testMode);
 
         // And Now we just accept user input and display to the user what is happening.
 
@@ -145,8 +149,8 @@ export class RamenPos
     /// <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
-        this._log.clear();
-        this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
+        this._flow_msg.Clear();
+        this._flow_msg.Info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
 
@@ -160,16 +164,16 @@ export class RamenPos
 
     HandlePrintingResponse(message)
     {
-        this._log.Clear();
+        this._flow_msg.Clear();
         var printingResponse = new PrintingResponse(message);
 
         if (printingResponse.IsSuccess())
         {
-            this._log.Info("# --> Printing Response: Printing Receipt successful");
+            this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
         }
         else
         {
-            this._log.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
         }
 
         this._spi.AckFlowEndedAndBackToIdle();
@@ -178,22 +182,22 @@ export class RamenPos
 
     HandleTerminalStatusResponse(message)
     {
-        this._log.Clear();
+        this._flow_msg.Clear();
         var terminalStatusResponse = new TerminalStatusResponse(message);
-        this._log.Info("# Terminal Status Response #");
-        this._log.Info("# Status: " + terminalStatusResponse.GetStatus());
-        this._log.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
-        this._log.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._flow_msg.Info("# Terminal Status Response #");
+        this._flow_msg.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._flow_msg.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._flow_msg.Info("# Charging: " + terminalStatusResponse.IsCharging());
         this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
     HandleBatteryLevelChanged(message)
     {
-        this._log.Clear();
+        this._log.clear();
         var terminalBattery = new TerminalBattery(message);
-        this._log.Info("# Battery Level Changed #");
-        this._log.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._flow_msg.Info("# Battery Level Changed #");
+        this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
         this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
@@ -614,7 +618,6 @@ export class RamenPos
                         inputsEnabled.push('pos_id');
                         inputsEnabled.push('serial_number');
                         inputsEnabled.push('auto_resolve_eftpos_address');
-                        inputsEnabled.push('resolve_eftpos_address');
                         inputsEnabled.push('test_mode');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
@@ -797,9 +800,11 @@ export class RamenPos
             {
                 this._posId         = document.getElementById('pos_id').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
+                this._testMode      = document.getElementById('test_mode').checked;
 
                 this._spi.SetPosId(this._posId);
                 this._spi.SetEftposAddress(this._eftposAddress);
+                this._spi.SetTestMode(this._testMode);
 
                 localStorage.setItem('pos_id', this._posId);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
