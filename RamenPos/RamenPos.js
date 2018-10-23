@@ -7,6 +7,7 @@ import {
     PrintingResponse,
     RefundResponse,
     TerminalStatusResponse,
+    TerminalBattery,
     CashoutOnlyResponse,
     MotoPurchaseResponse,
     GetLastTransactionResponse,
@@ -63,6 +64,7 @@ export class RamenPos
             this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
             this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
+            this._spi.SetPosInfo("assembly", this._version);
             this._spi.SetTestMode(this._testMode);
             this._options = new TransactionOptions();
             this._options.SetCustomerReceiptHeader("");
@@ -82,6 +84,10 @@ export class RamenPos
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
         
+        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
+        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
+        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
+
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -93,12 +99,11 @@ export class RamenPos
         this.AcceptUserInput();
     }
 
-    DeviceIpAddressRequest()
+    DeviceAddressRequest()
     {
         return {
-            ApiKey: this.ApiKey,
-            SerialNumber: this.SerialNumber,
-            ApiUrl: this.ApiUrl
+            ApiKey: this._apiKey,
+            SerialNumber: this._serialNumber
         };
     }
 
@@ -151,6 +156,46 @@ export class RamenPos
 
         eftposAddress.value = deviceAddressStatus.Address;
         this._eftposAddress = deviceAddressStatus.Address;
+    }
+
+    HandlePrintingResponse(message)
+    {
+        this._log.Clear();
+        var printingResponse = new PrintingResponse(message);
+
+        if (printingResponse.IsSuccess())
+        {
+            this._log.Info("# --> Printing Response: Printing Receipt successful");
+        }
+        else
+        {
+            this._log.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
+        }
+
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleTerminalStatusResponse(message)
+    {
+        this._log.Clear();
+        var terminalStatusResponse = new TerminalStatusResponse(message);
+        this._log.Info("# Terminal Status Response #");
+        this._log.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._log.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._log.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleBatteryLevelChanged(message)
+    {
+        this._log.Clear();
+        var terminalBattery = new TerminalBattery(message);
+        this._log.Info("# Battery Level Changed #");
+        this._log.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
     }
 
     PrintStatusAndActions()
