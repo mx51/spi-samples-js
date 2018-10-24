@@ -14,6 +14,7 @@ import {
     PurchaseResponse,
     Settlement,
     SuccessState,
+    RequestIdHelper,
     SpiFlow,
     SpiStatus} from '../lib/spi-client-js';
 
@@ -48,6 +49,7 @@ export class RamenPos
         this._acquirerCode   = "wbc";
         this._autoResolveEftposAddress  = false;
         this._testMode       = true;
+        this._useSecureWebSockets = false;
 
         this._log = log;
         this._receipt = receipt;
@@ -68,6 +70,7 @@ export class RamenPos
             this._spi.SetPosInfo("assembly", this._version);
             this._spi.SetAcquirerCode(this._acquirerCode);
             this._spi.SetDeviceApiKey(this._apiKey);
+            this._spi.SetSecureWebSockets(this._useSecureWebSockets);
             
             this._options = new TransactionOptions();
             this._options.SetCustomerReceiptHeader("");
@@ -167,13 +170,13 @@ export class RamenPos
         this._flow_msg.Clear();
         var printingResponse = new PrintingResponse(message);
 
-        if (printingResponse.IsSuccess())
+        if (printingResponse.isSuccess())
         {
             this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
         }
         else
         {
-            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.getErrorReason() + ", detail = " + printingResponse.getErrorDetail());
         }
 
         this._spi.AckFlowEndedAndBackToIdle();
@@ -618,14 +621,15 @@ export class RamenPos
                         inputsEnabled.push('pos_id');
                         inputsEnabled.push('serial_number');
                         inputsEnabled.push('auto_resolve_eftpos_address');
+                        inputsEnabled.push('use_secure_web_sockets');
                         inputsEnabled.push('test_mode');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
-                        inputsEnabled.push('print_merchant_copy');
-                        inputsEnabled.push('receipt_header');
-                        inputsEnabled.push('receipt_footer');
+                        inputsEnabled.push('print_merchant_copy_input');
+                        inputsEnabled.push('receipt_header_input');
+                        inputsEnabled.push('receipt_footer_input');
                         inputsEnabled.push('save_receipt');
                         inputsEnabled.push('print');
                         inputsEnabled.push('terminal_status');
@@ -684,6 +688,7 @@ export class RamenPos
                         inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
                         inputsEnabled.push('save_settings');
+                        inputsEnabled.push('save_receipt');
 
                         inputsEnabled.push('purchase');
                         inputsEnabled.push('moto');
@@ -696,6 +701,12 @@ export class RamenPos
                         inputsEnabled.push('glt');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
+
+                        inputsEnabled.push('receipt_header_input');
+                        inputsEnabled.push('receipt_footer_input');
+                        inputsEnabled.push('print');
+                        inputsEnabled.push('terminal_status');
+
                         break;
                     case SpiFlow.Transaction: // Paired, Transaction
                         if (this._spi.CurrentTxFlowState.AwaitingSignatureCheck)
@@ -794,23 +805,33 @@ export class RamenPos
 
     AcceptUserInput()
     {
-        document.getElementById('save_settings').addEventListener('click', () => 
+        document.getElementById('settings_form').addEventListener('submit', (e) => 
         {
+            e.preventDefault();
+
             if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
             {
                 this._posId         = document.getElementById('pos_id').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
+                this._serialNumber  = document.getElementById('serial_number').value;
                 this._testMode      = document.getElementById('test_mode').checked;
+                this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
+                this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
 
                 this._spi.SetPosId(this._posId);
                 this._spi.SetEftposAddress(this._eftposAddress);
+                this._spi.SetSerialNumber(this._serialNumber);
                 this._spi.SetTestMode(this._testMode);
+                this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+                this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
 
                 localStorage.setItem('pos_id', this._posId);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
                 localStorage.setItem('auto_resolve_eftpos_address', this._autoResolveEftposAddress);
                 localStorage.setItem('serial_number', this._serialNumber);
                 localStorage.setItem('test_mode', this._testMode);
+                localStorage.setItem('use_secure_web_sockets', this._useSecureWebSockets);
+                
                 this._log.info(`Saved settings`);
             }
 
@@ -821,36 +842,21 @@ export class RamenPos
             localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
 
             this.PrintPairingStatus();
+
+            return false;
         });
 
         document.getElementById('auto_resolve_eftpos_address').addEventListener('change', () => 
         {
-            var eftposAddress       = document.getElementById('eftpos_address');
-            var autoResolveEftposAddress = document.getElementById('auto_resolve_eftpos_address');
-            var resolveEftposAddress    = document.getElementById('resolve_eftpos_address');
-
-            eftposAddress.value = '';
-
-            if (autoResolveEftposAddress.checked)
-            {
-                eftposAddress.disabled = true;
-                resolveEftposAddress.disabled = false;
-            }
-            else
-            {
-                eftposAddress.disabled = false;
-                resolveEftposAddress.disabled = true;
-            }
+            document.getElementById('eftpos_address').disabled = document.getElementById('auto_resolve_eftpos_address').checked;
         });
 
-        document.getElementById('resolve_eftpos_address').addEventListener('click', () => 
+        document.getElementById('use_secure_web_sockets').addEventListener('change', () => 
         {
-            this._autoResolveEftposAddress    = document.getElementById('auto_resolve_eftpos_address').checked;
-            this._serialNumber                = document.getElementById('serial_number').value;
+            var isSecure = document.getElementById('use_secure_web_sockets').checked;
 
-            this._spi.SetSerialNumber(this._serialNumber);
-            this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
-        });
+            this._spi.SetSecureWebSockets(isSecure);
+        });  
 
         document.getElementById('pair').addEventListener('click', () => 
         {
@@ -972,16 +978,19 @@ export class RamenPos
             this._options.SetMerchantReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
 
             this._flow_msg.Clear();
+            this._flow_msg.Info(`Receipt header / footer updated.`);
             this._spi.AckFlowEndedAndBackToIdle();
             this.PrintStatusAndActions();
         });
 
         document.getElementById('print').addEventListener('click', () => 
         {
-            let posvendor_key   = document.getElementById('posvendor_key').value;
-            let payload         = document.getElementById('payload').value;
+            var header   = document.getElementById('receipt_header').value;
+            var footer   = document.getElementById('receipt_footer').value;
 
-            this._spi.PrintReceipt(posvendor_key, this.SanitizePrintText(payload));
+            var payload = this.SanitizePrintText(header + footer);
+
+            this._spi.PrintReceipt(this._apiKey, payload);
         });
 
         document.getElementById('terminal_status').addEventListener('click', () => 
@@ -1059,10 +1068,11 @@ export class RamenPos
         if(localStorage.getItem('auto_resolve_eftpos_address')) 
         {
             this._autoResolveEftposAddress = localStorage.getItem('auto_resolve_eftpos_address');
-            document.getElementById('auto_resolve_eftpos_address').value = this._autoResolveEftposAddress;
+            document.getElementById('auto_resolve_eftpos_address').checked = this._autoResolveEftposAddress;
         } 
 
         this._testMode = document.getElementById('test_mode').checked = localStorage.getItem('test_mode') === 'true' || false;
+        this._useSecureWebSockets = document.getElementById('use_secure_web_sockets').checked = localStorage.getItem('use_secure_web_sockets') === 'true' || false;
     }
 
     SanitizePrintText(printText)
