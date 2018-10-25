@@ -44,7 +44,7 @@ export class RamenPos
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
-        this._apiKey         = "RamenPosDeviceIpApiKey";
+        this._apiKey         = null;
         this._serialNumber   = "";
         this._acquirerCode   = "wbc";
         this._autoResolveEftposAddress  = false;
@@ -633,7 +633,7 @@ export class RamenPos
                         inputsEnabled.push('save_receipt');
                         inputsEnabled.push('print');
                         inputsEnabled.push('terminal_status');
-                        inputsEnabled.push('posvendor_key');
+                        inputsEnabled.push('pos_vendor_key');
 
                         if(!this.IsUnknownStatus())
                         {
@@ -682,8 +682,8 @@ export class RamenPos
                     case SpiFlow.Idle: // Paired, Idle
                         inputsEnabled.push('amount_input');
                         inputsEnabled.push('tip_amount_input');
-                        inputsEnabled.push('surcharge_amount');
-                        inputsEnabled.push('suppress_merchant_password');
+                        inputsEnabled.push('surcharge_amount_input');
+                        inputsEnabled.push('suppress_merchant_password_input');
                         inputsEnabled.push('cashout_amount_input');
                         inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
@@ -812,6 +812,7 @@ export class RamenPos
             if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
             {
                 this._posId         = document.getElementById('pos_id').value;
+                this._apiKey        = document.getElementById('pos_vendor_key').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
                 this._serialNumber  = document.getElementById('serial_number').value;
                 this._testMode      = document.getElementById('test_mode').checked;
@@ -819,6 +820,7 @@ export class RamenPos
                 this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
 
                 this._spi.SetPosId(this._posId);
+                this._spi.SetDeviceApiKey(this._apiKey);
                 this._spi.SetEftposAddress(this._eftposAddress);
                 this._spi.SetSerialNumber(this._serialNumber);
                 this._spi.SetTestMode(this._testMode);
@@ -826,6 +828,7 @@ export class RamenPos
                 this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
 
                 localStorage.setItem('pos_id', this._posId);
+                localStorage.setItem('pos_vendor_key', this._apiKey);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
                 localStorage.setItem('auto_resolve_eftpos_address', this._autoResolveEftposAddress);
                 localStorage.setItem('serial_number', this._serialNumber);
@@ -1039,6 +1042,16 @@ export class RamenPos
         else 
         {
             this._posId = document.getElementById('pos_id').value;
+        }
+
+        if(localStorage.getItem('pos_vendor_key')) 
+        {
+            this._apiKey = localStorage.getItem('pos_vendor_key');
+            document.getElementById('pos_vendor_key').value = this._apiKey;
+        } 
+        else 
+        {
+            this._apiKey = document.getElementById('pos_vendor_key').value;
         }
 
         if(localStorage.getItem('eftpos_address')) 

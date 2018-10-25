@@ -20,7 +20,11 @@
                     </tr>
                     <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
-                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="Pos ID" value="RAMENPOS1" required /></td>
+                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="POS ID" value="RAMENPOS1" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="pos_vendor_key">Vendor Key:</label></th>
+                        <td><input type="text" class="input" name="pos_id" id="pos_vendor_key" placeholder="POS Vendor Key" value="RamenPosDeviceIpApiKey" required /></td>
                     </tr>
                     <tr>
                         <th><label for="serial_number">Serial #:</label></th>
@@ -134,12 +138,7 @@
                 </fieldset>
                 <fieldset id="suppress_merchant_password_input" class="input">
                     <label for="suppress_merchant_password">Suppress Merchant Password?: </label>
-                    <input type="checkbox" id="suppress_merchant_password" name="suppress_merchant_password" value="false">
-                </fieldset>
-
-                <fieldset id="posvendor_key_input" class="input">
-                    <label for="posvendor_key">Pos Vendor Key: </label>
-                    <input type="text" id="posvendor_key" name="posvendor_key" value="TEST123" placeholder="">
+                    <input type="checkbox" id="suppress_merchant_password" name="suppress_merchant_password" value="1">
                 </fieldset>
 
                 <fieldset id="print_merchant_copy_input" class="input">
