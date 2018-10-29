@@ -5,15 +5,7 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="shortcut icon" href="/favicon.png">
 
-    <!-- Vendor libs -->
-    <script src="/node_modules/aes-js/index.js"></script>
-    <script src="/node_modules/bn.js/lib/bn.js"></script>
-    <script src="/node_modules/jssha/src/sha256.js"></script>
-    <script src="/node_modules/@assemblypayments/spi-client-js/dist/spi-client-js.js"></script>
-    <!-- End Vendor -->
-    
-    <script src="/lib/Log.js"></script>
-    <script src="TablePos.js"></script>
+    <script src="/dist/TablePos.min.js"></script>
 
 </head>
 <body class="status-unpaired flow-idle">
@@ -30,7 +22,7 @@
                     </tr>
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
-                        <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="emulator-prod.herokuapp.com" required /></td>
+                        <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
@@ -120,9 +112,7 @@
             </div>
         </td>
     </tr>
-    <div id="bottom_left">
-            <a href="/index.html">Return to Sample PoS Selection</a>
-    </div>   
     </table>
+
 </body>
 </html>
