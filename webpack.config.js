@@ -34,7 +34,7 @@ const config = {
         hot: true,
         port: 3000,
         host: 'localhost',
-        https: true,
+        https: false,
         disableHostCheck: true,
         before: function(app) {
             app.use('/api', apiMocker('/mocks/api'));
