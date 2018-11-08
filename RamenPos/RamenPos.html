@@ -4,9 +4,9 @@
     <title>Ramen-POS: Assembly Payments Instore Integration Solution</title>
     <link rel="stylesheet" href="/style.css">
     <link rel="shortcut icon" href="/favicon.png">
-    
-    <script src="/dist/RamenPos.min.js"></script>
 
+
+    
 </head>
 <body class="status-unpaired flow-idle">
     <table id="layout">
@@ -14,43 +14,47 @@
         <td class="col settings" rowspan="2">
             <h1>Settings</h1>
             <div class="padding-1">
-                <form name="settings" id="settings_form" onSubmit="return false;">
+                <form name="settings" id="settings_form">
                     <table class="form">
                     <tr>
                         <th><label for="test_mode">Test mode:</label></th>
-                        <td><input type="checkbox" class="input" id="test_mode" name="test_mode" value="false"></td>
+                        <td><input type="checkbox" class="input" id="test_mode" name="test_mode" value="1"></td>
                     </tr>
                     <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
-                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="Pos ID" value="RAMENPOS1" required /></td>
+                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="POS ID" value="RAMENPOS1" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="pos_vendor_key">Vendor Key:</label></th>
+                        <td><input type="text" class="input" name="pos_id" id="pos_vendor_key" placeholder="POS Vendor Key" value="RamenPosDeviceIpApiKey" required /></td>
                     </tr>
                     <tr>
                         <th><label for="serial_number">Serial #:</label></th>
                         <td><input type="text" class="input" name="serial_number" id="serial_number" placeholder="XXX-XXX-XXX" value="patest1" required /></td>
                     </tr>
                     <tr>
+                        <th><label for="use_secure_web_sockets">Secure WebSockets:</label></th>
+                        <td><input type="checkbox" class="input" id="use_secure_web_sockets" name="use_secure_web_sockets" value="1"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="auto_resolve_eftpos_address">Auto Address:</label></th>
+                        <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="1"></td>
+                        </tr>
+                    <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
                         <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
                     </tr>
                     <tr>
-                        <th><label for="auto_resolve_eftpos_address">Auto Address:</label></th>
-                        <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="false"></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><button type="button" class="input no-hide" id="resolve_eftpos_address">Resolve Address</button></td>
-                    </tr>
-                    <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="1"></td>
                     </tr>
                     <tr>
                         <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="1"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><button type="button" class="input no-hide" id="save_settings">Save</button></td>
+                        <td><button type="submit" class="input no-hide" id="save_settings">Save</button></td>
                     </tr>
                     </table>
                 </form>
@@ -136,12 +140,7 @@
                 </fieldset>
                 <fieldset id="suppress_merchant_password_input" class="input">
                     <label for="suppress_merchant_password">Suppress Merchant Password?: </label>
-                    <input type="checkbox" id="suppress_merchant_password" name="suppress_merchant_password" value="false">
-                </fieldset>
-
-                <fieldset id="posvendor_key_input" class="input">
-                    <label for="posvendor_key">Pos Vendor Key: </label>
-                    <input type="text" id="posvendor_key" name="posvendor_key" value="TEST123" placeholder="">
+                    <input type="checkbox" id="suppress_merchant_password" name="suppress_merchant_password" value="1">
                 </fieldset>
 
                 <fieldset id="print_merchant_copy_input" class="input">
