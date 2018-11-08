@@ -15,7 +15,7 @@ const config = {
 
     entry: {
         RamenPos: './RamenPos/RamenPos.js',
-        //KebabPos: './KebabPos/KebabPos.js',
+        KebabPos: './KebabPos/KebabPos.js',
         //MotelPos: './MotelPos/MotelPos.js',
         //TablePos: './TablePos/TablePos.js'
     },

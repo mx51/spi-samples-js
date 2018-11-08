@@ -14,8 +14,9 @@ import {
     PurchaseResponse,
     Settlement,
     SuccessState,
+    RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '../lib/spi-client-js';
+    SpiStatus} from '@assemblypayments/spi-client-js-beta';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
@@ -30,7 +31,7 @@ import {
 // 
 // To see logs from spi, check the console
 // </summary>
-class KebabPos
+export class KebabPos
 {
     constructor(log, receipt, flow_msg) 
     {
@@ -39,9 +40,16 @@ class KebabPos
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
         this._options = null;
-        this._version = '2.4.5';
+        this._version = '2.4.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
+
+        this._apiKey         = null;
+        this._serialNumber   = "";
+        this._acquirerCode   = "wbc";
+        this._autoResolveEftposAddress  = false;
+        this._testMode       = true;
+        this._useSecureWebSockets = false;
 
         this._log = log;
         this._receipt = receipt;
@@ -55,11 +63,15 @@ class KebabPos
 
         try
         {
-            this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+            this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
             this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
             this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
             this._spi.SetPosInfo("assembly", this._version);
+            this._spi.SetAcquirerCode(this._acquirerCode);
+            this._spi.SetDeviceApiKey(this._apiKey);
+            this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+
             this._options = new TransactionOptions();
             this._options.SetCustomerReceiptHeader("");
             this._options.SetCustomerReceiptFooter("");
@@ -72,6 +84,7 @@ class KebabPos
             return;
         }
 
+        document.addEventListener('DeviceAddressChanged', (e) => this.OnDeviceAddressChanged(e.detail)); 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
@@ -80,7 +93,9 @@ class KebabPos
         this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
         this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
         this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
+
         this._spi.Start();
+        this._spi.SetTestMode(this._testMode);
 
         // And Now we just accept user input and display to the user what is happening.
 
@@ -89,6 +104,14 @@ class KebabPos
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
+    }
+
+    DeviceAddressRequest()
+    {
+        return {
+            ApiKey: this._apiKey,
+            SerialNumber: this._serialNumber
+        };
     }
 
     OnTxFlowStateChanged(txState)
@@ -134,6 +157,14 @@ class KebabPos
         this.PrintStatusAndActions();
     }
 
+    OnDeviceAddressChanged(deviceAddressStatus)
+    {
+        var eftposAddress = document.getElementById('eftpos_address');
+
+        eftposAddress.value = deviceAddressStatus.Address;
+        this._eftposAddress = deviceAddressStatus.Address;
+    }
+
     HandlePrintingResponse(message)
     {
         this._log.Clear();
@@ -168,8 +199,8 @@ class KebabPos
     {
         this._log.Clear();
         var terminalBattery = new TerminalBattery(message);
-        this._log.Info("# Battery Level Changed #");
-        this._log.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._flow_msg.Info("# Battery Level Changed #");
+        this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
         this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
@@ -588,15 +619,21 @@ class KebabPos
                 {
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
+                        inputsEnabled.push('serial_number');
+                        inputsEnabled.push('auto_resolve_eftpos_address');
+                        inputsEnabled.push('use_secure_web_sockets');
+                        inputsEnabled.push('test_mode');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
-                        inputsEnabled.push('print_merchant_copy');
-                        inputsEnabled.push('receipt_header');
-                        inputsEnabled.push('receipt_footer');
+                        inputsEnabled.push('print_merchant_copy_input');
+                        inputsEnabled.push('receipt_header_input');
+                        inputsEnabled.push('receipt_footer_input');
+                        inputsEnabled.push('save_receipt');
                         inputsEnabled.push('print');
                         inputsEnabled.push('terminal_status');
+                        inputsEnabled.push('pos_vendor_key');
 
                         if(!this.IsUnknownStatus())
                         {
@@ -645,12 +682,13 @@ class KebabPos
                     case SpiFlow.Idle: // Paired, Idle
                         inputsEnabled.push('amount_input');
                         inputsEnabled.push('tip_amount_input');
-                        inputsEnabled.push('surcharge_amount');
-                        inputsEnabled.push('suppress_merchant_password');
+                        inputsEnabled.push('surcharge_amount_input');
+                        inputsEnabled.push('suppress_merchant_password_input');
                         inputsEnabled.push('cashout_amount_input');
                         inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
                         inputsEnabled.push('save_settings');
+                        inputsEnabled.push('save_receipt');
 
                         inputsEnabled.push('purchase');
                         inputsEnabled.push('moto');
@@ -663,6 +701,12 @@ class KebabPos
                         inputsEnabled.push('glt');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
+
+                        inputsEnabled.push('receipt_header_input');
+                        inputsEnabled.push('receipt_footer_input');
+                        inputsEnabled.push('print');
+                        inputsEnabled.push('terminal_status');
+
                         break;
                     case SpiFlow.Transaction: // Paired, Transaction
                         if (this._spi.CurrentTxFlowState.AwaitingSignatureCheck)
@@ -761,19 +805,37 @@ class KebabPos
 
     AcceptUserInput()
     {
-        document.getElementById('save_settings').addEventListener('click', () => 
+        document.getElementById('settings_form').addEventListener('submit', (e) => 
         {
+            e.preventDefault();
+
             if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
             {
                 this._posId         = document.getElementById('pos_id').value;
+                this._apiKey        = document.getElementById('pos_vendor_key').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
+                this._serialNumber  = document.getElementById('serial_number').value;
+                this._testMode      = document.getElementById('test_mode').checked;
+                this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
+                this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
 
                 this._spi.SetPosId(this._posId);
+                this._spi.SetDeviceApiKey(this._apiKey);
                 this._spi.SetEftposAddress(this._eftposAddress);
+                this._spi.SetSerialNumber(this._serialNumber);
+                this._spi.SetTestMode(this._testMode);
+                this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+                this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
 
                 localStorage.setItem('pos_id', this._posId);
+                localStorage.setItem('pos_vendor_key', this._apiKey);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
-                this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+                localStorage.setItem('auto_resolve_eftpos_address', this._autoResolveEftposAddress);
+                localStorage.setItem('serial_number', this._serialNumber);
+                localStorage.setItem('test_mode', this._testMode);
+                localStorage.setItem('use_secure_web_sockets', this._useSecureWebSockets);
+                
+                this._log.info(`Saved settings`);
             }
 
             this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
@@ -783,7 +845,21 @@ class KebabPos
             localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
 
             this.PrintPairingStatus();
+
+            return false;
         });
+
+        document.getElementById('auto_resolve_eftpos_address').addEventListener('change', () => 
+        {
+            document.getElementById('eftpos_address').disabled = document.getElementById('auto_resolve_eftpos_address').checked;
+        });
+
+        document.getElementById('use_secure_web_sockets').addEventListener('change', () => 
+        {
+            var isSecure = document.getElementById('use_secure_web_sockets').checked;
+
+            this._spi.SetSecureWebSockets(isSecure);
+        });  
 
         document.getElementById('pair').addEventListener('click', () => 
         {
@@ -896,24 +972,6 @@ class KebabPos
             this.PrintStatusAndActions();
         });
 
-        document.getElementById('receipt_header').addEventListener('click', () => 
-        {
-            this._options.SetCustomerReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
-            this._options.SetMerchantReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
-            this._flow_msg.Clear();
-            this._spi.AckFlowEndedAndBackToIdle();
-            this.PrintStatusAndActions();
-        });
-
-        document.getElementById('receipt_footer').addEventListener('click', () => 
-        {
-            this._options.SetCustomerReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
-            this._options.SetMerchantReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
-            this._flow_msg.Clear();
-            this._spi.AckFlowEndedAndBackToIdle();
-            this.PrintStatusAndActions();
-        });
-
         document.getElementById('print').addEventListener('click', () => 
         {
             let posvendor_key   = document.getElementById('posvendor_key').value;
@@ -970,6 +1028,16 @@ class KebabPos
             this._posId = document.getElementById('pos_id').value;
         }
 
+        if(localStorage.getItem('pos_vendor_key')) 
+        {
+            this._apiKey = localStorage.getItem('pos_vendor_key');
+            document.getElementById('pos_vendor_key').value = this._apiKey;
+        } 
+        else 
+        {
+            this._apiKey = document.getElementById('pos_vendor_key').value;
+        }
+
         if(localStorage.getItem('eftpos_address')) 
         {
             this._eftposAddress = localStorage.getItem('eftpos_address');
@@ -987,6 +1055,21 @@ class KebabPos
         {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
+
+        if(localStorage.getItem('serial_number')) 
+        {
+            this._serialNumber = localStorage.getItem('serial_number');
+            document.getElementById('serial_number').value = this._serialNumber;
+        } 
+
+        if(localStorage.getItem('auto_resolve_eftpos_address')) 
+        {
+            this._autoResolveEftposAddress = localStorage.getItem('auto_resolve_eftpos_address');
+            document.getElementById('auto_resolve_eftpos_address').checked = this._autoResolveEftposAddress;
+        } 
+
+        this._testMode = document.getElementById('test_mode').checked = localStorage.getItem('test_mode') === 'true' || false;
+        this._useSecureWebSockets = document.getElementById('use_secure_web_sockets').checked = localStorage.getItem('use_secure_web_sockets') === 'true' || false;
     }
 
     SanitizePrintText(printText)
