@@ -1,3 +1,23 @@
+import {
+    Spi, 
+    Logger, 
+    Secrets, 
+    TransactionOptions,
+    TransactionType,
+    PrintingResponse,
+    RefundResponse,
+    TerminalStatusResponse,
+    TerminalBattery,
+    CashoutOnlyResponse,
+    MotoPurchaseResponse,
+    GetLastTransactionResponse,
+    PurchaseResponse,
+    Settlement,
+    SuccessState,
+    RequestIdHelper,
+    SpiFlow,
+    SpiStatus} from '@assemblypayments/spi-client-js-beta';
+
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
 //  
@@ -11,7 +31,7 @@
 // 
 // To see logs from spi, check the console
 // </summary>
-class MotelPos
+export class MotelPos
 {
     constructor(log, receipt, flow_msg) 
     {

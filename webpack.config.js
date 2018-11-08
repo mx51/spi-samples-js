@@ -14,10 +14,10 @@ const config = {
     mode: isProd ? "production" : "development",
 
     entry: {
-        RamenPos: './RamenPos/RamenPos.js',
-        KebabPos: './KebabPos/KebabPos.js',
-        //MotelPos: './MotelPos/MotelPos.js',
-        //TablePos: './TablePos/TablePos.js'
+        RamenPos: sourcePath + '/RamenPos.js',
+        KebabPos: sourcePath + '/KebabPos.js',
+        MotelPos: sourcePath + '/MotelPos.js',
+        TablePos: sourcePath + '/TablePos.js'
     },
     
     output: {
@@ -29,7 +29,7 @@ const config = {
     devServer: {
         historyApiFallback: true,
         noInfo: true,
-        contentBase: __dirname,
+        contentBase: sourcePath,
         compress: true,
         hot: true,
         port: 3000,
@@ -60,7 +60,11 @@ const config = {
       ]
     },
     plugins: [
-        new htmlWebpackPlugin({template: 'index.html'})
+        new htmlWebpackPlugin({template: sourcePath + '/index.html', inject: false}),
+        new htmlWebpackPlugin({template: sourcePath + '/RamenPos.html', filename: outputPath + '/RamenPos.html', chunks: ['RamenPos']}),
+        new htmlWebpackPlugin({template: sourcePath + '/KebabPos.html', filename: outputPath + '/KebabPos.html', chunks: ['KebabPos']}),
+        new htmlWebpackPlugin({template: sourcePath + '/MotelPos.html', filename: outputPath + '/MotelPos.html', chunks: ['MotelPos']}),
+        new htmlWebpackPlugin({template: sourcePath + '/TablePos.html', filename: outputPath + '/TablePos.html', chunks: ['TablePos']})
     ]
 };
 

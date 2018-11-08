@@ -2,7 +2,7 @@
 
 set -e
 
-HEROKU_TARGET_REPO="acmepos-js.git"
+HEROKU_TARGET_REPO="ramenpos-js.git"
 
 
 ####
@@ -34,7 +34,7 @@ check_heroku_api_key
 
 # Start deploy
 banner_msg " "
-banner_msg "Deploying AcmePOS.js ... "
+banner_msg "Deploying RamenPOS.js ... "
 banner_msg " "
 
 # Run deploy
