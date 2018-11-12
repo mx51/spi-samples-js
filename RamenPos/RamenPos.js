@@ -16,7 +16,7 @@ import {
     SuccessState,
     RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js-beta';
+    SpiStatus} from '@assemblypayments/spi-client-js-beta/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.4.x of the SPI Client Library
@@ -95,9 +95,6 @@ export class RamenPos
         this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
 
         this._spi.Start();
-        this._spi.SetTestMode(this._testMode);
-
-        // And Now we just accept user input and display to the user what is happening.
 
         this._flow_msg.Clear();
         this._flow_msg.Info("# Welcome to RamenPos !");
