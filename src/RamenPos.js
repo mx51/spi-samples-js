@@ -628,11 +628,7 @@ export class RamenPos
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
                         inputsEnabled.push('print_merchant_copy_input');
-                        inputsEnabled.push('receipt_header_input');
-                        inputsEnabled.push('receipt_footer_input');
                         inputsEnabled.push('save_receipt');
-                        inputsEnabled.push('print');
-                        inputsEnabled.push('terminal_status');
                         inputsEnabled.push('pos_vendor_key');
 
                         if(!this.IsUnknownStatus())
@@ -689,6 +685,8 @@ export class RamenPos
                         inputsEnabled.push('pos_ref_id_input');
                         inputsEnabled.push('save_settings');
                         inputsEnabled.push('save_receipt');
+                        inputsEnabled.push('receipt_header_input');
+                        inputsEnabled.push('receipt_footer_input');
 
                         inputsEnabled.push('purchase');
                         inputsEnabled.push('moto');
@@ -702,8 +700,6 @@ export class RamenPos
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
 
-                        inputsEnabled.push('receipt_header_input');
-                        inputsEnabled.push('receipt_footer_input');
                         inputsEnabled.push('print');
                         inputsEnabled.push('terminal_status');
 

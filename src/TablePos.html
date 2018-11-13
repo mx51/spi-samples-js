@@ -11,11 +11,31 @@
         <td class="col settings" rowspan="2">
             <h1>Settings</h1>
             <div class="padding-1">
-                <form name="settings" onSubmit="return false;">
+                <form name="settings" id="settings_form">
                     <table class="form">
                     <tr>
+                        <th><label for="test_mode">Test mode:</label></th>
+                        <td><input type="checkbox" class="input" id="test_mode" name="test_mode" value="1"></td>
+                    </tr>
+                    <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
-                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="Pos ID" value="TABLEPOS1" required /></td>
+                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="POS ID" value="TABLEPOS1" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="pos_vendor_key">Vendor Key:</label></th>
+                        <td><input type="text" class="input" name="pos_id" id="pos_vendor_key" placeholder="POS Vendor Key" value="PosDeviceIpApiKey" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="serial_number">Serial #:</label></th>
+                        <td><input type="text" class="input" name="serial_number" id="serial_number" placeholder="XXX-XXX-XXX" value="patest1" required /></td>
+                    </tr>
+                    <tr>
+                        <th><label for="use_secure_web_sockets">Secure WebSockets:</label></th>
+                        <td><input type="checkbox" class="input" id="use_secure_web_sockets" name="use_secure_web_sockets" value="1"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="auto_resolve_eftpos_address">Auto Address:</label></th>
+                        <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="1"></td>
                     </tr>
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
@@ -23,15 +43,15 @@
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="1"></td>
                     </tr>
                     <tr>
                         <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="1"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><button type="button" class="input no-hide" id="save_settings">Save</button></td>
+                        <td><button type="submit" class="input no-hide" id="save_settings">Save</button></td>
                     </tr>
                     </table>
                 </form>
@@ -87,8 +107,15 @@
 
                     <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
                     <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
+
+                    <button type="button" class="input" id="print">Print</button>
+                    <button type="button" class="input" id="save_receipt">Save receipt</button>
+                    <button type="button" class="input" id="terminal_status">Terminal Status</button>
+                    <button type="button" class="input" id="recover">Recover</button>
+
                     <button type="button" class="input" id="tx_cancel">Cancel</button>
                     <button type="button" class="input" id="ok">Ok</button>
+                    <button type="button" class="input" id="ok_override_paid">Ok Override Paid</button>
                     <button type="button" class="input" id="ok_cancel">Cancel</button>
                 </p>
 
@@ -105,6 +132,23 @@
                 <fieldset id="bill_id_input" class="input">
                     <label for="bill_id">Bill #: </label>
                     <input type="number" id="bill_id" name="bill_id" value="" placeholder="Bill ID">
+                </fieldset>
+
+                <fieldset id="surcharge_amount_input" class="input">
+                    <label for="surcharge_amount">Surcharge Amount (cents): </label>
+                    <input type="number" id="surcharge_amount" name="surcharge_amount" value="0" placeholder="Surcharge Amount (cents)">
+                </fieldset>
+                <fieldset id="suppress_merchant_password_input" class="input">
+                    <label for="suppress_merchant_password">Suppress Merchant Password?: </label>
+                    <input type="checkbox" id="suppress_merchant_password" name="suppress_merchant_password" value="1">
+                </fieldset>
+                <fieldset id="print_merchant_copy_input" class="input">
+                    <label for="print_merchant_copy">Print merchant copy?: </label>
+                    <input type="checkbox" id="print_merchant_copy" name="print_merchant_copy" value="false">
+                </fieldset>
+                <fieldset id="pos_ref_id_input" class="input">
+                    <label for="pos_ref_id">Pos Ref ID: </label>
+                    <input type="text" id="pos_ref_id" name="pos_ref_id" placeholder="Pos Ref ID" value="">
                 </fieldset>
             </div>
         </td>

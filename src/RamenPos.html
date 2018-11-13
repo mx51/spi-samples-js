@@ -23,7 +23,7 @@
                     </tr>
                     <tr>
                         <th><label for="pos_vendor_key">Vendor Key:</label></th>
-                        <td><input type="text" class="input" name="pos_id" id="pos_vendor_key" placeholder="POS Vendor Key" value="RamenPosDeviceIpApiKey" required /></td>
+                        <td><input type="text" class="input" name="pos_id" id="pos_vendor_key" placeholder="POS Vendor Key" value="PosDeviceIpApiKey" required /></td>
                     </tr>
                     <tr>
                         <th><label for="serial_number">Serial #:</label></th>
@@ -36,7 +36,7 @@
                     <tr>
                         <th><label for="auto_resolve_eftpos_address">Auto Address:</label></th>
                         <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="1"></td>
-                        </tr>
+                    </tr>
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
                         <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
@@ -93,6 +93,7 @@
                 <p class="action-buttons">
                     <button type="button" class="input" id="pair_confirm">Confirm Code</button>
                     <button type="button" class="input" id="pair_cancel">Cancel Pairing</button>
+
                     <button type="button" class="input" id="purchase">Purchase</button>
                     <button type="button" class="input" id="moto">Moto</button>
                     <button type="button" class="input" id="cashout">Cashout</button>
@@ -100,14 +101,17 @@
                     <button type="button" class="input" id="settle">Settle</button>
                     <button type="button" class="input" id="settle_enq">Settle Enquiry</button>
                     <button type="button" class="input" id="glt">Get Last Transaction</button>
+
                     <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
                     <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
+                    
                     <button type="button" class="input" id="tx_cancel">Cancel</button>
                     <button type="button" class="input" id="tx_auth_code">Phone Auth</button>
                     <button type="button" class="input" id="recover">Recover</button>
                     <button type="button" class="input" id="print">Print</button>
                     <button type="button" class="input" id="save_receipt">Save receipt</button>
                     <button type="button" class="input" id="terminal_status">Terminal Status</button>
+
                     <button type="button" class="input" id="ok">Ok</button>
                     <button type="button" class="input" id="ok_retry">Ok Retry</button>
                     <button type="button" class="input" id="ok_override_paid">Ok Override Paid</button>

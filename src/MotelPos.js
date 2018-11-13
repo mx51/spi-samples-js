@@ -5,16 +5,10 @@ import {
     TransactionOptions,
     TransactionType,
     PrintingResponse,
-    RefundResponse,
     TerminalStatusResponse,
     TerminalBattery,
-    CashoutOnlyResponse,
-    MotoPurchaseResponse,
-    GetLastTransactionResponse,
     PurchaseResponse,
-    Settlement,
     SuccessState,
-    RequestIdHelper,
     SpiFlow,
     SpiStatus} from '@assemblypayments/spi-client-js-beta';
 
@@ -40,9 +34,17 @@ export class MotelPos
         this._posId = "MOTELPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.1.0';
+        this._options = null;
+        this._version = '2.4.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
+
+        this._apiKey         = null;
+        this._serialNumber   = "";
+        this._acquirerCode   = "wbc";
+        this._autoResolveEftposAddress  = false;
+        this._testMode       = true;
+        this._useSecureWebSockets = false;
 
         this._log = log;
         this._receipt = receipt;
@@ -54,18 +56,43 @@ export class MotelPos
         this._log.info("Starting MotelPos...");
         this.LoadPersistedState();
 
-        // region Spi Setup
-        // This is how you instantiate Spi.
-        this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
-        this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
-        this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        try
+        {
+            this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+            this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
+            this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
+            this._spi.SetPosInfo("assembly", this._version);
+            this._spi.SetAcquirerCode(this._acquirerCode);
+            this._spi.SetDeviceApiKey(this._apiKey);
+            this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+            
+            this._options = new TransactionOptions();
+            this._options.SetCustomerReceiptHeader("");
+            this._options.SetCustomerReceiptFooter("");
+            this._options.SetMerchantReceiptHeader("");
+            this._options.SetMerchantReceiptFooter("");
+        }
+        catch (e)
+        {
+            this._log.info(e.Message);
+            return;
+        }
+
+        document.addEventListener('DeviceAddressChanged', (e) => this.OnDeviceAddressChanged(e.detail)); 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
+
+        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
+        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
+        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
+
         this._spiPreauth = this._spi.EnablePreauth();
+
         this._spi.Start();
+        this._spi.SetTestMode(this._testMode);
 
         // And Now we just accept user input and display to the user what is happening.
 
@@ -74,6 +101,14 @@ export class MotelPos
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
+    }
+
+    DeviceAddressRequest()
+    {
+        return {
+            ApiKey: this._apiKey,
+            SerialNumber: this._serialNumber
+        };
     }
 
     OnTxFlowStateChanged(txState)
@@ -116,6 +151,55 @@ export class MotelPos
     {
         this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
+        this.PrintStatusAndActions();
+    }
+
+
+    OnDeviceAddressChanged(deviceAddressStatus)
+    {
+        var eftposAddress = document.getElementById('eftpos_address');
+
+        eftposAddress.value = deviceAddressStatus.Address;
+        this._eftposAddress = deviceAddressStatus.Address;
+    }
+
+    HandlePrintingResponse(message)
+    {
+        this._flow_msg.Clear();
+        var printingResponse = new PrintingResponse(message);
+
+        if (printingResponse.isSuccess())
+        {
+            this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
+        }
+        else
+        {
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.getErrorReason() + ", detail = " + printingResponse.getErrorDetail());
+        }
+
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleTerminalStatusResponse(message)
+    {
+        this._flow_msg.Clear();
+        var terminalStatusResponse = new TerminalStatusResponse(message);
+        this._flow_msg.Info("# Terminal Status Response #");
+        this._flow_msg.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._flow_msg.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._flow_msg.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleBatteryLevelChanged(message)
+    {
+        this._log.clear();
+        var terminalBattery = new TerminalBattery(message);
+        this._flow_msg.Info("# Battery Level Changed #");
+        this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
@@ -281,11 +365,23 @@ export class MotelPos
                 {
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
-                        inputsEnabled.push('eftpos_address');
+                        inputsEnabled.push('serial_number');
+                        inputsEnabled.push('auto_resolve_eftpos_address');
+                        inputsEnabled.push('use_secure_web_sockets');
+                        inputsEnabled.push('test_mode');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
+                        inputsEnabled.push('print_merchant_copy_input');
+                        inputsEnabled.push('save_receipt');
+                        // inputsEnabled.push('print');
+                        inputsEnabled.push('pos_vendor_key');
+
+                        if(!this.IsUnknownStatus())
+                        {
+                            inputsEnabled.push('eftpos_address');
+                        }
                         break;
                         
                     case SpiFlow.Pairing: // Unpaired, PairingFlow
@@ -312,12 +408,16 @@ export class MotelPos
                 break;
             case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
                 // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
-                inputsEnabled.push('eftpos_address');
                 inputsEnabled.push('rcpt_from_eftpos');
                 inputsEnabled.push('sig_flow_from_eftpos');
                 inputsEnabled.push('save_settings');
                 // .. but otherwise we give the same options as PairedConnected
                 // goto case SpiStatus.PairedConnected;
+
+                if(!this.IsUnknownStatus())
+                {
+                    inputsEnabled.push('eftpos_address');
+                }
 
             case SpiStatus.PairedConnected:
                 switch (this._spi.CurrentFlow)
@@ -326,6 +426,10 @@ export class MotelPos
                         inputsEnabled.push('amount_input');
                         inputsEnabled.push('preauth_ref_input');
                         inputsEnabled.push('save_settings');
+
+                        inputsEnabled.push('surcharge_amount_input');
+                        inputsEnabled.push('suppress_merchant_password_input');
+                        inputsEnabled.push('terminal_status');
 
                         inputsEnabled.push('acct_verify');
                         inputsEnabled.push('preauth_open');
@@ -346,14 +450,32 @@ export class MotelPos
                             inputsEnabled.push('tx_sign_decline');
                         }
 
+                        if(this.IsUnknownStatus())
+                        {
+                            inputsEnabled.push('ok_retry');
+                            inputsEnabled.push('ok_override_paid');
+                            inputsEnabled.push('ok_cancel');
+                        }
+
                         if (!this._spi.CurrentTxFlowState.Finished && !this._spi.CurrentTxFlowState.AttemptingToCancel)
                         {
                             inputsEnabled.push('tx_cancel');
                         }
-
-                        if(this._spi.CurrentTxFlowState.Finished) 
+                        else
                         {
-                            inputsEnabled.push('ok');
+                            switch (this._spi.CurrentTxFlowState.Success) 
+                            {
+                                case SuccessState.Success:
+                                    inputsEnabled.push('ok');
+                                    break;
+                                case SuccessState.Failed:
+                                    inputsEnabled.push('ok_cancel');
+                                    break;
+                                default:
+                                    // Unknown
+                                    inputsEnabled.push('ok_cancel');
+                                    break;
+                            }
                         }
                                    
                         break;
@@ -387,6 +509,19 @@ export class MotelPos
         this._flow_msg.Info();
     }
 
+    IsUnknownStatus()
+    {
+        if (this._spi.CurrentFlow == SpiFlow.Transaction) 
+        {
+            if (this._spi.CurrentTxFlowState.Finished && this._spi.CurrentTxFlowState.Success == SuccessState.Unknown)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     PrintPairingStatus()
     {
         this._flow_msg.Info(`# --------------- STATUS ------------------`);
@@ -400,19 +535,37 @@ export class MotelPos
 
     AcceptUserInput()
     {
-        document.getElementById('save_settings').addEventListener('click', () => {
+        document.getElementById('settings_form').addEventListener('submit', (e) => {
+
+            e.preventDefault();
 
             if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
             {
                 this._posId         = document.getElementById('pos_id').value;
+                this._apiKey        = document.getElementById('pos_vendor_key').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
+                this._serialNumber  = document.getElementById('serial_number').value;
+                this._testMode      = document.getElementById('test_mode').checked;
+                this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
+                this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
 
                 this._spi.SetPosId(this._posId);
+                this._spi.SetDeviceApiKey(this._apiKey);
                 this._spi.SetEftposAddress(this._eftposAddress);
+                this._spi.SetSerialNumber(this._serialNumber);
+                this._spi.SetTestMode(this._testMode);
+                this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+                this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
 
                 localStorage.setItem('pos_id', this._posId);
+                localStorage.setItem('pos_vendor_key', this._apiKey);
                 localStorage.setItem('eftpos_address', this._eftposAddress);
-                this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+                localStorage.setItem('auto_resolve_eftpos_address', this._autoResolveEftposAddress);
+                localStorage.setItem('serial_number', this._serialNumber);
+                localStorage.setItem('test_mode', this._testMode);
+                localStorage.setItem('use_secure_web_sockets', this._useSecureWebSockets);
+
+                this._log.info(`Saved settings`);
             }
 
             this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
@@ -424,6 +577,18 @@ export class MotelPos
             this.PrintPairingStatus();
         });
 
+        document.getElementById('auto_resolve_eftpos_address').addEventListener('change', () => 
+        {
+            document.getElementById('eftpos_address').disabled = document.getElementById('auto_resolve_eftpos_address').checked;
+        });
+
+        document.getElementById('use_secure_web_sockets').addEventListener('change', () => 
+        {
+            var isSecure = document.getElementById('use_secure_web_sockets').checked;
+
+            this._spi.SetSecureWebSockets(isSecure);
+        });  
+        
         document.getElementById('pair').addEventListener('click', () => 
         {
             this._spi.Pair();
@@ -532,6 +697,51 @@ export class MotelPos
             this._flow_msg.innerHTML = "Order Cancelled";
             this.PrintStatusAndActions();
         });
+
+        document.getElementById('print_merchant_copy').addEventListener('click', () => 
+        {
+            this._spi.Config.PrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
+            this._flow_msg.Clear();
+            this._spi.AckFlowEndedAndBackToIdle();
+            this.PrintStatusAndActions();
+        });
+
+        document.getElementById('save_receipt').addEventListener('click', () => 
+        {
+            this._options.SetCustomerReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
+            this._options.SetMerchantReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
+
+            this._options.SetCustomerReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
+            this._options.SetMerchantReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
+
+            this._flow_msg.Clear();
+            this._flow_msg.Info(`Receipt header / footer updated.`);
+            this._spi.AckFlowEndedAndBackToIdle();
+            this.PrintStatusAndActions();
+        });
+
+        document.getElementById('print').addEventListener('click', () => 
+        {
+            var header   = document.getElementById('receipt_header').value;
+            var footer   = document.getElementById('receipt_footer').value;
+
+            var payload = this.SanitizePrintText(header + footer);
+
+            this._spi.PrintReceipt(this._apiKey, payload);
+        });
+
+        document.getElementById('terminal_status').addEventListener('click', () => 
+        {
+            this._spi.GetTerminalStatus();
+        });
+
+        document.getElementById('recover').addEventListener('click', () => 
+        {
+            this._flow_msg.Clear();
+            var posRefId = document.getElementById('pos_ref_id').value;
+            var res = this._spi.InitiateRecovery(posRefId, TransactionType.Purchase);
+            this._flow_msg.Info(res.Initiated ? "# Recovery Initiated. Will be updated with Progress." : `# Could not initiate recovery. ${res.Message}. Please Retry.`);
+        });
     }
 
     LoadPersistedState()
@@ -544,6 +754,16 @@ export class MotelPos
         else 
         {
             this._posId = document.getElementById('pos_id').value;
+        }
+
+        if(localStorage.getItem('pos_vendor_key')) 
+        {
+            this._apiKey = localStorage.getItem('pos_vendor_key');
+            document.getElementById('pos_vendor_key').value = this._apiKey;
+        } 
+        else 
+        {
+            this._apiKey = document.getElementById('pos_vendor_key').value;
         }
 
         if(localStorage.getItem('eftpos_address')) 
@@ -563,6 +783,28 @@ export class MotelPos
         {
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
+
+        if(localStorage.getItem('serial_number')) 
+        {
+            this._serialNumber = localStorage.getItem('serial_number');
+            document.getElementById('serial_number').value = this._serialNumber;
+        } 
+
+        if(localStorage.getItem('auto_resolve_eftpos_address')) 
+        {
+            this._autoResolveEftposAddress = localStorage.getItem('auto_resolve_eftpos_address');
+            document.getElementById('auto_resolve_eftpos_address').checked = this._autoResolveEftposAddress;
+        } 
+
+        this._testMode = document.getElementById('test_mode').checked = localStorage.getItem('test_mode') === 'true' || false;
+        this._useSecureWebSockets = document.getElementById('use_secure_web_sockets').checked = localStorage.getItem('use_secure_web_sockets') === 'true' || false;
+    }
+
+    SanitizePrintText(printText)
+    {
+        printText = printText.replace("\\emphasis", "\emphasis");
+        printText = printText.replace("\\clear", "\clear");
+        return printText.replace("\r\n", "\n");
     }
 }
 
@@ -574,8 +816,8 @@ document.addEventListener('DOMContentLoaded', () =>
     try 
     {
         let log         = console;
-        let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
-        let flow_msg    = new Log(document.getElementById('flow_msg'));
+        let receipt     = new Logger(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
+        let flow_msg    = new Logger(document.getElementById('flow_msg'));
         let pos         = new MotelPos(log, receipt, flow_msg);
         pos.Start();
     } 
