@@ -15,10 +15,6 @@
                 <form name="settings" id="settings_form">
                     <table class="form">
                     <tr>
-                        <th><label for="test_mode">Test mode:</label></th>
-                        <td><input type="checkbox" class="input" id="test_mode" name="test_mode" value="1"></td>
-                    </tr>
-                    <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
                         <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="POS ID" value="RAMENPOS1" required /></td>
                     </tr>
@@ -30,14 +26,6 @@
                         <th><label for="serial_number">Serial #:</label></th>
                         <td><input type="text" class="input" name="serial_number" id="serial_number" placeholder="XXX-XXX-XXX" value="patest1" required /></td>
                     </tr>
-                    <tr>
-                        <th><label for="use_secure_web_sockets">Secure WebSockets:</label></th>
-                        <td><input type="checkbox" class="input" id="use_secure_web_sockets" name="use_secure_web_sockets" value="1"></td>
-                    </tr>
-                    <tr>
-                        <th><label for="auto_resolve_eftpos_address">Auto Address:</label></th>
-                        <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="1"></td>
-                        </tr>
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
                         <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
@@ -57,6 +45,29 @@
                     </table>
                 </form>
             </div>
+            <h1>Auto Address Settings</h1>
+            <div class="padding-1 status">
+            <form name="address_settings" id="address_settings_form">
+                <table class="form">
+                    <tr>
+                        <th><label for="test_mode">Test mode:</label></th>
+                        <td><input type="checkbox" class="input" id="test_mode" name="test_mode" value="1"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="use_secure_web_sockets">Secure WebSockets:</label></th>
+                        <td><input type="checkbox" class="input" id="use_secure_web_sockets" name="use_secure_web_sockets" value="1"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="auto_resolve_eftpos_address">Auto Address:</label></th>
+                        <td><input type="checkbox" class="input" id="auto_resolve_eftpos_address" name="auto_resolve_eftpos_address" value="1"></td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                        <td><button type="submit" class="input no-hide" id="save_address_settings">Save</button></td>
+                    </tr>
+                </table>
+            </form>
+            </div>         
             <h1>Status</h1>
             <div class="padding-1 status">
                 <p id="status_indicator" data-status="Unpaired" data-flow="Idle">
@@ -69,7 +80,6 @@
                     <button type="button" class="input" id="unpair">UNPAIR</button>
                 </p>
             </div>
-
         </td>
         <td class="col flow">
             <h1>Flow: <span id="flow_status_heading">Idle</span></h1>

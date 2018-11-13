@@ -70,7 +70,6 @@ export class RamenPos
             this._spi.SetPosInfo("assembly", this._version);
             this._spi.SetAcquirerCode(this._acquirerCode);
             this._spi.SetDeviceApiKey(this._apiKey);
-            this._spi.SetSecureWebSockets(this._useSecureWebSockets);
             
             this._options = new TransactionOptions();
             this._options.SetCustomerReceiptHeader("");
@@ -624,6 +623,7 @@ export class RamenPos
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
+                        inputsEnabled.push('save_address_settings');
                         inputsEnabled.push('print_merchant_copy_input');
                         inputsEnabled.push('receipt_header_input');
                         inputsEnabled.push('receipt_footer_input');
@@ -802,6 +802,22 @@ export class RamenPos
 
     AcceptUserInput()
     {
+        document.getElementById('address_settings_form').addEventListener('submit', (e) =>
+        {
+            e.preventDefault();
+
+            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) {
+                this._testMode      = document.getElementById('test_mode').checked;
+                this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
+                this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
+                this._spi.SetTestMode(this._testMode);
+                this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+                this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
+
+                this._log.info(`Auto address settings saved`);
+            }
+        });
+
         document.getElementById('settings_form').addEventListener('submit', (e) => 
         {
             e.preventDefault();
@@ -812,17 +828,11 @@ export class RamenPos
                 this._apiKey        = document.getElementById('pos_vendor_key').value;
                 this._eftposAddress = document.getElementById('eftpos_address').value;
                 this._serialNumber  = document.getElementById('serial_number').value;
-                this._testMode      = document.getElementById('test_mode').checked;
-                this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
-                this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
 
                 this._spi.SetPosId(this._posId);
                 this._spi.SetDeviceApiKey(this._apiKey);
                 this._spi.SetEftposAddress(this._eftposAddress);
                 this._spi.SetSerialNumber(this._serialNumber);
-                this._spi.SetTestMode(this._testMode);
-                this._spi.SetSecureWebSockets(this._useSecureWebSockets);
-                this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
 
                 localStorage.setItem('pos_id', this._posId);
                 localStorage.setItem('pos_vendor_key', this._apiKey);
