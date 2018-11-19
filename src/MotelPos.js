@@ -10,7 +10,9 @@ import {
     PurchaseResponse,
     SuccessState,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js-beta';
+    SpiStatus,
+    AccountVerifyResponse,
+    PreauthResponse} from '@assemblypayments/spi-client-js-beta';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
@@ -149,7 +151,6 @@ export class MotelPos
     // <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
-        this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
@@ -195,7 +196,7 @@ export class MotelPos
 
     HandleBatteryLevelChanged(message)
     {
-        this._log.clear();
+        this._flow_msg.Clear();
         var terminalBattery = new TerminalBattery(message);
         this._flow_msg.Info("# Battery Level Changed #");
         this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
@@ -693,7 +694,7 @@ export class MotelPos
         document.getElementById('ok_cancel').addEventListener('click', () => 
         {
             this._spi.AckFlowEndedAndBackToIdle();
-            this._log.clear();
+            this._flow_msg.Clear();
             this._flow_msg.innerHTML = "Order Cancelled";
             this.PrintStatusAndActions();
         });

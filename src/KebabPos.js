@@ -152,8 +152,7 @@ export class KebabPos
     /// <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
-        this._log.clear();
-        this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
+        this._flow_msg.Info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
 
@@ -167,16 +166,16 @@ export class KebabPos
 
     HandlePrintingResponse(message)
     {
-        this._log.Clear();
+        this._flow_msg.Clear();
         var printingResponse = new PrintingResponse(message);
 
-        if (printingResponse.IsSuccess())
+        if (printingResponse.isSuccess())
         {
-            this._log.Info("# --> Printing Response: Printing Receipt successful");
+            this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
         }
         else
         {
-            this._log.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.getErrorReason() + ", detail = " + printingResponse.getErrorDetail());
         }
 
         this._spi.AckFlowEndedAndBackToIdle();
@@ -185,19 +184,19 @@ export class KebabPos
 
     HandleTerminalStatusResponse(message)
     {
-        this._log.Clear();
+        this._flow_msg.Clear();
         var terminalStatusResponse = new TerminalStatusResponse(message);
-        this._log.Info("# Terminal Status Response #");
-        this._log.Info("# Status: " + terminalStatusResponse.GetStatus());
-        this._log.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
-        this._log.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._flow_msg.Info("# Terminal Status Response #");
+        this._flow_msg.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._flow_msg.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._flow_msg.Info("# Charging: " + terminalStatusResponse.IsCharging());
         this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
     HandleBatteryLevelChanged(message)
     {
-        this._log.Clear();
+        this._flow_msg.Clear();
         var terminalBattery = new TerminalBattery(message);
         this._flow_msg.Info("# Battery Level Changed #");
         this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
@@ -974,10 +973,12 @@ export class KebabPos
 
         document.getElementById('print').addEventListener('click', () => 
         {
-            let posvendor_key   = document.getElementById('posvendor_key').value;
-            let payload         = document.getElementById('payload').value;
+            var header   = document.getElementById('receipt_header').value;
+            var footer   = document.getElementById('receipt_footer').value;
 
-            this._spi.PrintReceipt(posvendor_key, this.SanitizePrintText(payload));
+            var payload = this.SanitizePrintText(header + footer);
+
+            this._spi.PrintReceipt(this._apiKey, payload);
         });
 
         document.getElementById('terminal_status').addEventListener('click', () => 

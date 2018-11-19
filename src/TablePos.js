@@ -172,7 +172,6 @@ export class TablePos
     // <param name="spiStatus"></param>
     OnSpiStatusChanged(spiStatus)
     {
-        this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
         this.PrintStatusAndActions();
     }
@@ -217,7 +216,7 @@ export class TablePos
 
     HandleBatteryLevelChanged(message)
     {
-        this._log.clear();
+        this._flow_msg.Clear();
         var terminalBattery = new TerminalBattery(message);
         this._flow_msg.Info("# Battery Level Changed #");
         this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
@@ -852,7 +851,7 @@ export class TablePos
         document.getElementById('ok_cancel').addEventListener('click', () => 
         {
             this._spi.AckFlowEndedAndBackToIdle();
-            this._log.clear();
+            this._flow_msg.Clear();
             this._flow_msg.innerHTML = "Order Cancelled";
             this.PrintStatusAndActions();
         });

@@ -197,7 +197,7 @@ export class RamenPos
 
     HandleBatteryLevelChanged(message)
     {
-        this._log.clear();
+        this._flow_msg.Clear();
         var terminalBattery = new TerminalBattery(message);
         this._flow_msg.Info("# Battery Level Changed #");
         this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
