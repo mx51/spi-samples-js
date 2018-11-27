@@ -8,6 +8,7 @@ const sourcePath    = path.resolve(__dirname,'src');
 const outputPath    = path.resolve(__dirname,'dist');
 const isProd        = process.argv.indexOf("-p") !== -1;
 const pkg           = JSON.parse(fs.readFileSync('./package.json'));
+const port          = process.env.PORT || 3000;
 
 const config = {
 
@@ -32,7 +33,7 @@ const config = {
         contentBase: __dirname,
         compress: true,
         hot: true,
-        port: 3000,
+        port: port,
         host: 'localhost',
         https: false,
         disableHostCheck: true,
