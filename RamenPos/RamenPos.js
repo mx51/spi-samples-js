@@ -100,6 +100,7 @@ export class RamenPos
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
+        this.SetSpiAutoAddressResolutionState();
     }
 
     DeviceAddressRequest()
@@ -800,6 +801,13 @@ export class RamenPos
 
     }
 
+    SetSpiAutoAddressResolutionState()
+    {
+        this._spi.SetTestMode(this._testMode);
+        this._spi.SetSecureWebSockets(this._useSecureWebSockets);
+        this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
+    }
+
     AcceptUserInput()
     {
         document.getElementById('address_settings_form').addEventListener('submit', (e) =>
@@ -810,10 +818,7 @@ export class RamenPos
                 this._testMode      = document.getElementById('test_mode').checked;
                 this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
                 this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
-                this._spi.SetTestMode(this._testMode);
-                this._spi.SetSecureWebSockets(this._useSecureWebSockets);
-                this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
-
+                this.SetSpiAutoAddressResolutionState();
                 this._log.info(`Auto address settings saved`);
             }
         });
