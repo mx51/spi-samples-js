@@ -93,6 +93,7 @@ export class RamenPos
         this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
         this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
 
+        this.SetSpiAutoAddressResolutionState();
         this._spi.Start();
 
         this._flow_msg.Clear();
@@ -100,7 +101,6 @@ export class RamenPos
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
-        this.SetSpiAutoAddressResolutionState();
     }
 
     DeviceAddressRequest()
