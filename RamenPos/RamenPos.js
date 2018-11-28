@@ -93,7 +93,7 @@ export class RamenPos
         this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
         this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
 
-        this.SetSpiAutoAddressResolutionState();
+        this.SetAutoAddressResolutionState();
         this._spi.Start();
 
         this._flow_msg.Clear();
@@ -801,7 +801,7 @@ export class RamenPos
 
     }
 
-    SetSpiAutoAddressResolutionState()
+    SetAutoAddressResolutionState()
     {
         this._spi.SetTestMode(this._testMode);
         this._spi.SetSecureWebSockets(this._useSecureWebSockets);
@@ -818,7 +818,7 @@ export class RamenPos
                 this._testMode      = document.getElementById('test_mode').checked;
                 this._useSecureWebSockets       = document.getElementById('use_secure_web_sockets').checked;
                 this._autoResolveEftposAddress  = document.getElementById('auto_resolve_eftpos_address').checked;
-                this.SetSpiAutoAddressResolutionState();
+                this.SetAutoAddressResolutionState();
                 this._log.info(`Auto address settings saved`);
             }
         });
