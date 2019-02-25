@@ -16,7 +16,7 @@ import {
     SuccessState,
     RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js-beta/dist/spi-client-js';
+    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.4.x of the SPI Client Library
