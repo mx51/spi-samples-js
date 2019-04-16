@@ -1,3 +1,22 @@
+import {
+    Spi, 
+    Logger, 
+    Secrets, 
+    TransactionOptions,
+    TransactionType,
+    PrintingResponse,
+    RefundResponse,
+    TerminalStatusResponse,
+    TerminalBattery,
+    CashoutOnlyResponse,
+    MotoPurchaseResponse,
+    GetLastTransactionResponse,
+    PurchaseResponse,
+    Settlement,
+    SuccessState,
+    RequestIdHelper,
+    SpiFlow,
+    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
 //  
@@ -11,7 +30,7 @@
 // 
 // To see logs from spi, check the console
 // </summary>
-class MotelPos
+export class MotelPos
 {
     constructor(log, receipt, flow_msg) 
     {
@@ -20,7 +39,7 @@ class MotelPos
         this._posId = "MOTELPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.1.0';
+        this._version = '2.4.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -36,9 +55,11 @@ class MotelPos
 
         // region Spi Setup
         // This is how you instantiate Spi.
-        this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+        this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
         this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
         this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+
+        this._spi.SetPosInfo("assembly", this._version);
 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
@@ -554,8 +575,8 @@ document.addEventListener('DOMContentLoaded', () =>
     try 
     {
         let log         = console;
-        let receipt     = new Log(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
-        let flow_msg    = new Log(document.getElementById('flow_msg'));
+        let receipt     = new Logger(document.getElementById('receipt_output'),`\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`);
+        let flow_msg    = new Logger(document.getElementById('flow_msg'));
         let pos         = new MotelPos(log, receipt, flow_msg);
         pos.Start();
     } 

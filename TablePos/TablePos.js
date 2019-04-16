@@ -2,13 +2,21 @@ import {
     Spi, 
     Logger, 
     Secrets, 
+    TransactionOptions,
     TransactionType,
+    PrintingResponse,
     RefundResponse,
+    TerminalStatusResponse,
+    TerminalBattery,
+    CashoutOnlyResponse,
+    MotoPurchaseResponse,
+    GetLastTransactionResponse,
     PurchaseResponse,
     Settlement,
     SuccessState,
+    RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '../lib/spi-client-js';
+    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
@@ -68,6 +76,8 @@ class TablePos
         this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
         this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
         this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+
+        this._spi.SetPosInfo("assembly", this._version);
 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 

@@ -14,8 +14,9 @@ import {
     PurchaseResponse,
     Settlement,
     SuccessState,
+    RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '../lib/spi-client-js';
+    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
@@ -29,8 +30,20 @@ import {
 // 3. Transaction Flow screen
 // 
 // To see logs from spi, check the console
+// </summary>// <summary>
+// NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
+//  
+// This is your POS. To integrate with SPI, you need to instantiate a Spi object
+// and interact with it.
+// 
+// Primarily you need to implement 3 things.
+// 1. Settings Screen
+// 2. Pairing Flow Screen
+// 3. Transaction Flow screen
+// 
+// To see logs from spi, check the console
 // </summary>
-class KebabPos
+export class KebabPos
 {
     constructor(log, receipt, flow_msg) 
     {
@@ -38,8 +51,7 @@ class KebabPos
         this._posId = "KEBABPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._options = null;
-        this._version = '2.4.5';
+        this._version = '2.1.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -53,33 +65,18 @@ class KebabPos
         this._log.info("Starting KebabPos...");
         this.LoadPersistedState();
 
-        try
-        {
-            this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
-            this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
-            this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        // region Spi Setup
+        // This is how you instantiate Spi.
+        this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+        this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
+        this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
-            this._spi.SetPosInfo("assembly", this._version);
-            this._options = new TransactionOptions();
-            this._options.SetCustomerReceiptHeader("");
-            this._options.SetCustomerReceiptFooter("");
-            this._options.SetMerchantReceiptHeader("");
-            this._options.SetMerchantReceiptFooter("");
-        }
-        catch (e)
-        {
-            this._log.info(e.Message);
-            return;
-        }
+        this._spi.SetPosInfo("assembly", this._version);
 
         document.addEventListener('StatusChanged', (e) => this.OnSpiStatusChanged(e.detail)); 
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
-        
-        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
-        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
-        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -131,46 +128,6 @@ class KebabPos
     {
         this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
-        this.PrintStatusAndActions();
-    }
-
-    HandlePrintingResponse(message)
-    {
-        this._log.Clear();
-        var printingResponse = new PrintingResponse(message);
-
-        if (printingResponse.IsSuccess())
-        {
-            this._log.Info("# --> Printing Response: Printing Receipt successful");
-        }
-        else
-        {
-            this._log.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.GetErrorReason() + ", detail = " + printingResponse.GetErrorDetail());
-        }
-
-        this._spi.AckFlowEndedAndBackToIdle();
-        this.PrintStatusAndActions();
-    }
-
-    HandleTerminalStatusResponse(message)
-    {
-        this._log.Clear();
-        var terminalStatusResponse = new TerminalStatusResponse(message);
-        this._log.Info("# Terminal Status Response #");
-        this._log.Info("# Status: " + terminalStatusResponse.GetStatus());
-        this._log.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
-        this._log.Info("# Charging: " + terminalStatusResponse.IsCharging());
-        this._spi.AckFlowEndedAndBackToIdle();
-        this.PrintStatusAndActions();
-    }
-
-    HandleBatteryLevelChanged(message)
-    {
-        this._log.Clear();
-        var terminalBattery = new TerminalBattery(message);
-        this._log.Info("# Battery Level Changed #");
-        this._log.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
-        this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
@@ -273,7 +230,6 @@ class KebabPos
                 this._receipt.Info(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : `# PRINTED FROM EFTPOS`);
                 this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
                 this._flow_msg.Info(`# TIP: ${purchaseResponse.GetTipAmount()}`);
-                this._flow_msg.Info(`# SURCHARGE: ${purchaseResponse.GetSurchargeAmount()}`);
                 this._flow_msg.Info(`# CASHOUT: ${purchaseResponse.GetCashoutAmount()}`);
                 this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
                 this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
@@ -360,7 +316,6 @@ class KebabPos
                 this._flow_msg.Info(`# CASHOUT: ${cashoutResponse.GetCashoutAmount()}`);
                 this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${cashoutResponse.GetBankNonCashAmount()}`);
                 this._flow_msg.Info(`# BANKED CASH AMOUNT: ${cashoutResponse.GetBankCashAmount()}`);
-                this._flow_msg.Info(`# SURCHARGE: ${cashoutResponse.GetSurchargeAmount()}`);
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# CASHOUT FAILED!`);
@@ -405,7 +360,6 @@ class KebabPos
                 this._flow_msg.Info(`# PURCHASE: ${purchaseResponse.GetPurchaseAmount()}`);
                 this._flow_msg.Info(`# BANKED NON-CASH AMOUNT: ${purchaseResponse.GetBankNonCashAmount()}`);
                 this._flow_msg.Info(`# BANKED CASH AMOUNT: ${purchaseResponse.GetBankCashAmount()}`);
-                this._flow_msg.Info(`# SURCHARGE: ${purchaseResponse.GetSurchargeAmount()}`);
                 break;
             case SuccessState.Failed:
                 this._flow_msg.Info(`# WE DID NOT GET MOTO-PAID :(`);
@@ -447,9 +401,7 @@ class KebabPos
                 if (success == SuccessState.Unknown)
                 {
                     this._flow_msg.Info("# Did not retrieve Expected Transaction. Here is what we got:");
-                } 
-                else 
-                {
+                } else {
                     this._flow_msg.Info("# Tx Matched Expected Purchase Request.");
                 }
             }
@@ -588,20 +540,11 @@ class KebabPos
                 {
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
+                        inputsEnabled.push('eftpos_address');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
                         inputsEnabled.push('save_settings');
-                        inputsEnabled.push('print_merchant_copy');
-                        inputsEnabled.push('receipt_header');
-                        inputsEnabled.push('receipt_footer');
-                        inputsEnabled.push('print');
-                        inputsEnabled.push('terminal_status');
-
-                        if(!this.IsUnknownStatus())
-                        {
-                            inputsEnabled.push('eftpos_address');
-                        }
                         break;
                         
                     case SpiFlow.Pairing: // Unpaired, PairingFlow
@@ -628,16 +571,12 @@ class KebabPos
                 break;
             case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
                 // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
+                inputsEnabled.push('eftpos_address');
                 inputsEnabled.push('rcpt_from_eftpos');
                 inputsEnabled.push('sig_flow_from_eftpos');
                 inputsEnabled.push('save_settings');
                 // .. but otherwise we give the same options as PairedConnected
                 // goto case SpiStatus.PairedConnected;
-
-                if(!this.IsUnknownStatus())
-                {
-                    inputsEnabled.push('eftpos_address');
-                }
 
             case SpiStatus.PairedConnected:
                 switch (this._spi.CurrentFlow)
@@ -645,8 +584,6 @@ class KebabPos
                     case SpiFlow.Idle: // Paired, Idle
                         inputsEnabled.push('amount_input');
                         inputsEnabled.push('tip_amount_input');
-                        inputsEnabled.push('surcharge_amount');
-                        inputsEnabled.push('suppress_merchant_password');
                         inputsEnabled.push('cashout_amount_input');
                         inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
@@ -675,13 +612,6 @@ class KebabPos
                         {
                             inputsEnabled.push('tx_auth_code');
                             inputsEnabled.push('auth_code_input');
-                        }
-
-                        if(this.IsUnknownStatus())
-                        {
-                            inputsEnabled.push('ok_retry');
-                            inputsEnabled.push('ok_override_paid');
-                            inputsEnabled.push('ok_cancel');
                         }
 
                         if (!this._spi.CurrentTxFlowState.Finished && !this._spi.CurrentTxFlowState.AttemptingToCancel)
@@ -733,19 +663,6 @@ class KebabPos
         });
 
         this._flow_msg.Info();
-    }
-
-    IsUnknownStatus()
-    {
-        if (this._spi.CurrentFlow == SpiFlow.Transaction) 
-        {
-            if (this._spi.CurrentTxFlowState.Finished && this._spi.CurrentTxFlowState.Success == SuccessState.Unknown)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     PrintPairingStatus()
@@ -811,9 +728,8 @@ class KebabPos
             let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
             let tipAmount       = parseInt(document.getElementById('tip_amount').value,10);
             let cashoutAmount   = parseInt(document.getElementById('cashout_amount').value,10);
-            let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
             let promptForCashout = document.getElementById('prompt_for_cash').checked;
-            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout, this._options, surchargeAmount);
+            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout);
             if (!res.Initiated)
             {
                 this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
@@ -823,16 +739,14 @@ class KebabPos
         document.getElementById('refund').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
-            let suppressMerchantPassword = document.getElementById('suppress_merchant_password').checked;
             let posRefId    = `refund-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateRefundTx(posRefId, amount, suppressMerchantPassword);
+            let res         = this._spi.InitiateRefundTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
         });
 
         document.getElementById('cashout').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('cashout_amount').value,10);
-            let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
 
             if(!amount > 0) 
             {
@@ -841,16 +755,15 @@ class KebabPos
             }
 
             let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateCashoutOnlyTx(posRefId, amount, surchargeAmount);
+            let res         = this._spi.InitiateCashoutOnlyTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# Cashout Initiated. Will be updated with Progress." : `# Could not initiate cashout: ${res.Message}. Please Retry.`);
         });
 
         document.getElementById('moto').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
-            let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
             let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount, surchargeAmount);
+            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount);
             this._flow_msg.Info(res.Initiated ? "# MOTO purchase Initiated. Will be updated with Progress." : `# Could not initiate moto purchase: ${res.Message}. Please Retry.`);
         });
 
@@ -886,45 +799,6 @@ class KebabPos
         {
             let res = this._spi.InitiateSettlementEnquiry(RequestIdHelper.Id("stlenq"));
             this._flow_msg.Info(res.Initiated ? "# Settle enquiry Initiated. Will be updated with Progress." : `# Could not initiate settle enquiry: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('print_merchant_copy').addEventListener('click', () => 
-        {
-            this._spi.Config.PrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
-            this._flow_msg.Clear();
-            this._spi.AckFlowEndedAndBackToIdle();
-            this.PrintStatusAndActions();
-        });
-
-        document.getElementById('receipt_header').addEventListener('click', () => 
-        {
-            this._options.SetCustomerReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
-            this._options.SetMerchantReceiptHeader(this.SanitizePrintText(document.getElementById('receipt_header').value));
-            this._flow_msg.Clear();
-            this._spi.AckFlowEndedAndBackToIdle();
-            this.PrintStatusAndActions();
-        });
-
-        document.getElementById('receipt_footer').addEventListener('click', () => 
-        {
-            this._options.SetCustomerReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
-            this._options.SetMerchantReceiptFooter(this.SanitizePrintText(document.getElementById('receipt_footer').value));
-            this._flow_msg.Clear();
-            this._spi.AckFlowEndedAndBackToIdle();
-            this.PrintStatusAndActions();
-        });
-
-        document.getElementById('print').addEventListener('click', () => 
-        {
-            let posvendor_key   = document.getElementById('posvendor_key').value;
-            let payload         = document.getElementById('payload').value;
-
-            this._spi.PrintReceipt(posvendor_key, this.SanitizePrintText(payload));
-        });
-
-        document.getElementById('terminal_status').addEventListener('click', () => 
-        {
-            this._spi.GetTerminalStatus();
         });
 
         document.getElementById('ok').addEventListener('click', () => 
@@ -988,13 +862,6 @@ class KebabPos
             this._spiSecrets = new Secrets(localStorage.getItem('EncKey'), localStorage.getItem('HmacKey'));
         }
     }
-
-    SanitizePrintText(printText)
-    {
-        printText = printText.replace("\\emphasis", "\emphasis");
-        printText = printText.replace("\\clear", "\clear");
-        return printText.replace("\r\n", "\n");
-    }
 }
 
 /**
@@ -1015,4 +882,3 @@ document.addEventListener('DOMContentLoaded', () =>
         console.error(err);
     }
 });
-

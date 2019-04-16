@@ -8,7 +8,7 @@ const sourcePath    = path.resolve(__dirname,'src');
 const outputPath    = path.resolve(__dirname,'dist');
 const isProd        = process.argv.indexOf("-p") !== -1;
 const pkg           = JSON.parse(fs.readFileSync('./package.json'));
-const port          = process.env.PORT || 3000;
+const PORT          = process.env.PORT || 3000;
 
 const config = {
 
@@ -16,9 +16,9 @@ const config = {
 
     entry: {
         RamenPos: './RamenPos/RamenPos.js',
-        //KebabPos: './KebabPos/KebabPos.js',
-        //MotelPos: './MotelPos/MotelPos.js',
-        //TablePos: './TablePos/TablePos.js'
+        KebabPos: './KebabPos/KebabPos.js',
+        MotelPos: './MotelPos/MotelPos.js',
+        TablePos: './TablePos/TablePos.js'
     },
     
     output: {
@@ -33,8 +33,8 @@ const config = {
         contentBase: __dirname,
         compress: true,
         hot: true,
-        port: port,
-        host: 'localhost',
+        port: PORT,
+        host: '0.0.0.0',
         https: false,
         disableHostCheck: true,
         before: function(app) {
