@@ -43,6 +43,7 @@ export class MotelPos
         this._serialNumber = "";
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
+        this._print_merchant_copy = false;
 
         this._log = log;
         this._receipt = receipt;
@@ -57,8 +58,9 @@ export class MotelPos
         // region Spi Setup
         // This is how you instantiate Spi.
         this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
-        this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
-        this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        this._spi.Config.EnabledPromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
+        this._spi.Config.EnabledSignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        this._spi.Config.EnabledPrintMerchantCopy = this._print_merchant_copy;
 
         this._spi.SetPosInfo("assembly", this._version);
 
@@ -184,7 +186,7 @@ export class MotelPos
                                     this._flow_msg.Info("# RRN:", details.GetRRN());
                                     this._flow_msg.Info("# Scheme:", details.SchemeName);
                                     this._flow_msg.Info("# Customer Receipt:");
-                                    this._receipt.Info(details.GetCustomerReceipt().trim());
+                                    this._receipt.Info(!details.WasCustomerReceiptPrinted() ? details.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
                                     break;
                                 case TransactionType.AccountVerify:
                                     this._flow_msg.Info("# ACCOUNT VERIFICATION SUCCESS");
@@ -194,7 +196,7 @@ export class MotelPos
                                     this._flow_msg.Info("# RRN:", details.GetRRN());
                                     this._flow_msg.Info("# Scheme:", details.SchemeName);
                                     this._flow_msg.Info("# Merchant Receipt:");
-                                    this._receipt.Info(details.GetMerchantReceipt().trim());
+                                    this._receipt.Info(!details.WasCustomerReceiptPrinted() ? details.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
                                     break;
                                 default:
                                     this._flow_msg.Info("# MOTEL POS DOESN'T KNOW WHAT TO DO WITH THIS TX TYPE WHEN IT SUCCEEDS");
@@ -206,27 +208,28 @@ export class MotelPos
                             {
                                 case TransactionType.Preauth:
                                     this._flow_msg.Info("# PREAUTH TRANSACTION FAILED :(");
-                                    this._flow_msg.Info("# Error:", txState.Response.GetError());
-                                    this._flow_msg.Info("# Error Detail:", txState.Response.GetErrorDetail());
                                     if (txState.Response != null)
                                     {
+                                        this._flow_msg.Info("# Error:", txState.Response.GetError());
+                                        this._flow_msg.Info("# Error Detail:", txState.Response.GetErrorDetail());
                                         var purchaseResponse = new PurchaseResponse(txState.Response);
                                         this._flow_msg.Info("# Response:", purchaseResponse.GetResponseText());
                                         this._flow_msg.Info("# RRN:", purchaseResponse.GetRRN());
                                         this._flow_msg.Info("# Scheme:", purchaseResponse.SchemeName);
                                         this._flow_msg.Info("# Customer Receipt:");
-                                        this._receipt.Info(purchaseResponse.GetCustomerReceipt().trim());
+                                        this._receipt.Info(!purchaseResponse.WasCustomerReceiptPrinted() ? purchaseResponse.GetCustomerReceipt().trim() : "# PRINTED FROM EFTPOS");
                                     }
                                     break;
                                 case TransactionType.AccountVerify:
                                     this._flow_msg.Info("# ACCOUNT VERIFICATION FAILED :(");
-                                    this._flow_msg.Info("# Error:", txState.Response.GetError());
-                                    this._flow_msg.Info("# Error Detail:", txState.Response.GetErrorDetail());
+
                                     if (txState.Response != null)
                                     {
+                                        this._flow_msg.Info("# Error:", txState.Response.GetError());
+                                        this._flow_msg.Info("# Error Detail:", txState.Response.GetErrorDetail());
                                         var acctVerifyResponse = new AccountVerifyResponse(txState.Response);
                                         var details = acctVerifyResponse.Details;
-                                        this._receipt.Info(details.GetCustomerReceipt().trim());
+                                        this._receipt.Info(!details.WasMerchantReceiptPrinted() ? details.GetMerchantReceipt().trim() : "# PRINTED FROM EFTPOS");
                                     }
                                     break;
                                 default:
@@ -326,6 +329,7 @@ export class MotelPos
                 {
                     case SpiFlow.Idle: // Paired, Idle
                         inputsEnabled.push('amount_input');
+                        inputsEnabled.push('surcharge_input');
                         inputsEnabled.push('preauth_ref_input');
                         inputsEnabled.push('save_settings');
 
@@ -340,6 +344,7 @@ export class MotelPos
                         inputsEnabled.push('unpair');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
+                        inputsEnabled.push('print_merchant_copy_input');
                         break;
                     case SpiFlow.Transaction: // Paired, Transaction
                         if (this._spi.CurrentTxFlowState.AwaitingSignatureCheck)
@@ -394,7 +399,7 @@ export class MotelPos
         this._flow_msg.Info(`# --------------- STATUS ------------------`);
         this._flow_msg.Info(`# ${this._posId} <-> Eftpos: ${this._eftposAddress} #`);
         this._flow_msg.Info(`# SPI STATUS: ${this._spi.CurrentStatus}     FLOW: ${this._spi.CurrentFlow} #`);
-        this._flow_msg.Info(`# SPI CONFIG: ${JSON.stringify(this._spi.Config)}`);
+        this._flow_msg.Info(`# SPI CONFIG: ${JSON.stringify(this._spiPreauth.Config)}`);
         this._flow_msg.Info(`# -----------------------------------------`);
         this._flow_msg.Info(`# POS: v${this._version} Spi: v${Spi.GetVersion()}`);
 
@@ -417,11 +422,13 @@ export class MotelPos
                 this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
             }
 
-            this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
-            this._spi.Config.SignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
+            this._spiPreauth.Config.EnabledPromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
+            this._spiPreauth.Config.EnabledSignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
+            this._spiPreauth.Config.EnabledPrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
 
-            localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
-            localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
+            localStorage.setItem('rcpt_from_eftpos', this._spiPreauth.Config.EnabledPromptForCustomerCopyOnEftpos);
+            localStorage.setItem('sig_flow_from_eftpos', this._spiPreauth.Config.EnabledSignatureFlowOnEftpos);
+            localStorage.setItem('print_merchant_copy', this._spiPreauth.Config.EnabledPrintMerchantCopy);
 
             this.PrintPairingStatus();
         });
@@ -498,9 +505,10 @@ export class MotelPos
         document.getElementById('preauth_complete').addEventListener('click', () => 
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
+            let surcharge   = parseInt(document.getElementById('surcharge').value,10);
             let preauthId   = document.getElementById('preauth_ref').value; 
             let ref         = `prcomp-${preauthId}-${new Date().toISOString()}`; 
-            let res         = this._spiPreauth.InitiateCompletionTx(ref, preauthId, amount);
+            let res         = this._spiPreauth.InitiateCompletionTx(ref, preauthId, amount, surcharge);
             this._flow_msg.Info(res.Initiated ? "# Preauth complete Initiated. Will be updated with Progress." : `# Could not initiate preauth complete request: ${res.Message}. Please Retry.`);
         });
 
@@ -560,6 +568,7 @@ export class MotelPos
 
         this._rcpt_from_eftpos = document.getElementById('rcpt_from_eftpos').checked = localStorage.getItem('rcpt_from_eftpos') === 'true' || false;
         this._sig_flow_from_eftpos = document.getElementById('sig_flow_from_eftpos').checked = localStorage.getItem('sig_flow_from_eftpos') === 'true' || false;
+        this._print_merchant_copy = document.getElementById('print_merchant_copy').checked = localStorage.getItem('print_merchant_copy') === 'true' || false;
 
         if(localStorage.getItem('EncKey') && localStorage.getItem('HmacKey')) 
         {
