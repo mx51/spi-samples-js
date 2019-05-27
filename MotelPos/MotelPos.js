@@ -39,7 +39,8 @@ export class MotelPos
         this._posId = "MOTELPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.4.0';
+        this._version = '2.5.0';
+        this._serialNumber = "";
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 

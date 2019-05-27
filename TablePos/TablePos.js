@@ -39,7 +39,8 @@ class TablePos
         this._posId = "TABLEPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.1.0';
+        this._version = '2.5.0';
+        this._serialNumber = "";
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -73,7 +74,7 @@ class TablePos
 
         // region Spi Setup
         // This is how you instantiate Spi.
-        this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+        this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
         this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
         this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
 
