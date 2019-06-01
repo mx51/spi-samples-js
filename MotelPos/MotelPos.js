@@ -58,9 +58,9 @@ export class MotelPos
         // region Spi Setup
         // This is how you instantiate Spi.
         this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
-        this._spi.Config.EnabledPromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
-        this._spi.Config.EnabledSignatureFlowOnEftpos = this._sig_flow_from_eftpos;
-        this._spi.Config.EnabledPrintMerchantCopy = this._print_merchant_copy;
+        this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
+        this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        this._spi.Config.PrintMerchantCopy = this._print_merchant_copy;
 
         this._spi.SetPosInfo("assembly", this._version);
 

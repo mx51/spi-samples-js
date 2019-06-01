@@ -43,6 +43,7 @@ class TablePos
         this._serialNumber = "";
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
+        this._print_merchant_copy = false;
 
         // My Bills Store.
         // Key = BillId
@@ -77,6 +78,7 @@ class TablePos
         this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
         this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
         this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        this._spi.Config.PrintMerchantCopy = this._print_merchant_copy;
 
         this._spi.SetPosInfo("assembly", this._version);
 
@@ -86,9 +88,11 @@ class TablePos
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
 
         this._pat = this._spi.EnablePayAtTable();
-        this._pat.Config.LabelTableId = "Table Number";
+        this.EnablePayAtTableConfigs();
         this._pat.GetBillStatus = this.PayAtTableGetBillDetails.bind(this);
         this._pat.BillPaymentReceived = this.PayAtTableBillPaymentReceived.bind(this);
+        this._pat.BillPaymentFlowEnded = this.PayAtTableBillPaymentFlowEnded.bind(this);
+        this._pat.GetOpenTables = this.PayAtTableGetOpenTables.bind(this);
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -98,6 +102,21 @@ class TablePos
         
         this.PrintStatusAndActions();
         this.AcceptUserInput();
+    }
+
+    EnablePayAtTableConfigs()
+    {
+        this._pat.Config.PayAtTableEnabled = true;
+        this._pat.Config.OperatorIdEnabled = true;
+        this._pat.Config.AllowedOperatorIds = [];
+        this._pat.Config.EqualSplitEnabled = true;
+        this._pat.Config.SplitByAmountEnabled = true;
+        this._pat.Config.SummaryReportEnabled = true;
+        this._pat.Config.TippingEnabled = true;
+        this._pat.Config.LabelOperatorId = "Operator ID";
+        this._pat.Config.LabelPayButton = "Pay at Table";
+        this._pat.Config.LabelTableId = "Table Number";
+        this._pat.Config.TableRetrievalEnabled = true;
     }
 
     OnTxFlowStateChanged(txState)
@@ -149,7 +168,7 @@ class TablePos
     // <param name="tableId"></param>
     // <param name="operatorId"></param>
     // <returns></returns>
-    PayAtTableGetBillDetails(billId, tableId, operatorId)
+    PayAtTableGetBillDetails(billId, tableId, operatorId, paymentFlowStarted)
     {
         if (!billId)
         {
@@ -178,11 +197,20 @@ class TablePos
 
         var myBill = this.billsStore[billId];
 
+        if (this.billsStore[billId].Locked && paymentFlowStarted)
+        {
+            this._log.info(`Table is Locked.`);
+            return Object.assign(new BillStatusResponse(), { Result: BillRetrievalResult.INVALID_TABLE_ID });
+        }
+
+        this.billsStore[billId].Locked = paymentFlowStarted;
+
         var response = Object.assign(new BillStatusResponse(),
         {
             Result: BillRetrievalResult.SUCCESS,
             BillId: billId,
             TableId: tableId,
+            OperatorId: operatorId,
             TotalAmount: myBill.TotalAmount,
             OutstandingAmount: myBill.OutstandingAmount
         });
@@ -207,6 +235,9 @@ class TablePos
         var bill = this.billsStore[billPayment.BillId];
         bill.OutstandingAmount -= billPayment.PurchaseAmount;
         bill.tippedAmount += billPayment.TipAmount;
+        bill.SurchargeAmount += billPayment.SurchargeAmount;
+        bill.Locked = bill.OutstandingAmount == 0 ? false : true;
+
         this._flow_msg.Info(`Updated Bill: ${JSON.stringify(bill)}`);
 
         // Here you can access other data that you might want to store from this payment, for example the merchant receipt.
@@ -223,6 +254,77 @@ class TablePos
         });
     }
 
+    PayAtTableBillPaymentFlowEnded(message)
+    {
+        var billPaymentFlowEndedResponse = new BillPaymentFlowEndedResponse(message);
+
+        if (!billsStore[billPaymentFlowEndedResponse.BillId])
+        {
+            // We cannot find this bill.
+            this._flow_msg.Info(`Incorrect Bill Id!`);
+            return;
+        }
+
+        var myBill = billsStore[billPaymentFlowEndedResponse.BillId];
+        myBill.Locked = false;
+
+        this._flow_msg.Info(`
+            Bill Id                : ${billPaymentFlowEndedResponse.BillId}
+            Table                  : ${billPaymentFlowEndedResponse.TableId}
+            Operator Id            : ${billPaymentFlowEndedResponse.OperatorId}
+            Bill OutStanding Amount: ${(billPaymentFlowEndedResponse.BillOutstandingAmount / 100.0).toFixed(2)}
+            Bill Total Amount      : ${(billPaymentFlowEndedResponse.BillTotalAmount / 100.0).toFixed(2)}
+            Card Total Count       : ${billPaymentFlowEndedResponse.CardTotalCount}
+            Card Total Amount      : ${billPaymentFlowEndedResponse.CardTotalAmount}
+            Cash Total Count       : ${billPaymentFlowEndedResponse.CashTotalCount}
+            Cash Total Amount      : ${billPaymentFlowEndedResponse.CashTotalAmount}
+            Locked                 : ${myBill.Locked}`);
+    }
+
+    PayAtTableGetOpenTables(operatorId)
+    {
+        var openTableList = [];
+        var isOpenTables = false;
+
+        if (Object.keys(this.tableToBillMapping).length > 0)
+        {
+            for(var tableId in this.tableToBillMapping)
+            {
+                var item = this.tableToBillMapping[tableId];
+
+                if (billsStore[item.Value].OperatorId == operatorId && billsStore[item.Value].OutstandingAmount > 0)
+                {
+                    if (!isOpenTables)
+                    {
+                        this._flow_msg.Info(`#    Open Tables: `);
+                        isOpenTables = true;
+                    }
+
+                    var openTablesItem = Object.assign(new OpenTablesEntry(),
+                    {
+                        TableId: item.Key,
+                        Label: billsStore[item.Value].Label,
+                        BillOutstandingAmount: billsStore[item.Value].OutstandingAmount
+                    });
+
+                    this._flow_msg.Info(`Table Id : ${item.Key}, Bill Id: ${billsStore[item.Value].BillId}, Outstanding Amount: $${(billsStore[item.Value].OutstandingAmount / 100).toFixed(2)}`);
+                    openTableList.push(openTablesItem);
+                }
+            }
+        }
+
+        if (!isOpenTables)
+        {
+            this._flow_msg.Info(`# No Open Tables.`);
+        }
+
+        var openTableListJson = JSON.stringify(openTableList);
+
+        return Object.assign(new GetOpenTablesResponse(), 
+        {
+            TableData: openTableListJson
+        });
+    }
 
     // endregion
 
@@ -569,14 +671,32 @@ class TablePos
 
         document.getElementById('open').addEventListener('click', () => 
         {
-            let table = document.getElementById('table_number').value;
+            let table       = document.getElementById('table_number').value;
+            let operatorId  = document.getElementById('operator_id').value;
+            let label       = document.getElementById('label').value;
+            let locked      = document.getElementById('locked').checked;
+
             if(!table) 
             {
                 this._flow_msg.Info('# Please give a table number');
                 return false;
             }
 
-            this.openTable(table);
+            this.openTable(table, operatorId, label, locked);
+        });
+
+        document.getElementById('locked').addEventListener('click', () => 
+        {
+            let table       = document.getElementById('table_number').value;
+            let isLock      = document.getElementById('locked').checked;
+
+            if(!table) 
+            {
+                this._flow_msg.Info('# Please give a table number');
+                return false;
+            }
+
+            this.LockTable(table, isLock);
         });
 
         document.getElementById('close').addEventListener('click', () => 
@@ -696,7 +816,7 @@ class TablePos
 
     //region My Pos Functions
 
-    openTable(tableId)
+    openTable(tableId, operatorId, label)
     {
         if (this.tableToBillMapping[tableId])
         {
@@ -704,7 +824,7 @@ class TablePos
             return;
         }
 
-        let newBill = Object.assign(new Bill(), { BillId: this.newBillId(), TableId: tableId });
+        let newBill = Object.assign(new Bill(), { BillId: this.newBillId(), TableId: tableId, OperatorId: operatorId, Label: label });
         this.billsStore[newBill.BillId] = newBill;
         this.tableToBillMapping[newBill.TableId] = newBill.BillId;
         this.SaveBillState();
