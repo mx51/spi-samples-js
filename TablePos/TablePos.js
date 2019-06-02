@@ -682,7 +682,7 @@ class TablePos
                 return false;
             }
 
-            this.openTable(table, operatorId, label, locked);
+            this.OpenTable(table, operatorId, label, locked);
         });
 
         document.getElementById('locked').addEventListener('click', () => 
@@ -707,7 +707,7 @@ class TablePos
                 this._flow_msg.Info('# Please give a table number');
                 return false;
             }
-            this.closeTable(table);
+            this.CloseTable(table);
         });
 
         document.getElementById('add').addEventListener('click', () => 
@@ -724,7 +724,7 @@ class TablePos
                 this._flow_msg.Info('# Please enter an amount');
                 return false;
             }
-            this.addToTable(table, amount);
+            this.AddToTable(table, amount);
         });
         
         document.getElementById('table').addEventListener('click', () => 
@@ -735,7 +735,7 @@ class TablePos
                 this._flow_msg.Info('# Please give a table number');
                 return false;
             }
-            this.printTable(table);
+            this.PrintTable(table);
         });
 
         document.getElementById('bill').addEventListener('click', () => 
@@ -751,7 +751,7 @@ class TablePos
 
         document.getElementById('tables').addEventListener('click', () => 
         {
-            this.printTables();
+            this.PrintTables();
         });
 
         document.getElementById('purchase').addEventListener('click', () => 
@@ -816,7 +816,7 @@ class TablePos
 
     //region My Pos Functions
 
-    openTable(tableId, operatorId, label)
+    OpenTable(tableId, operatorId, label)
     {
         if (this.tableToBillMapping[tableId])
         {
@@ -824,28 +824,35 @@ class TablePos
             return;
         }
 
-        let newBill = Object.assign(new Bill(), { BillId: this.newBillId(), TableId: tableId, OperatorId: operatorId, Label: label });
+        let newBill = Object.assign(new Bill(), { BillId: this.NewBillId(), TableId: tableId, OperatorId: operatorId, Label: label });
         this.billsStore[newBill.BillId] = newBill;
         this.tableToBillMapping[newBill.TableId] = newBill.BillId;
         this.SaveBillState();
         this._flow_msg.Info(`Opened: ${JSON.stringify(newBill)}`);
     }
 
-    addToTable(tableId, amountCents)
+    AddToTable(tableId, amountCents)
     {
         if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
         }
-        let bill = this.billsStore[this.tableToBillMapping[tableId]];
+
+        var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        if (bill.Locked)
+        {
+            this._flow_msg.Info("Table is Locked.");
+            return;
+        }
+
         bill.TotalAmount += amountCents;
         bill.OutstandingAmount += amountCents;
         this.SaveBillState();
         this._flow_msg.Info(`Updated: ${JSON.stringify(bill)}`);
     }
 
-    closeTable(tableId)
+    CloseTable(tableId)
     {
         if (!this.tableToBillMapping[tableId])
         {
@@ -853,6 +860,12 @@ class TablePos
             return;
         }
         var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        if (bill.Locked)
+        {
+            this._flow_msg.Info("Table is Locked.");
+            return;
+        }
+
         if (bill.OutstandingAmount > 0)
         {
             this._flow_msg.Info(`Bill not Paid Yet: ${JSON.stringify(bill)}`);
@@ -866,17 +879,36 @@ class TablePos
         this._flow_msg.Info(`Closed: ${JSON.stringify(bill)}`);
     }
 
-    printTable(tableId)
+    LockTable(tableId, locked)
     {
         if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
         }
-        this.printBill(this.tableToBillMapping[tableId]);
+        var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        bill.Locked = locked;
+        if (locked)
+        {
+            this._flow_msg.Info(`Locked: ${JSON.stringify(bill)}`);
+        }
+        else
+        {
+            this._flow_msg.Info(`UnLocked: ${JSON.stringify(bill)}`);
+        }
     }
 
-    printTables()
+    PrintTable(tableId)
+    {
+        if (!this.tableToBillMapping[tableId])
+        {
+            this._flow_msg.Info("Table not Open.");
+            return;
+        }
+        this.PrintBill(this.tableToBillMapping[tableId]);
+    }
+
+    PrintTables()
     {
         if (Object.keys(this.tableToBillMapping).length > 0) 
         { 
@@ -907,7 +939,7 @@ class TablePos
         }
     }
 
-    printBill(billId)
+    PrintBill(billId)
     {
         if (!this.billsStore[billId])
         {
@@ -917,7 +949,7 @@ class TablePos
         this._flow_msg.Info(`Bill: ${this.billsStore[billId].toString()}`);
     }
 
-    newBillId()
+    NewBillId()
     {
         return ((Date.now() * 1000) + new Date().getMilliseconds()).toString();
     }
@@ -980,14 +1012,25 @@ class Bill
     {
         this.BillId = null;
         this.TableId = null;
+        this.OperatorId = null;
+        this.Label = null;
         this.TotalAmount = 0;
         this.OutstandingAmount = 0;
         this.tippedAmount = 0;
+        this.Locked = false;
     }
 }
 Bill.prototype.toString = function() 
 {
-    return `${this.BillId} - Table:${this.TableId} Total:$${(this.TotalAmount / 100).toFixed(2)} Outstanding:$${(this.OutstandingAmount / 100).toFixed(2)} Tips:$${(this.tippedAmount / 100).toFixed(2)}`;
+    return `${this.BillId} - /
+        Table:${this.TableId} 
+        Operator Id:${this.OperatorId} 
+        Label:${this.Label} 
+        Total:$${(this.TotalAmount / 100).toFixed(2)} 
+        Outstanding:$${(this.OutstandingAmount / 100).toFixed(2)} 
+        Tips:$${(this.tippedAmount / 100).toFixed(2)}
+        Surcharge:$${(this.SurchargeAmount / 100).toFixed(2)}  
+        Locked:${this.Locked}`;
 }
 
 /**
