@@ -25,6 +25,10 @@
                         <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
                     </tr>
                     <tr>
+                        <th><label for="print_merchant_copy">Merchant receipt from EFTPOS:</label></th>
+                        <td><input type="checkbox" class="input" id="print_merchant_copy" name="print_merchant_copy" value="false"></td>
+                    </tr>
+                    <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
                         <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
                     </tr>
@@ -81,6 +85,7 @@
                     <button type="button" class="input" id="add">Add to bill</button>
                     <button type="button" class="input" id="close">Close table</button>
                     <button type="button" class="input" id="tables">List open tables</button>
+                    <button type="button" class="input" id="lock">Lock/Unlock table</button>
                     <button type="button" class="input" id="table">Get table bill</button>
                     <button type="button" class="input" id="bill">Print bill ID</button>
 
@@ -105,9 +110,24 @@
                     <input type="number" id="table_number" name="table_number" value="1" placeholder="Table number">
                 </fieldset>
 
+                <fieldset id="locked_input" class="input">
+                    <label for="locked">Locked: </label>
+                    <input type="checkbox" class="input" id="locked" name="locked" value="false">
+                </fieldset>
+
                 <fieldset id="bill_id_input" class="input">
                     <label for="bill_id">Bill #: </label>
                     <input type="number" id="bill_id" name="bill_id" value="" placeholder="Bill ID">
+                </fieldset>
+
+                <fieldset id="operator_id_input" class="input">
+                    <label for="operator_id">Operator ID: </label>
+                    <input type="number" id="operator_id" name="operator_id" value="" placeholder="Operator ID">
+                </fieldset>
+
+                <fieldset id="label_input" class="input">
+                    <label for="label">Label: </label>
+                    <input type="text" id="label" name="label" value="" placeholder="Label">
                 </fieldset>
             </div>
         </td>

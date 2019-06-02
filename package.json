@@ -8,7 +8,7 @@
   "homepage": "https://github.com/AssemblyPayments/acmepos-js",
   "scripts": {
     "start": "webpack-dev-server --port $PORT",
-    "dev": "webpack-dev-server --port 3000",
+    "dev": "webpack-dev-server --open --color --public localhost:3000",
     "build": "webpack -p",
     "build:dev": "webpack"
   },

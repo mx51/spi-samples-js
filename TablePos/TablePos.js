@@ -2,21 +2,17 @@ import {
     Spi, 
     Logger, 
     Secrets, 
-    TransactionOptions,
+    OpenTablesEntry,
+    BillStatusResponse,
+    BillPaymentFlowEndedResponse,
     TransactionType,
-    PrintingResponse,
     RefundResponse,
-    TerminalStatusResponse,
-    TerminalBattery,
-    CashoutOnlyResponse,
-    MotoPurchaseResponse,
-    GetLastTransactionResponse,
     PurchaseResponse,
     Settlement,
     SuccessState,
     RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
+    SpiStatus} from '../lib/spi-client-js'; //'@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
@@ -499,6 +495,7 @@ class TablePos
                     case SpiFlow.Idle: // Unpaired, Idle
                         inputsEnabled.push('pos_id');
                         inputsEnabled.push('eftpos_address');
+                        inputsEnabled.push('print_merchant_copy');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
                         inputsEnabled.push('pair');
@@ -530,6 +527,7 @@ class TablePos
             case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
                 // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
                 inputsEnabled.push('eftpos_address');
+                inputsEnabled.push('print_merchant_copy');
                 inputsEnabled.push('rcpt_from_eftpos');
                 inputsEnabled.push('sig_flow_from_eftpos');
                 inputsEnabled.push('save_settings');
@@ -551,6 +549,10 @@ class TablePos
                         inputsEnabled.push('tables');
                         inputsEnabled.push('table');
                         inputsEnabled.push('bill');
+                        inputsEnabled.push('lock');
+                        inputsEnabled.push('locked');
+                        inputsEnabled.push('operator_id');
+                        inputsEnabled.push('label');
 
                         inputsEnabled.push('purchase');
                         inputsEnabled.push('refund');
@@ -638,9 +640,11 @@ class TablePos
                 localStorage.setItem('eftpos_address', this._eftposAddress);
             }
 
+            this._spi.Config.PrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
             this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
             this._spi.Config.SignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
 
+            localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy);
             localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
             localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
 
@@ -674,7 +678,6 @@ class TablePos
             let table       = document.getElementById('table_number').value;
             let operatorId  = document.getElementById('operator_id').value;
             let label       = document.getElementById('label').value;
-            let locked      = document.getElementById('locked').checked;
 
             if(!table) 
             {
@@ -682,10 +685,10 @@ class TablePos
                 return false;
             }
 
-            this.OpenTable(table, operatorId, label, locked);
+            this.OpenTable(table, operatorId, label);
         });
 
-        document.getElementById('locked').addEventListener('click', () => 
+        document.getElementById('lock').addEventListener('click', () => 
         {
             let table       = document.getElementById('table_number').value;
             let isLock      = document.getElementById('locked').checked;
@@ -746,7 +749,7 @@ class TablePos
                 this._flow_msg.Info('# Please give a bill number');
                 return false;
             }
-            this.printBill(billId);
+            this.PrintBill(billId);
         });
 
         document.getElementById('tables').addEventListener('click', () => 
@@ -986,6 +989,7 @@ class TablePos
             this._eftposAddress = document.getElementById('eftpos_address').value;
         }
 
+        this._print_merchant_copy = document.getElementById('print_merchant_copy').checked = localStorage.getItem('print_merchant_copy') === 'true' || false;
         this._rcpt_from_eftpos = document.getElementById('rcpt_from_eftpos').checked = localStorage.getItem('rcpt_from_eftpos') === 'true' || false;
         this._sig_flow_from_eftpos = document.getElementById('sig_flow_from_eftpos').checked = localStorage.getItem('sig_flow_from_eftpos') === 'true' || false;
 
