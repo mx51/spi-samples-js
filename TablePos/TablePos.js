@@ -40,6 +40,7 @@ class TablePos
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
         this._print_merchant_copy = false;
+        this.allowedOperatorIdList = [];
 
         // My Bills Store.
         // Key = BillId
@@ -561,6 +562,8 @@ class TablePos
                         inputsEnabled.push('unpair');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
+
+                        inputsEnabled.push('set_allowed_operatorid');
                         break;
                     case SpiFlow.Transaction: // Paired, Transaction
                         if (this._spi.CurrentTxFlowState.AwaitingSignatureCheck)
@@ -686,6 +689,21 @@ class TablePos
             }
 
             this.OpenTable(table, operatorId, label);
+        });
+
+        document.getElementById('set_allowed_operatorid').addEventListener('click', () => 
+        {
+            let allowed_operatorid = document.getElementById('operator_id').value;
+
+            if(!allowed_operatorid) 
+            {
+                this._flow_msg.Info('# Please give a operator id');
+                return false;
+            }
+
+            this.allowedOperatorIdList.push(allowed_operatorid);
+            this._pat.Config.AllowedOperatorIds = this.allowedOperatorIdList;
+            this._pat.PushPayAtTableConfig();
         });
 
         document.getElementById('lock').addEventListener('click', () => 
