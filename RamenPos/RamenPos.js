@@ -15,6 +15,7 @@ import {
     Settlement,
     SuccessState,
     RequestIdHelper,
+    DeviceAddressResponseCode,
     SpiFlow,
     SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
 
@@ -158,8 +159,33 @@ export class RamenPos
     {
         var eftposAddress = document.getElementById('eftpos_address');
 
-        eftposAddress.value = deviceAddressStatus.Address;
-        this._eftposAddress = deviceAddressStatus.Address;
+        switch(deviceAddressStatus.DeviceAddressResponseCode)
+        {
+            case DeviceAddressResponseCode.SUCCESS:
+                eftposAddress.value = deviceAddressStatus.Address;
+                this._eftposAddress = deviceAddressStatus.Address;
+                alert(`Device Address has been updated to ${deviceAddressStatus.Address}`);
+                break;
+            case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
+                eftposAddress.value = "";
+                this._eftposAddress = "";
+                alert("The serial number is invalid: " + deviceAddressStatus.ResponseStatusDescription + " : " + deviceAddressStatus.ResponseMessage);
+                break;
+            case DeviceAddressResponseCode.DEVICE_SERVICE_ERROR:
+                eftposAddress.value = "";
+                this._eftposAddress = "";
+                alert("The device service error: " + deviceAddressStatus.ResponseStatusDescription + " : " + deviceAddressStatus.ResponseMessage);
+                break;
+            case DeviceAddressResponseCode.ADDRESS_NOT_CHANGED:
+                alert("The IP address have not changed!");
+                break;
+            case DeviceAddressResponseCode.SERIAL_NUMBER_NOT_CHANGED:
+                alert("The serial number have not changed!");
+                break;
+            default:
+                alert("The serial number is invalid! or The IP address have not changed!");
+                break;
+        }        
     }
 
     HandlePrintingResponse(message)
