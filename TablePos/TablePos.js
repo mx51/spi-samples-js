@@ -487,6 +487,92 @@ class TablePos
         flowStatusEl.innerText      = this._spi.CurrentFlow;
         flowStatusHeading.innerText = this._spi.CurrentFlow;
 
+        // Configure buttons and related inputs
+        let buttons = [
+            {
+                id: 'open',
+                onClick: () => {
+                    let tableId     = document.getElementById('table_number').value;
+                    let operatorId  = document.getElementById('operator_id').value;
+                    let label       = document.getElementById('label').value;
+                    let isLocked    = document.getElementById('locked').checked;
+
+                    this.OpenTable(tableId, operatorId, label, isLocked);
+                },
+                inputs: ['table_number', 'operator_id', 'label', 'locked']
+            },
+            {
+                id: 'add',
+                onClick: () => {
+                    let tableId     = document.getElementById('table_number').value;
+                    let amountCents = parseInt(document.getElementById('amount').value, 10);
+
+                    this.AddToTable(tableId, amountCents);
+                },
+                inputs: ['table_number', 'amount']
+            },
+            {
+                id: 'close',
+                onClick: () => {
+                    let tableId = document.getElementById('table_number').value;
+
+                    this.CloseTable(tableId);
+                },
+                inputs: ['table_number']
+            },
+            {
+                id: 'lock',
+                onClick: () => {
+                    let tableId     = document.getElementById('table_number').value;
+                    let isLocked    = document.getElementById('locked').checked;
+
+                    this.LockTable(tableId, isLocked);
+                },
+                inputs: ['table_number', 'locked']
+            },
+            {
+                id: 'tables',
+                onClick: () => {
+                    this.PrintTables();
+                }
+            },
+            {
+                id: 'table',
+                onClick: () => {
+                    let tableId = document.getElementById('table_number').value;
+
+                    this.PrintTable(tableId);
+                },
+                inputs: ['table_number']
+            },
+            {
+                id: 'bill',
+                onClick: () => {
+                    let billId = document.getElementById('bill_id').value;
+
+                    this.PrintBill(billId);
+                },
+                inputs: ['bill_id']
+            }
+        ];
+
+        buttons.forEach((button) => {
+            let buttonElement       = document.getElementById(button.id);
+            buttonElement.disabled  = false;
+            buttonElement.onclick   = () => {
+
+                // Disable all inputs and enable relevant inputs for this control action
+                button.inputs.forEach((input) => {
+                    let inputElement = document.getElementById(input);
+    
+                    inputElement.disabled = false;
+                    inputElement.required = true;
+                });
+            }
+
+
+        });
+
         // Available Actions depend on the current status (Unpaired/PairedConnecting/PairedConnected)
         switch (this._spi.CurrentStatus)
         {
@@ -825,19 +911,11 @@ class TablePos
             this._flow_msg.innerHTML = "Select from the options below";
             this.PrintStatusAndActions();
         });
-
-        document.getElementById('ok_cancel').addEventListener('click', () => 
-        {
-            this._spi.AckFlowEndedAndBackToIdle();
-            this._log.clear();
-            this._flow_msg.innerHTML = "Order Cancelled";
-            this.PrintStatusAndActions();
-        });
     }
 
     //region My Pos Functions
 
-    OpenTable(tableId, operatorId, label)
+    OpenTable(tableId, operatorId, label, locked = false)
     {
         if (this.tableToBillMapping[tableId])
         {
@@ -845,7 +923,7 @@ class TablePos
             return;
         }
 
-        let newBill = Object.assign(new Bill(), { BillId: this.NewBillId(), TableId: tableId, OperatorId: operatorId, Label: label });
+        let newBill = Object.assign(new Bill(), { BillId: this.NewBillId(), TableId: tableId, OperatorId: operatorId, Label: label, Locked: locked });
         this.billsStore[newBill.BillId] = newBill;
         this.tableToBillMapping[newBill.TableId] = newBill.BillId;
         this.SaveBillState();

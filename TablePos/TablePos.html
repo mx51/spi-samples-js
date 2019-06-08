@@ -18,27 +18,27 @@
                     <table class="form">
                     <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
-                        <td><input type="text" class="input" name="pos_id" id="pos_id" placeholder="Pos ID" value="TABLEPOS1" required /></td>
+                        <td><input type="text" class="action" name="pos_id" id="pos_id" placeholder="Pos ID" value="TABLEPOS1" required /></td>
                     </tr>
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
-                        <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
+                        <td><input type="text" class="action" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
                     </tr>
                     <tr>
                         <th><label for="print_merchant_copy">Merchant receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="print_merchant_copy" name="print_merchant_copy" value="false"></td>
+                        <td><input type="checkbox" class="action" id="print_merchant_copy" name="print_merchant_copy" value="false"></td>
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="action" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
                     </tr>
                     <tr>
                         <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="action" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
-                        <td><button type="button" class="input no-hide" id="save_settings">Save</button></td>
+                        <td><button type="button" class="action no-hide" id="save_settings">Save</button></td>
                     </tr>
                     </table>
                 </form>
@@ -51,8 +51,11 @@
                     <label id="flow_status" class="flow_status">Idle</label>
                 </p>
                 <p class="paring-buttons">
-                    <button type="button" class="input" id="pair">PAIR</button>
-                    <button type="button" class="input" id="unpair">UNPAIR</button>
+                    <button type="button" class="action" id="pair">PAIR</button>
+                    <button type="button" class="action" id="unpair">UNPAIR</button>
+
+                    <button type="button" class="action" id="pair_confirm">Confirm Code</button>
+                    <button type="button" class="action" id="pair_cancel">Cancel Pairing</button>
                 </p>
             </div>
 
@@ -73,63 +76,87 @@
     </tr>
     <tr>
         <td class="col actions">
+
             <h1>Actions</h1>
+
 
             <div class="padding-1">
 
-                <p class="action-buttons">
-                    <button type="button" class="input" id="pair_confirm">Confirm Code</button>
-                    <button type="button" class="input" id="pair_cancel">Cancel Pairing</button>
+                <form name="controls">
 
-                    <button type="button" class="input" id="open">Open table</button>
-                    <button type="button" class="input" id="add">Add to bill</button>
-                    <button type="button" class="input" id="close">Close table</button>
-                    <button type="button" class="input" id="tables">List open tables</button>
-                    <button type="button" class="input" id="lock">Lock/Unlock table</button>
-                    <button type="button" class="input" id="table">Get table bill</button>
-                    <button type="button" class="input" id="bill">Print bill ID</button>
-                    <button type="button" class="input" id="set_allowed_operatorid">Set allowed operator ID</button>
+                    <div class="action-buttons">
+                        <button type="button" class="action" id="open">Open table</button>
+                        <button type="button" class="action" id="add" data-ref="[bill_id]">Add to bill</button>
+                        <button type="button" class="action" id="close" data-ref="[table_number]">Close table</button>
+                        <button type="button" class="action" id="lock" data-ref="[table_number, locked]">Lock/Unlock table</button>
+                        <button type="button" class="action" id="tables">List open tables</button>
+                        <button type="button" class="action" id="table">Get table bill</button>
+                        <button type="button" class="action" id="bill">Print bill ID</button>
 
-                    <button type="button" class="input" id="purchase">Purchase</button>
-                    <button type="button" class="input" id="refund">Refund</button>
-                    <button type="button" class="input" id="settle">Settle</button>
+                        <button type="button" class="action" id="pat_all_enable" aria-label="Enable all pay at table settings">Enable All PAT settings</button>
+                        <button type="button" class="action" id="pat_enabled" data-ref="[enabled]">Pay at table</button>
+                        <button type="button" class="action" id="operatorid_enabled" data-ref="[enabled]">Operator ID</button>
+                        <button type="button" class="action" id="set_allowed_operatorid" data-ref="[enabled]">Set allowed operator ID</button>
+                        <button type="button" class="action" id="equal_split" data-ref="[enabled]">Equal split</button>
+                        <button type="button" class="action" id="split_by_amount" data-ref="[enabled]">Split by amount</button>
+                        <button type="button" class="action" id="tipping" data-ref="[enabled]">Tipping</button>
+                        <button type="button" class="action" id="summary_report" data-ref="[enabled]">Summary report</button>
+                        <button type="button" class="action" id="set_label_operatorid" data-ref="[label]">Set operatorid label</button>
+                        <button type="button" class="action" id="set_label_tableid" data-ref="[label]">Set tableid label</button>
+                        <button type="button" class="action" id="set_label_paybutton" data-ref="[label]">Set pay button label</button>
+                        <button type="button" class="action" id="table_retrieval_enabled" data-ref="[enabled]">Table retrieval button</button>
 
-                    <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
-                    <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
-                    <button type="button" class="input" id="tx_cancel">Cancel</button>
-                    <button type="button" class="input" id="ok">Ok</button>
-                    <button type="button" class="input" id="ok_cancel">Cancel</button>
-                </p>
+                        <button type="button" class="action" id="purchase">Purchase</button>
+                        <button type="button" class="action" id="refund">Refund</button>
+                        <button type="button" class="action" id="settle">Settle</button>
 
-                <fieldset id="amount_input" class="input">
-                    <label for="amount">Amount (cents): </label>
-                    <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)">
-                </fieldset>
+                        <button type="button" class="action" id="tx_sign_accept">Accept Signature</button>
+                        <button type="button" class="action" id="tx_sign_decline">Decline Signature</button>
+                        <button type="button" class="action" id="tx_cancel">Cancel</button>
+                        <button type="button" class="action" id="ok">Ok</button>
+                    </div>
 
-                <fieldset id="table_input" class="input">
-                    <label for="table">Table #: </label>
-                    <input type="number" id="table_number" name="table_number" value="1" placeholder="Table number">
-                </fieldset>
+                    <div class="action-inputs">
+                        <fieldset id="amount_input" class="input">
+                            <label for="amount">Amount (cents): </label>
+                            <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)" required>
+                        </fieldset>
 
-                <fieldset id="locked_input" class="input">
-                    <label for="locked">Locked: </label>
-                    <input type="checkbox" class="input" id="locked" name="locked" value="false">
-                </fieldset>
+                        <fieldset id="table_input" class="input">
+                            <label for="table">Table #: </label>
+                            <input type="number" id="table_number" name="table_number" value="1" placeholder="Table number" required>
+                        </fieldset>
 
-                <fieldset id="bill_id_input" class="input">
-                    <label for="bill_id">Bill #: </label>
-                    <input type="number" id="bill_id" name="bill_id" value="" placeholder="Bill ID">
-                </fieldset>
+                        <fieldset id="locked_input" class="input">
+                            <label for="locked">Locked: </label>
+                            <input type="checkbox" id="locked" name="locked" value="false">
+                        </fieldset>
 
-                <fieldset id="operator_id_input" class="input">
-                    <label for="operator_id">Operator ID: </label>
-                    <input type="number" id="operator_id" name="operator_id" value="" placeholder="Operator ID">
-                </fieldset>
+                        <fieldset id="enabled_input" class="input">
+                            <label for="enabled">Enabled: </label>
+                            <input type="checkbox" id="enabled" name="enabled" value="false">
+                        </fieldset>
 
-                <fieldset id="label_input" class="input">
-                    <label for="label">Label: </label>
-                    <input type="text" id="label" name="label" value="" placeholder="Label">
-                </fieldset>
+                        <fieldset id="bill_id_input" class="input">
+                            <label for="bill_id">Bill #: </label>
+                            <input type="number" id="bill_id" name="bill_id" value="" placeholder="Bill ID" required>
+                        </fieldset>
+
+                        <fieldset id="operator_id_input" class="input">
+                            <label for="operator_id">Operator ID: </label>
+                            <input type="number" id="operator_id" name="operator_id" value="" placeholder="Operator ID" required>
+                        </fieldset>
+
+                        <fieldset id="label_input" class="input">
+                            <label for="label">Label: </label>
+                            <input type="text" id="label" name="label" value="" placeholder="Label" required>
+                        </fieldset>
+
+                        <button type="submit" name="save" id="save">Save</button>
+                    </div>
+
+                </form>
+
             </div>
         </td>
     </tr>
