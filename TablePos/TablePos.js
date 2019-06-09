@@ -487,11 +487,50 @@ class TablePos
         flowStatusEl.innerText      = this._spi.CurrentFlow;
         flowStatusHeading.innerText = this._spi.CurrentFlow;
 
+        let isUnpaired          = this._spi.CurrentStatus === SpiStatus.Unpaired;
+        let isPairedConnecting  = this._spi.CurrentStatus === SpiStatus.PairedConnecting;
+        let isPairedConnected   = this._spi.CurrentStatus === SpiStatus.PairedConnected;
+
+        let isIdleFlow          = this._spi.CurrentFlow === SpiFlow.Idle;
+        let isTransactionFlow   = this._spi.CurrentFlow === SpiFlow.Transaction;
+        let isPairingFlow       = this._spi.CurrentFlow === SpiFlow.Pairing;
+
         // Configure buttons and related inputs
         let buttons = [
             {
-                id: 'open',
+                id: 'save_settings',
+                enabled: (isUnpaired && isIdleFlow) || isPairedConnecting || (isPairedConnected && isIdleFlow),
                 onClick: () => {
+                    if(isUnpaired && isIdleFlow) 
+                    {
+                        this._posId         = document.getElementById('pos_id').value;
+                        this._eftposAddress = document.getElementById('eftpos_address').value;
+        
+                        this._spi.SetPosId(this._posId);
+                        this._spi.SetEftposAddress(this._eftposAddress);
+        
+                        localStorage.setItem('pos_id', this._posId);
+                        localStorage.setItem('eftpos_address', this._eftposAddress);
+                    }
+        
+                    this._spi.Config.PrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
+                    this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
+                    this._spi.Config.SignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
+        
+                    localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy);
+                    localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
+                    localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
+        
+                    this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+        
+                    this.PrintPairingStatus();
+                },
+                inputs: []
+            },
+            {
+                id: 'open',
+                enabled: true,
+                onSubmit: () => {
                     let tableId     = document.getElementById('table_number').value;
                     let operatorId  = document.getElementById('operator_id').value;
                     let label       = document.getElementById('label').value;
@@ -503,7 +542,8 @@ class TablePos
             },
             {
                 id: 'add',
-                onClick: () => {
+                enabled: true,
+                onSubmit: () => {
                     let tableId     = document.getElementById('table_number').value;
                     let amountCents = parseInt(document.getElementById('amount').value, 10);
 
@@ -513,7 +553,8 @@ class TablePos
             },
             {
                 id: 'close',
-                onClick: () => {
+                enabled: true,
+                onSubmit: () => {
                     let tableId = document.getElementById('table_number').value;
 
                     this.CloseTable(tableId);
@@ -522,7 +563,8 @@ class TablePos
             },
             {
                 id: 'lock',
-                onClick: () => {
+                enabled: true,
+                onSubmit: () => {
                     let tableId     = document.getElementById('table_number').value;
                     let isLocked    = document.getElementById('locked').checked;
 
@@ -532,13 +574,16 @@ class TablePos
             },
             {
                 id: 'tables',
+                enabled: true,
                 onClick: () => {
                     this.PrintTables();
-                }
+                },
+                inputs: []
             },
             {
                 id: 'table',
-                onClick: () => {
+                enabled: true,
+                onSubmit: () => {
                     let tableId = document.getElementById('table_number').value;
 
                     this.PrintTable(tableId);
@@ -547,27 +592,209 @@ class TablePos
             },
             {
                 id: 'bill',
-                onClick: () => {
+                enabled: true,
+                onSubmit: () => {
                     let billId = document.getElementById('bill_id').value;
 
                     this.PrintBill(billId);
                 },
                 inputs: ['bill_id']
+            },
+            {
+                id: 'pat_all_enable',
+                enabled: (isPairedConnected && isIdleFlow),
+                onClick: () => {
+                    this.EnablePayAtTableConfigs();
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: []
+            },
+            {
+                id: 'pat_enabled',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.PayAtTableEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'operatorid_enabled',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.OperatorIdEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'set_allowed_operatorid',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let operatorId = document.getElementById('operator_id').value;
+
+                    this.allowedOperatorIdList.push(operatorId);
+                    this._pat.Config.AllowedOperatorIds = allowedOperatorIdList;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['operator_id']
+            },
+            {
+                id: 'equal_split',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.EqualSplitEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'split_by_amount',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.SplitByAmountEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'tipping',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.TippingEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'summary_report',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.SummaryReportEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'set_label_operatorid',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let label = document.getElementById('label').value;
+
+                    this._pat.Config.LabelOperatorId = label;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['label']
+            },
+            {
+                id: 'set_label_tableid',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let label = document.getElementById('label').value;
+
+                    this._pat.Config.LabelTableId = label;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['label']
+            },
+            {
+                id: 'set_label_paybutton',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let label = document.getElementById('label').value;
+
+                    this._pat.Config.LabelPayButton = label;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['label']
+            },
+            {
+                id: 'table_retrieval_enabled',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let enabled = document.getElementById('enabled').checked;
+
+                    this._pat.Config.TableRetrievalEnabled = enabled;
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: ['enabled']
+            },
+            {
+                id: 'purchase',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let posRefId        = `purchase-${new Date().toISOString()}`; 
+                    let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
+                    let tipAmount       = 0;
+                    let cashoutAmount   = 0;
+                    let promptForCashout = false;
+                    let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout);
+                    if (!res.Initiated)
+                    {
+                        this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
+                    }
+                },
+                inputs: ['amount']
+            },
+            {
+                id: 'refund',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let amount      = parseInt(document.getElementById('amount').value,10);
+                    let posRefId    = `refund-${new Date().toISOString()}`; 
+                    let res         = this._spi.InitiateRefundTx(posRefId, amount);
+                    this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
+                },
+                inputs: ['amount']
+            },
+            {
+                id: 'settle',
+                enabled: (isPairedConnected && isIdleFlow),
+                onClick: () => {
+                    let res = this._spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
+                    this._flow_msg.Info(res.Initiated ? "# Settle Initiated. Will be updated with Progress." : `# Could not initiate settle: ${res.Message}. Please Retry.`);
+                },
+                inputs: []
             }
         ];
 
         buttons.forEach((button) => {
             let buttonElement       = document.getElementById(button.id);
-            buttonElement.disabled  = false;
-            buttonElement.onclick   = () => {
+            let actionForm          = document.getElementById('action-form');
 
-                // Disable all inputs and enable relevant inputs for this control action
-                button.inputs.forEach((input) => {
-                    let inputElement = document.getElementById(input);
-    
-                    inputElement.disabled = false;
-                    inputElement.required = true;
-                });
+            buttonElement.disabled  = !button.enabled;
+
+            // If this button requires additional input
+            if(button.inputs.length) 
+            {
+                buttonElement.onclick   = () => {
+
+                    // Disable all inputs and enable relevant inputs for this control action
+                    button.inputs.forEach((input) => {
+                        let inputElement = document.getElementById(input);
+        
+                        inputElement.disabled = false;
+                        inputElement.required = true;
+                    });
+
+                    actionForm.onsubmit = button.onSubmit;
+                }
+            }
+            else
+            {
+                buttonElement.onclick = button.onClick;
             }
 
 

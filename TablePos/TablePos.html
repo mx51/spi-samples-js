@@ -14,7 +14,7 @@
         <td class="col settings" rowspan="2">
             <h1>Settings</h1>
             <div class="padding-1">
-                <form name="settings" onSubmit="return false;">
+                <form name="settings" id="settings-form" onSubmit="return false;">
                     <table class="form">
                     <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
@@ -26,15 +26,15 @@
                     </tr>
                     <tr>
                         <th><label for="print_merchant_copy">Merchant receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="action" id="print_merchant_copy" name="print_merchant_copy" value="false"></td>
+                        <td><input type="checkbox" class="action" id="print_merchant_copy" name="print_merchant_copy" value="false" aria-label="Offer Merchant Receipt From Eftpos"></td>
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="action" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="action" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false" aria-label="Offer Customer Receipt From Eftpos"></td>
                     </tr>
                     <tr>
                         <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="action" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
+                        <td><input type="checkbox" class="action" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false" aria-label="Signature Flow to be handled by Eftpos"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -45,18 +45,21 @@
             </div>
             <h1>Status</h1>
             <div class="padding-1 status">
-                <p id="status_indicator" data-status="Unpaired" data-flow="Idle">
-                    <label id="primary_status">Unpaired</label>
-                    <span>: </span>
-                    <label id="flow_status" class="flow_status">Idle</label>
-                </p>
-                <p class="paring-buttons">
-                    <button type="button" class="action" id="pair">PAIR</button>
-                    <button type="button" class="action" id="unpair">UNPAIR</button>
 
-                    <button type="button" class="action" id="pair_confirm">Confirm Code</button>
-                    <button type="button" class="action" id="pair_cancel">Cancel Pairing</button>
-                </p>
+                <form name="pairing" id="pairing-form">
+                    <p id="status_indicator" data-status="Unpaired" data-flow="Idle">
+                        <label id="primary_status">Unpaired</label>
+                        <span>: </span>
+                        <label id="flow_status" class="flow_status">Idle</label>
+                    </p>
+                    <p class="paring-buttons">
+                        <button type="button" class="action" id="pair" aria-label="Pair with Eftpos">PAIR</button>
+                        <button type="button" class="action" id="unpair" aria-label="Unpair and Disconnect">UNPAIR</button>
+
+                        <button type="button" class="action" id="pair_confirm" aria-label="Confirm Pairing Code">Confirm Code</button>
+                        <button type="button" class="action" id="pair_cancel" aria-label="Cancel Pairing">Cancel Pairing</button>
+                    </p>
+                </form>
             </div>
 
         </td>
@@ -82,38 +85,38 @@
 
             <div class="padding-1">
 
-                <form name="controls">
+                <form id="action-form" name="controls">
 
                     <div class="action-buttons">
-                        <button type="button" class="action" id="open">Open table</button>
-                        <button type="button" class="action" id="add" data-ref="[bill_id]">Add to bill</button>
-                        <button type="button" class="action" id="close" data-ref="[table_number]">Close table</button>
-                        <button type="button" class="action" id="lock" data-ref="[table_number, locked]">Lock/Unlock table</button>
-                        <button type="button" class="action" id="tables">List open tables</button>
-                        <button type="button" class="action" id="table">Get table bill</button>
-                        <button type="button" class="action" id="bill">Print bill ID</button>
+                        <button type="button" class="action" id="open" aria-label="Start a new bill">Open table</button>
+                        <button type="button" class="action" id="add" aria-label="Add an amount to a bill" data-ref="[bill_id]">Add to bill</button>
+                        <button type="button" class="action" id="close" aria-label="Close a table" data-ref="[table_number]">Close table</button>
+                        <button type="button" class="action" id="lock" aria-label="Lock/Unlock a table" data-ref="[table_number, locked]">Lock/Unlock table</button>
+                        <button type="button" class="action" id="tables" aria-label="List open tables">List open tables</button>
+                        <button type="button" class="action" id="table" aria-label="Print current bill for a table">Get table bill</button>
+                        <button type="button" class="action" id="bill" aria-label="Print a bill">Print bill ID</button>
 
                         <button type="button" class="action" id="pat_all_enable" aria-label="Enable all pay at table settings">Enable All PAT settings</button>
-                        <button type="button" class="action" id="pat_enabled" data-ref="[enabled]">Pay at table</button>
-                        <button type="button" class="action" id="operatorid_enabled" data-ref="[enabled]">Operator ID</button>
-                        <button type="button" class="action" id="set_allowed_operatorid" data-ref="[enabled]">Set allowed operator ID</button>
-                        <button type="button" class="action" id="equal_split" data-ref="[enabled]">Equal split</button>
-                        <button type="button" class="action" id="split_by_amount" data-ref="[enabled]">Split by amount</button>
-                        <button type="button" class="action" id="tipping" data-ref="[enabled]">Tipping</button>
-                        <button type="button" class="action" id="summary_report" data-ref="[enabled]">Summary report</button>
-                        <button type="button" class="action" id="set_label_operatorid" data-ref="[label]">Set operatorid label</button>
-                        <button type="button" class="action" id="set_label_tableid" data-ref="[label]">Set tableid label</button>
-                        <button type="button" class="action" id="set_label_paybutton" data-ref="[label]">Set pay button label</button>
-                        <button type="button" class="action" id="table_retrieval_enabled" data-ref="[enabled]">Table retrieval button</button>
+                        <button type="button" class="action" id="pat_enabled" aria-label="enable/disable pay at table" data-ref="[enabled]">Pay at table</button>
+                        <button type="button" class="action" id="operatorid_enabled" aria-label="enable/disable operator id property" data-ref="[enabled]">Operator ID</button>
+                        <button type="button" class="action" id="set_allowed_operatorid" aria-label="set allowed operator id" data-ref="[enabled]">Set allowed operator ID</button>
+                        <button type="button" class="action" id="equal_split" aria-label="enable/disable equal split property" data-ref="[enabled]">Equal split</button>
+                        <button type="button" class="action" id="split_by_amount" aria-label="enable/disable split by amount property" data-ref="[enabled]">Split by amount</button>
+                        <button type="button" class="action" id="tipping" aria-label="enable/disable tipping property" data-ref="[enabled]">Tipping</button>
+                        <button type="button" class="action" id="summary_report" aria-label="enable/disable summary report" data-ref="[enabled]">Summary report</button>
+                        <button type="button" class="action" id="set_label_operatorid" aria-label="set operatorid label" data-ref="[label]">Set operatorid label</button>
+                        <button type="button" class="action" id="set_label_tableid" aria-label="set tableid label" data-ref="[label]">Set tableid label</button>
+                        <button type="button" class="action" id="set_label_paybutton" aria-label="set pay button label" data-ref="[label]">Set pay button label</button>
+                        <button type="button" class="action" id="table_retrieval_enabled" aria-label="enable/disable table retrieval button" data-ref="[enabled]">Table retrieval button</button>
 
-                        <button type="button" class="action" id="purchase">Purchase</button>
-                        <button type="button" class="action" id="refund">Refund</button>
-                        <button type="button" class="action" id="settle">Settle</button>
+                        <button type="button" class="action" id="purchase" aria-label="Quick Purchase Tx">Purchase</button>
+                        <button type="button" class="action" id="refund" aria-label="hand out a refund">Refund</button>
+                        <button type="button" class="action" id="settle" aria-label="Initiate Settlement">Settle</button>
 
-                        <button type="button" class="action" id="tx_sign_accept">Accept Signature</button>
-                        <button type="button" class="action" id="tx_sign_decline">Decline Signature</button>
-                        <button type="button" class="action" id="tx_cancel">Cancel</button>
-                        <button type="button" class="action" id="ok">Ok</button>
+                        <button type="button" class="action" id="tx_sign_accept" aria-label="Accept Signature">Accept Signature</button>
+                        <button type="button" class="action" id="tx_sign_decline" aria-label=Decline Signature">Decline Signature</button>
+                        <button type="button" class="action" id="tx_cancel" aria-label="Attempt to Cancel Tx">Cancel</button>
+                        <button type="button" class="action" id="ok" aria-label="acknowledge final">Ok</button>
                     </div>
 
                     <div class="action-inputs">
