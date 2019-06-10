@@ -513,17 +513,97 @@ class TablePos
                         localStorage.setItem('eftpos_address', this._eftposAddress);
                     }
         
-                    this._spi.Config.PrintMerchantCopy = document.getElementById('print_merchant_copy').checked;
-                    this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
-                    this._spi.Config.SignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
-        
-                    localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy);
-                    localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
-                    localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
-        
+                    if(isIdleFlow) 
+                    {
+                        // Print config
+                        this._spi.Config.PrintMerchantCopy              = document.getElementById('print_merchant_copy').checked;
+                        this._spi.Config.PromptForCustomerCopyOnEftpos  = document.getElementById('rcpt_from_eftpos').checked;
+                        this._spi.Config.SignatureFlowOnEftpos          = document.getElementById('sig_flow_from_eftpos').checked;
+                        
+                        localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy);
+                        localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
+                        localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
+
+                        // PAT config
+                        this._pat.Config.PayAtTableEnabled      = document.getElementById('pat_enabled').checked;
+                        this._pat.Config.OperatorIdEnabled      = document.getElementById('operatorid_enabled').checked;
+                        this._pat.Config.EqualSplitEnabled      = document.getElementById('equal_split').checked;
+                        this._pat.Config.SplitByAmountEnabled   = document.getElementById('split_by_amount').checked;
+                        this._pat.Config.TippingEnabled         = document.getElementById('tipping').checked;
+                        this._pat.Config.SummaryReportEnabled   = document.getElementById('summary_report').checked;
+                        this._pat.Config.AllowedOperatorIds     = document.getElementById('set_allowed_operatorid').value.split(',');
+                        this._pat.Config.LabelOperatorId        = document.getElementById('set_label_operatorid').value;
+                        this._pat.Config.LabelTableId           = document.getElementById('set_label_tableid').value;
+                        this._pat.Config.LabelPayButton         = document.getElementById('set_label_paybutton').value;
+                        this._pat.Config.TableRetrievalEnabled  = document.getElementById('table_retrieval_enabled').checked;
+                        this._pat.PushPayAtTableConfig();
+
+                        localStorage.setItem('pat_config', JSON.stringify(this._pat.Config));
+                    }
+
                     this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
         
                     this.PrintPairingStatus();
+                },
+                inputs: []
+            },
+            {
+                id: 'pat_all_enable',
+                enabled: isIdleFlow,
+                onClick: () => {
+                    let optionInputs = document.querySelectorAll('input[type=checkbox].table-config');
+
+                    console.log('optino inputs', optionInputs);
+
+                    optionInputs.forEach((input) => {
+                        input.checked = true;
+                    });
+
+                    this.EnablePayAtTableConfigs();
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: []
+            },
+            {
+                id: 'pair',
+                enabled: isUnpaired && isIdleFlow,
+                onClick: () => {
+                    this._spi.Pair();
+                },
+                inputs: []
+            },
+            {
+                id: 'unpair',
+                enabled: !isUnpaired && isIdleFlow,
+                onClick: () => {
+                    this._spi.Unpair();
+                },
+                inputs: []
+            },
+            {
+                id: 'pair_cancel',
+                enabled: isPairingFlow,
+                onClick: () => {
+                    this._spi.PairingCancel();
+                },
+                inputs: []
+            },
+            {
+                id: 'pair_confirm',
+                enabled: isPairingFlow && this._spi.CurrentPairingFlowState.AwaitingCheckFromEftpos,
+                onClick: () => {
+                    this._spi.PairingConfirmCode();
+                },
+                inputs: []
+            },
+            {
+                id: 'ok',
+                enabled: (isPairingFlow && this._spi.CurrentPairingFlowState.Finished) || (isTransactionFlow && this._spi.CurrentTxFlowState.Finished),
+                onClick: () => {
+                    this._spi.AckFlowEndedAndBackToIdle();
+                    this._flow_msg.Clear();
+                    this._flow_msg.innerHTML = "Select from the options below";
+                    this.PrintStatusAndActions();
                 },
                 inputs: []
             },
@@ -613,9 +693,7 @@ class TablePos
                 id: 'pat_enabled',
                 enabled: (isPairedConnected && isIdleFlow),
                 onSubmit: () => {
-                    let enabled = document.getElementById('enabled').checked;
-
-                    this._pat.Config.PayAtTableEnabled = enabled;
+                    this._pat.Config.PayAtTableEnabled = document.getElementById('pat_enabled').checked;
                     this._pat.PushPayAtTableConfig();
                 },
                 inputs: ['enabled']
@@ -767,8 +845,76 @@ class TablePos
                     this._flow_msg.Info(res.Initiated ? "# Settle Initiated. Will be updated with Progress." : `# Could not initiate settle: ${res.Message}. Please Retry.`);
                 },
                 inputs: []
+            },
+            {
+                id: 'tx_sign_accept',
+                enabled: (isTransactionFlow && this._spi.CurrentTxFlowState.AwaitingSignatureCheck),
+                onClick: () => {
+                    this._spi.AcceptSignature(true);
+                },
+                inputs: []
+            },
+            {
+                id: 'tx_sign_decline',
+                enabled: (isTransactionFlow && this._spi.CurrentTxFlowState.AwaitingSignatureCheck),
+                onClick: () => {
+                    this._spi.AcceptSignature(false);
+                },
+                inputs: []
+            },
+            {
+                id: 'tx_cancel',
+                enabled: (isTransactionFlow && (this._spi.CurrentTxFlowState.Finished && this._spi.CurrentTxFlowState.AttemptingToCancel)),
+                onClick: () => {
+                    this._spi.CancelTransaction();
+                },
+                inputs: []
             }
         ];
+
+        let inputs = [
+            {
+                id: 'pos_id',
+                enabled: (isUnpaired && isIdleFlow),
+                validate: () => {
+                    let posId = document.getElementById('pos_id');
+
+                    return posId.checkValidity();
+                }
+            },
+            {
+                id: 'eftpos_address',
+                enabled: (isUnpaired || isPairedConnecting),
+                validate: () => {
+                    let eftposAddress = document.getElementById('eftpos_address');
+
+                    return eftposAddress.checkValidity();
+                }
+            },
+            {
+                id: 'print_merchant_copy',
+                enabled: isIdleFlow,
+                validate: () => {
+                    return true;
+                }
+            },
+            {
+                id: 'rcpt_from_eftpos',
+                enabled: isIdleFlow,
+                validate: () => {
+                    return true;
+                }
+            },
+            {
+                id: 'sig_flow_from_eftpos',
+                enabled: isIdleFlow,
+                validate: () => {
+                    return true;
+                }
+            }
+        ];
+
+
 
         buttons.forEach((button) => {
             let buttonElement       = document.getElementById(button.id);

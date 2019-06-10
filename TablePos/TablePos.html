@@ -15,53 +15,98 @@
             <h1>Settings</h1>
             <div class="padding-1">
                 <form name="settings" id="settings-form" onSubmit="return false;">
-                    <table class="form">
-                    <tr>
-                        <th><label for="pos_id">Pos ID:</label></th>
-                        <td><input type="text" class="action" name="pos_id" id="pos_id" placeholder="Pos ID" value="TABLEPOS1" required /></td>
-                    </tr>
-                    <tr>
-                        <th><label for="eftpos_address">EFTPOS Address:</label></th>
-                        <td><input type="text" class="action" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
-                    </tr>
-                    <tr>
-                        <th><label for="print_merchant_copy">Merchant receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="action" id="print_merchant_copy" name="print_merchant_copy" value="false" aria-label="Offer Merchant Receipt From Eftpos"></td>
-                    </tr>
-                    <tr>
-                        <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="action" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false" aria-label="Offer Customer Receipt From Eftpos"></td>
-                    </tr>
-                    <tr>
-                        <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
-                        <td><input type="checkbox" class="action" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false" aria-label="Signature Flow to be handled by Eftpos"></td>
-                    </tr>
-                    <tr>
-                        <td>&nbsp;</td>
-                        <td><button type="button" class="action no-hide" id="save_settings">Save</button></td>
-                    </tr>
-                    </table>
+                    <fieldset>
+                        <legend>EFTPOS config</legend>
+                        <table class="form">
+                        <tr>
+                            <th><label for="pos_id">Pos ID:</label></th>
+                            <td><input type="text" class="input medium" name="pos_id" id="pos_id" placeholder="Pos ID" value="TABLEPOS1" required aria-label="Point of sale ID" /></td>
+                        </tr>
+                        <tr>
+                            <th><label for="eftpos_address">EFTPOS Address:</label></th>
+                            <td><input type="text" class="input medium" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" aria-label="IP address of terminal or FQDN" required /></td>
+                        </tr>
+                        </table>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Print config</legend>
+                        <table class="form">
+                        <tr>
+                            <th><label for="print_merchant_copy">Merchant receipt:</label></th>
+                            <td><input type="checkbox" class="input" id="print_merchant_copy" name="print_merchant_copy" value="false" aria-label="Offer Merchant Receipt From Eftpos"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="rcpt_from_eftpos">Customer receipt:</label></th>
+                            <td><input type="checkbox" class="input" id="rcpt_from_eftpos" name="rcpt_from_eftpos" value="false" aria-label="Offer Customer Receipt From Eftpos"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="sig_flow_from_eftpos">Signature:</label></th>
+                            <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false" aria-label="Signature Flow to be handled by Eftpos"></td>
+                        </tr>
+                        </table>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Table config</legend>
+                        <table class="form table-config">
+                        <tr>
+                            <th><label for="pat_all_enable">Enable all:</label></th>
+                            <td><button type="button" class="action" id="pat_all_enable" name="pat_all_enable" value="false" aria-label="Enable all pay at table settings">Enable</button></td>
+                        </tr>
+                        <tr>
+                            <th><label for="pat_enabled">Enable PAT:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="pat_enabled" name="pat_enabled" value="false" aria-label="Enable pay at table"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="operatorid_enabled">Enable operator ID:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="operatorid_enabled" name="operatorid_enabled" value="false" aria-label="Enable operator id property"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="set_allowed_operatorid">Allowed operator IDs:</label></th>
+                            <td><input type="number" class="input small table-config" id="set_allowed_operatorid" name="set_allowed_operatorid" value="" aria-label="Set allowed operator ids (comma seperated)" size="2"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="equal_split">Equal split:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="equal_split" name="equal_split" value="false" aria-label="Enable equal split property"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="split_by_amount">Split by amount:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="split_by_amount" name="split_by_amount" value="false" aria-label="Enable split by amount property"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="tipping">Tipping:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="tipping" name="tipping" value="false" aria-label="Enable tipping property"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="summary_report">Summary report:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="summary_report" name="summary_report" value="false" aria-label="Enable summary report"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="set_label_operatorid">Operator ID label:</label></th>
+                            <td><input type="text" class="input medium table-config" id="set_label_operatorid" name="set_label_operatorid" value="Operator ID" aria-label="Set operatorid label" requried></td>
+                        </tr>
+                        <tr>
+                            <th><label for="set_label_tableid">Table ID label:</label></th>
+                            <td><input type="text" class="input medium table-config" id="set_label_tableid" name="set_label_tableid" value="Table Number" aria-label="Set tableid label" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="set_label_paybutton">Pay button label:</label></th>
+                            <td><input type="text" class="input medium table-config" id="set_label_paybutton" name="set_label_paybutton" value="Pay at Table" aria-label="Set pay button label" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="table_retrieval_enabled">Table retrieval:</label></th>
+                            <td><input type="checkbox" class="input table-config" id="table_retrieval_enabled" name="table_retrieval_enabled" value="false" aria-label="Enable table retrieval button"></td>
+                        </tr>
+                        </table>
+                    </fieldset>
+
+                    <div class="submit-input">
+                        <button type="button" class="action no-hide" id="save_settings">Save settings</button>
+                    </div>
+                    
                 </form>
             </div>
-            <h1>Status</h1>
-            <div class="padding-1 status">
-
-                <form name="pairing" id="pairing-form">
-                    <p id="status_indicator" data-status="Unpaired" data-flow="Idle">
-                        <label id="primary_status">Unpaired</label>
-                        <span>: </span>
-                        <label id="flow_status" class="flow_status">Idle</label>
-                    </p>
-                    <p class="paring-buttons">
-                        <button type="button" class="action" id="pair" aria-label="Pair with Eftpos">PAIR</button>
-                        <button type="button" class="action" id="unpair" aria-label="Unpair and Disconnect">UNPAIR</button>
-
-                        <button type="button" class="action" id="pair_confirm" aria-label="Confirm Pairing Code">Confirm Code</button>
-                        <button type="button" class="action" id="pair_cancel" aria-label="Cancel Pairing">Cancel Pairing</button>
-                    </p>
-                </form>
-            </div>
-
         </td>
         <td class="col flow">
             <h1>Flow: <span id="flow_status_heading">Idle</span></h1>
@@ -84,6 +129,21 @@
 
 
             <div class="padding-1">
+
+                <form name="pairing" id="pairing-form">
+                    <p id="status_indicator" data-status="Unpaired" data-flow="Idle">
+                        <label id="primary_status">Unpaired</label>
+                        <span>: </span>
+                        <label id="flow_status" class="flow_status">Idle</label>
+                    </p>
+                    <p class="paring-buttons">
+                        <button type="button" class="action" id="pair" aria-label="Pair with Eftpos">PAIR</button>
+                        <button type="button" class="action" id="unpair" aria-label="Unpair and Disconnect">UNPAIR</button>
+
+                        <button type="button" class="action" id="pair_confirm" aria-label="Confirm Pairing Code">Confirm Code</button>
+                        <button type="button" class="action" id="pair_cancel" aria-label="Cancel Pairing">Cancel Pairing</button>
+                    </p>
+                </form>
 
                 <form id="action-form" name="controls">
 

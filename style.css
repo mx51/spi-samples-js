@@ -10,6 +10,11 @@ body {
     height: 100vh;
 }
 
+input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+}
+
 #layout {
     border-collapse: collapse;
     margin: 0;
@@ -35,7 +40,7 @@ h1 {
 }
 
 #layout .settings {
-    width: 350px;
+    width: 420px;
 }
 
 #layout .receipt {
@@ -55,6 +60,10 @@ h1 {
     bottom: 2%;
     left: 2%;
     color: red;
+}
+
+.settings th {
+    width: 50%;
 }
 
 .col.flow {
@@ -79,6 +88,7 @@ table.form {
 
 table.form th {
     text-align: right;
+    font-weight: normal;
 }
 
 table.form th, table.form td {
@@ -93,6 +103,13 @@ table.form input {
     border-radius: 2px;
     padding: 5px;
     border: 1px solid #AAA;
+}
+
+table.form input.small {
+    width: 50px;
+}
+
+table.form input.medium {
     width: 150px;
 }
 
@@ -100,10 +117,20 @@ table.form button {
     padding: 0.5em;
     border-radius: 4px;
     width: 150px;
+
+}
+
+.submit-input {
+    text-align: right;
 }
 
 .status-msg p, .status-msg p span {
     text-align: center;
+}
+
+#status_indicator {
+    margin: 0;
+    padding: 5px 10px;
 }
 
 #status_indicator[data-status="Unpaired"] {
@@ -123,6 +150,7 @@ button {
     width: 150px;
     padding: 0.5em;
     cursor: pointer;
+    font-size: 12px;
 }
 
 button:disabled {
@@ -137,12 +165,9 @@ button.no-hide:disabled {
     padding: 1em;
 }
 
-.padding-1.status {
-    text-align: center;
-}
-
 fieldset {
-    border: none;
+    margin: 10px 0;
+    border: 1px solid #DDD;
 }
 
 fieldset:disabled {
