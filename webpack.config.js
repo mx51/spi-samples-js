@@ -15,9 +15,9 @@ const config = {
     mode: isProd ? "production" : "development",
 
     entry: {
-        RamenPos: './RamenPos/RamenPos.js',
-        KebabPos: './KebabPos/KebabPos.js',
-        MotelPos: './MotelPos/MotelPos.js',
+       // RamenPos: './RamenPos/RamenPos.js',
+       // KebabPos: './KebabPos/KebabPos.js',
+       // MotelPos: './MotelPos/MotelPos.js',
         TablePos: './TablePos/TablePos.js'
     },
     
@@ -61,7 +61,7 @@ const config = {
       ]
     },
     plugins: [
-        new htmlWebpackPlugin({template: 'index.html'})
+        new htmlWebpackPlugin({template: 'TablePos/TablePos.html'})
     ]
 };
 

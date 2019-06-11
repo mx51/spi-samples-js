@@ -40,7 +40,7 @@ h1 {
 }
 
 #layout .settings {
-    width: 420px;
+    width: 430px;
 }
 
 #layout .receipt {
@@ -64,6 +64,10 @@ h1 {
 
 .settings th {
     width: 50%;
+}
+
+.actions .form th {
+    width: 200px;
 }
 
 .col.flow {
@@ -96,20 +100,20 @@ table.form th, table.form td {
 }
 
 table.form label {
-    text-align: left;
+
 }
 
-table.form input {
+.input {
     border-radius: 2px;
     padding: 5px;
     border: 1px solid #AAA;
 }
 
-table.form input.small {
+.input.small {
     width: 50px;
 }
 
-table.form input.medium {
+.input.medium {
     width: 150px;
 }
 
@@ -167,6 +171,7 @@ button.no-hide:disabled {
 
 fieldset {
     margin: 10px 0;
+    padding: 10px;
     border: 1px solid #DDD;
 }
 

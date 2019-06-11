@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="/style.css">
     <link rel="shortcut icon" href="/favicon.png">
 
-    <script src="/dist/TablePos.min.js"></script>
+    <!-- <script src="/dist/TablePos.min.js"></script> -->
 
 </head>
 <body class="status-unpaired flow-idle">
@@ -136,18 +136,18 @@
                         <span>: </span>
                         <label id="flow_status" class="flow_status">Idle</label>
                     </p>
-                    <p class="paring-buttons">
+                    <fieldset class="paring-buttons">
                         <button type="button" class="action" id="pair" aria-label="Pair with Eftpos">PAIR</button>
                         <button type="button" class="action" id="unpair" aria-label="Unpair and Disconnect">UNPAIR</button>
 
                         <button type="button" class="action" id="pair_confirm" aria-label="Confirm Pairing Code">Confirm Code</button>
                         <button type="button" class="action" id="pair_cancel" aria-label="Cancel Pairing">Cancel Pairing</button>
-                    </p>
+                    </fieldset>
                 </form>
 
                 <form id="action-form" name="controls">
 
-                    <div class="action-buttons">
+                    <fieldset class="action-buttons">
                         <button type="button" class="action" id="open" aria-label="Start a new bill">Open table</button>
                         <button type="button" class="action" id="add" aria-label="Add an amount to a bill" data-ref="[bill_id]">Add to bill</button>
                         <button type="button" class="action" id="close" aria-label="Close a table" data-ref="[table_number]">Close table</button>
@@ -155,7 +155,7 @@
                         <button type="button" class="action" id="tables" aria-label="List open tables">List open tables</button>
                         <button type="button" class="action" id="table" aria-label="Print current bill for a table">Get table bill</button>
                         <button type="button" class="action" id="bill" aria-label="Print a bill">Print bill ID</button>
-
+<!-- 
                         <button type="button" class="action" id="pat_all_enable" aria-label="Enable all pay at table settings">Enable All PAT settings</button>
                         <button type="button" class="action" id="pat_enabled" aria-label="enable/disable pay at table" data-ref="[enabled]">Pay at table</button>
                         <button type="button" class="action" id="operatorid_enabled" aria-label="enable/disable operator id property" data-ref="[enabled]">Operator ID</button>
@@ -167,7 +167,7 @@
                         <button type="button" class="action" id="set_label_operatorid" aria-label="set operatorid label" data-ref="[label]">Set operatorid label</button>
                         <button type="button" class="action" id="set_label_tableid" aria-label="set tableid label" data-ref="[label]">Set tableid label</button>
                         <button type="button" class="action" id="set_label_paybutton" aria-label="set pay button label" data-ref="[label]">Set pay button label</button>
-                        <button type="button" class="action" id="table_retrieval_enabled" aria-label="enable/disable table retrieval button" data-ref="[enabled]">Table retrieval button</button>
+                        <button type="button" class="action" id="table_retrieval_enabled" aria-label="enable/disable table retrieval button" data-ref="[enabled]">Table retrieval button</button> -->
 
                         <button type="button" class="action" id="purchase" aria-label="Quick Purchase Tx">Purchase</button>
                         <button type="button" class="action" id="refund" aria-label="hand out a refund">Refund</button>
@@ -177,46 +177,42 @@
                         <button type="button" class="action" id="tx_sign_decline" aria-label=Decline Signature">Decline Signature</button>
                         <button type="button" class="action" id="tx_cancel" aria-label="Attempt to Cancel Tx">Cancel</button>
                         <button type="button" class="action" id="ok" aria-label="acknowledge final">Ok</button>
-                    </div>
+                    </fieldset>
 
-                    <div class="action-inputs">
-                        <fieldset id="amount_input" class="input">
-                            <label for="amount">Amount (cents): </label>
-                            <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)" required>
-                        </fieldset>
-
-                        <fieldset id="table_input" class="input">
-                            <label for="table">Table #: </label>
-                            <input type="number" id="table_number" name="table_number" value="1" placeholder="Table number" required>
-                        </fieldset>
-
-                        <fieldset id="locked_input" class="input">
-                            <label for="locked">Locked: </label>
-                            <input type="checkbox" id="locked" name="locked" value="false">
-                        </fieldset>
-
-                        <fieldset id="enabled_input" class="input">
-                            <label for="enabled">Enabled: </label>
-                            <input type="checkbox" id="enabled" name="enabled" value="false">
-                        </fieldset>
-
-                        <fieldset id="bill_id_input" class="input">
-                            <label for="bill_id">Bill #: </label>
-                            <input type="number" id="bill_id" name="bill_id" value="" placeholder="Bill ID" required>
-                        </fieldset>
-
-                        <fieldset id="operator_id_input" class="input">
-                            <label for="operator_id">Operator ID: </label>
-                            <input type="number" id="operator_id" name="operator_id" value="" placeholder="Operator ID" required>
-                        </fieldset>
-
-                        <fieldset id="label_input" class="input">
-                            <label for="label">Label: </label>
-                            <input type="text" id="label" name="label" value="" placeholder="Label" required>
-                        </fieldset>
+                    <fieldset class="actions">
+                        <table class="form">
+                        <tr>
+                            <th><label for="amount">Amount (cents): </label></th>
+                            <td><input class="input small" type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="table">Table #: </label></th>
+                            <td><input class="input small" type="number" id="table_number" name="table_number" value="1" placeholder="Table number" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="locked">Locked: </label></th>
+                            <td><input class="input" type="checkbox" id="locked" name="locked" value="false"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="enabled">Enabled: </label></th>
+                            <td><input class="input" type="checkbox" id="enabled" name="enabled" value="false"></td>
+                        </tr>
+                        <tr>
+                            <th><label for="bill_id">Bill #: </label></th>
+                            <td><input class="input small" type="number" id="bill_id" name="bill_id" value="" placeholder="Bill ID" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="operator_id">Operator ID: </label></th>
+                            <td><input class="input medium" type="number" id="operator_id" name="operator_id" value="" placeholder="Operator ID" required></td>
+                        </tr>
+                        <tr>
+                            <th><label for="label">Label: </label></th>
+                            <td><input class="input medium" type="text" id="label" name="label" value="" placeholder="Label" required></td>
+                        </tr>
+                        </table>
 
                         <button type="submit" name="save" id="save">Save</button>
-                    </div>
+                    </fieldset>
 
                 </form>
 
