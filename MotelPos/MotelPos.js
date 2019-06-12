@@ -12,6 +12,7 @@ import {
     MotoPurchaseResponse,
     GetLastTransactionResponse,
     PurchaseResponse,
+    PreauthResponse,
     Settlement,
     SuccessState,
     RequestIdHelper,
