@@ -15,6 +15,7 @@ import {
     Settlement,
     SuccessState,
     RequestIdHelper,
+    BillRetrievalResult,
     SpiFlow,
     SpiStatus} from '../lib/spi-client-js'; //'@assemblypayments/spi-client-js/dist/spi-client-js';
 
@@ -321,6 +322,8 @@ class TablePos
 
         // It is important that we persist this data on behalf of assembly.
         this.assemblyBillDataStore[billPayment.BillId] = updatedBillData;
+
+        this.SaveBillState();
 
         return Object.assign(new BillStatusResponse(),
         {
@@ -1367,6 +1370,8 @@ class TablePos
         }
         var bill = this.billsStore[this.tableToBillMapping[tableId]];
         bill.Locked = locked;
+        this.SaveBillState();
+
         if (locked)
         {
             this._flow_msg.Info(`Locked: ${JSON.stringify(bill)}`);
