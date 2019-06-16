@@ -6,7 +6,11 @@ import {
     BillStatusResponse,
     BillPaymentFlowEndedResponse,
     TransactionType,
+    PrintingResponse,
     RefundResponse,
+    GetOpenTablesResponse,
+    TerminalStatusResponse,
+    TerminalBattery,
     PurchaseResponse,
     Settlement,
     SuccessState,
@@ -63,6 +67,7 @@ class TablePos
         this._log = log;
         this._receipt = receipt;
         this._flow_msg = flow_msg;
+        this._isActionFlow = false;
     }
 
     Start()
@@ -84,6 +89,10 @@ class TablePos
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
 
+        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
+        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
+        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
+
         this._pat = this._spi.EnablePayAtTable();
         this.EnablePayAtTableConfigs();
         this._pat.GetBillStatus = this.PayAtTableGetBillDetails.bind(this);
@@ -102,17 +111,48 @@ class TablePos
 
     EnablePayAtTableConfigs()
     {
-        this._pat.Config.PayAtTableEnabled = true;
-        this._pat.Config.OperatorIdEnabled = true;
-        this._pat.Config.AllowedOperatorIds = [];
-        this._pat.Config.EqualSplitEnabled = true;
-        this._pat.Config.SplitByAmountEnabled = true;
-        this._pat.Config.SummaryReportEnabled = true;
-        this._pat.Config.TippingEnabled = true;
-        this._pat.Config.LabelOperatorId = "Operator ID";
-        this._pat.Config.LabelPayButton = "Pay at Table";
-        this._pat.Config.LabelTableId = "Table Number";
-        this._pat.Config.TableRetrievalEnabled = true;
+        if(localStorage.getItem('pat_config')) 
+        {
+            var savedPatConfig = JSON.parse(localStorage.getItem('pat_config'));
+            this._pat.Config.PayAtTableEnabled      = savedPatConfig.PayAtTableEnabled;
+            this._pat.Config.OperatorIdEnabled      = savedPatConfig.OperatorIdEnabled;
+            this._pat.Config.EqualSplitEnabled      = savedPatConfig.EqualSplitEnabled;
+            this._pat.Config.SplitByAmountEnabled   = savedPatConfig.SplitByAmountEnabled;
+            this._pat.Config.TippingEnabled         = savedPatConfig.TippingEnabled;
+            this._pat.Config.SummaryReportEnabled   = savedPatConfig.SummaryReportEnabled;
+            this._pat.Config.AllowedOperatorIds     = savedPatConfig.AllowedOperatorIds;
+            this._pat.Config.LabelOperatorId        = savedPatConfig.LabelOperatorId;
+            this._pat.Config.LabelTableId           = savedPatConfig.LabelTableId;
+            this._pat.Config.LabelPayButton         = savedPatConfig.LabelPayButton;
+            this._pat.Config.TableRetrievalEnabled  = savedPatConfig.TableRetrievalEnabled;
+        }
+        else
+        {
+            this._pat.Config.PayAtTableEnabled = true;
+            this._pat.Config.OperatorIdEnabled = true;
+            this._pat.Config.AllowedOperatorIds = [];
+            this._pat.Config.EqualSplitEnabled = true;
+            this._pat.Config.SplitByAmountEnabled = true;
+            this._pat.Config.SummaryReportEnabled = true;
+            this._pat.Config.TippingEnabled = true;
+            this._pat.Config.LabelOperatorId = "Operator ID";
+            this._pat.Config.LabelPayButton = "Pay at Table";
+            this._pat.Config.LabelTableId = "Table Number";
+            this._pat.Config.TableRetrievalEnabled = true;
+        }
+
+        document.getElementById('pat_enabled').checked              = this._pat.Config.PayAtTableEnabled;
+        document.getElementById('operatorid_enabled').checked       = this._pat.Config.OperatorIdEnabled;
+        document.getElementById('equal_split').checked              = this._pat.Config.EqualSplitEnabled;
+        document.getElementById('split_by_amount').checked          = this._pat.Config.SplitByAmountEnabled;
+        document.getElementById('tipping').checked                  = this._pat.Config.TippingEnabled;
+        document.getElementById('summary_report').checked           = this._pat.Config.SummaryReportEnabled;
+        document.getElementById('set_allowed_operatorid').value     = this._pat.Config.AllowedOperatorIds.join(',');
+        document.getElementById('set_label_operatorid').value       = this._pat.Config.LabelOperatorId;
+        document.getElementById('set_label_tableid').value          = this._pat.Config.LabelTableId;
+        document.getElementById('set_label_paybutton').value        = this._pat.Config.LabelPayButton;
+        document.getElementById('table_retrieval_enabled').checked  = this._pat.Config.TableRetrievalEnabled;
+
     }
 
     OnTxFlowStateChanged(txState)
@@ -155,6 +195,46 @@ class TablePos
     {
         this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
+        this.PrintStatusAndActions();
+    }
+
+    HandlePrintingResponse(message)
+    {
+        this._flow_msg.Clear();
+        var printingResponse = new PrintingResponse(message);
+
+        if (printingResponse.isSuccess())
+        {
+            this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
+        }
+        else
+        {
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.getErrorReason() + ", detail = " + printingResponse.getErrorDetail());
+        }
+
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleTerminalStatusResponse(message)
+    {
+        this._flow_msg.Clear();
+        var terminalStatusResponse = new TerminalStatusResponse(message);
+        this._flow_msg.Info("# Terminal Status Response #");
+        this._flow_msg.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._flow_msg.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._flow_msg.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleBatteryLevelChanged(message)
+    {
+        this._log.clear();
+        var terminalBattery = new TerminalBattery(message);
+        this._flow_msg.Info("# Battery Level Changed #");
+        this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
@@ -254,14 +334,14 @@ class TablePos
     {
         var billPaymentFlowEndedResponse = new BillPaymentFlowEndedResponse(message);
 
-        if (!billsStore[billPaymentFlowEndedResponse.BillId])
+        if (!this.billsStore[billPaymentFlowEndedResponse.BillId])
         {
             // We cannot find this bill.
             this._flow_msg.Info(`Incorrect Bill Id!`);
             return;
         }
 
-        var myBill = billsStore[billPaymentFlowEndedResponse.BillId];
+        var myBill = this.billsStore[billPaymentFlowEndedResponse.BillId];
         myBill.Locked = false;
 
         this._flow_msg.Info(`
@@ -288,7 +368,7 @@ class TablePos
             {
                 var item = this.tableToBillMapping[tableId];
 
-                if (billsStore[item.Value].OperatorId == operatorId && billsStore[item.Value].OutstandingAmount > 0)
+                if (this.billsStore[item].OperatorId == operatorId && this.billsStore[item].OutstandingAmount > 0)
                 {
                     if (!isOpenTables)
                     {
@@ -298,12 +378,12 @@ class TablePos
 
                     var openTablesItem = Object.assign(new OpenTablesEntry(),
                     {
-                        TableId: item.Key,
-                        Label: billsStore[item.Value].Label,
-                        BillOutstandingAmount: billsStore[item.Value].OutstandingAmount
+                        TableId: tableId,
+                        Label: this.billsStore[item].Label,
+                        BillOutstandingAmount: this.billsStore[item].OutstandingAmount
                     });
 
-                    this._flow_msg.Info(`Table Id : ${item.Key}, Bill Id: ${billsStore[item.Value].BillId}, Outstanding Amount: $${(billsStore[item.Value].OutstandingAmount / 100).toFixed(2)}`);
+                    this._flow_msg.Info(`Table Id : ${tableId}, Bill Id: ${this.billsStore[item].BillId}, Outstanding Amount: $${(this.billsStore[item].OutstandingAmount / 100).toFixed(2)}`);
                     openTableList.push(openTablesItem);
                 }
             }
@@ -479,6 +559,12 @@ class TablePos
         let primaryStatusEl = document.getElementById('primary_status');
         let flowStatusEl    = document.getElementById('flow_status');
         let flowStatusHeading = document.getElementById('flow_status_heading');
+        let actionForm      = document.getElementById('action-form');
+        let pairingForm     = document.getElementById('pairing-form');
+        let actionSubmitButton = document.getElementById('submit_action');
+        let cancelActionButton = document.getElementById('cancel_action');
+        let actionInputGroups = document.querySelectorAll('#action-inputs .input-field-group');
+        let currentActionHeading = document.getElementById('current-action-heading');
 
         statusEl.dataset['status']  = this._spi.CurrentStatus;
         statusEl.dataset['flow']    = this._spi.CurrentFlow;
@@ -535,7 +621,11 @@ class TablePos
                         this._pat.Config.LabelTableId           = document.getElementById('set_label_tableid').value;
                         this._pat.Config.LabelPayButton         = document.getElementById('set_label_paybutton').value;
                         this._pat.Config.TableRetrievalEnabled  = document.getElementById('table_retrieval_enabled').checked;
-                        this._pat.PushPayAtTableConfig();
+                        
+                        if(isPairedConnected)
+                        {
+                            this._pat.PushPayAtTableConfig();
+                        }
 
                         localStorage.setItem('pat_config', JSON.stringify(this._pat.Config));
                     }
@@ -607,8 +697,9 @@ class TablePos
                 inputs: []
             },
             {
+                // start a new bill for table
                 id: 'open',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onSubmit: () => {
                     let tableId     = document.getElementById('table_number').value;
                     let operatorId  = document.getElementById('operator_id').value;
@@ -620,8 +711,9 @@ class TablePos
                 inputs: ['table_number', 'operator_id', 'label', 'locked']
             },
             {
+                // add $amount to the bill of table #
                 id: 'add',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onSubmit: () => {
                     let tableId     = document.getElementById('table_number').value;
                     let amountCents = parseInt(document.getElementById('amount').value, 10);
@@ -631,8 +723,9 @@ class TablePos
                 inputs: ['table_number', 'amount']
             },
             {
+                // close table
                 id: 'close',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onSubmit: () => {
                     let tableId = document.getElementById('table_number').value;
 
@@ -641,8 +734,9 @@ class TablePos
                 inputs: ['table_number']
             },
             {
+                // Lock/Unlock table
                 id: 'lock',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onSubmit: () => {
                     let tableId     = document.getElementById('table_number').value;
                     let isLocked    = document.getElementById('locked').checked;
@@ -652,16 +746,18 @@ class TablePos
                 inputs: ['table_number', 'locked']
             },
             {
+                // list open tables
                 id: 'tables',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onClick: () => {
                     this.PrintTables();
                 },
                 inputs: []
             },
             {
+                // print current bill for table
                 id: 'table',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onSubmit: () => {
                     let tableId = document.getElementById('table_number').value;
 
@@ -670,8 +766,9 @@ class TablePos
                 inputs: ['table_number']
             },
             {
+                // print bill with ID
                 id: 'bill',
-                enabled: true,
+                enabled: isPairedConnected && isIdleFlow,
                 onSubmit: () => {
                     let billId = document.getElementById('bill_id').value;
 
@@ -793,37 +890,68 @@ class TablePos
             }
         ];
 
-        document.getElementsByClassName('action').disabled = true;
+        // Hide action inputs
+        for(var inputGroup of actionInputGroups) {
+            inputGroup.classList.add('hidden');
+        }
 
         buttons.forEach((button) => {
             let buttonElement       = document.getElementById(button.id);
-            let actionForm          = document.getElementById('action-form');
 
             buttonElement.disabled  = !button.enabled;
 
             // If this button requires additional input
-            if(button.inputs.length) 
+            if(button.inputs && button.inputs.length) 
             {
                 buttonElement.onclick   = () => {
 
-                    // Disable all inputs and enable relevant inputs for this control action
+                    // Show relevant inputs for this action
                     button.inputs.forEach((input) => {
-                        let inputElement = document.getElementById(input);
+                        let inputElement        = document.getElementById(input);
+                        let inputGroupElement   = document.querySelector(`#action-inputs [data-id="${input}"]`);
         
-                        inputElement.disabled = false;
+                        inputGroupElement.classList.remove('hidden');
                         inputElement.required = true;
                     });
 
-                    actionForm.onsubmit = button.onSubmit;
+                    this._isActionFlow = true;
+                    actionSubmitButton.onclick = () => {
+                        button.onSubmit();
+                        this._isActionFlow = false;
+
+                        for(var inputGroup of actionInputGroups) {
+                            inputGroup.classList.add('hidden');
+                        }
+            
+                        actionSubmitButton.classList.add('hidden');
+                        cancelActionButton.classList.add('hidden');
+                        currentActionHeading.innerText = '';
+                    }
+
+                    actionSubmitButton.classList.remove('hidden');
+                    cancelActionButton.classList.remove('hidden');
+                    currentActionHeading.innerText = buttonElement.innerText;
                 }
             }
             else
             {
                 buttonElement.onclick = button.onClick;
+                actionSubmitButton.classList.add('hidden');
             }
 
-
         });
+
+        cancelActionButton.onclick = () => {
+            this._isActionFlow = false;
+
+            for(var inputGroup of actionInputGroups) {
+                inputGroup.classList.add('hidden');
+            }
+
+            actionSubmitButton.classList.add('hidden');
+            cancelActionButton.classList.add('hidden');
+            currentActionHeading.innerText = '';
+        }
 
         // Available Actions depend on the current status (Unpaired/PairedConnecting/PairedConnected)
         // switch (this._spi.CurrentStatus)
@@ -1369,6 +1497,7 @@ class Bill
         this.TotalAmount = 0;
         this.OutstandingAmount = 0;
         this.tippedAmount = 0;
+        this.SurchargeAmount = 0;
         this.Locked = false;
     }
 }

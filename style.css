@@ -15,6 +15,10 @@ input[type=checkbox] {
     height: 20px;
 }
 
+.hidden {
+    display: none;
+}
+
 #layout {
     border-collapse: collapse;
     margin: 0;
@@ -37,6 +41,11 @@ h1 {
     font-weight: 300;
     border-bottom: 1px solid #DDD;
     background-color: #F0F0F0;
+}
+
+h3 {
+    margin: 0;
+    padding: 0;
 }
 
 #layout .settings {
@@ -66,7 +75,7 @@ h1 {
     width: 50%;
 }
 
-.actions .form th {
+#action-form .form th {
     width: 200px;
 }
 
@@ -97,10 +106,6 @@ table.form th {
 
 table.form th, table.form td {
     padding: 0.5em;
-}
-
-table.form label {
-
 }
 
 .input {
