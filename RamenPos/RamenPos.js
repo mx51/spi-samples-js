@@ -17,7 +17,7 @@ import {
     RequestIdHelper,
     DeviceAddressResponseCode,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
+    SpiStatus} from '../lib/spi-client-js'; //'@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.4.x of the SPI Client Library
@@ -963,8 +963,9 @@ export class RamenPos
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
+            let suppressMerchantPassword = document.getElementById('suppress_merchant_password').checked;
             let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount, surchargeAmount);
+            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount, surchargeAmount, suppressMerchantPassword);
             this._flow_msg.Info(res.Initiated ? "# MOTO purchase Initiated. Will be updated with Progress." : `# Could not initiate moto purchase: ${res.Message}. Please Retry.`);
         });
 
