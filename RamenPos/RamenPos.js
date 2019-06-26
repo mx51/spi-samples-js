@@ -15,8 +15,9 @@ import {
     Settlement,
     SuccessState,
     RequestIdHelper,
+    DeviceAddressResponseCode,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
+    SpiStatus} from '../lib/spi-client-js'; //'@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.4.x of the SPI Client Library
@@ -40,7 +41,7 @@ export class RamenPos
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
         this._options = null;
-        this._version = '2.4.0';
+        this._version = '2.6.0';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -158,8 +159,33 @@ export class RamenPos
     {
         var eftposAddress = document.getElementById('eftpos_address');
 
-        eftposAddress.value = deviceAddressStatus.Address;
-        this._eftposAddress = deviceAddressStatus.Address;
+        switch(deviceAddressStatus.DeviceAddressResponseCode)
+        {
+            case DeviceAddressResponseCode.SUCCESS:
+                eftposAddress.value = deviceAddressStatus.Address;
+                this._eftposAddress = deviceAddressStatus.Address;
+                alert(`Device Address has been updated to ${deviceAddressStatus.Address}`);
+                break;
+            case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
+                eftposAddress.value = "";
+                this._eftposAddress = "";
+                alert("The serial number is invalid: " + deviceAddressStatus.ResponseStatusDescription + " : " + deviceAddressStatus.ResponseMessage);
+                break;
+            case DeviceAddressResponseCode.DEVICE_SERVICE_ERROR:
+                eftposAddress.value = "";
+                this._eftposAddress = "";
+                alert("The device service error: " + deviceAddressStatus.ResponseStatusDescription + " : " + deviceAddressStatus.ResponseMessage);
+                break;
+            case DeviceAddressResponseCode.ADDRESS_NOT_CHANGED:
+                alert("The IP address have not changed!");
+                break;
+            case DeviceAddressResponseCode.SERIAL_NUMBER_NOT_CHANGED:
+                alert("The serial number have not changed!");
+                break;
+            default:
+                alert("The serial number is invalid! or The IP address have not changed!");
+                break;
+        }        
     }
 
     HandlePrintingResponse(message)
@@ -937,8 +963,9 @@ export class RamenPos
         {
             let amount      = parseInt(document.getElementById('amount').value,10);
             let surchargeAmount = parseInt(document.getElementById('surcharge_amount').value,10);
+            let suppressMerchantPassword = document.getElementById('suppress_merchant_password').checked;
             let posRefId    = `cashout-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount, surchargeAmount);
+            let res         = this._spi.InitiateMotoPurchaseTx(posRefId, amount, surchargeAmount, suppressMerchantPassword);
             this._flow_msg.Info(res.Initiated ? "# MOTO purchase Initiated. Will be updated with Progress." : `# Could not initiate moto purchase: ${res.Message}. Please Retry.`);
         });
 

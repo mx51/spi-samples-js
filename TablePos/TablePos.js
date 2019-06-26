@@ -2,21 +2,22 @@ import {
     Spi, 
     Logger, 
     Secrets, 
-    TransactionOptions,
+    OpenTablesEntry,
+    BillStatusResponse,
+    BillPaymentFlowEndedResponse,
     TransactionType,
     PrintingResponse,
     RefundResponse,
+    GetOpenTablesResponse,
     TerminalStatusResponse,
     TerminalBattery,
-    CashoutOnlyResponse,
-    MotoPurchaseResponse,
-    GetLastTransactionResponse,
     PurchaseResponse,
     Settlement,
     SuccessState,
     RequestIdHelper,
+    BillRetrievalResult,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
+    SpiStatus} from '../lib/spi-client-js'; //'@assemblypayments/spi-client-js/dist/spi-client-js';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
@@ -39,9 +40,12 @@ class TablePos
         this._posId = "TABLEPOS1";
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
-        this._version = '2.1.0';
+        this._version = '2.6.0';
+        this._serialNumber = "";
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
+        this._print_merchant_copy = false;
+        this.allowedOperatorIdList = [];
 
         // My Bills Store.
         // Key = BillId
@@ -64,6 +68,7 @@ class TablePos
         this._log = log;
         this._receipt = receipt;
         this._flow_msg = flow_msg;
+        this._isActionFlow = false;
     }
 
     Start()
@@ -73,9 +78,10 @@ class TablePos
 
         // region Spi Setup
         // This is how you instantiate Spi.
-        this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+        this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
         this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcpt_from_eftpos;
         this._spi.Config.SignatureFlowOnEftpos = this._sig_flow_from_eftpos;
+        this._spi.Config.PrintMerchantCopy = this._print_merchant_copy;
 
         this._spi.SetPosInfo("assembly", this._version);
 
@@ -84,10 +90,16 @@ class TablePos
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
 
+        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
+        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
+        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
+
         this._pat = this._spi.EnablePayAtTable();
-        this._pat.Config.LabelTableId = "Table Number";
+        this.EnablePayAtTableConfigs();
         this._pat.GetBillStatus = this.PayAtTableGetBillDetails.bind(this);
         this._pat.BillPaymentReceived = this.PayAtTableBillPaymentReceived.bind(this);
+        this._pat.BillPaymentFlowEnded = this.PayAtTableBillPaymentFlowEnded.bind(this);
+        this._pat.GetOpenTables = this.PayAtTableGetOpenTables.bind(this);
         this._spi.Start();
 
         // And Now we just accept user input and display to the user what is happening.
@@ -96,7 +108,52 @@ class TablePos
         this._flow_msg.Info("# Welcome to TablePos !");
         
         this.PrintStatusAndActions();
-        this.AcceptUserInput();
+    }
+
+    EnablePayAtTableConfigs()
+    {
+        if(localStorage.getItem('pat_config')) 
+        {
+            var savedPatConfig = JSON.parse(localStorage.getItem('pat_config'));
+            this._pat.Config.PayAtTableEnabled      = savedPatConfig.PayAtTableEnabled;
+            this._pat.Config.OperatorIdEnabled      = savedPatConfig.OperatorIdEnabled;
+            this._pat.Config.EqualSplitEnabled      = savedPatConfig.EqualSplitEnabled;
+            this._pat.Config.SplitByAmountEnabled   = savedPatConfig.SplitByAmountEnabled;
+            this._pat.Config.TippingEnabled         = savedPatConfig.TippingEnabled;
+            this._pat.Config.SummaryReportEnabled   = savedPatConfig.SummaryReportEnabled;
+            this._pat.Config.AllowedOperatorIds     = savedPatConfig.AllowedOperatorIds;
+            this._pat.Config.LabelOperatorId        = savedPatConfig.LabelOperatorId;
+            this._pat.Config.LabelTableId           = savedPatConfig.LabelTableId;
+            this._pat.Config.LabelPayButton         = savedPatConfig.LabelPayButton;
+            this._pat.Config.TableRetrievalEnabled  = savedPatConfig.TableRetrievalEnabled;
+        }
+        else
+        {
+            this._pat.Config.PayAtTableEnabled = true;
+            this._pat.Config.OperatorIdEnabled = true;
+            this._pat.Config.AllowedOperatorIds = [];
+            this._pat.Config.EqualSplitEnabled = true;
+            this._pat.Config.SplitByAmountEnabled = true;
+            this._pat.Config.SummaryReportEnabled = true;
+            this._pat.Config.TippingEnabled = true;
+            this._pat.Config.LabelOperatorId = "Operator ID";
+            this._pat.Config.LabelPayButton = "Pay at Table";
+            this._pat.Config.LabelTableId = "Table Number";
+            this._pat.Config.TableRetrievalEnabled = true;
+        }
+
+        document.getElementById('pat_enabled').checked              = this._pat.Config.PayAtTableEnabled;
+        document.getElementById('operatorid_enabled').checked       = this._pat.Config.OperatorIdEnabled;
+        document.getElementById('equal_split').checked              = this._pat.Config.EqualSplitEnabled;
+        document.getElementById('split_by_amount').checked          = this._pat.Config.SplitByAmountEnabled;
+        document.getElementById('tipping').checked                  = this._pat.Config.TippingEnabled;
+        document.getElementById('summary_report').checked           = this._pat.Config.SummaryReportEnabled;
+        document.getElementById('set_allowed_operatorid').value     = this._pat.Config.AllowedOperatorIds.join(',');
+        document.getElementById('set_label_operatorid').value       = this._pat.Config.LabelOperatorId;
+        document.getElementById('set_label_tableid').value          = this._pat.Config.LabelTableId;
+        document.getElementById('set_label_paybutton').value        = this._pat.Config.LabelPayButton;
+        document.getElementById('table_retrieval_enabled').checked  = this._pat.Config.TableRetrievalEnabled;
+
     }
 
     OnTxFlowStateChanged(txState)
@@ -142,13 +199,53 @@ class TablePos
         this.PrintStatusAndActions();
     }
 
+    HandlePrintingResponse(message)
+    {
+        this._flow_msg.Clear();
+        var printingResponse = new PrintingResponse(message);
+
+        if (printingResponse.isSuccess())
+        {
+            this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
+        }
+        else
+        {
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.getErrorReason() + ", detail = " + printingResponse.getErrorDetail());
+        }
+
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleTerminalStatusResponse(message)
+    {
+        this._flow_msg.Clear();
+        var terminalStatusResponse = new TerminalStatusResponse(message);
+        this._flow_msg.Info("# Terminal Status Response #");
+        this._flow_msg.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._flow_msg.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._flow_msg.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleBatteryLevelChanged(message)
+    {
+        this._log.clear();
+        var terminalBattery = new TerminalBattery(message);
+        this._flow_msg.Info("# Battery Level Changed #");
+        this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
     // region PayAtTable Delegates
 
     // <param name="billId"></param>
     // <param name="tableId"></param>
     // <param name="operatorId"></param>
     // <returns></returns>
-    PayAtTableGetBillDetails(billId, tableId, operatorId)
+    PayAtTableGetBillDetails(billId, tableId, operatorId, paymentFlowStarted)
     {
         if (!billId)
         {
@@ -177,11 +274,20 @@ class TablePos
 
         var myBill = this.billsStore[billId];
 
+        if (this.billsStore[billId].Locked && paymentFlowStarted)
+        {
+            this._log.info(`Table is Locked.`);
+            return Object.assign(new BillStatusResponse(), { Result: BillRetrievalResult.INVALID_TABLE_ID });
+        }
+
+        this.billsStore[billId].Locked = paymentFlowStarted;
+
         var response = Object.assign(new BillStatusResponse(),
         {
             Result: BillRetrievalResult.SUCCESS,
             BillId: billId,
             TableId: tableId,
+            OperatorId: operatorId,
             TotalAmount: myBill.TotalAmount,
             OutstandingAmount: myBill.OutstandingAmount
         });
@@ -206,6 +312,9 @@ class TablePos
         var bill = this.billsStore[billPayment.BillId];
         bill.OutstandingAmount -= billPayment.PurchaseAmount;
         bill.tippedAmount += billPayment.TipAmount;
+        bill.SurchargeAmount += billPayment.SurchargeAmount;
+        bill.Locked = bill.OutstandingAmount == 0 ? false : true;
+
         this._flow_msg.Info(`Updated Bill: ${JSON.stringify(bill)}`);
 
         // Here you can access other data that you might want to store from this payment, for example the merchant receipt.
@@ -213,6 +322,8 @@ class TablePos
 
         // It is important that we persist this data on behalf of assembly.
         this.assemblyBillDataStore[billPayment.BillId] = updatedBillData;
+
+        this.SaveBillState();
 
         return Object.assign(new BillStatusResponse(),
         {
@@ -222,6 +333,77 @@ class TablePos
         });
     }
 
+    PayAtTableBillPaymentFlowEnded(message)
+    {
+        var billPaymentFlowEndedResponse = new BillPaymentFlowEndedResponse(message);
+
+        if (!this.billsStore[billPaymentFlowEndedResponse.BillId])
+        {
+            // We cannot find this bill.
+            this._flow_msg.Info(`Incorrect Bill Id!`);
+            return;
+        }
+
+        var myBill = this.billsStore[billPaymentFlowEndedResponse.BillId];
+        myBill.Locked = false;
+
+        this._flow_msg.Info(`
+            Bill Id                : ${billPaymentFlowEndedResponse.BillId}
+            Table                  : ${billPaymentFlowEndedResponse.TableId}
+            Operator Id            : ${billPaymentFlowEndedResponse.OperatorId}
+            Bill OutStanding Amount: ${(billPaymentFlowEndedResponse.BillOutstandingAmount / 100.0).toFixed(2)}
+            Bill Total Amount      : ${(billPaymentFlowEndedResponse.BillTotalAmount / 100.0).toFixed(2)}
+            Card Total Count       : ${billPaymentFlowEndedResponse.CardTotalCount}
+            Card Total Amount      : ${billPaymentFlowEndedResponse.CardTotalAmount}
+            Cash Total Count       : ${billPaymentFlowEndedResponse.CashTotalCount}
+            Cash Total Amount      : ${billPaymentFlowEndedResponse.CashTotalAmount}
+            Locked                 : ${myBill.Locked}`);
+    }
+
+    PayAtTableGetOpenTables(operatorId)
+    {
+        var openTableList = [];
+        var isOpenTables = false;
+
+        if (Object.keys(this.tableToBillMapping).length > 0)
+        {
+            for(var tableId in this.tableToBillMapping)
+            {
+                var item = this.tableToBillMapping[tableId];
+
+                if (this.billsStore[item].OperatorId == operatorId && this.billsStore[item].OutstandingAmount > 0)
+                {
+                    if (!isOpenTables)
+                    {
+                        this._flow_msg.Info(`#    Open Tables: `);
+                        isOpenTables = true;
+                    }
+
+                    var openTablesItem = Object.assign(new OpenTablesEntry(),
+                    {
+                        TableId: tableId,
+                        Label: this.billsStore[item].Label,
+                        BillOutstandingAmount: this.billsStore[item].OutstandingAmount
+                    });
+
+                    this._flow_msg.Info(`Table Id : ${tableId}, Bill Id: ${this.billsStore[item].BillId}, Outstanding Amount: $${(this.billsStore[item].OutstandingAmount / 100).toFixed(2)}`);
+                    openTableList.push(openTablesItem);
+                }
+            }
+        }
+
+        if (!isOpenTables)
+        {
+            this._flow_msg.Info(`# No Open Tables.`);
+        }
+
+        var openTableListJson = JSON.stringify(openTableList);
+
+        return Object.assign(new GetOpenTablesResponse(), 
+        {
+            TableData: openTableListJson
+        });
+    }
 
     // endregion
 
@@ -380,6 +562,12 @@ class TablePos
         let primaryStatusEl = document.getElementById('primary_status');
         let flowStatusEl    = document.getElementById('flow_status');
         let flowStatusHeading = document.getElementById('flow_status_heading');
+        let actionForm      = document.getElementById('action-form');
+        let pairingForm     = document.getElementById('pairing-form');
+        let actionSubmitButton = document.getElementById('submit_action');
+        let cancelActionButton = document.getElementById('cancel_action');
+        let actionInputGroups = document.querySelectorAll('#action-inputs .input-field-group');
+        let currentActionHeading = document.getElementById('current-action-heading');
 
         statusEl.dataset['status']  = this._spi.CurrentStatus;
         statusEl.dataset['flow']    = this._spi.CurrentFlow;
@@ -387,120 +575,386 @@ class TablePos
         flowStatusEl.innerText      = this._spi.CurrentFlow;
         flowStatusHeading.innerText = this._spi.CurrentFlow;
 
-        // Available Actions depend on the current status (Unpaired/PairedConnecting/PairedConnected)
-        switch (this._spi.CurrentStatus)
-        {
-            case SpiStatus.Unpaired: //Unpaired...
-                switch (this._spi.CurrentFlow)
-                {
-                    case SpiFlow.Idle: // Unpaired, Idle
-                        inputsEnabled.push('pos_id');
-                        inputsEnabled.push('eftpos_address');
-                        inputsEnabled.push('rcpt_from_eftpos');
-                        inputsEnabled.push('sig_flow_from_eftpos');
-                        inputsEnabled.push('pair');
-                        inputsEnabled.push('save_settings');
-                        break;
+        let isUnpaired          = this._spi.CurrentStatus === SpiStatus.Unpaired;
+        let isPairedConnecting  = this._spi.CurrentStatus === SpiStatus.PairedConnecting;
+        let isPairedConnected   = this._spi.CurrentStatus === SpiStatus.PairedConnected;
+
+        let isIdleFlow          = this._spi.CurrentFlow === SpiFlow.Idle;
+        let isTransactionFlow   = this._spi.CurrentFlow === SpiFlow.Transaction;
+        let isPairingFlow       = this._spi.CurrentFlow === SpiFlow.Pairing;
+
+        // Configure buttons and related inputs
+        let buttons = [
+            {
+                id: 'save_settings',
+                enabled: (isUnpaired && isIdleFlow) || isPairedConnecting || (isPairedConnected && isIdleFlow),
+                onClick: () => {
+                    if(isUnpaired && isIdleFlow) 
+                    {
+                        this._posId         = document.getElementById('pos_id').value;
+                        this._eftposAddress = document.getElementById('eftpos_address').value;
+        
+                        this._spi.SetPosId(this._posId);
+                        this._spi.SetEftposAddress(this._eftposAddress);
+        
+                        localStorage.setItem('pos_id', this._posId);
+                        localStorage.setItem('eftpos_address', this._eftposAddress);
+                    }
+        
+                    if(isIdleFlow) 
+                    {
+                        // Print config
+                        this._spi.Config.PrintMerchantCopy              = document.getElementById('print_merchant_copy').checked;
+                        this._spi.Config.PromptForCustomerCopyOnEftpos  = document.getElementById('rcpt_from_eftpos').checked;
+                        this._spi.Config.SignatureFlowOnEftpos          = document.getElementById('sig_flow_from_eftpos').checked;
                         
-                    case SpiFlow.Pairing: // Unpaired, PairingFlow
-                        var pairingState = this._spi.CurrentPairingFlowState;
-                        if (pairingState.AwaitingCheckFromPos)
-                        {
-                            inputsEnabled.push('pair_confirm');
-                        }
-                        if (!pairingState.Finished)
-                        {
-                            inputsEnabled.push('pair_cancel');
-                        }
-                        else
-                        {
-                            inputsEnabled.push('ok');
-                        }
-                        break;
+                        localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy);
+                        localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
+                        localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
+
+                        // PAT config
+                        this._pat.Config.PayAtTableEnabled      = document.getElementById('pat_enabled').checked;
+                        this._pat.Config.OperatorIdEnabled      = document.getElementById('operatorid_enabled').checked;
+                        this._pat.Config.EqualSplitEnabled      = document.getElementById('equal_split').checked;
+                        this._pat.Config.SplitByAmountEnabled   = document.getElementById('split_by_amount').checked;
+                        this._pat.Config.TippingEnabled         = document.getElementById('tipping').checked;
+                        this._pat.Config.SummaryReportEnabled   = document.getElementById('summary_report').checked;
+                        this._pat.Config.AllowedOperatorIds     = document.getElementById('set_allowed_operatorid').value.split(',');
+                        this._pat.Config.LabelOperatorId        = document.getElementById('set_label_operatorid').value;
+                        this._pat.Config.LabelTableId           = document.getElementById('set_label_tableid').value;
+                        this._pat.Config.LabelPayButton         = document.getElementById('set_label_paybutton').value;
+                        this._pat.Config.TableRetrievalEnabled  = document.getElementById('table_retrieval_enabled').checked;
                         
-                    case SpiFlow.Transaction: // Unpaired, TransactionFlow - Should never be the case!
-                    default:
-                        this._log.info(`# .. Unexpected Flow .. ${this._spi.CurrentFlow}`);
-                        break;
+                        if(isPairedConnected)
+                        {
+                            this._pat.PushPayAtTableConfig();
+                        }
+
+                        localStorage.setItem('pat_config', JSON.stringify(this._pat.Config));
+                    }
+
+                    this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
+        
+                    this.PrintPairingStatus();
+                },
+                inputs: []
+            },
+            {
+                id: 'pat_all_enable',
+                enabled: isIdleFlow,
+                onClick: () => {
+                    let optionInputs = document.querySelectorAll('input[type=checkbox].table-config');
+
+                    console.log('optino inputs', optionInputs);
+
+                    optionInputs.forEach((input) => {
+                        input.checked = true;
+                    });
+
+                    this.EnablePayAtTableConfigs();
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: []
+            },
+            {
+                id: 'pair',
+                enabled: isUnpaired && isIdleFlow,
+                onClick: () => {
+                    this._spi.Pair();
+                },
+                inputs: []
+            },
+            {
+                id: 'unpair',
+                enabled: !isUnpaired && isIdleFlow,
+                onClick: () => {
+                    this._spi.Unpair();
+                },
+                inputs: []
+            },
+            {
+                id: 'pair_cancel',
+                enabled: isPairingFlow,
+                onClick: () => {
+                    this._spi.PairingCancel();
+                },
+                inputs: []
+            },
+            {
+                id: 'pair_confirm',
+                enabled: isPairingFlow && this._spi.CurrentPairingFlowState.AwaitingCheckFromEftpos,
+                onClick: () => {
+                    this._spi.PairingConfirmCode();
+                },
+                inputs: []
+            },
+            {
+                id: 'ok',
+                enabled: (isPairingFlow && this._spi.CurrentPairingFlowState.Finished) || (isTransactionFlow && this._spi.CurrentTxFlowState.Finished),
+                onClick: () => {
+                    this._spi.AckFlowEndedAndBackToIdle();
+                    this._flow_msg.Clear();
+                    this._flow_msg.innerHTML = "Select from the options below";
+                    this.PrintStatusAndActions();
+                },
+                inputs: []
+            },
+            {
+                // start a new bill for table
+                id: 'open',
+                enabled: isPairedConnected && isIdleFlow,
+                onSubmit: () => {
+                    let tableId     = document.getElementById('table_number').value;
+                    let operatorId  = document.getElementById('operator_id').value;
+                    let label       = document.getElementById('label').value;
+                    let isLocked    = document.getElementById('locked').checked;
+
+                    this.OpenTable(tableId, operatorId, label, isLocked);
+                },
+                inputs: ['table_number', 'operator_id', 'label', 'locked']
+            },
+            {
+                // add $amount to the bill of table #
+                id: 'add',
+                enabled: isPairedConnected && isIdleFlow,
+                onSubmit: () => {
+                    let tableId     = document.getElementById('table_number').value;
+                    let amountCents = parseInt(document.getElementById('amount').value, 10);
+
+                    this.AddToTable(tableId, amountCents);
+                },
+                inputs: ['table_number', 'amount']
+            },
+            {
+                // close table
+                id: 'close',
+                enabled: isPairedConnected && isIdleFlow,
+                onSubmit: () => {
+                    let tableId = document.getElementById('table_number').value;
+
+                    this.CloseTable(tableId);
+                },
+                inputs: ['table_number']
+            },
+            {
+                // Lock/Unlock table
+                id: 'lock',
+                enabled: isPairedConnected && isIdleFlow,
+                onSubmit: () => {
+                    let tableId     = document.getElementById('table_number').value;
+                    let isLocked    = document.getElementById('locked').checked;
+
+                    this.LockTable(tableId, isLocked);
+                },
+                inputs: ['table_number', 'locked']
+            },
+            {
+                // list open tables
+                id: 'tables',
+                enabled: isPairedConnected && isIdleFlow,
+                onClick: () => {
+                    this.PrintTables();
+                },
+                inputs: []
+            },
+            {
+                // print current bill for table
+                id: 'table',
+                enabled: isPairedConnected && isIdleFlow,
+                onSubmit: () => {
+                    let tableId = document.getElementById('table_number').value;
+
+                    this.PrintTable(tableId);
+                },
+                inputs: ['table_number']
+            },
+            {
+                // print bill with ID
+                id: 'bill',
+                enabled: isPairedConnected && isIdleFlow,
+                onSubmit: () => {
+                    let billId = document.getElementById('bill_id').value;
+
+                    this.PrintBill(billId);
+                },
+                inputs: ['bill_id']
+            },
+            {
+                id: 'pat_all_enable',
+                enabled: (isPairedConnected && isIdleFlow),
+                onClick: () => {
+                    this.EnablePayAtTableConfigs();
+                    this._pat.PushPayAtTableConfig();
+                },
+                inputs: []
+            },
+            {
+                id: 'purchase',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let posRefId        = `purchase-${new Date().toISOString()}`; 
+                    let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
+                    let tipAmount       = 0;
+                    let cashoutAmount   = 0;
+                    let promptForCashout = false;
+                    let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout);
+                    if (!res.Initiated)
+                    {
+                        this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
+                    }
+                },
+                inputs: ['amount']
+            },
+            {
+                id: 'refund',
+                enabled: (isPairedConnected && isIdleFlow),
+                onSubmit: () => {
+                    let amount      = parseInt(document.getElementById('amount').value,10);
+                    let posRefId    = `refund-${new Date().toISOString()}`; 
+                    let res         = this._spi.InitiateRefundTx(posRefId, amount);
+                    this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
+                },
+                inputs: ['amount']
+            },
+            {
+                id: 'settle',
+                enabled: (isPairedConnected && isIdleFlow),
+                onClick: () => {
+                    let res = this._spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
+                    this._flow_msg.Info(res.Initiated ? "# Settle Initiated. Will be updated with Progress." : `# Could not initiate settle: ${res.Message}. Please Retry.`);
+                },
+                inputs: []
+            },
+            {
+                id: 'tx_sign_accept',
+                enabled: (isTransactionFlow && this._spi.CurrentTxFlowState.AwaitingSignatureCheck),
+                onClick: () => {
+                    this._spi.AcceptSignature(true);
+                },
+                inputs: []
+            },
+            {
+                id: 'tx_sign_decline',
+                enabled: (isTransactionFlow && this._spi.CurrentTxFlowState.AwaitingSignatureCheck),
+                onClick: () => {
+                    this._spi.AcceptSignature(false);
+                },
+                inputs: []
+            },
+            {
+                id: 'tx_cancel',
+                enabled: (isTransactionFlow && (this._spi.CurrentTxFlowState.Finished && this._spi.CurrentTxFlowState.AttemptingToCancel)),
+                onClick: () => {
+                    this._spi.CancelTransaction();
+                },
+                inputs: []
+            }
+        ];
+
+        let inputs = [
+            {
+                id: 'pos_id',
+                enabled: (isUnpaired && isIdleFlow),
+                validate: () => {
+                    let posId = document.getElementById('pos_id');
+
+                    return posId.checkValidity();
                 }
-                break;
-            case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
-                // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
-                inputsEnabled.push('eftpos_address');
-                inputsEnabled.push('rcpt_from_eftpos');
-                inputsEnabled.push('sig_flow_from_eftpos');
-                inputsEnabled.push('save_settings');
-                // .. but otherwise we give the same options as PairedConnected
-                // goto case SpiStatus.PairedConnected;
+            },
+            {
+                id: 'eftpos_address',
+                enabled: (isUnpaired || isPairedConnecting),
+                validate: () => {
+                    let eftposAddress = document.getElementById('eftpos_address');
 
-            case SpiStatus.PairedConnected:
-                switch (this._spi.CurrentFlow)
-                {
-                    case SpiFlow.Idle: // Paired, Idle
-                        inputsEnabled.push('amount_input');
-                        inputsEnabled.push('table_input');
-                        inputsEnabled.push('bill_id_input');
-                        inputsEnabled.push('save_settings');
-
-                        inputsEnabled.push('open');
-                        inputsEnabled.push('add');
-                        inputsEnabled.push('close');
-                        inputsEnabled.push('tables');
-                        inputsEnabled.push('table');
-                        inputsEnabled.push('bill');
-
-                        inputsEnabled.push('purchase');
-                        inputsEnabled.push('refund');
-                        inputsEnabled.push('settle');
-
-                        inputsEnabled.push('unpair');
-                        inputsEnabled.push('rcpt_from_eftpos');
-                        inputsEnabled.push('sig_flow_from_eftpos');
-                        break;
-                    case SpiFlow.Transaction: // Paired, Transaction
-                        if (this._spi.CurrentTxFlowState.AwaitingSignatureCheck)
-                        {
-                            inputsEnabled.push('tx_sign_accept');
-                            inputsEnabled.push('tx_sign_decline');
-                        }
-
-                        if (!this._spi.CurrentTxFlowState.Finished && !this._spi.CurrentTxFlowState.AttemptingToCancel)
-                        {
-                            inputsEnabled.push('tx_cancel');
-                        }
-
-                        if(this._spi.CurrentTxFlowState.Finished) 
-                        {
-                            inputsEnabled.push('ok');
-                        }
-                                   
-                        break;
-                    case SpiFlow.Pairing: // Paired, Pairing - we have just finished the pairing flow. OK to ack.
-                        inputsEnabled.push('ok');
-                        break;
-                    default:
-                        this._log.info(`# .. Unexpected Flow .. ${this._spi.CurrentFlow}`);
-                        break;
+                    return eftposAddress.checkValidity();
                 }
-                break;
+            },
+            {
+                id: 'print_merchant_copy',
+                enabled: isIdleFlow,
+                validate: () => {
+                    return true;
+                }
+            },
+            {
+                id: 'rcpt_from_eftpos',
+                enabled: isIdleFlow,
+                validate: () => {
+                    return true;
+                }
+            },
+            {
+                id: 'sig_flow_from_eftpos',
+                enabled: isIdleFlow,
+                validate: () => {
+                    return true;
+                }
+            }
+        ];
 
-
-            default:
-                this._log.info(`# .. Unexpected State .. ${this._spi.CurrentStatus}`);
-                break;
+        // Hide action inputs
+        for(var inputGroup of actionInputGroups) {
+            inputGroup.classList.add('hidden');
         }
 
-        // Configure buttons / inputs
-        let inputs = document.querySelectorAll('.input');
-        for(let i = 0; i < inputs.length; i++) 
-        {
-            inputs[i].disabled = true;
-        }
+        buttons.forEach((button) => {
+            let buttonElement       = document.getElementById(button.id);
 
-        inputsEnabled.forEach((input) => 
-        {
-            document.getElementById(input).disabled = false;
+            buttonElement.disabled  = !button.enabled;
+
+            // If this button requires additional input
+            if(button.inputs && button.inputs.length) 
+            {
+                buttonElement.onclick   = () => {
+
+                    // Show relevant inputs for this action
+                    button.inputs.forEach((input) => {
+                        let inputElement        = document.getElementById(input);
+                        let inputGroupElement   = document.querySelector(`#action-inputs [data-id="${input}"]`);
+        
+                        inputGroupElement.classList.remove('hidden');
+                        inputElement.required = true;
+                    });
+
+                    this._isActionFlow = true;
+                    actionSubmitButton.onclick = () => {
+                        button.onSubmit();
+                        this._isActionFlow = false;
+
+                        for(var inputGroup of actionInputGroups) {
+                            inputGroup.classList.add('hidden');
+                        }
+            
+                        actionSubmitButton.classList.add('hidden');
+                        cancelActionButton.classList.add('hidden');
+                        currentActionHeading.innerText = '';
+                    }
+
+                    actionSubmitButton.classList.remove('hidden');
+                    cancelActionButton.classList.remove('hidden');
+                    currentActionHeading.innerText = buttonElement.innerText;
+                }
+            }
+            else
+            {
+                buttonElement.onclick = button.onClick;
+                actionSubmitButton.classList.add('hidden');
+            }
+
         });
+
+        cancelActionButton.onclick = () => {
+            this._isActionFlow = false;
+
+            for(var inputGroup of actionInputGroups) {
+                inputGroup.classList.add('hidden');
+            }
+
+            actionSubmitButton.classList.add('hidden');
+            cancelActionButton.classList.add('hidden');
+            currentActionHeading.innerText = '';
+        }
 
         this._flow_msg.Info();
     }
@@ -519,183 +973,9 @@ class TablePos
         this._flow_msg.Info(`# POS: v${this._version} Spi: v${Spi.GetVersion()}`);
     }
 
-    AcceptUserInput()
-    {
-        document.getElementById('save_settings').addEventListener('click', () => {
-
-            if(this._spi.CurrentStatus === SpiStatus.Unpaired && this._spi.CurrentFlow === SpiFlow.Idle) 
-            {
-                this._posId         = document.getElementById('pos_id').value;
-                this._eftposAddress = document.getElementById('eftpos_address').value;
-
-                this._spi.SetPosId(this._posId);
-                this._spi.SetEftposAddress(this._eftposAddress);
-
-                localStorage.setItem('pos_id', this._posId);
-                localStorage.setItem('eftpos_address', this._eftposAddress);
-            }
-
-            this._spi.Config.PromptForCustomerCopyOnEftpos = document.getElementById('rcpt_from_eftpos').checked;
-            this._spi.Config.SignatureFlowOnEftpos = document.getElementById('sig_flow_from_eftpos').checked;
-
-            localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
-            localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
-
-            this._log.info(`Saved settings ${this._posId}:${this._eftposAddress}`);
-
-            this.PrintPairingStatus();
-        });
-
-        document.getElementById('pair').addEventListener('click', () => 
-        {
-            this._spi.Pair();
-        });
-
-        document.getElementById('pair_confirm').addEventListener('click', () => 
-        {
-            this._spi.PairingConfirmCode();
-        });
-
-        document.getElementById('pair_cancel').addEventListener('click', () => 
-        {
-            this._spi.PairingCancel();
-        });
-
-        document.getElementById('unpair').addEventListener('click', () => 
-        {
-            this._spi.Unpair();
-        });
-
-        document.getElementById('open').addEventListener('click', () => 
-        {
-            let table = document.getElementById('table_number').value;
-            if(!table) 
-            {
-                this._flow_msg.Info('# Please give a table number');
-                return false;
-            }
-
-            this.openTable(table);
-        });
-
-        document.getElementById('close').addEventListener('click', () => 
-        {
-            let table = document.getElementById('table_number').value;
-            if(!table) 
-            {
-                this._flow_msg.Info('# Please give a table number');
-                return false;
-            }
-            this.closeTable(table);
-        });
-
-        document.getElementById('add').addEventListener('click', () => 
-        {
-            let table   = document.getElementById('table_number').value;
-            let amount  = parseInt(document.getElementById('amount').value,10);
-            if(!table) 
-            {
-                this._flow_msg.Info('# Please give a table number');
-                return false;
-            }
-            if(!amount) 
-            {
-                this._flow_msg.Info('# Please enter an amount');
-                return false;
-            }
-            this.addToTable(table, amount);
-        });
-        
-        document.getElementById('table').addEventListener('click', () => 
-        {
-            let table = document.getElementById('table_number').value;
-            if(!table) 
-            {
-                this._flow_msg.Info('# Please give a table number');
-                return false;
-            }
-            this.printTable(table);
-        });
-
-        document.getElementById('bill').addEventListener('click', () => 
-        {
-            let billId = document.getElementById('bill_id').value;
-            if(!billId) 
-            {
-                this._flow_msg.Info('# Please give a bill number');
-                return false;
-            }
-            this.printBill(billId);
-        });
-
-        document.getElementById('tables').addEventListener('click', () => 
-        {
-            this.printTables();
-        });
-
-        document.getElementById('purchase').addEventListener('click', () => 
-        {
-            let posRefId        = `purchase-${new Date().toISOString()}`; 
-            let purchaseAmount  = parseInt(document.getElementById('amount').value,10);
-            let tipAmount       = 0;
-            let cashoutAmount   = 0;
-            let promptForCashout = false;
-            let res             = this._spi.InitiatePurchaseTxV2(posRefId, purchaseAmount, tipAmount, cashoutAmount, promptForCashout);
-            if (!res.Initiated)
-            {
-                this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
-            }
-        });
-    
-        document.getElementById('refund').addEventListener('click', () => 
-        {
-            let amount      = parseInt(document.getElementById('amount').value,10);
-            let posRefId    = `refund-${new Date().toISOString()}`; 
-            let res         = this._spi.InitiateRefundTx(posRefId, amount);
-            this._flow_msg.Info(res.Initiated ? "# Refund Initiated. Will be updated with Progress." : `# Could not initiate refund: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('tx_sign_accept').addEventListener('click', () => 
-        {
-            this._spi.AcceptSignature(true);
-        });
-
-        document.getElementById('tx_sign_decline').addEventListener('click', () => 
-        {
-            this._spi.AcceptSignature(false);
-        });
-
-        document.getElementById('tx_cancel').addEventListener('click', () => 
-        {
-            this._spi.CancelTransaction();
-        });
-
-        document.getElementById('settle').addEventListener('click', () => 
-        {
-            let res = this._spi.InitiateSettleTx(RequestIdHelper.Id("settle"));
-            this._flow_msg.Info(res.Initiated ? "# Settle Initiated. Will be updated with Progress." : `# Could not initiate settle: ${res.Message}. Please Retry.`);
-        });
-
-        document.getElementById('ok').addEventListener('click', () => 
-        {
-            this._spi.AckFlowEndedAndBackToIdle();
-            this._flow_msg.Clear();
-            this._flow_msg.innerHTML = "Select from the options below";
-            this.PrintStatusAndActions();
-        });
-
-        document.getElementById('ok_cancel').addEventListener('click', () => 
-        {
-            this._spi.AckFlowEndedAndBackToIdle();
-            this._log.clear();
-            this._flow_msg.innerHTML = "Order Cancelled";
-            this.PrintStatusAndActions();
-        });
-    }
-
     //region My Pos Functions
 
-    openTable(tableId)
+    OpenTable(tableId, operatorId, label, locked = false)
     {
         if (this.tableToBillMapping[tableId])
         {
@@ -703,28 +983,35 @@ class TablePos
             return;
         }
 
-        let newBill = Object.assign(new Bill(), { BillId: this.newBillId(), TableId: tableId });
+        let newBill = Object.assign(new Bill(), { BillId: this.NewBillId(), TableId: tableId, OperatorId: operatorId, Label: label, Locked: locked });
         this.billsStore[newBill.BillId] = newBill;
         this.tableToBillMapping[newBill.TableId] = newBill.BillId;
         this.SaveBillState();
         this._flow_msg.Info(`Opened: ${JSON.stringify(newBill)}`);
     }
 
-    addToTable(tableId, amountCents)
+    AddToTable(tableId, amountCents)
     {
         if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
         }
-        let bill = this.billsStore[this.tableToBillMapping[tableId]];
+
+        var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        if (bill.Locked)
+        {
+            this._flow_msg.Info("Table is Locked.");
+            return;
+        }
+
         bill.TotalAmount += amountCents;
         bill.OutstandingAmount += amountCents;
         this.SaveBillState();
         this._flow_msg.Info(`Updated: ${JSON.stringify(bill)}`);
     }
 
-    closeTable(tableId)
+    CloseTable(tableId)
     {
         if (!this.tableToBillMapping[tableId])
         {
@@ -732,6 +1019,12 @@ class TablePos
             return;
         }
         var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        if (bill.Locked)
+        {
+            this._flow_msg.Info("Table is Locked.");
+            return;
+        }
+
         if (bill.OutstandingAmount > 0)
         {
             this._flow_msg.Info(`Bill not Paid Yet: ${JSON.stringify(bill)}`);
@@ -745,17 +1038,38 @@ class TablePos
         this._flow_msg.Info(`Closed: ${JSON.stringify(bill)}`);
     }
 
-    printTable(tableId)
+    LockTable(tableId, locked)
     {
         if (!this.tableToBillMapping[tableId])
         {
             this._flow_msg.Info("Table not Open.");
             return;
         }
-        this.printBill(this.tableToBillMapping[tableId]);
+        var bill = this.billsStore[this.tableToBillMapping[tableId]];
+        bill.Locked = locked;
+        this.SaveBillState();
+
+        if (locked)
+        {
+            this._flow_msg.Info(`Locked: ${JSON.stringify(bill)}`);
+        }
+        else
+        {
+            this._flow_msg.Info(`UnLocked: ${JSON.stringify(bill)}`);
+        }
     }
 
-    printTables()
+    PrintTable(tableId)
+    {
+        if (!this.tableToBillMapping[tableId])
+        {
+            this._flow_msg.Info("Table not Open.");
+            return;
+        }
+        this.PrintBill(this.tableToBillMapping[tableId]);
+    }
+
+    PrintTables()
     {
         if (Object.keys(this.tableToBillMapping).length > 0) 
         { 
@@ -786,7 +1100,7 @@ class TablePos
         }
     }
 
-    printBill(billId)
+    PrintBill(billId)
     {
         if (!this.billsStore[billId])
         {
@@ -796,7 +1110,7 @@ class TablePos
         this._flow_msg.Info(`Bill: ${this.billsStore[billId].toString()}`);
     }
 
-    newBillId()
+    NewBillId()
     {
         return ((Date.now() * 1000) + new Date().getMilliseconds()).toString();
     }
@@ -833,6 +1147,7 @@ class TablePos
             this._eftposAddress = document.getElementById('eftpos_address').value;
         }
 
+        this._print_merchant_copy = document.getElementById('print_merchant_copy').checked = localStorage.getItem('print_merchant_copy') === 'true' || false;
         this._rcpt_from_eftpos = document.getElementById('rcpt_from_eftpos').checked = localStorage.getItem('rcpt_from_eftpos') === 'true' || false;
         this._sig_flow_from_eftpos = document.getElementById('sig_flow_from_eftpos').checked = localStorage.getItem('sig_flow_from_eftpos') === 'true' || false;
 
@@ -859,14 +1174,26 @@ class Bill
     {
         this.BillId = null;
         this.TableId = null;
+        this.OperatorId = null;
+        this.Label = null;
         this.TotalAmount = 0;
         this.OutstandingAmount = 0;
         this.tippedAmount = 0;
+        this.SurchargeAmount = 0;
+        this.Locked = false;
     }
 }
 Bill.prototype.toString = function() 
 {
-    return `${this.BillId} - Table:${this.TableId} Total:$${(this.TotalAmount / 100).toFixed(2)} Outstanding:$${(this.OutstandingAmount / 100).toFixed(2)} Tips:$${(this.tippedAmount / 100).toFixed(2)}`;
+    return `${this.BillId} - /
+        Table:${this.TableId} 
+        Operator Id:${this.OperatorId} 
+        Label:${this.Label} 
+        Total:$${(this.TotalAmount / 100).toFixed(2)} 
+        Outstanding:$${(this.OutstandingAmount / 100).toFixed(2)} 
+        Tips:$${(this.tippedAmount / 100).toFixed(2)}
+        Surcharge:$${(this.SurchargeAmount / 100).toFixed(2)}  
+        Locked:${this.Locked}`;
 }
 
 /**
