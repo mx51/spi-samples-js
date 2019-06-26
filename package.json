@@ -1,6 +1,6 @@
 {
   "name": "spi-samples-js",
-  "version": "2.4.6",
+  "version": "2.6.0",
   "description": "Point of service samples which integrate with assembly payments spi module",
   "main": "index.html",
   "author": "",
