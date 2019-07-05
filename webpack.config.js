@@ -17,8 +17,8 @@ const config = {
     entry: {
        // RamenPos: './RamenPos/RamenPos.js',
        // KebabPos: './KebabPos/KebabPos.js',
-        MotelPos: './MotelPos/MotelPos.js',
-       // TablePos: './TablePos/TablePos.js'
+       // MotelPos: './MotelPos/MotelPos.js',
+        TablePos: './TablePos/TablePos.js'
     },
     
     output: {
@@ -61,7 +61,7 @@ const config = {
       ]
     },
     plugins: [
-        new htmlWebpackPlugin({template: 'MotelPos/MotelPos.html'})
+        new htmlWebpackPlugin({template: 'TablePos/TablePos.html'})
     ]
 };
 

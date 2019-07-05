@@ -780,15 +780,6 @@ class TablePos
                 inputs: ['bill_id']
             },
             {
-                id: 'pat_all_enable',
-                enabled: (isPairedConnected && isIdleFlow),
-                onClick: () => {
-                    this.EnablePayAtTableConfigs();
-                    this._pat.PushPayAtTableConfig();
-                },
-                inputs: []
-            },
-            {
                 id: 'purchase',
                 enabled: (isPairedConnected && isIdleFlow),
                 onSubmit: () => {
