@@ -371,7 +371,7 @@ class TablePos
             {
                 var item = this.tableToBillMapping[tableId];
 
-                if (this.billsStore[item].OperatorId == operatorId && this.billsStore[item].OutstandingAmount > 0)
+                if (this.billsStore[item].OperatorId == operatorId && this.billsStore[item].OutstandingAmount > 0 && this.billsStore[item].Locked == false)
                 {
                     if (!isOpenTables)
                     {
@@ -682,7 +682,7 @@ class TablePos
             },
             {
                 id: 'pair_confirm',
-                enabled: isPairingFlow && this._spi.CurrentPairingFlowState.AwaitingCheckFromEftpos,
+                enabled: isPairingFlow && (this._spi.CurrentPairingFlowState.AwaitingCheckFromEftpos || this._spi.CurrentPairingFlowState.AwaitingCheckFromPos),
                 onClick: () => {
                     this._spi.PairingConfirmCode();
                 },

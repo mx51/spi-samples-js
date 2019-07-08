@@ -31,6 +31,7 @@ const config = {
         historyApiFallback: true,
         noInfo: true,
         contentBase: __dirname,
+        index: 'TablePos.html',
         compress: true,
         hot: true,
         port: PORT,
@@ -61,11 +62,11 @@ const config = {
       ]
     },
     plugins: [
-        new htmlWebpackPlugin({template: 'index.html'}),
-        // new htmlWebpackPlugin({template: 'RamenPos/RamenPos.html'}),
-        // new htmlWebpackPlugin({template: 'KebabPos/KebabPos.html'}),
-        // new htmlWebpackPlugin({template: 'MotelPos/MotelPos.html'}),
-        // new htmlWebpackPlugin({template: 'TablePos/TablePos.html'})
+        //new htmlWebpackPlugin({template: 'RamenPos/RamenPos.html', filename: 'RamenPos.html', chunks: ['RamenPos']}),
+        //new htmlWebpackPlugin({template: 'KebabPos/KebabPos.html', filename: 'KebabPos.html', chunks: ['KebabPos']}),
+        //new htmlWebpackPlugin({template: 'MotelPos/MotelPos.html', filename: 'MotelPos.html', chunks: ['MotelPos']}),
+        new htmlWebpackPlugin({template: 'TablePos/TablePos.html', filename: 'TablePos.html', chunks: ['TablePos']}),
+        //new htmlWebpackPlugin({template: 'index.html', filename: 'index.html', inject: false}),
     ]
 };
 
