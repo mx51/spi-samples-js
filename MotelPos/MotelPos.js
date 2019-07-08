@@ -17,7 +17,7 @@ import {
     SuccessState,
     RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
+    SpiStatus} from '../lib/spi-client-js';
 // <summary>
 // NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
 //  
@@ -69,6 +69,11 @@ export class MotelPos
         document.addEventListener('PairingFlowStateChanged', (e) => this.OnPairingFlowStateChanged(e.detail)); 
         document.addEventListener('SecretsChanged', (e) => this.OnSecretsChanged(e.detail)); 
         document.addEventListener('TxFlowStateChanged', (e) => this.OnTxFlowStateChanged(e.detail)); 
+
+        this._spi.PrintingResponse = this.HandlePrintingResponse.bind(this);
+        this._spi.TerminalStatusResponse = this.HandleTerminalStatusResponse.bind(this);
+        this._spi.BatteryLevelChanged = this.HandleBatteryLevelChanged.bind(this);
+
         this._spiPreauth = this._spi.EnablePreauth();
         this._spi.Start();
 
@@ -121,6 +126,47 @@ export class MotelPos
     {
         this._log.clear();
         this._log.info(`# --> SPI Status Changed: ${spiStatus}`);
+        this.PrintStatusAndActions();
+    }
+
+
+    HandlePrintingResponse(message)
+    {
+        this._flow_msg.Clear();
+        var printingResponse = new PrintingResponse(message);
+
+        if (printingResponse.isSuccess())
+        {
+            this._flow_msg.Info("# --> Printing Response: Printing Receipt successful");
+        }
+        else
+        {
+            this._flow_msg.Info("# --> Printing Response:  Printing Receipt failed: reason = " + printingResponse.getErrorReason() + ", detail = " + printingResponse.getErrorDetail());
+        }
+
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleTerminalStatusResponse(message)
+    {
+        this._flow_msg.Clear();
+        var terminalStatusResponse = new TerminalStatusResponse(message);
+        this._flow_msg.Info("# Terminal Status Response #");
+        this._flow_msg.Info("# Status: " + terminalStatusResponse.GetStatus());
+        this._flow_msg.Info("# Battery Level: " + terminalStatusResponse.GetBatteryLevel() + "%");
+        this._flow_msg.Info("# Charging: " + terminalStatusResponse.IsCharging());
+        this._spi.AckFlowEndedAndBackToIdle();
+        this.PrintStatusAndActions();
+    }
+
+    HandleBatteryLevelChanged(message)
+    {
+        this._log.clear();
+        var terminalBattery = new TerminalBattery(message);
+        this._flow_msg.Info("# Battery Level Changed #");
+        this._flow_msg.Info("# Battery Level: " + terminalBattery.BatteryLevel + "%");
+        this._spi.AckFlowEndedAndBackToIdle();
         this.PrintStatusAndActions();
     }
 
@@ -345,7 +391,7 @@ export class MotelPos
                         inputsEnabled.push('unpair');
                         inputsEnabled.push('rcpt_from_eftpos');
                         inputsEnabled.push('sig_flow_from_eftpos');
-                        inputsEnabled.push('print_merchant_copy_input');
+                        inputsEnabled.push('print_merchant_copy');
                         break;
                     case SpiFlow.Transaction: // Paired, Transaction
                         if (this._spi.CurrentTxFlowState.AwaitingSignatureCheck)
@@ -389,7 +435,9 @@ export class MotelPos
 
         inputsEnabled.forEach((input) => 
         {
-            document.getElementById(input).disabled = false;
+            let inputEl = document.getElementById(input);
+            if(!inputEl) throw new Error(`Input element not found to enable: ${input}`);
+            inputEl.disabled = false;
         });
 
         this._flow_msg.Info();
