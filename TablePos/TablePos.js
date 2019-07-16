@@ -45,7 +45,6 @@ class TablePos
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
         this._print_merchant_copy = false;
-        this.allowedOperatorIdList = [];
 
         // My Bills Store.
         // Key = BillId
@@ -977,6 +976,15 @@ class TablePos
         let newBill = Object.assign(new Bill(), { BillId: this.NewBillId(), TableId: tableId, OperatorId: operatorId, Label: label, Locked: locked });
         this.billsStore[newBill.BillId] = newBill;
         this.tableToBillMapping[newBill.TableId] = newBill.BillId;
+
+        if(!this._pat.Config.AllowedOperatorIds.includes(operatorId))
+        {
+            this._pat.Config.AllowedOperatorIds.push(operatorId);
+            document.getElementById('set_allowed_operatorid').value = this._pat.Config.AllowedOperatorIds.join(',');
+            this._pat.PushPayAtTableConfig();
+            localStorage.setItem('pat_config', JSON.stringify(this._pat.Config));
+        }
+
         this.SaveBillState();
         this._flow_msg.Info(`Opened: ${JSON.stringify(newBill)}`);
     }
