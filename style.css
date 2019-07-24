@@ -10,6 +10,15 @@ body {
     height: 100vh;
 }
 
+input[type=checkbox] {
+    width: 20px;
+    height: 20px;
+}
+
+.hidden {
+    display: none;
+}
+
 #layout {
     border-collapse: collapse;
     margin: 0;
@@ -34,8 +43,13 @@ h1 {
     background-color: #F0F0F0;
 }
 
+h3 {
+    margin: 0;
+    padding: 0;
+}
+
 #layout .settings {
-    width: 350px;
+    width: 430px;
 }
 
 #layout .receipt {
@@ -57,6 +71,14 @@ h1 {
     color: red;
 }
 
+.settings th {
+    width: 50%;
+}
+
+#action-form .form th {
+    width: 200px;
+}
+
 .col.flow {
     height: 400px;
 }
@@ -65,6 +87,7 @@ h1 {
     font-size: 12px;
     overflow-y: scroll;
     max-height: 300px;
+    word-break: break-all;
 }
 
 table.form {
@@ -79,20 +102,24 @@ table.form {
 
 table.form th {
     text-align: right;
+    font-weight: normal;
 }
 
 table.form th, table.form td {
     padding: 0.5em;
 }
 
-table.form label {
-    text-align: left;
-}
-
-table.form input {
+.input {
     border-radius: 2px;
     padding: 5px;
     border: 1px solid #AAA;
+}
+
+.input.small {
+    width: 50px;
+}
+
+.input.medium {
     width: 150px;
 }
 
@@ -100,10 +127,20 @@ table.form button {
     padding: 0.5em;
     border-radius: 4px;
     width: 150px;
+
+}
+
+.submit-input {
+    text-align: right;
 }
 
 .status-msg p, .status-msg p span {
     text-align: center;
+}
+
+#status_indicator {
+    margin: 0;
+    padding: 5px 10px;
 }
 
 #status_indicator[data-status="Unpaired"] {
@@ -123,6 +160,7 @@ button {
     width: 150px;
     padding: 0.5em;
     cursor: pointer;
+    font-size: 12px;
 }
 
 button:disabled {
@@ -137,12 +175,10 @@ button.no-hide:disabled {
     padding: 1em;
 }
 
-.padding-1.status {
-    text-align: center;
-}
-
 fieldset {
-    border: none;
+    margin: 10px 0;
+    padding: 10px;
+    border: 1px solid #DDD;
 }
 
 fieldset:disabled {

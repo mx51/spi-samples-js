@@ -13,7 +13,7 @@
         <td class="col settings" rowspan="2">
             <h1>Settings</h1>
             <div class="padding-1">
-                <form name="settings" onSubmit="return false;">
+                <form name="settings" id="settings-form" onSubmit="return false;">
                     <table class="form">
                     <tr>
                         <th><label for="pos_id">Pos ID:</label></th>
@@ -30,6 +30,10 @@
                     <tr>
                         <th><label for="sig_flow_from_eftpos">Sig from EFTPOS:</label></th>
                         <td><input type="checkbox" class="input" id="sig_flow_from_eftpos" name="sig_flow_from_eftpos" value="false"></td>
+                    </tr>
+                    <tr>
+                        <th><label for="print_merchant_copy">Merchant copy:</label></th>
+                        <td><input type="checkbox" class="input" id="print_merchant_copy" name="print_merchant_copy" value="false"></td>
                     </tr>
                     <tr>
                         <td>&nbsp;</td>
@@ -94,6 +98,11 @@
                 <fieldset id="amount_input" class="input">
                     <label for="amount">Amount (cents): </label>
                     <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)">
+                </fieldset>
+
+                <fieldset id="surcharge_input" class="input">
+                    <label for="surcharge">Surcharge: </label>
+                    <input type="number" id="surcharge" name="surcharge" value="0" placeholder="Surcharge (cents)">
                 </fieldset>
 
                 <fieldset id="preauth_ref_input" class="input">

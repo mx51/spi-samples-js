@@ -25,11 +25,11 @@
                     </tr>
                     <tr>
                         <th><label for="serial_number">Serial #:</label></th>
-                        <td><input type="text" class="input" name="serial_number" id="serial_number" placeholder="XXX-XXX-XXX" value="patest1" required /></td>
+                        <td><input type="text" class="input" name="serial_number" id="serial_number" placeholder="XXX-XXX-XXX" value="" pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}" minlength="11" maxlength="11" required /></td>
                     </tr>
                     <tr>
                         <th><label for="eftpos_address">EFTPOS Address:</label></th>
-                        <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" required /></td>
+                        <td><input type="text" class="input" name="eftpos_address" id="eftpos_address" placeholder="EFTPOS address" value="192.168.1.1" /></td>
                     </tr>
                     <tr>
                         <th><label for="rcpt_from_eftpos">Receipt from EFTPOS:</label></th>

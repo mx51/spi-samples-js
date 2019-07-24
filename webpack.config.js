@@ -61,7 +61,11 @@ const config = {
       ]
     },
     plugins: [
-        new htmlWebpackPlugin({template: 'index.html'})
+        new htmlWebpackPlugin({template: 'index.html'}),
+        // new htmlWebpackPlugin({template: 'RamenPos/RamenPos.html'}),
+        // new htmlWebpackPlugin({template: 'KebabPos/KebabPos.html'}),
+        // new htmlWebpackPlugin({template: 'MotelPos/MotelPos.html'}),
+        // new htmlWebpackPlugin({template: 'TablePos/TablePos.html'})
     ]
 };
 
