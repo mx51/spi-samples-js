@@ -17,9 +17,9 @@ import {
     SuccessState,
     RequestIdHelper,
     SpiFlow,
-    SpiStatus} from '../lib/spi-client-js';
+    SpiStatus} from '@assemblypayments/spi-client-js/dist/spi-client-js';
 // <summary>
-// NOTE: THIS PROJECT USES THE 2.1.x of the SPI Client Library
+// NOTE: THIS PROJECT USES THE 2.6.x of the SPI Client Library
 //  
 // This is your POS. To integrate with SPI, you need to instantiate a Spi object
 // and interact with it.
