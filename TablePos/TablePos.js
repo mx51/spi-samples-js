@@ -126,20 +126,6 @@ class TablePos
             this._pat.Config.LabelPayButton         = savedPatConfig.LabelPayButton;
             this._pat.Config.TableRetrievalEnabled  = savedPatConfig.TableRetrievalEnabled;
         }
-        else
-        {
-            this._pat.Config.PayAtTableEnabled = true;
-            this._pat.Config.OperatorIdEnabled = true;
-            this._pat.Config.AllowedOperatorIds = [];
-            this._pat.Config.EqualSplitEnabled = true;
-            this._pat.Config.SplitByAmountEnabled = true;
-            this._pat.Config.SummaryReportEnabled = true;
-            this._pat.Config.TippingEnabled = true;
-            this._pat.Config.LabelOperatorId = "Operator ID";
-            this._pat.Config.LabelPayButton = "Pay at Table";
-            this._pat.Config.LabelTableId = "Table Number";
-            this._pat.Config.TableRetrievalEnabled = true;
-        }
 
         document.getElementById('pat_enabled').checked              = this._pat.Config.PayAtTableEnabled;
         document.getElementById('operatorid_enabled').checked       = this._pat.Config.OperatorIdEnabled;
@@ -152,7 +138,6 @@ class TablePos
         document.getElementById('set_label_tableid').value          = this._pat.Config.LabelTableId;
         document.getElementById('set_label_paybutton').value        = this._pat.Config.LabelPayButton;
         document.getElementById('table_retrieval_enabled').checked  = this._pat.Config.TableRetrievalEnabled;
-
     }
 
     OnTxFlowStateChanged(txState)
@@ -642,15 +627,21 @@ class TablePos
                 id: 'pat_all_enable',
                 enabled: isIdleFlow,
                 onClick: () => {
-                    let optionInputs = document.querySelectorAll('input[type=checkbox].table-config');
+                    const payAtTableConfig = {
+                        PayAtTableEnabled: true,
+                        OperatorIdEnabled: true,
+                        AllowedOperatorIds: [ 1 ],
+                        EqualSplitEnabled: true,
+                        SplitByAmountEnabled: true,
+                        SummaryReportEnabled: true,
+                        TippingEnabled: true,
+                        LabelOperatorId: "Operator ID",
+                        LabelPayButton: "Pay at Table",
+                        LabelTableId: "Table Number",
+                        TableRetrievalEnabled: true,
+                    }
 
-                    console.log('optino inputs', optionInputs);
-
-                    optionInputs.forEach((input) => {
-                        input.checked = true;
-                    });
-
-                    localStorage.removeItem('pat_config');
+                    localStorage.setItem('pat_config', JSON.stringify(payAtTableConfig));
                     this.EnablePayAtTableConfigs();
                     this._pat.PushPayAtTableConfig();
                 },
