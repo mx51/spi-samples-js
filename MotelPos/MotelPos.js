@@ -1,4 +1,5 @@
 import {
+    AccountVerifyResponse,
     Spi, 
     Logger, 
     Secrets, 
