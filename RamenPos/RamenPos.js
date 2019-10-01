@@ -41,7 +41,7 @@ export class RamenPos
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
         this._options = null;
-        this._version = '2.6.0';
+        this._version = '2.6.3';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
