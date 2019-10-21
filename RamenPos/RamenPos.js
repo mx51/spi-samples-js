@@ -41,7 +41,7 @@ export class RamenPos
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
         this._options = null;
-        this._version = '2.6.3';
+        this._version = '2.6.6';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -164,7 +164,7 @@ export class RamenPos
             case DeviceAddressResponseCode.SUCCESS:
                 eftposAddress.value = deviceAddressStatus.Address;
                 this._eftposAddress = deviceAddressStatus.Address;
-                alert(`Device Address has been updated to ${deviceAddressStatus.Address}`);
+                this._flow_msg.Info(`Device Address has been updated to ${deviceAddressStatus.Address}`);
                 break;
             case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
                 eftposAddress.value = "";
