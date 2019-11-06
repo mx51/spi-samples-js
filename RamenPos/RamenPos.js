@@ -41,7 +41,7 @@ export class RamenPos
         this._eftposAddress = "192.168.1.1";
         this._spiSecrets = null;
         this._options = null;
-        this._version = '2.6.7';
+        this._version = '2.6.8';
         this._rcpt_from_eftpos = false;
         this._sig_flow_from_eftpos = false;
 
@@ -283,9 +283,11 @@ export class RamenPos
                     switch (txState.Type)
                     {
                         case TransactionType.Purchase:
+                        case TransactionType.ZipPurchase:
                             this.HandleFinishedPurchase(txState);
                             break;
                         case TransactionType.Refund:
+                        case TransactionType.ZipRefund:
                             this.HandleFinishedRefund(txState);
                             break;
                         case TransactionType.CashoutOnly:
@@ -704,17 +706,17 @@ export class RamenPos
                 switch (this._spi.CurrentFlow)
                 {
                     case SpiFlow.Idle: // Paired, Idle
-                        inputsEnabled.push('amount_input');
-                        inputsEnabled.push('tip_amount_input');
-                        inputsEnabled.push('surcharge_amount_input');
+                        inputsEnabled.push('purchase_inputs');
+                        inputsEnabled.push('zip_purchase_input');
+                        inputsEnabled.push('zip_refund_input');
                         inputsEnabled.push('suppress_merchant_password_input');
-                        inputsEnabled.push('cashout_amount_input');
-                        inputsEnabled.push('prompt_for_cash');
                         inputsEnabled.push('pos_ref_id_input');
                         inputsEnabled.push('save_settings');
                         inputsEnabled.push('save_receipt');
 
                         inputsEnabled.push('purchase');
+                        inputsEnabled.push('zip_purchase');
+                        inputsEnabled.push('zip_refund');
                         inputsEnabled.push('moto');
                         inputsEnabled.push('refund');
                         inputsEnabled.push('cashout');
@@ -931,6 +933,41 @@ export class RamenPos
             if (!res.Initiated)
             {
                 this._flow_msg.Info(`# Could not initiate purchase: ${res.Message}. Please Retry.`);
+            }
+        });
+
+        document.getElementById('zip_purchase').addEventListener('click', () =>
+        {
+            const purchaseAmount = parseInt(document.getElementById('zip_purchase_amount').value, 10);
+            const storeCode = document.getElementById('zip_purchase_store_code').value;
+            const description = document.getElementById('zip_purchase_description').value;
+
+            const res = this._spi.InitiateZipPurchaseTx(`zprchs-${new Date().toISOString()}`, purchaseAmount, description, storeCode, this._options);
+
+            if (res.Initiated)
+            {
+                this._flow_msg.Info('# Zip Purchase Initiated. Will be updated with Progress.');
+            }
+            else
+            {
+                this._flow_msg.Info(`# Could not initiate Zip purchase: ${res.Message}. Please Retry.`);
+            }
+        });
+
+        document.getElementById('zip_refund').addEventListener('click', () =>
+        {
+
+            const refundAmount = parseInt(document.getElementById('zip_refund_amount').value, 10);
+            const originalReceiptNumber = document.getElementById('zip_refund_store_code').value;
+            const res = this._spi.InitiateZipRefundTx(`rfnd-${new Date().toISOString()}`, refundAmount, originalReceiptNumber, this._options);
+
+            if (res.Initiated)
+            {
+                this._flow_msg.Info(`# Refund Initiated. Will be updated with Progress.`);
+            }
+            else
+            {
+                this._flow_msg.Info(`# Could not initiate refund: ${res.Message}. Please Retry.`);
             }
         });
 

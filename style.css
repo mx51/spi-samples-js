@@ -45,7 +45,7 @@ h1 {
 
 h3 {
     margin: 0;
-    padding: 0;
+    padding: 0 0 1rem;
 }
 
 #layout .settings {
@@ -183,6 +183,10 @@ fieldset {
 
 fieldset:disabled {
     display: none;
+}
+
+fieldset input {
+    margin-bottom: .5rem;
 }
 
 #flow_status_heading {

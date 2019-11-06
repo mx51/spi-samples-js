@@ -105,15 +105,9 @@
                 <p class="action-buttons">
                     <button type="button" class="input" id="pair_confirm">Confirm Code</button>
                     <button type="button" class="input" id="pair_cancel">Cancel Pairing</button>
-                    <button type="button" class="input" id="purchase">Purchase</button>
-                    <button type="button" class="input" id="moto">Moto</button>
-                    <button type="button" class="input" id="cashout">Cashout</button>
-                    <button type="button" class="input" id="refund">Refund</button>
                     <button type="button" class="input" id="settle">Settle</button>
                     <button type="button" class="input" id="settle_enq">Settle Enquiry</button>
                     <button type="button" class="input" id="glt">Get Last Transaction</button>
-                    <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
-                    <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
                     <button type="button" class="input" id="tx_cancel">Cancel</button>
                     <button type="button" class="input" id="tx_auth_code">Phone Auth</button>
                     <button type="button" class="input" id="recover">Recover</button>
@@ -123,30 +117,76 @@
                     <button type="button" class="input" id="ok">Ok</button>
                     <button type="button" class="input" id="ok_retry">Ok Retry</button>
                     <button type="button" class="input" id="ok_override_paid">Ok Override Paid</button>
-                    <button type="button" class="input" id="ok_cancel">Cancel</button>
+                    <button type="button" class="input" id="ok_cancel">Ok Transaction Unsuccessful</button>
                 </p>
 
-                <fieldset id="amount_input" class="input">
-                    <label for="amount">Amount (cents): </label>
-                    <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)">
-                </fieldset>
-                <fieldset id="tip_amount_input" class="input">
-                    <label for="tip_amount">Tip Amount (cents): </label>
-                    <input type="number" id="tip_amount" name="tip_amount" value="0" placeholder="Tip Amount (cents)">
-                </fieldset>
-                <fieldset id="cashout_amount_input" class="input">
-                    <label for="cashout_amount">Cash out amount (cents): </label>
-                    <input type="number" id="cashout_amount" name="cashout_amount" value="0" placeholder="Cash out Amount (cents)">
-                </fieldset>
-                <fieldset id="prompt_for_cash_input" class="input">
-                    <label for="prompt_for_cash">Prompt for Cash?: </label>
-                    <input type="checkbox" id="prompt_for_cash" name="prompt_for_cash" value="false">
+                <fieldset id="purchase_inputs" class="input">
+                    <h3>Purchase / Moto / Cashout / Refund</h3>
+                    <div id="amount_input">
+                        <label for="amount">Amount (cents): </label>
+                        <input type="number" id="amount" name="amount" value="10" placeholder="Amount (cents)">
+                    </div>
+                    <div id="tip_amount_input">
+                        <label for="tip_amount">Tip Amount (cents): </label>
+                        <input type="number" id="tip_amount" name="tip_amount" value="0" placeholder="Tip Amount (cents)">
+                    </div>
+                    <div id="cashout_amount_input">
+                        <label for="cashout_amount">Cash out amount (cents): </label>
+                        <input type="number" id="cashout_amount" name="cashout_amount" value="0" placeholder="Cash out Amount (cents)">
+                    </div>
+                    <div id="prompt_for_cash_input">
+                        <label for="prompt_for_cash">Prompt for Cash?: </label>
+                        <input type="checkbox" id="prompt_for_cash" name="prompt_for_cash" value="false">
+                    </div>
+                    <div id="surcharge_amount_input">
+                        <label for="surcharge_amount">Surcharge Amount (cents): </label>
+                        <input type="number" id="surcharge_amount" name="surcharge_amount" value="0" placeholder="Surcharge Amount (cents)">
+                    </div>
+
+                    <div>
+                        <button type="button" class="input" id="purchase">Purchase</button>
+                        <button type="button" class="input" id="moto">Moto</button>
+                        <button type="button" class="input" id="cashout">Cashout</button>
+                        <button type="button" class="input" id="refund">Refund</button>
+                        <button type="button" class="input" id="tx_sign_accept">Accept Signature</button>
+                        <button type="button" class="input" id="tx_sign_decline">Decline Signature</button>
+                    </div>
                 </fieldset>
 
-                <fieldset id="surcharge_amount_input" class="input">
-                    <label for="surcharge_amount">Surcharge Amount (cents): </label>
-                    <input type="number" id="surcharge_amount" name="surcharge_amount" value="0" placeholder="Surcharge Amount (cents)">
+                <fieldset id="zip_purchase_input" class="input">
+                    <h3>Zip Purchase</h3>
+                    <div>
+                        <label for="zip_purchase_amount">Amount: </label>
+                        <input type="tel" id="zip_purchase_amount" name="zip_purchase_amount" placeholder="Amount" value="10">
+                    </div>
+                    <div>
+                        <label for="zip_purchase_store_code">Store Code: </label>
+                        <input type="tel" id="zip_purchase_store_code" name="zip_purchase_store_code" placeholder="Store Code" value="">
+                    </div>
+                    <div>
+                        <label for="zip_purchase_description">Description: </label>
+                        <input type="tel" id="zip_purchase_description" name="zip_purchase_description" placeholder="Description" value="Purchase">
+                    </div>
+                    <div>
+                        <button type="button" class="input" id="zip_purchase">Zip Purchase</button>
+                    </div>
                 </fieldset>
+
+                <fieldset id="zip_refund_input" class="input">
+                    <h3>Zip Refund</h3>
+                    <div>
+                        <label for="zip_refund_amount">Amount: </label>
+                        <input type="tel" id="zip_refund_amount" name="zip_refund_amount" placeholder="Amount" value="10">
+                    </div>
+                    <div>
+                        <label for="zip_refund_store_code">Original Receipt Number: </label>
+                        <input type="tel" id="zip_refund_store_code" name="zip_refund_store_code" placeholder="Original Receipt Number" value="">
+                    </div>
+                    <div>
+                        <button type="button" class="input" id="zip_refund">Zip Refund</button>
+                    </div>
+                </fieldset>
+
                 <fieldset id="suppress_merchant_password_input" class="input">
                     <label for="suppress_merchant_password">Suppress Merchant Password?: </label>
                     <input type="checkbox" id="suppress_merchant_password" name="suppress_merchant_password" value="1">

@@ -29,7 +29,7 @@ const config = {
 
     devServer: {
         historyApiFallback: true,
-        noInfo: true,
+        stats: 'minimal',
         contentBase: __dirname,
         compress: true,
         hot: true,
