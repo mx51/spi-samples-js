@@ -1,4 +1,5 @@
-@import-normalize;
+@import-normalize "opinionated.css";
+@import '~bootstrap/scss/bootstrap.scss';
 
 html, body {
 	margin: 0;

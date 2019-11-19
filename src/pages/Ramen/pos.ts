@@ -23,7 +23,7 @@ import {
 import Pos from '../../services/_common/pos';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import '../style.css';
+import '../style.scss';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE latest verion of the SPI Client Library

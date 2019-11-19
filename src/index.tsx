@@ -7,7 +7,7 @@ import MotelPos from './pages/Motel';
 import RamenPos from './pages/Ramen';
 import TablePos from './pages/Table';
 
-import './index.css';
+import './index.scss';
 
 const Routes = () => (
   <BrowserRouter>
