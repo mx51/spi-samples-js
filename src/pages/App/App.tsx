@@ -6,8 +6,8 @@ import './App.css';
 
 const App = () => (
   <div className="app">
-    <h1>Choose your SPI {getSpiVersion()} POS Sample</h1>
-    <nav>
+    <h1 className="bpos-heading">Choose your SPI {getSpiVersion()} POS Sample</h1>
+    <nav className="homePageLink">
       <ol>
         <li>
           <Link to="/burger">Burger POS</Link>

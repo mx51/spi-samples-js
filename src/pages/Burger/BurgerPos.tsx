@@ -5,7 +5,7 @@ import { getSpiVersion } from '../../services/_common/uiHelpers';
 function BurgerPos() {
   return (
     <div>
-      <h1>Welcome to BurgerPOS (v{getSpiVersion()})</h1>
+      <h1 className="bpos-heading h3">Welcome to BurgerPOS (v{getSpiVersion()})</h1>
 
       <Tab.Container id="pos-tabs" defaultActiveKey="sample">
         <Row>

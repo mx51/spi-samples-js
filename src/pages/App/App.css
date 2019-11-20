@@ -1,3 +1,23 @@
+.app a {
+    font-family: 'Muli-Regular', 'Muli';
+    color: #210096;
+    text-align: left;
+    line-height: 2rem;
+    font-size: 1rem;
+}
+
+ol {
+    color: black;
+    margin-left: 2.2rem;
+    padding-top: 2rem;
+}
+
+li::before {
+    content: "";
+    width: 20px;
+    display: inline-block;
+}
+
 input[type=checkbox] {
     width: 20px;
     height: 20px;
