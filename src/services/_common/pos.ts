@@ -31,7 +31,7 @@ class Pos {
   }
 
   // Helper method to shorten and bind adding an event listener
-  addUiOperation(elementSelector: string, eventType: string, operationFunction: Function): Boolean {
+  addUiOperation(elementSelector: string, eventType: string, operationFunction: Function): boolean {
     const boundFunction = operationFunction.bind(this);
     const targetEl = document.querySelector(elementSelector);
 

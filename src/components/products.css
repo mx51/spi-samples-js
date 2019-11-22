@@ -1,0 +1,15 @@
+.product-display {
+  display: inline-block;
+  border: 1px solid grey;
+  margin: 5px;
+  text-align: center;
+}
+.product-category {
+  font-size: 1.2rem;
+  margin-top: 2rem;
+  font-family: 'Muli-Regular', 'Muli';
+}
+div.order-sidebar {
+  border-left: 1px solid grey;
+  padding: 0;
+}
