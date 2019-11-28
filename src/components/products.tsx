@@ -45,7 +45,7 @@ function Products() {
         {
           id: '101',
           name: 'Chicken burger',
-          image: `./images/chicken.jpg`,
+          image: `chicken.jpg`,
           price: '12',
         },
         {
@@ -126,6 +126,7 @@ function Products() {
         </Col>
         <Col lg={4} className="order-sidebar">
           <Order list={shortlistedProducts} onRemoveProduct={handleRemoveProduct} />
+          <Checkout />
         </Col>
       </Row>
     </>
@@ -162,7 +163,7 @@ function ProductCategory(props: {
 }
 
 function Order(props: { list: any; onRemoveProduct: Function }) {
-  const { list } = props;
+  const { list, onRemoveProduct } = props;
   const groupedProducts: any = [];
 
   list.forEach((item: Product) => {
@@ -176,26 +177,52 @@ function Order(props: { list: any; onRemoveProduct: Function }) {
   console.log('Grouped: ', groupedProducts);
 
   return (
-    <div>
-      <h2 className="order-header">Order</h2>
+    <div className="min-vh-100 sticky-top">
+      <p className="order-header">Order</p>
       <ul className="nobull">
         {groupedProducts.map((item: any) => (
           <li className="space" key={item.id}>
-            <button className="orderList" type="button">
-              <Row>
-                <Col sm={1}>{item.count} </Col>
-                <Col sm={1}> X </Col>
-                <Col sm={5}>{item.name}</Col>
-                <Col sm={2}>${item.price}.00</Col>
-                <Col sm={2}>${item.price * item.count}.00</Col>
-                <Col sm={1}>
+            <Row>
+              <Col sm={10}>
+                <Row>
+                  <button className="orderList" type="button" onClick={() => onRemoveProduct(item.id)}>
+                    <Col sm={1}>{item.count} </Col>
+                    <Col sm={1}> X </Col>
+                    <Col sm={5}>{item.name}</Col>
+                    <Col sm={3}>${item.price}.00</Col>
+                    <Col sm={2}>${item.price * item.count}.00</Col>
+                  </button>
+                </Row>
+              </Col>
+              <Col sm={2}>
+                <button className="bin-button" type="button">
                   <Icon icon={trashAlt} />
-                </Col>
-              </Row>
-            </button>
+                </button>
+              </Col>
+            </Row>
           </li>
         ))}
       </ul>
+      <h3 className="total">
+        Total:
+        <h3 className="order-amount">
+          ${groupedProducts.reduce((total: any, product: any) => total + product.price * product.count, 0)}
+        </h3>
+      </h3>
+      <button type="button" className="checkout-button">
+        Checkout
+      </button>
+    </div>
+  );
+}
+
+function Checkout() {
+  return (
+    <div style={{ display: 'none' }}>
+      {/* <button type="button" className="checkout-button">
+        Checkout
+      </button> */}
+      <h1>Checkout Page coming soon.....</h1>
     </div>
   );
 }
