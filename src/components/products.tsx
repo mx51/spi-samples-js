@@ -45,7 +45,7 @@ function Products() {
         {
           id: '101',
           name: 'Chicken burger',
-          image: `chicken.jpg`,
+          image: './images/chicken.jpg',
           price: '12',
         },
         {
@@ -91,7 +91,9 @@ function Products() {
       ],
     },
   ];
+
   const [shortlistedProducts, updateShortlistedProducts] = useState([]);
+  const [checkout, setCheckout] = useState(false);
 
   function handleRemoveProduct(id: any) {
     console.log('Remove product', id);
@@ -110,6 +112,11 @@ function Products() {
     updateShortlistedProducts(newArr);
   }
 
+  function handleCheckout() {
+    console.log('checkout clicked');
+    setCheckout(true);
+  }
+
   return (
     <>
       <Row>
@@ -125,8 +132,8 @@ function Products() {
           ))}
         </Col>
         <Col lg={4} className="order-sidebar">
-          <Order list={shortlistedProducts} onRemoveProduct={handleRemoveProduct} />
-          <Checkout />
+          <Order list={shortlistedProducts} onRemoveProduct={handleRemoveProduct} onCheckout={handleCheckout} />
+          <Checkout visible={checkout} />
         </Col>
       </Row>
     </>
@@ -162,8 +169,8 @@ function ProductCategory(props: {
   );
 }
 
-function Order(props: { list: any; onRemoveProduct: Function }) {
-  const { list, onRemoveProduct } = props;
+function Order(props: { list: any; onRemoveProduct: Function; onCheckout: Function }) {
+  const { list, onRemoveProduct, onCheckout } = props;
   const groupedProducts: any = [];
 
   list.forEach((item: Product) => {
@@ -209,20 +216,28 @@ function Order(props: { list: any; onRemoveProduct: Function }) {
           ${groupedProducts.reduce((total: any, product: any) => total + product.price * product.count, 0)}
         </h3>
       </h3>
-      <button type="button" className="checkout-button">
+      <button type="button" className="checkout-button" onClick={() => onCheckout()}>
         Checkout
       </button>
     </div>
   );
 }
 
-function Checkout() {
+function Checkout(props: { visible: Boolean }) {
+  const { visible } = props;
   return (
-    <div style={{ display: 'none' }}>
-      {/* <button type="button" className="checkout-button">
-        Checkout
-      </button> */}
-      <h1>Checkout Page coming soon.....</h1>
+    <div className={`checkout-page ${visible ? '' : 'd-none'}`}>
+      <Row>
+        <Col sm={3}>
+          <Order list={[]} onRemoveProduct={() => {}} onCheckout={() => {}} />
+        </Col>
+        <Col sm={9}>
+          <div className="payment-options">
+            <h2>Total</h2>
+            <p> checkout </p>
+          </div>
+        </Col>
+      </Row>
     </div>
   );
 }
