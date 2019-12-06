@@ -41,6 +41,14 @@ ul {
   padding: 0;
   display: flex;
 }
+.orderLists{
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  background-color: grey;
+}
 
 .total {
   position: absolute;
@@ -102,6 +110,8 @@ ul {
     outline: none;
      box-shadow: 0 2px 5px 0 #bfbfbf;
     cursor: pointer;
+    font-size: larger;
+    padding: 0;
   }
 
   .flyout-toggle #slider { width: 75%!important }
@@ -121,7 +131,7 @@ ul {
   }
   .flyout {
   position: fixed;
-  z-index: 999;
+  z-index: 3333;
   top: 0;
   right: 0;
   width: 75%;
@@ -131,6 +141,37 @@ ul {
   -webkit-box-shadow: 0px -5px 15px 0px #bfbfbf;
   box-shadow: 0px -5px 15px 0px #bfbfbf;
   transition: all 2s ease-in-out;
+  }
+  .orderCheckout-change{
+      position: absolute;
+      bottom: 10%;
+      padding: 1rem;
+      color: #575656;
+      font-size: 1rem;
+  }
+
+  .orderCheckout-total{
+    position: absolute;
+    bottom: 17%;
+    padding: 1rem;
+    color: #575656;
+    font-size: 1rem;
+  }
+  .order-amount-total{
+    display:inline-block;
+    position: relative;
+    font-size: 2rem;
+    margin-left: 14rem;
+    color: #575656;
+    font-weight:400;
+  }
+  .order-amount-change{
+    display:inline-block;
+    position: relative;
+    font-size: 2rem;
+    margin-left: 12rem;
+    color: #575656;
+    font-weight:400;
   }
 
 .fastcash-div {
@@ -146,8 +187,8 @@ left:30%;
   margin: .5rem;
 }
 div .fastcash-input  {
- height: 4rem;
- width: 23rem;
+ height: 3rem;
+ width: 10rem;
  margin: 1rem;
 }
 
@@ -159,4 +200,19 @@ div .fastcash-card {
 height:4rem;
 width: 10rem;
 }
+div .checkout-order{
+  padding:0;
+  overflow: auto;
+}
+.transaction-successful{
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 30%;
+  width: 50%;
+  font-size: 1.4rem;
+}
+.aaa button {
+  margin: .5rem;
 
+}
