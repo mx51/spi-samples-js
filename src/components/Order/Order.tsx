@@ -1,8 +1,9 @@
 import React from 'react';
 import { Col, Row } from 'react-bootstrap';
+import './Order.css';
 
-function OrderCheckout(props: { list: any; totalPaidAmount: number; totalBillAmount: number; onClose: Function }) {
-  const { list, totalPaidAmount, totalBillAmount, onClose } = props;
+function Order(props: { list: any; onRemoveProduct: Function; onCheckout: Function }) {
+  const { list, onRemoveProduct, onCheckout } = props;
   // const groupedProducts: any = [];
   console.log(list);
 
@@ -19,16 +20,14 @@ function OrderCheckout(props: { list: any; totalPaidAmount: number; totalBillAmo
 
   return (
     <div className="min-vh-100 sticky-top">
-      <h1 className="logo">
-        <img src="./images/assembly-logo.png" width="48" height="32" alt="Assembly Payments Logo" />
-      </h1>
+      <p className="order-header">Order</p>
       <ul className="nobull">
         {list.map((item: any) => (
           <li className="space" key={item.id}>
             <Row>
               <Col sm={10}>
                 <Row>
-                  <button className="orderLists" type="button">
+                  <button className="orderList" type="button" onClick={() => onRemoveProduct(item.id)}>
                     <Col sm={1}>{item.quantity} </Col>
                     <Col sm={1}> X </Col>
                     <Col sm={5}>{item.name}</Col>
@@ -41,20 +40,17 @@ function OrderCheckout(props: { list: any; totalPaidAmount: number; totalBillAmo
           </li>
         ))}
       </ul>
-      <div className="orderCheckout-total">
-        <hr />
-        Total(${totalPaidAmount} paid)
-        <h3 className="order-amount-total">${totalBillAmount}</h3>
+      <div className="total">
+        Total
+        <h3 className="order-amount">
+          ${list.reduce((total: any, product: any) => total + product.price * product.quantity, 0)}
+        </h3>
       </div>
-      <div className="orderCheckout-change">
-        Change
-        <h3 className="order-amount-change">${totalPaidAmount - totalBillAmount}</h3>
-      </div>
-      <button type="button" className="checkout-button" onClick={() => onClose()}>
-        Back
+      <button type="button" className="checkout-button" onClick={() => onCheckout()}>
+        Checkout
       </button>
     </div>
   );
 }
 
-export default OrderCheckout;
+export default Order;

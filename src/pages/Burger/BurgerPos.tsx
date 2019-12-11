@@ -1,7 +1,8 @@
 import React from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 // import { getSpiVersion } from '../../services/_common/uiHelpers';
-import Products from '../../components/products';
+import Products from '../../components/Products/products';
+import Pairing from '../../components/Pairing/Pairing';
 import './BurgerPos.css';
 
 function BurgerPos() {
@@ -31,7 +32,9 @@ function BurgerPos() {
               <Tab.Pane eventKey="sample">
                 <Products />
               </Tab.Pane>
-              <Tab.Pane eventKey="settings">Pairing Settings</Tab.Pane>
+              <Tab.Pane eventKey="settings">
+                <Pairing />
+              </Tab.Pane>
             </Tab.Content>
           </Col>
         </Row>

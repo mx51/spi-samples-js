@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import './products.css';
 import { Col, Row } from 'react-bootstrap';
-import Checkout from './Checkout';
-import Order from './Order';
-import ProductList from './ProductList';
+import Checkout from '../Checkout/Checkout';
+import Order from '../Order/Order';
+import ProductList from '../ProductList/ProductList';
 
 function Products() {
   const allProducts = [
@@ -168,6 +167,11 @@ function Products() {
     setCheckout(true);
   }
 
+  function handleNoThanks() {
+    setCheckout(false);
+    updateShortlistedProducts([]);
+  }
+
   function handleCheckoutClosed() {
     setCheckout(false);
   }
@@ -189,7 +193,12 @@ function Products() {
         </Col>
         <Col lg={4} className="order-sidebar">
           <Order list={shortlistedProducts} onRemoveProduct={handleRemoveProduct} onCheckout={handleCheckout} />
-          <Checkout visible={checkout} list={shortlistedProducts} onClose={handleCheckoutClosed} />
+          <Checkout
+            visible={checkout}
+            list={shortlistedProducts}
+            onClose={handleCheckoutClosed}
+            onNoThanks={handleNoThanks}
+          />
         </Col>
       </Row>
     </>

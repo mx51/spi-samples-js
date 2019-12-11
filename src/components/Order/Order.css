@@ -1,0 +1,53 @@
+div.order-sidebar {
+  border-left: 1px solid grey;
+  padding: 0;
+  min-height: 100vh;
+}
+.order-header   {
+  font-size: 1.5rem;
+  text-align: center;
+  color: #575656;
+  margin-top: 2rem;
+  font-weight: 100;
+  background-color: #f6f6f6;
+  font-family: 'Muli-Regular', 'Muli';
+  margin:0;
+  padding: 1rem;
+}
+ul {
+  list-style-type: none;
+  padding: 1rem;
+}
+
+.orderList {
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  display: flex;
+}
+.orderLists{
+  border: none;
+  width: 100%;
+  text-align: left;
+  padding: 0;
+  display: flex;
+  background-color: grey;
+}
+
+.total {
+  position: absolute;
+  bottom: 8%;
+  padding: 1rem;
+  color: #575656;
+  font-size: 1.7rem;
+}
+.order-amount {
+  display:inline-block;
+  position: relative;
+  font-size: 4.5rem;
+  margin-left: 9rem;
+  color: #575656;
+  font-weight: 400;
+
+}

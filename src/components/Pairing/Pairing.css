@@ -1,0 +1,13 @@
+#pairing .column {
+  border-right: 1px solid #a8a4a4;
+  min-height: 100vh;
+  text-align: center;
+  background-color: #fff;
+  font-family: 'Muli-Regular', 'Muli';
+  padding: 0;
+  color: #140553;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  font-weight: 600;
+}
+

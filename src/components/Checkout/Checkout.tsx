@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Col } from 'react-bootstrap';
-import OrderCheckout from './OrderCheckout';
-import Tick from './Tick';
+import OrderCheckout from '../OrderCheckout/OrderCheckout';
+import Tick from '../Tick';
+import './Checkout.css';
 
-function Checkout(props: { visible: Boolean; list: any; onClose: Function }) {
-  const { visible, list, onClose } = props;
+function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoThanks: Function }) {
+  const { visible, list, onClose, onNoThanks } = props;
 
   // function toggle() {
   //   document.body.classList.toggle('flyout-toggle');
@@ -31,6 +32,12 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function }) {
   function enterPredefinedAmount(amount: number) {
     setTotalPaid(totalPaid + amount);
     checkTransactionStatus(totalPaid + amount);
+  }
+
+  function handleNoThanks() {
+    onNoThanks();
+    setTransactionStatus(false);
+    setTotalPaid(0);
   }
 
   function paymentOption() {
@@ -85,10 +92,12 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function }) {
     return (
       <div className="transaction-successful">
         <Tick className="color-purple" />
-        <div className="aaa">
+        <div className="transaction-successful-button">
           <p>Transaction successful!</p>
           <button type="button">Receipt</button>
-          <button type="button">No Thanks!!</button>
+          <button type="button" onClick={() => handleNoThanks()}>
+            No Thanks!!
+          </button>
         </div>
       </div>
     );
@@ -100,8 +109,8 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function }) {
         <OrderCheckout list={list} totalBillAmount={totalBillAmount} totalPaidAmount={totalPaid} onClose={onClose} />
       </Col>
       <Col sm={9}>
-        <div className="flyout">
-          <button type="button" className="flyout-toggle" onClick={() => onClose()}>
+        <div className="checkout-page-flyout">
+          <button type="button" className="checkout-flyout-toggle" onClick={() => onClose()}>
             {'▼'}
           </button>
 

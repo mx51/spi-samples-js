@@ -1,5 +1,5 @@
 import React from 'react';
-import { ReactComponent as IconTick } from '../images/tick.svg';
+import { ReactComponent as IconTick } from '../../images/tick.svg';
 import './tick.scss';
 
 const Tick = (props: { className: any }) => {
