@@ -14,7 +14,11 @@
 .actions-button{
   border: 1px solid  #e2e2e2;
   color: #210096;
-  margin-right: 1rem;;
+  margin-right: .5rem;
+  margin-bottom: .5rem;
+  width:8rem;
+  height:2.5rem;
+  font-size: .9rem;
 }
 
 .actions-checkbox{
@@ -29,7 +33,14 @@
   padding:1rem;
 
 }
-
+.actions-text {
+  border-top: 0;
+  border-left:0;
+  border-right:0;
+  width: 15rem;
+  text-align: left;
+  border-bottom: 1px solid #7e7c7c;
+}
 .actions-textarea {
   border-top: 0;
   border-left:0;
@@ -38,3 +49,21 @@
   text-align: left;
   border-bottom: 1px solid #7e7c7c;
 }
+
+.whenpaired-button{
+  padding:1rem;
+}
+
+.aaa {
+  font-size: 1rem;
+  font-weight: 100;
+  letter-spacing: 0;
+  color:grey;
+
+}
+
+div.aaa.form-check{
+  padding:0;
+  text-align: left;
+}
+

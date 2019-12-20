@@ -2,8 +2,14 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import './OrderCheckout.css';
 
-function OrderCheckout(props: { list: any; totalPaidAmount: number; totalBillAmount: number; onClose: Function }) {
-  const { list, totalPaidAmount, totalBillAmount, onClose } = props;
+function OrderCheckout(props: {
+  list: any;
+  totalPaidAmount: number;
+  totalBillAmount: number;
+  cashOutAmount: number;
+  onClose: Function;
+}) {
+  const { list, totalPaidAmount, totalBillAmount, cashOutAmount, onClose } = props;
   // const groupedProducts: any = [];
   console.log(list);
 
@@ -17,6 +23,8 @@ function OrderCheckout(props: { list: any; totalPaidAmount: number; totalBillAmo
   // });
 
   console.log('Grouped: ', list);
+  const changeAmount = totalPaidAmount - totalBillAmount - cashOutAmount;
+  const totalAmount = totalBillAmount + cashOutAmount;
 
   return (
     <div className="min-vh-100 sticky-top">
@@ -43,14 +51,35 @@ function OrderCheckout(props: { list: any; totalPaidAmount: number; totalBillAmo
         ))}
       </ul>
       <div className="orderCheckout-total">
-        <hr />
-        Total(${totalPaidAmount} paid)
-        <h3 className="order-amount-total">${totalBillAmount}</h3>
+        <Row>
+          <Col>Bill Amount</Col>
+          <Col xs={1}>${totalBillAmount}</Col>
+        </Row>
+        <Row className={cashOutAmount <= 0 ? 'd-none' : ''}>
+          <Col>Cash out</Col>
+          <Col xs={1}>${cashOutAmount}</Col>
+        </Row>
+        <Row className={changeAmount <= 0 ? 'd-none' : ''}>
+          <Col>Change</Col>
+          <Col xs={1}>${changeAmount}</Col>
+        </Row>
+        <Row>
+          <Col>Total (${totalPaidAmount} paid)</Col>
+          <Col xs={1}>${totalAmount}</Col>
+        </Row>
+        {/* <hr />
+        Total (${totalPaidAmount} paid)
+        <h3 className="order-amount-total">${totalBillAmount}</h3> */}
       </div>
-      <div className="orderCheckout-change">
+      {/* <div className="orderCheckout-change">
+        <hr />
+        Cash out
+        <h3 className="order-amount-change">${cashOutAmount}</h3>
+      </div> */}
+      {/* <div className="orderCheckout-change">
         Change
         <h3 className="order-amount-change">${totalPaidAmount - totalBillAmount}</h3>
-      </div>
+      </div> */}
       <button type="button" className="checkout-button" onClick={() => onClose()}>
         Back
       </button>

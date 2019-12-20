@@ -4,7 +4,11 @@ import Checkout from '../Checkout/Checkout';
 import Order from '../Order/Order';
 import ProductList from '../ProductList/ProductList';
 
-function Products() {
+type Props = {
+  spi: any;
+};
+
+function Products({ spi }: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -198,6 +202,7 @@ function Products() {
             list={shortlistedProducts}
             onClose={handleCheckoutClosed}
             onNoThanks={handleNoThanks}
+            spi={spi}
           />
         </Col>
       </Row>

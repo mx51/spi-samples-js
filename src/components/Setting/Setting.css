@@ -27,6 +27,7 @@ div .setting-checkbox {
   color: black;
   margin-right: 2rem;
   padding:.5rem;
+  padding-top:0;
 }
 .setting-checkboxfield {
   margin-right: 1rem;

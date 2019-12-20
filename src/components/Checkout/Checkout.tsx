@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
+import { TransactionOptions } from '@assemblypayments/spi-client-js';
 import { Col } from 'react-bootstrap';
 import OrderCheckout from '../OrderCheckout/OrderCheckout';
 import Tick from '../Tick';
 import './Checkout.css';
+import Input from '../Input/Input';
+import { purchase as purchaseService, moto as motoService, refund as refundService } from '../../services';
+// import { moto as motoService } from '../../services';
 
-function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoThanks: Function }) {
-  const { visible, list, onClose, onNoThanks } = props;
+function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoThanks: Function; spi: any }) {
+  const { visible, list, onClose, onNoThanks, spi } = props;
 
   // function toggle() {
   //   document.body.classList.toggle('flyout-toggle');
@@ -14,11 +18,12 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoT
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [totalPaidAmount, settotalPaidAmount] = useState<number>(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
+  const [cashoutAmount, setCashoutAmount] = useState(0);
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
-
+  const total = parseInt(totalBillAmount, 10) + cashoutAmount;
   function checkTransactionStatus(paid: number) {
-    if (totalBillAmount <= paid) {
+    if (totalBillAmount + cashoutAmount <= paid) {
       setTransactionStatus(true);
     }
   }
@@ -43,7 +48,7 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoT
   function paymentOption() {
     return (
       <div className="payment-options">
-        <h2>Total ${totalBillAmount}</h2>
+        <h2>Total ${total}</h2>
         <hr />
         <div className="fastcash-div">
           <p className="fastcash-heading">Fast cash options</p>
@@ -78,10 +83,55 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoT
             </button>
           </div>
           <div>
-            <p> Other payment options</p>
-            <button className="fastcash-card" type="button">
+            <p> Card payment options</p>
+            <button
+              className="fastcash-card"
+              type="button"
+              onClick={() =>
+                purchaseService.initiatePurchase(
+                  { Info: () => {} },
+                  new TransactionOptions(),
+                  spi,
+                  total * 100,
+                  0,
+                  0,
+                  0,
+                  false
+                )
+              }
+            >
               Credit Card
             </button>
+            <button
+              className="fastcash-card"
+              type="button"
+              onClick={() => motoService.initiateMotoPurchase({ Info: () => {} }, spi, total * 100, 0, false)}
+            >
+              MOTO
+            </button>
+            <button
+              className="fastcash-card"
+              type="button"
+              onClick={() => refundService.initiateRefund({ Info: () => {} }, spi, total * 100, false)}
+            >
+              Refund
+            </button>
+          </div>
+          <div>
+            <p> Other options</p>
+            <Input
+              id="cashoutAmount"
+              name="cashoutAmount"
+              value={cashoutAmount === 0 ? '' : cashoutAmount.toString()}
+              label="Cashout Amount"
+              onChange={(e: any) => {
+                const cashOut = e.target.value ? parseInt(e.target.value, 10) : 0;
+
+                setCashoutAmount(cashOut);
+                console.log(cashoutAmount);
+              }}
+            />
+            <Input id="TipAmount" name="TipAmount" label="Enter Tip Amount" />
           </div>
         </div>
       </div>
@@ -106,7 +156,13 @@ function Checkout(props: { visible: Boolean; list: any; onClose: Function; onNoT
   return (
     <div className={`checkout-page ${visible ? '' : 'd-none'}`}>
       <Col sm={3} className="checkout-order">
-        <OrderCheckout list={list} totalBillAmount={totalBillAmount} totalPaidAmount={totalPaid} onClose={onClose} />
+        <OrderCheckout
+          list={list}
+          totalBillAmount={totalBillAmount}
+          totalPaidAmount={totalPaid}
+          cashOutAmount={cashoutAmount}
+          onClose={onClose}
+        />
       </Col>
       <Col sm={9}>
         <div className="checkout-page-flyout">
