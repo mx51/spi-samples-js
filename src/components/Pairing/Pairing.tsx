@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import Setting from '../Setting/Setting';
+import PairingConfig from '../PairingConfig/PairingConfig';
 import Flow from '../Flow/Flow';
 import Receipt from '../Receipt/Receipt';
 import Status from '../Status/Status';
@@ -32,7 +32,7 @@ function Pairing({ isAwaitingConfirmation, isFinishedPairing, spi }: Props) {
       <Row>
         <Col lg={3} className="column">
           <div className="flex-fill d-flex flex-column">
-            <Setting spi={spi} />
+            <PairingConfig spi={spi} />
           </div>
           <div className="flex-fill">
             <Status

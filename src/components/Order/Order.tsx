@@ -2,8 +2,8 @@ import React from 'react';
 import { Col, Row } from 'react-bootstrap';
 import './Order.css';
 
-function Order(props: { list: any; onRemoveProduct: Function; onCheckout: Function }) {
-  const { list, onRemoveProduct, onCheckout } = props;
+function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity: Function }) {
+  const { list, onCheckout, onChangeProductQuantity } = props;
   // const groupedProducts: any = [];
   console.log(list);
 
@@ -27,13 +27,32 @@ function Order(props: { list: any; onRemoveProduct: Function; onCheckout: Functi
             <Row>
               <Col sm={10}>
                 <Row>
-                  <button className="orderList" type="button" onClick={() => onRemoveProduct(item.id)}>
+                  {/* <button className="orderList" type="button" onClick={() => onRemoveProduct(item.id)}>
                     <Col sm={1}>{item.quantity} </Col>
                     <Col sm={1}> X </Col>
                     <Col sm={5}>{item.name}</Col>
                     <Col sm={3}>${item.price}.00</Col>
                     <Col sm={2}>${item.price * item.quantity}.00</Col>
-                  </button>
+                  </button> */}
+                  <Col sm={5}>
+                    <div className="quantity-buttons">
+                      <button type="button" onClick={() => onChangeProductQuantity(item.id, 1)}>
+                        +
+                      </button>
+                      <div className="quantity-label">{item.quantity}</div>
+                      <button type="button" onClick={() => onChangeProductQuantity(item.id, -1)}>
+                        -
+                      </button>
+                    </div>
+                  </Col>
+
+                  <Col sm={5} className="quantity">
+                    {item.name}
+                  </Col>
+
+                  <Col sm={2} className="quantity">
+                    ${item.price * item.quantity}
+                  </Col>
                 </Row>
               </Col>
             </Row>

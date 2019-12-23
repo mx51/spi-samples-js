@@ -141,7 +141,7 @@ function Products({ spi }: Props) {
     updateShortlistedProducts(products);
   };
 
-  function handleRemoveProduct(id: any) {
+  function handleChangeProductQuantity(id: any, quantity: number) {
     console.log('Remove product', id);
 
     const products = [...shortlistedProducts];
@@ -156,7 +156,7 @@ function Products({ spi }: Props) {
 
     // if clicked product found in shortlisted product list then decrement the quantity
     if (shortlistedId > -1) {
-      products[shortlistedId].quantity -= 1;
+      products[shortlistedId].quantity += quantity;
       // if the quantity reaches 0, then remove the product from shortlisted product
       if (products[shortlistedId].quantity === 0) {
         products.splice(shortlistedId, 1);
@@ -196,7 +196,11 @@ function Products({ spi }: Props) {
           ))}
         </Col>
         <Col lg={4} className="order-sidebar">
-          <Order list={shortlistedProducts} onRemoveProduct={handleRemoveProduct} onCheckout={handleCheckout} />
+          <Order
+            list={shortlistedProducts}
+            onChangeProductQuantity={handleChangeProductQuantity}
+            onCheckout={handleCheckout}
+          />
           <Checkout
             visible={checkout}
             list={shortlistedProducts}

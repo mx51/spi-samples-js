@@ -3,6 +3,7 @@ import { Col, Nav, Row, Tab } from 'react-bootstrap';
 // import { getSpiVersion } from '../../services/_common/uiHelpers';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
+import Setting from '../../components/Setting/Setting';
 import './BurgerPos.css';
 import SpiService from './spiService';
 
@@ -46,7 +47,10 @@ function BurgerPos() {
                   <Nav.Link eventKey="sample">Sample POS</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="settings">Pairing Settings</Nav.Link>
+                  <Nav.Link eventKey="pairing">Pairing</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="setting">Setting</Nav.Link>
                 </Nav.Item>
               </Nav>
             </div>
@@ -56,12 +60,15 @@ function BurgerPos() {
               <Tab.Pane eventKey="sample">
                 <Products spi={spiService._spi} />
               </Tab.Pane>
-              <Tab.Pane eventKey="settings">
+              <Tab.Pane eventKey="pairing">
                 <Pairing
                   isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
                   isFinishedPairing={pairingState.Finished}
                   spi={spiService._spi}
                 />
+              </Tab.Pane>
+              <Tab.Pane eventKey="setting">
+                <Setting />
               </Tab.Pane>
             </Tab.Content>
           </Col>

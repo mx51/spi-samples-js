@@ -54,7 +54,12 @@ function Actions(props: { isPaired: Boolean }) {
               <Input id="txtSurchargeAmount" name="surchargeAmount" label="Surcharge amount" />
             </Col>
             <Col sm={6}>
-              <Form.Check className="aaa" type="checkbox" id="check-Print-merchant-copy" label="Print merchant copy" />{' '}
+              <Form.Check
+                className="receipt-header"
+                type="checkbox"
+                id="check-Print-merchant-copy"
+                label="Print merchant copy"
+              />{' '}
               <textarea placeholder="Receipt header" className="actions-text" />
               <textarea placeholder="Receipt footer" className="actions-text" />
               <Input id="txtPosRefId" name="posRefId" label="POS Ref ID" />
