@@ -10,7 +10,8 @@
   font-size: 1rem;
   text-align: left;
   letter-spacing: 0;
-  padding-left:1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
   color:#210096;
 }
 .setting-inputfield {

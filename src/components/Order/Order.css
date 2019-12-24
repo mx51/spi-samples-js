@@ -37,16 +37,22 @@ ul {
 
 .total {
   position: absolute;
-  bottom: 8%;
-  padding: 1rem;
-  color: #575656;
-  font-size: 1.7rem;
+    bottom: 4rem;
+    right: 0;
+    left: 0;
+    padding: 1rem;
+    color: #575656;
+    font-size: 1.7rem;
+}
+
+.aaa {
+  font-size: 1rem;
 }
 .order-amount {
   display:inline-block;
   position: relative;
-  font-size: 4.5rem;
-  margin-left: 9rem;
+  font-size: 2rem;
+  margin-left: 14rem;
   color: #575656;
   font-weight: 400;
 
@@ -69,3 +75,9 @@ ul {
 
 }
 
+.order-header-buttons button {
+  width: 100%;
+  height: 3rem;
+  background: none;
+  font-size: .9rem;
+}

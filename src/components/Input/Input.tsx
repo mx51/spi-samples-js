@@ -6,12 +6,10 @@ function Input(props: { id: string; label: string; name: string; onChange?: Func
   console.log(id, label, name, value);
 
   return (
-    <div className="group">
-      <span className="highlight" />
-      <span className="bar" />
+    <fieldset className="input p-2">
+      <legend className="w-auto">{label}</legend>
       {value ? (
         <input
-          className="setting-input"
           id={id}
           type="text"
           value={value}
@@ -22,7 +20,6 @@ function Input(props: { id: string; label: string; name: string; onChange?: Func
         />
       ) : (
         <input
-          className="setting-input"
           id={id}
           type="text"
           required
@@ -31,11 +28,7 @@ function Input(props: { id: string; label: string; name: string; onChange?: Func
           }}
         />
       )}
-
-      <label className="setting-label" htmlFor={id}>
-        {label}
-      </label>
-    </div>
+    </fieldset>
   );
 }
 

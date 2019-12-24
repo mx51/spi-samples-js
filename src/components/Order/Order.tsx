@@ -1,9 +1,35 @@
-import React from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Col, Row, Modal, Button } from 'react-bootstrap';
+import Input from '../Input/Input';
+
 import './Order.css';
+
+function Surcharge(props: { show: boolean; handleClose: Function }) {
+  const { show, handleClose } = props;
+  console.log('MOdal show', show);
+
+  return (
+    <Modal show={show} onHide={() => handleClose()}>
+      <Modal.Header closeButton>
+        <Modal.Title>Add Surcharge</Modal.Title>
+      </Modal.Header>
+      <Modal.Body>
+        <Input id="surcharge" name="surcharge" label="Surcharge Amount" />
+        <p className="ml-2">Cents</p>
+        <Button variant="primary" className="btn-custom" onClick={() => handleClose()} block>
+          Apply
+        </Button>
+      </Modal.Body>
+    </Modal>
+  );
+}
 
 function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity: Function }) {
   const { list, onCheckout, onChangeProductQuantity } = props;
+
+  const [showSurcharge, setShowSurcharge] = useState(false);
+  const [surchargeAmount, setSurchargeAmount] = useState(10);
+
   // const groupedProducts: any = [];
   console.log(list);
 
@@ -16,11 +42,29 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
   //   // setgroupedProducts(groupedProducts);
   // });
 
-  console.log('Grouped: ', list);
+  console.log('Grouped: ', list, setSurchargeAmount);
+
+  const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
+  const totalAmount = subTotalAmount + surchargeAmount;
 
   return (
     <div className="min-vh-100 sticky-top">
-      <p className="order-header">Order</p>
+      <Surcharge show={showSurcharge} handleClose={() => setShowSurcharge(false)} />
+
+      <h2 className="order-header">Order</h2>
+      <Row className="order-header-buttons no-gutters">
+        <Col sm={4}>
+          <button type="button">Last Transaction</button>
+        </Col>
+        <Col sm={4}>
+          <button type="button" onClick={() => setShowSurcharge(true)}>
+            Add Surcharge
+          </button>
+        </Col>
+        <Col sm={4}>
+          <button type="button">Refund</button>
+        </Col>
+      </Row>
       <ul className="nobull">
         {list.map((item: any) => (
           <li className="space" key={item.id}>
@@ -59,11 +103,23 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
           </li>
         ))}
       </ul>
+
       <div className="total">
-        Total
-        <h3 className="order-amount">
-          ${list.reduce((total: any, product: any) => total + product.price * product.quantity, 0)}
-        </h3>
+        <div className="aaa">
+          <Row>
+            <Col sm={9}>Subtotal</Col>
+            <Col sm={3}>${subTotalAmount}</Col>
+          </Row>
+          <Row>
+            <Col sm={9}>Surcharge</Col>
+            <Col sm={3}>${surchargeAmount}</Col>
+          </Row>
+        </div>
+        <hr />
+        <Row>
+          <Col sm={9}>Total</Col>
+          <Col sm={3}>${totalAmount}</Col>
+        </Row>
       </div>
       <button type="button" className="checkout-button" onClick={() => onCheckout()}>
         Checkout
