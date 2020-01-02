@@ -17,7 +17,7 @@ function Setting({ spi }: Props) {
 
   return (
     <div>
-      <p className="setting-header">Setting</p>
+      <p className="setting-header">Pairing configuration</p>
       <div className="setting-fields">
         <Input
           id="POS ID"

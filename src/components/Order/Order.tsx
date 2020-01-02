@@ -4,9 +4,11 @@ import Input from '../Input/Input';
 
 import './Order.css';
 
-function Surcharge(props: { show: boolean; handleClose: Function }) {
-  const { show, handleClose } = props;
-  console.log('MOdal show', show);
+function SurchargeModal(props: { show: boolean; handleClose: Function; handleApplySurcharge: Function }) {
+  const { show, handleClose, handleApplySurcharge } = props;
+  console.log('MOdal show', show, handleApplySurcharge);
+
+  const [surcharge, setSurcharge] = useState<number>(0);
 
   return (
     <Modal show={show} onHide={() => handleClose()}>
@@ -14,9 +16,15 @@ function Surcharge(props: { show: boolean; handleClose: Function }) {
         <Modal.Title>Add Surcharge</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Input id="surcharge" name="surcharge" label="Surcharge Amount" />
+        <Input
+          id="surcharge"
+          name="surcharge"
+          label="Surcharge Amount"
+          value={surcharge.toString()}
+          onChange={(e: any) => setSurcharge(e.target.value)}
+        />
         <p className="ml-2">Cents</p>
-        <Button variant="primary" className="btn-custom" onClick={() => handleClose()} block>
+        <Button variant="primary" className="btn-custom" onClick={() => handleApplySurcharge(surcharge / 100)} block>
           Apply
         </Button>
       </Modal.Body>
@@ -28,7 +36,7 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
   const { list, onCheckout, onChangeProductQuantity } = props;
 
   const [showSurcharge, setShowSurcharge] = useState(false);
-  const [surchargeAmount, setSurchargeAmount] = useState(10);
+  const [surchargeAmount, setSurchargeAmount] = useState(0);
 
   // const groupedProducts: any = [];
   console.log(list);
@@ -47,9 +55,18 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
   const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = subTotalAmount + surchargeAmount;
 
+  function handleApplySurcharge(surcharge: number) {
+    setSurchargeAmount(surcharge);
+    setShowSurcharge(false);
+  }
+
   return (
     <div className="min-vh-100 sticky-top">
-      <Surcharge show={showSurcharge} handleClose={() => setShowSurcharge(false)} />
+      <SurchargeModal
+        show={showSurcharge}
+        handleClose={() => setShowSurcharge(false)}
+        handleApplySurcharge={handleApplySurcharge}
+      />
 
       <h2 className="order-header">Order</h2>
       <Row className="order-header-buttons no-gutters">

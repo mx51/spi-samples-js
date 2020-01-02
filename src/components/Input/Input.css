@@ -18,7 +18,7 @@ fieldset.input legend {
   padding-left: 0.5rem;
 }
 
-fieldset.input input {
+fieldset.input input, fieldset.input textarea  {
   margin: 0;
   border: none;
   font-size: 1rem;
