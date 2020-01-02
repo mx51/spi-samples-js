@@ -68,7 +68,7 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
         handleApplySurcharge={handleApplySurcharge}
       />
 
-      <h2 className="order-header">Order</h2>
+      <h2 className="sub-header mb-0">Order</h2>
       <Row className="order-header-buttons no-gutters">
         <Col sm={4}>
           <button type="button">Last Transaction</button>
@@ -86,7 +86,7 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
         {list.map((item: any) => (
           <li className="space" key={item.id}>
             <Row>
-              <Col sm={10}>
+              <Col sm={12}>
                 <Row>
                   {/* <button className="orderList" type="button" onClick={() => onRemoveProduct(item.id)}>
                     <Col sm={1}>{item.quantity} </Col>
@@ -95,7 +95,7 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
                     <Col sm={3}>${item.price}.00</Col>
                     <Col sm={2}>${item.price * item.quantity}.00</Col>
                   </button> */}
-                  <Col sm={5}>
+                  <Col sm={4}>
                     <div className="quantity-buttons">
                       <button type="button" onClick={() => onChangeProductQuantity(item.id, 1)}>
                         +
@@ -106,12 +106,10 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
                       </button>
                     </div>
                   </Col>
-
                   <Col sm={5} className="quantity">
                     {item.name}
                   </Col>
-
-                  <Col sm={2} className="quantity">
+                  <Col sm={3} className="quantity text-right">
                     ${item.price * item.quantity}
                   </Col>
                 </Row>
@@ -122,23 +120,31 @@ function Order(props: { list: any; onCheckout: Function; onChangeProductQuantity
       </ul>
 
       <div className="total">
-        <div className="aaa">
+        <div className="">
           <Row>
-            <Col sm={9}>Subtotal</Col>
-            <Col sm={3}>${subTotalAmount}</Col>
+            <Col sm={7}>Subtotal</Col>
+            <Col sm={5} className="text-right">
+              ${subTotalAmount.toFixed(2)}
+            </Col>
           </Row>
           <Row>
-            <Col sm={9}>Surcharge</Col>
-            <Col sm={3}>${surchargeAmount}</Col>
+            <Col sm={7}>Surcharge</Col>
+            <Col sm={5} className="text-right">
+              ${surchargeAmount.toFixed(2)}
+            </Col>
           </Row>
         </div>
         <hr />
-        <Row>
-          <Col sm={9}>Total</Col>
-          <Col sm={3}>${totalAmount}</Col>
-        </Row>
+        <div className="total-amount">
+          <Row>
+            <Col sm={7}>Total</Col>
+            <Col sm={5} className="text-right">
+              ${totalAmount.toFixed(2)}
+            </Col>
+          </Row>
+        </div>
       </div>
-      <button type="button" className="checkout-button" onClick={() => onCheckout()}>
+      <button type="button" className="primary-button checkout-button mb-0" onClick={() => onCheckout()}>
         Checkout
       </button>
     </div>

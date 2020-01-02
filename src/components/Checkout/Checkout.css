@@ -1,14 +1,5 @@
 
-.checkout-button {
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  height: 4.5rem;
-  background-color: #200096;
-  text-align: center;
-  color: #fff;
-  font-size:1.5rem;
-}
+
 
 .checkout-page {
   position: fixed;

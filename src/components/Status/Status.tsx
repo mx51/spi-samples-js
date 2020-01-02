@@ -16,37 +16,39 @@ function Status(props: {
 
   return (
     <div>
-      <p className="status-header">Status</p>
+      <h2 className="sub-header">Status</h2>
 
-      {isPaired ? (
-        <Alert variant="success"> Paired Connected: Idle </Alert>
-      ) : (
-        <Alert variant="danger"> Unpaired : Idle </Alert>
-      )}
-      {isPaired ? (
-        <button type="button" onClick={() => onChangeStatus(false)}>
-          Unpair
-        </button>
-      ) : (
-        <button type="button" onClick={() => onChangeStatus(true)}>
-          Pair
-        </button>
-      )}
-      {isPaired && !isFinishedPairing && (
-        <div>
-          {isAwaitingConfirmation && (
-            <button type="button" onClick={() => pairingService.pairingConfirmCode(spi)}>
-              Confirm code
-            </button>
-          )}
-          {!isFinishedPairing && (
-            <button type="button" onClick={() => pairingService.pairingCancel(spi)}>
-              Cancel Pairing
-            </button>
-          )}
-        </div>
-        // {pairingState.Finished && <button type="button">Ok</button>}
-      )}
+      <div className="ml-3 mr-3">
+        {isPaired ? (
+          <Alert variant="success"> Paired Connected: Idle </Alert>
+        ) : (
+          <Alert variant="danger"> Unpaired : Idle </Alert>
+        )}
+        {isPaired ? (
+          <button type="button" onClick={() => onChangeStatus(false)}>
+            Unpair
+          </button>
+        ) : (
+          <button type="button" onClick={() => onChangeStatus(true)}>
+            Pair
+          </button>
+        )}
+        {isPaired && !isFinishedPairing && (
+          <div>
+            {isAwaitingConfirmation && (
+              <button type="button" onClick={() => pairingService.pairingConfirmCode(spi)}>
+                Confirm code
+              </button>
+            )}
+            {!isFinishedPairing && (
+              <button type="button" onClick={() => pairingService.pairingCancel(spi)}>
+                Cancel Pairing
+              </button>
+            )}
+          </div>
+          // {pairingState.Finished && <button type="button">Ok</button>}
+        )}
+      </div>
     </div>
   );
 }

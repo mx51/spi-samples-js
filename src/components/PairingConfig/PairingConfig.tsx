@@ -17,8 +17,8 @@ function Setting({ spi }: Props) {
 
   return (
     <div>
-      <p className="setting-header">Pairing configuration</p>
-      <div className="setting-fields">
+      <h2 className="sub-header">Pairing configuration</h2>
+      <div className="ml-4 mr-4">
         <Input
           id="POS ID"
           name="POS ID"
@@ -57,14 +57,12 @@ function Setting({ spi }: Props) {
           }}
         />
         <div className="setting-checkbox">
-          <Form.Check type="checkbox" id="check-test-mode" label="Test Mode" />
-          <Form.Check type="checkbox" id="check-secure-websocket" label="Secure WebSockets" />
-          <Form.Check type="checkbox" id="check-auto-address" label="Auto Address" />
-          <Form.Check type="checkbox" id="check-receipt-eftpos" label="Receipt from EFTPOS" />
-          <Form.Check type="checkbox" id="check-sig-eftpos" label="Sig from EFTPOS" />
+          <Form.Check type="checkbox" id="check-auto-address" label="Auto Address" className="m-2" />
+          <Form.Check type="checkbox" id="check-receipt-eftpos" label="Receipt from EFTPOS" className="m-2" />
+          <Form.Check type="checkbox" id="check-sig-eftpos" label="Sig from EFTPOS" className="m-2" />
           <button
             type="button"
-            className="setting-save-button"
+            className="primary-button"
             onClick={() => {
               console.log(spi);
               spi.SetPosId(posId);

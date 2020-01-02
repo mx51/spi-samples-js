@@ -80,7 +80,7 @@ function OrderCheckout(props: {
         Change
         <h3 className="order-amount-change">${totalPaidAmount - totalBillAmount}</h3>
       </div> */}
-      <button type="button" className="checkout-button" onClick={() => onClose()}>
+      <button type="button" className="primary-button checkout-button mb-0" onClick={() => onClose()}>
         Back
       </button>
     </div>

@@ -26,3 +26,39 @@ code {
 div button.btn-custom, .btn-custom:hover, button.btn-custom:active, button.btn-custom:visited {
   background-color: #200096;
 }
+h2.sub-header  {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+  background-color: #F6F6F6;
+  color: #140553;
+  font-family: 'Muli-Regular', 'Muli';
+  margin:0;
+  padding: 1.3rem;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+div.sub-column {
+  border-right: 1px solid #a8a4a4;
+  min-height: 100vh;
+  background-color: #fff;
+  font-family: 'Muli-Regular', 'Muli';
+  padding: 0;
+  color: #140553;
+}
+
+button.primary-button {
+  background-color: #210096;
+  color: white;
+  margin-top: 1rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+
+label.form-check-label {
+  margin-left: 0.5rem;
+}

@@ -3,17 +3,7 @@ div.order-sidebar {
   padding: 0;
   min-height: 100vh;
 }
-.order-header   {
-  font-size: 1.5rem;
-  text-align: center;
-  color: #575656;
-  margin-top: 2rem;
-  font-weight: 100;
-  background-color: #f6f6f6;
-  font-family: 'Muli-Regular', 'Muli';
-  margin:0;
-  padding: 1rem;
-}
+
 ul {
   list-style-type: none;
   padding: 1rem;
@@ -42,12 +32,14 @@ ul {
     left: 0;
     padding: 1rem;
     color: #575656;
-    font-size: 1.7rem;
+    font-size: 1rem;
+    letter-spacing: 1.25px;
 }
 
-.aaa {
-  font-size: 1rem;
+.total-amount {
+  font-size: 1.5rem;
 }
+
 .order-amount {
   display:inline-block;
   position: relative;
@@ -80,4 +72,12 @@ ul {
   height: 3rem;
   background: none;
   font-size: .9rem;
+}
+
+
+button.checkout-button {
+  position: absolute;
+  bottom: 0;
+  height: 4.5rem;
+  font-size:1.5rem;
 }

@@ -2,9 +2,8 @@ import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import PairingConfig from '../PairingConfig/PairingConfig';
 import Flow from '../Flow/Flow';
-import Receipt from '../Receipt/Receipt';
 import Status from '../Status/Status';
-import Actions from '../Actions/Actions';
+// import Actions from '../Actions/Actions';
 import './Pairing.css';
 import { pairing as pairingService } from '../../services';
 
@@ -28,9 +27,9 @@ function Pairing({ isAwaitingConfirmation, isFinishedPairing, spi }: Props) {
   }
 
   return (
-    <div id="pairing">
+    <div>
       <Row>
-        <Col lg={3} className="column">
+        <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
             <PairingConfig spi={spi} />
           </div>
@@ -44,16 +43,10 @@ function Pairing({ isAwaitingConfirmation, isFinishedPairing, spi }: Props) {
             />
           </div>
         </Col>
-        <Col lg={6} className="column d-flex flex-column">
+        <Col lg={8} className="sub-column d-flex flex-column">
           <div className="flex-fill ">
             <Flow />
           </div>
-          <div className="flex-fill ">
-            <Actions isPaired={isPaired} />
-          </div>
-        </Col>
-        <Col lg={3} className="column">
-          <Receipt />
         </Col>
       </Row>
     </div>
