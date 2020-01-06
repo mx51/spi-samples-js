@@ -1,6 +1,4 @@
 
-
-
 .checkout-page {
   position: fixed;
   top: 0;
@@ -85,7 +83,7 @@
   width: 10rem;
   }
 
-  div .checkout-order{
+  div.checkout-order{
     padding:0;
     overflow: auto;
   }

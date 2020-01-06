@@ -1,8 +1,8 @@
 import React from 'react';
 import './Input.css';
 
-function Input(props: { id: string; label: string; name: string; onChange?: Function; value?: string }) {
-  const { id, label, name, onChange, value } = props;
+function Input(props: { id: string; label: string; name: string; onChange?: Function; value?: string; type?: string }) {
+  const { id, label, name, onChange, value, type } = props;
   console.log(id, label, name, value);
 
   return (
@@ -11,7 +11,7 @@ function Input(props: { id: string; label: string; name: string; onChange?: Func
       {value ? (
         <input
           id={id}
-          type="text"
+          type={type || 'text'}
           value={value}
           required
           onChange={e => {
@@ -21,7 +21,7 @@ function Input(props: { id: string; label: string; name: string; onChange?: Func
       ) : (
         <input
           id={id}
-          type="text"
+          type={type || 'text'}
           required
           onChange={e => {
             if (onChange) onChange(e);

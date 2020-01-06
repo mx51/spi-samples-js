@@ -9,7 +9,6 @@ type Props = {
   spi: any;
 };
 
-// eslint-disable-next-line
 function Setting({ spi }: Props) {
   const [posId, setPosId] = useState('');
   const [serial, setSerial] = useState('');
@@ -56,7 +55,7 @@ function Setting({ spi }: Props) {
             }
           }}
         />
-        <div className="setting-checkbox">
+        <div>
           <Form.Check type="checkbox" id="check-auto-address" label="Auto Address" className="m-2" />
           <Form.Check type="checkbox" id="check-receipt-eftpos" label="Receipt from EFTPOS" className="m-2" />
           <Form.Check type="checkbox" id="check-sig-eftpos" label="Sig from EFTPOS" className="m-2" />

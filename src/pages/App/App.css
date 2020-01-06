@@ -172,7 +172,7 @@ button {
 }
 
 button:disabled {
-    display: none;
+    /* display: none; */
 }
 
 button.no-hide:disabled {

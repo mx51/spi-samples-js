@@ -67,19 +67,7 @@ function OrderCheckout(props: {
           <Col>Total (${totalPaidAmount} paid)</Col>
           <Col xs={1}>${totalAmount}</Col>
         </Row>
-        {/* <hr />
-        Total (${totalPaidAmount} paid)
-        <h3 className="order-amount-total">${totalBillAmount}</h3> */}
       </div>
-      {/* <div className="orderCheckout-change">
-        <hr />
-        Cash out
-        <h3 className="order-amount-change">${cashOutAmount}</h3>
-      </div> */}
-      {/* <div className="orderCheckout-change">
-        Change
-        <h3 className="order-amount-change">${totalPaidAmount - totalBillAmount}</h3>
-      </div> */}
       <button type="button" className="primary-button checkout-button mb-0" onClick={() => onClose()}>
         Back
       </button>

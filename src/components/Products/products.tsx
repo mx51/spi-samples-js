@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import Checkout from '../Checkout/Checkout';
+import Checkoutnew from '../Checkoutnew/Checkoutnew';
+import Refund from '../Refund/Refund';
 import Order from '../Order/Order';
 import ProductList from '../ProductList/ProductList';
 
@@ -99,7 +100,7 @@ function Products({ spi }: Props) {
           id: '303',
           name: 'Orange Juice',
           image: './images/orange juice.jpg',
-          price: '4',
+          price: '1',
         },
       ],
     },
@@ -107,6 +108,7 @@ function Products({ spi }: Props) {
 
   const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
   const [checkout, setCheckout] = useState(false);
+  const [refund, setRefund] = useState(false);
 
   const handleProductClick = (id: string) => {
     console.log(`clicked ... ${id}`);
@@ -170,6 +172,10 @@ function Products({ spi }: Props) {
     console.log('checkout clicked');
     setCheckout(true);
   }
+  function handleRefund() {
+    console.log(refund);
+    setRefund(true);
+  }
 
   function handleNoThanks() {
     setCheckout(false);
@@ -178,6 +184,7 @@ function Products({ spi }: Props) {
 
   function handleCheckoutClosed() {
     setCheckout(false);
+    setRefund(false);
   }
 
   return (
@@ -200,14 +207,16 @@ function Products({ spi }: Props) {
             list={shortlistedProducts}
             onChangeProductQuantity={handleChangeProductQuantity}
             onCheckout={handleCheckout}
+            onRefund={handleRefund}
           />
-          <Checkout
+          <Checkoutnew
             visible={checkout}
             list={shortlistedProducts}
             onClose={handleCheckoutClosed}
             onNoThanks={handleNoThanks}
             spi={spi}
           />
+          <Refund visible={refund} onClose={handleCheckoutClosed} spi={spi} />
         </Col>
       </Row>
     </>
