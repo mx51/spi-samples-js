@@ -109,6 +109,7 @@ function Products({ spi }: Props) {
   const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
   const [checkout, setCheckout] = useState(false);
   const [refund, setRefund] = useState(false);
+  const [surchargeAmount, setSurchargeAmount] = useState(0);
 
   const handleProductClick = (id: string) => {
     console.log(`clicked ... ${id}`);
@@ -168,6 +169,10 @@ function Products({ spi }: Props) {
     updateShortlistedProducts(products);
   }
 
+  function handleApplySurcharge(surcharge: number) {
+    setSurchargeAmount(surcharge);
+    // setShowSurcharge(false);
+  }
   function handleCheckout() {
     console.log('checkout clicked');
     setCheckout(true);
@@ -208,6 +213,9 @@ function Products({ spi }: Props) {
             onChangeProductQuantity={handleChangeProductQuantity}
             onCheckout={handleCheckout}
             onRefund={handleRefund}
+            handleApplySurcharge={handleApplySurcharge}
+            surchargeAmount={surchargeAmount}
+            setSurchargeAmount={setSurchargeAmount}
           />
           <Checkoutnew
             visible={checkout}
@@ -215,6 +223,8 @@ function Products({ spi }: Props) {
             onClose={handleCheckoutClosed}
             onNoThanks={handleNoThanks}
             spi={spi}
+            surchargeAmount={surchargeAmount}
+            setSurchargeAmount={setSurchargeAmount}
           />
           <Refund visible={refund} onClose={handleCheckoutClosed} spi={spi} />
         </Col>

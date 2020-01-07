@@ -1,20 +1,12 @@
 import React, { useState } from 'react';
-// import { TransactionOptions } from '@assemblypayments/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import './Refund.css';
 import Input from '../Input/Input';
 
 import { refund as refundService } from '../../services';
 
-// import { moto as motoService } from '../../services';
-
 function Refund(props: { visible: Boolean; onClose: Function; spi: any }) {
   const { onClose, visible, spi } = props;
-  // const [totalPaid, setTotalPaid] = useState<number>(0);
-  // const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
-  // function toggle() {
-  //   document.body.classList.toggle('flyout-toggle');
-  // }
 
   function RefundTransaction() {
     const [RefundAmount, setRefundAmount] = useState(0);

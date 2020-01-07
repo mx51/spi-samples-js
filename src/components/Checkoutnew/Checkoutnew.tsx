@@ -15,8 +15,16 @@ enum PaymentType {
   CreditCard,
 }
 
-function CheckoutNew(props: { visible: Boolean; list: any; onClose: Function; onNoThanks: Function; spi: any }) {
-  const { onClose, visible, onNoThanks, spi, list } = props;
+function CheckoutNew(props: {
+  visible: Boolean;
+  list: any;
+  onClose: Function;
+  onNoThanks: Function;
+  spi: any;
+  surchargeAmount: number;
+  setSurchargeAmount: Function;
+}) {
+  const { onClose, visible, onNoThanks, spi, list, surchargeAmount, setSurchargeAmount } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
@@ -28,10 +36,11 @@ function CheckoutNew(props: { visible: Boolean; list: any; onClose: Function; on
 
   function handleNoThanks() {
     console.log(totalPaid);
-    console.log(onNoThanks, setPaymentType);
+    console.log(onNoThanks, setPaymentType, surchargeAmount);
     onNoThanks();
     setTransactionStatus(false);
     setTotalPaid(0);
+    setSurchargeAmount(0);
   }
   function transactionSuccessful() {
     return (

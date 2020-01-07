@@ -3,11 +3,17 @@ import { Col, Row, Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import './Order.css';
 
-function SurchargeModal(props: { show: boolean; handleClose: Function; handleApplySurcharge: Function }) {
-  const { show, handleClose, handleApplySurcharge } = props;
+function SurchargeModal(props: {
+  show: boolean;
+  handleClose: Function;
+  handleApplySurcharge: Function;
+  surcharge: number;
+  setSurcharge: Function;
+}) {
+  const { show, handleClose, handleApplySurcharge, surcharge, setSurcharge } = props;
   console.log('Modal show', show, handleApplySurcharge);
 
-  const [surcharge, setSurcharge] = useState<number>(0);
+  // const [surcharge, setSurcharge] = useState<number>(0);
   function applySurcharge() {
     handleApplySurcharge(surcharge / 100);
     setSurcharge(0);
@@ -25,7 +31,7 @@ function SurchargeModal(props: { show: boolean; handleClose: Function; handleApp
           label="Surcharge Amount"
           type="number"
           value={surcharge === 0 ? '' : surcharge.toString()}
-          onChange={(e: any) => setSurcharge(e.target.value)}
+          onChange={(e: any) => setSurcharge(Number.parseInt(e.target.value, 10))}
         />
         <p className="ml-2">Cents</p>
         <Button variant="primary" className="btn-custom" onClick={() => applySurcharge()} block>
@@ -36,11 +42,29 @@ function SurchargeModal(props: { show: boolean; handleClose: Function; handleApp
   );
 }
 
-function Order(props: { list: any; onCheckout: Function; onRefund: Function; onChangeProductQuantity: Function }) {
-  const { list, onCheckout, onChangeProductQuantity, onRefund } = props;
+function Order(props: {
+  list: any;
+  onCheckout: Function;
+  onRefund: Function;
+  onChangeProductQuantity: Function;
+  handleApplySurcharge: Function;
+  surchargeAmount: number;
+  setSurchargeAmount: Function;
+}) {
+  const {
+    list,
+    onCheckout,
+    onChangeProductQuantity,
+    onRefund,
+    handleApplySurcharge,
+    surchargeAmount,
+    setSurchargeAmount,
+  } = props;
 
   const [showSurcharge, setShowSurcharge] = useState(false);
-  const [surchargeAmount, setSurchargeAmount] = useState(0);
+  const [surcharge, setSurcharge] = useState<number>(0);
+
+  // const [surchargeAmount, setSurchargeAmount] = useState(0);
 
   // const groupedProducts: any = [];
   console.log(list);
@@ -57,12 +81,12 @@ function Order(props: { list: any; onCheckout: Function; onRefund: Function; onC
   console.log('Grouped: ', list, setSurchargeAmount);
 
   const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
-  const totalAmount = subTotalAmount + surchargeAmount;
+  const totalAmount = subTotalAmount + surchargeAmount / 100;
 
-  function handleApplySurcharge(surcharge: number) {
-    setSurchargeAmount(surcharge);
-    setShowSurcharge(false);
-  }
+  // function handleApplySurcharge(surcharge: number) {
+  //   setSurchargeAmount(surcharge);
+  //   setShowSurcharge(false);
+  // }
   function removeProductQuntity(id: any) {
     if (list.length === 1 && list[0].quantity === 1) {
       setSurchargeAmount(0);
@@ -74,8 +98,13 @@ function Order(props: { list: any; onCheckout: Function; onRefund: Function; onC
     <div className="min-vh-100 sticky-top">
       <SurchargeModal
         show={showSurcharge}
+        surcharge={surcharge}
+        setSurcharge={setSurcharge}
         handleClose={() => setShowSurcharge(false)}
-        handleApplySurcharge={handleApplySurcharge}
+        handleApplySurcharge={() => {
+          handleApplySurcharge(surcharge);
+          setShowSurcharge(false);
+        }}
       />
 
       <h2 className="sub-header mb-0">Order</h2>
@@ -142,7 +171,7 @@ function Order(props: { list: any; onCheckout: Function; onRefund: Function; onC
           <Row>
             <Col sm={7}>Surcharge</Col>
             <Col sm={5} className="text-right">
-              ${surchargeAmount.toFixed(2)}
+              ${(surchargeAmount / 100).toFixed(2)}
             </Col>
           </Row>
         </div>
