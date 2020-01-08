@@ -22,3 +22,7 @@ h1.logo {
   background-color: transparent;
   background-color: #e9e5f5;
 }
+
+.window-fix {
+  width: calc(100% + 15px);
+}

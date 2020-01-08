@@ -31,12 +31,32 @@ function BurgerPos() {
     };
   });
 
+  const [purchaseState, setPurchaseState] = useState({
+    Finished: false,
+    Success: false,
+  });
+  const handlePurchaseStatusChange = useCallback((event: any) => {
+    const { Finished, Success } = event.detail;
+    setPurchaseState({
+      Finished,
+      Success,
+    });
+    console.log(event.detail);
+  }, []);
+  useEffect(() => {
+    document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
+
+    return function cleanup() {
+      document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
+    };
+  });
+
   return (
     <div>
       {/* <h1 className="bpos-heading h3">Welcome to BurgerPOS (v{getSpiVersion()})</h1> */}
 
       <Tab.Container id="pos-tabs" defaultActiveKey="sample">
-        <Row>
+        <Row className="window-fix">
           <Col sm={2} className="menu-sidebar min-vh-100">
             <div className="sticky-top">
               <h1 className="logo">
@@ -58,7 +78,11 @@ function BurgerPos() {
           <Col sm={10}>
             <Tab.Content>
               <Tab.Pane eventKey="sample">
-                <Products spi={spiService._spi} />
+                <Products
+                  isFinishedTransaction={purchaseState.Finished}
+                  isSuccessTransaction={purchaseState.Success}
+                  spi={spiService._spi}
+                />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing

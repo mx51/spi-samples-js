@@ -5,7 +5,11 @@ import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
 import Input from '../Input/Input';
 import Tick from '../Tick';
-import { purchase as purchaseService, moto as motoService } from '../../services';
+import {
+  purchase as purchaseService,
+  moto as motoService,
+  transactionFlow as transactionFlowService,
+} from '../../services';
 
 // import { moto as motoService } from '../../services';
 
@@ -23,8 +27,20 @@ function CheckoutNew(props: {
   spi: any;
   surchargeAmount: number;
   setSurchargeAmount: Function;
+  isFinishedTransaction: Boolean;
+  isSuccessTransaction: Boolean;
 }) {
-  const { onClose, visible, onNoThanks, spi, list, surchargeAmount, setSurchargeAmount } = props;
+  const {
+    onClose,
+    visible,
+    onNoThanks,
+    spi,
+    list,
+    surchargeAmount,
+    setSurchargeAmount,
+    // isFinishedTransaction,
+    // isSuccessTransaction,
+  } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
@@ -35,6 +51,7 @@ function CheckoutNew(props: {
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
 
   function handleNoThanks() {
+    transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
     console.log(totalPaid);
     console.log(onNoThanks, setPaymentType, surchargeAmount);
     onNoThanks();
@@ -48,7 +65,14 @@ function CheckoutNew(props: {
         <Tick className="color-purple" />
         <div className="transaction-successful-button">
           <p>Transaction successful!</p>
-          <button type="button">Receipt</button>
+          <button
+            type="button"
+            onClick={() =>
+              transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {})
+            }
+          >
+            Receipt
+          </button>
           <button type="button" onClick={() => handleNoThanks()}>
             No Thanks!!
           </button>

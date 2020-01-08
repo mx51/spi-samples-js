@@ -6,10 +6,12 @@ import Order from '../Order/Order';
 import ProductList from '../ProductList/ProductList';
 
 type Props = {
+  isFinishedTransaction: Boolean;
+  isSuccessTransaction: Boolean;
   spi: any;
 };
 
-function Products({ spi }: Props) {
+function Products({ spi, isFinishedTransaction, isSuccessTransaction }: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -225,6 +227,8 @@ function Products({ spi }: Props) {
             spi={spi}
             surchargeAmount={surchargeAmount}
             setSurchargeAmount={setSurchargeAmount}
+            isFinishedTransaction={isFinishedTransaction}
+            isSuccessTransaction={isSuccessTransaction}
           />
           <Refund visible={refund} onClose={handleCheckoutClosed} spi={spi} />
         </Col>
