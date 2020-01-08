@@ -31,16 +31,9 @@ function BurgerPos() {
     };
   });
 
-  const [purchaseState, setPurchaseState] = useState({
-    Finished: false,
-    Success: false,
-  });
+  const [purchaseState, setPurchaseState] = useState({});
   const handlePurchaseStatusChange = useCallback((event: any) => {
-    const { Finished, Success } = event.detail;
-    setPurchaseState({
-      Finished,
-      Success,
-    });
+    setPurchaseState({ ...event.detail });
     console.log(event.detail);
   }, []);
   useEffect(() => {
@@ -78,11 +71,7 @@ function BurgerPos() {
           <Col sm={10}>
             <Tab.Content>
               <Tab.Pane eventKey="sample">
-                <Products
-                  isFinishedTransaction={purchaseState.Finished}
-                  isSuccessTransaction={purchaseState.Success}
-                  spi={spiService._spi}
-                />
+                <Products spi={spiService._spi} purchaseState={purchaseState} />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing

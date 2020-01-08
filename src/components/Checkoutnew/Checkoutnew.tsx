@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React, { useState } from 'react';
-import { TransactionOptions } from '@assemblypayments/spi-client-js';
+import { TransactionOptions, SuccessState, PurchaseResponse } from '@assemblypayments/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
 import Input from '../Input/Input';
@@ -27,20 +27,9 @@ function CheckoutNew(props: {
   spi: any;
   surchargeAmount: number;
   setSurchargeAmount: Function;
-  isFinishedTransaction: Boolean;
-  isSuccessTransaction: Boolean;
+  purchaseState: any;
 }) {
-  const {
-    onClose,
-    visible,
-    onNoThanks,
-    spi,
-    list,
-    surchargeAmount,
-    setSurchargeAmount,
-    // isFinishedTransaction,
-    // isSuccessTransaction,
-  } = props;
+  const { onClose, visible, onNoThanks, spi, list, surchargeAmount, setSurchargeAmount, purchaseState } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
@@ -61,22 +50,40 @@ function CheckoutNew(props: {
   }
   function transactionSuccessful() {
     return (
-      <div className="transaction-successful">
-        <Tick className="color-purple" />
-        <div className="transaction-successful-button">
-          <p>Transaction successful!</p>
-          <button
-            type="button"
-            onClick={() =>
-              transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {})
-            }
-          >
-            Receipt
-          </button>
-          <button type="button" onClick={() => handleNoThanks()}>
-            No Thanks!!
-          </button>
-        </div>
+      <div>
+        {!purchaseState.Finished && (
+          <div className="transaction-successful">
+            <p>Processing Transaction</p>
+            <button type="button">Cancel</button>
+          </div>
+        )}
+        {purchaseState.Finished && SuccessState.Failed === purchaseState.Success && (
+          <div className="transaction-successful">
+            <p>Transaction Failed</p>
+            <button type="button" onClick={() => handleNoThanks()}>
+              Sorry!! Try Again
+            </button>
+          </div>
+        )}
+        {purchaseState.Finished && SuccessState.Success === purchaseState.Success && (
+          <div className="transaction-successful">
+            <Tick className="color-purple" />
+            <div className="transaction-successful-button">
+              <p>Transaction successful!</p>
+              <button
+                type="button"
+                onClick={() =>
+                  transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {})
+                }
+              >
+                Receipt
+              </button>
+              <button type="button" onClick={() => handleNoThanks()}>
+                No Thanks!!
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -121,18 +128,16 @@ function CheckoutNew(props: {
     );
   }
   function Moto() {
+    function motoPay() {
+      motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalBillAmount, 10) * 100, 0, false);
+      setTransactionStatus(true);
+    }
     return (
       <div className="ml-4 mr-4">
         <p>
           Please click process as Moto button <span>👇</span> to process your payment
         </p>
-        <button
-          className="primary-button"
-          type="button"
-          onClick={() =>
-            motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalBillAmount, 10) * 100, 0, false)
-          }
-        >
+        <button className="primary-button" type="button" onClick={() => motoPay()}>
           MOTO
         </button>
       </div>
@@ -200,6 +205,11 @@ function CheckoutNew(props: {
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">Receipt</h2>
+              {purchaseState.Finished && SuccessState.Success === purchaseState.Success && (
+                <pre className="receipt-alignment">
+                  {new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
+                </pre>
+              )}
             </Col>
           </Row>
         </div>
