@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 // import { getSpiVersion } from '../../services/_common/uiHelpers';
 import Products from '../../components/Products/products';
@@ -11,38 +11,38 @@ const spiService = new SpiService();
 spiService.start();
 
 function BurgerPos() {
-  const [pairingState, setPairingState] = useState({
-    AwaitingCheckFromPos: false,
-    Finished: false,
-  });
-  const handlePairingStatusChange = useCallback((event: any) => {
-    const { AwaitingCheckFromPos, Finished } = event.detail;
-    setPairingState({
-      AwaitingCheckFromPos,
-      Finished,
-    });
-    console.log(event.detail);
-  }, []);
-  useEffect(() => {
-    document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  // const [pairingState, setPairingState] = useState({
+  //   AwaitingCheckFromPos: false,
+  //   Finished: false,
+  // });
+  // const handlePairingStatusChange = useCallback((event: any) => {
+  //   const { AwaitingCheckFromPos, Finished } = event.detail;
+  //   setPairingState({
+  //     AwaitingCheckFromPos,
+  //     Finished,
+  //   });
+  //   console.log(event.detail);
+  // }, []);
+  // useEffect(() => {
+  //   document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
 
-    return function cleanup() {
-      document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-    };
-  });
+  //   return function cleanup() {
+  //     document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  //   };
+  // });
 
-  const [purchaseState, setPurchaseState] = useState({});
-  const handlePurchaseStatusChange = useCallback((event: any) => {
-    setPurchaseState({ ...event.detail });
-    console.log(event.detail);
-  }, []);
-  useEffect(() => {
-    document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
+  // const [purchaseState, setPurchaseState] = useState({});
+  // const handlePurchaseStatusChange = useCallback((event: any) => {
+  //   setPurchaseState({ ...event.detail });
+  //   console.log(event.detail);
+  // }, []);
+  // useEffect(() => {
+  //   document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
 
-    return function cleanup() {
-      document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
-    };
-  });
+  //   return function cleanup() {
+  //     document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
+  //   };
+  // });
 
   return (
     <div>
@@ -71,12 +71,12 @@ function BurgerPos() {
           <Col sm={10}>
             <Tab.Content>
               <Tab.Pane eventKey="sample">
-                <Products spi={spiService._spi} purchaseState={purchaseState} />
+                <Products spi={spiService._spi} />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing
-                  isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
-                  isFinishedPairing={pairingState.Finished}
+                  // isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
+                  // isFinishedPairing={pairingState.Finished}
                   spi={spiService._spi}
                 />
               </Tab.Pane>

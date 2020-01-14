@@ -28,7 +28,7 @@ function printPairingStatus(flowMsg: Logger, spi: Spi) {
   flowMsg.Info(`# --------------- STATUS ------------------`);
   flowMsg.Info(`# ${spi._posId} <-> Eftpos: ${spi._eftposAddress} #`);
   flowMsg.Info(`# SPI STATUS: ${spi.CurrentStatus}     FLOW: ${spi.CurrentFlow} #`);
-  flowMsg.Info(`# SPI CONFIG: ${JSON.stringify(spi._spiPreauth.Config || spi.Config)}`);
+  flowMsg.Info(`# SPI CONFIG: ${JSON.stringify((spi._spiPreauth && spi._spiPreauth.Config) || spi.Config)}`);
   flowMsg.Info(`# -----------------------------------------`);
   flowMsg.Info(`# POS: v${spi._posVersion} Spi: v${Spi.GetVersion()}`);
 }

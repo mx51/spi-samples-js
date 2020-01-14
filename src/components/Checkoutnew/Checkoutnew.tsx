@@ -1,10 +1,11 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
-import React, { useState } from 'react';
-import { TransactionOptions, SuccessState, PurchaseResponse } from '@assemblypayments/spi-client-js';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { TransactionOptions, SuccessState, PurchaseResponse, Logger } from '@assemblypayments/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
 import Input from '../Input/Input';
 import Tick from '../Tick';
+import PosUtils from '../../services/_common/pos';
 import {
   purchase as purchaseService,
   moto as motoService,
@@ -27,24 +28,54 @@ function CheckoutNew(props: {
   spi: any;
   surchargeAmount: number;
   setSurchargeAmount: Function;
-  purchaseState: any;
+  // purchaseState: any;
+  setTransactionStatus: any;
+  transactionStatus: any;
 }) {
-  const { onClose, visible, onNoThanks, spi, list, surchargeAmount, setSurchargeAmount, purchaseState } = props;
+  const {
+    onClose,
+    visible,
+    onNoThanks,
+    spi,
+    list,
+    surchargeAmount,
+    setSurchargeAmount,
+    // purchaseState,
+    setTransactionStatus,
+    transactionStatus,
+  } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
-  const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
-  // function toggle() {
-  //   document.body.classList.toggle('flyout-toggle');
-  // }
+  const flowEl = useRef(null);
+  const receiptEl = useRef(null);
+
+  const [purchaseState, setPurchaseState] = useState({ Finished: false, Success: '', Response: '' });
+  const handlePurchaseStatusChange = useCallback((event: any) => {
+    setPurchaseState({ ...event.detail });
+    const flowMsg = new Logger(flowEl.current);
+    const receipt = new Logger(receiptEl.current);
+
+    console.log('???', event.detail);
+    if (event.detail.Finished) {
+      PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
+    } else {
+      transactionFlowService.handleTransaction(flowMsg, event.detail);
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
+    return function cleanup() {
+      document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
+    };
+  });
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
 
   function handleNoThanks() {
-    transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
     console.log(totalPaid);
     console.log(onNoThanks, setPaymentType, surchargeAmount);
     onNoThanks();
-    setTransactionStatus(false);
+    // setTransactionStatus(false);
     setTotalPaid(0);
     setSurchargeAmount(0);
   }
@@ -164,7 +195,7 @@ function CheckoutNew(props: {
         return <CreditCard />;
     }
   }
-
+  console.log('visible.......', visible);
   return (
     <div className={`checkout-page1 ${visible ? '' : 'd-none'}`}>
       <Col sm={2} className="checkout-order min-vh-100 sticky-top">
@@ -201,12 +232,13 @@ function CheckoutNew(props: {
             </Col>
             <Col sm={5} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
+              <div ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">Receipt</h2>
               {purchaseState.Finished && SuccessState.Success === purchaseState.Success && (
-                <pre className="receipt-alignment">
+                <pre className="receipt-alignment" ref={receiptEl}>
                   {new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
                 </pre>
               )}

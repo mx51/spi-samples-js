@@ -4,13 +4,14 @@ import Checkoutnew from '../Checkoutnew/Checkoutnew';
 import Refund from '../Refund/Refund';
 import Order from '../Order/Order';
 import ProductList from '../ProductList/ProductList';
+import { transactionFlow as transactionFlowService } from '../../services';
 
 type Props = {
   spi: any;
-  purchaseState: any;
+  // purchaseState: any;
 };
 
-function Products({ spi, purchaseState }: Props) {
+function Products({ spi }: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -111,6 +112,7 @@ function Products({ spi, purchaseState }: Props) {
   const [checkout, setCheckout] = useState(false);
   const [refund, setRefund] = useState(false);
   const [surchargeAmount, setSurchargeAmount] = useState(0);
+  const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
 
   const handleProductClick = (id: string) => {
     console.log(`clicked ... ${id}`);
@@ -184,15 +186,18 @@ function Products({ spi, purchaseState }: Props) {
   }
 
   function handleNoThanks() {
+    transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
     setCheckout(false);
+    setRefund(false);
     updateShortlistedProducts([]);
+    setTransactionStatus(false);
   }
 
   function handleCheckoutClosed() {
     setCheckout(false);
     setRefund(false);
   }
-
+  console.log('Checkout .........', checkout);
   return (
     <>
       <Row>
@@ -226,9 +231,19 @@ function Products({ spi, purchaseState }: Props) {
             spi={spi}
             surchargeAmount={surchargeAmount}
             setSurchargeAmount={setSurchargeAmount}
-            purchaseState={purchaseState}
+            // purchaseState={purchaseState}
+            setTransactionStatus={setTransactionStatus}
+            transactionStatus={transactionStatus}
           />
-          <Refund visible={refund} onClose={handleCheckoutClosed} spi={spi} />
+          <Refund
+            visible={refund}
+            onClose={handleCheckoutClosed}
+            spi={spi}
+            // purchaseState={purchaseState}
+            onNoThanks={handleNoThanks}
+            setTransactionStatus={setTransactionStatus}
+            transactionStatus={transactionStatus}
+          />
         </Col>
       </Row>
     </>
