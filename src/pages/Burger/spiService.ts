@@ -20,7 +20,7 @@ class Spi {
   constructor() {
     this._spi = null;
     this._posId = 'RAMENPOS1';
-    this._eftposAddress = '192.168.1.1';
+    this._eftposAddress = window.localStorage.getItem('eftpos_address') || '192.168.1.1';
     this._spiSecrets = null;
     this._options = null;
     this._version = '2.6.3';
@@ -33,6 +33,16 @@ class Spi {
     this._testMode = true;
     this._useSecureWebSockets = false;
     this._log = console;
+    const secretsString = window.localStorage.getItem('secrets') || '';
+    try {
+      const secrets = JSON.parse(secretsString);
+      if (secrets) {
+        this._spiSecrets = secrets;
+        console.log(this._spiSecrets);
+      }
+    } catch (error) {
+      this._log.error('unable to access secrets');
+    }
   }
 
   start() {
@@ -56,7 +66,7 @@ class Spi {
     document.addEventListener('DeviceAddressChanged', this.onSpiStateChange);
     document.addEventListener('StatusChanged', this.onSpiStateChange);
     document.addEventListener('PairingFlowStateChanged', this.onSpiStateChange);
-    document.addEventListener('SecretsChanged', this.onSpiStateChange);
+    document.addEventListener('SecretsChanged', Spi.onSecretsChange);
     document.addEventListener('TxFlowStateChanged', this.onSpiStateChange);
     this._spi.PrintingResponse = this.onSpiResponse.bind(this);
     this._spi.TerminalStatusResponse = this.onSpiResponse.bind(this);
@@ -71,6 +81,10 @@ class Spi {
     if (e.detail && e.detail === 'PairedConnected') {
       this._spi.AckFlowEndedAndBackToIdle();
     }
+  }
+
+  static onSecretsChange(e: any) {
+    window.localStorage.setItem('secrets', JSON.stringify(e.detail));
   }
 
   onSpiResponse() {

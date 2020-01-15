@@ -10,9 +10,9 @@ type Props = {
 };
 
 function Setting({ spi }: Props) {
-  const [posId, setPosId] = useState('');
-  const [serial, setSerial] = useState('');
-  const [eftpos, setEftpos] = useState('');
+  const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
+  const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
+  const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos') || '');
 
   return (
     <div>
@@ -67,6 +67,9 @@ function Setting({ spi }: Props) {
               spi.SetPosId(posId);
               spi.SetEftposAddress(eftpos);
               spi.SetSerialNumber(serial);
+              window.localStorage.setItem('eftpos', eftpos);
+              window.localStorage.setItem('posID', posId);
+              window.localStorage.setItem('serial', serial);
             }}
           >
             Save Setting
