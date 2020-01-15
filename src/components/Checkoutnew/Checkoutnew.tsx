@@ -57,6 +57,7 @@ function CheckoutNew(props: {
 
     console.log('???', event.detail);
     if (event.detail.Finished) {
+      console.log(receipt);
       PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
     } else {
       transactionFlowService.handleTransaction(flowMsg, event.detail);
@@ -142,6 +143,7 @@ function CheckoutNew(props: {
           id="Tip"
           name="Tip"
           label="Tip Amount"
+          type="number"
           onChange={(e: any) => setTipAmount(parseInt(e.target.value, 10))}
         />
         <p className="ml-2">Cents</p>
@@ -149,6 +151,7 @@ function CheckoutNew(props: {
           id="cashout-amount"
           name="Cashout amount"
           label="cashout Amount"
+          type="number"
           onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10))}
         />
         <p className="ml-2">Cents</p>
@@ -237,11 +240,9 @@ function CheckoutNew(props: {
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">Receipt</h2>
-              {purchaseState.Finished && SuccessState.Success === purchaseState.Success && (
-                <pre className="receipt-alignment" ref={receiptEl}>
-                  {new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
-                </pre>
-              )}
+              <pre className="receipt-alignment" ref={receiptEl}>
+                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
+              </pre>
             </Col>
           </Row>
         </div>

@@ -94,6 +94,7 @@ function Refund(props: {
           id="Refund-Amount"
           name="Refund"
           label="Refund Amount"
+          type="number"
           onChange={(e: any) => setRefundAmount(parseInt(e.target.value, 10) / 100)}
         />
         <p className="ml-2">Cents</p>
@@ -130,11 +131,9 @@ function Refund(props: {
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">Receipt</h2>
-              {purchaseState.Finished && SuccessState.Success === purchaseState.Success && (
-                <pre className="receipt-alignment" ref={receiptEl}>
-                  {new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
-                </pre>
-              )}
+              <pre className="receipt-alignment" ref={receiptEl}>
+                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
+              </pre>
             </Col>
           </Row>
         </div>

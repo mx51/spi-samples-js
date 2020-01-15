@@ -19,7 +19,7 @@ class Spi {
 
   constructor() {
     this._spi = null;
-    this._posId = 'RAMENPOS1';
+    this._posId = window.localStorage.getItem('posID') || '';
     this._eftposAddress = window.localStorage.getItem('eftpos_address') || '192.168.1.1';
     this._spiSecrets = null;
     this._options = null;
