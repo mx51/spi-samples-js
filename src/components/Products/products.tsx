@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Checkoutnew from '../Checkoutnew/Checkoutnew';
-import Refund from '../Refund/Refund';
 import Order from '../Order/Order';
 import ProductList from '../ProductList/ProductList';
 import { transactionFlow as transactionFlowService } from '../../services';
@@ -178,13 +177,14 @@ function Products({ spi }: Props) {
   }
   function handleCheckout() {
     console.log('checkout clicked');
+    setRefund(false);
     setCheckout(true);
   }
   function handleRefund() {
     console.log(refund);
     setRefund(true);
+    setCheckout(true);
   }
-
   function handleNoThanks() {
     transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
     setCheckout(false);
@@ -217,8 +217,8 @@ function Products({ spi }: Props) {
           <Order
             list={shortlistedProducts}
             onChangeProductQuantity={handleChangeProductQuantity}
-            onCheckout={handleCheckout}
             onRefund={handleRefund}
+            onCheckout={handleCheckout}
             handleApplySurcharge={handleApplySurcharge}
             surchargeAmount={surchargeAmount}
             setSurchargeAmount={setSurchargeAmount}
@@ -234,15 +234,7 @@ function Products({ spi }: Props) {
             // purchaseState={purchaseState}
             setTransactionStatus={setTransactionStatus}
             transactionStatus={transactionStatus}
-          />
-          <Refund
-            visible={refund}
-            onClose={handleCheckoutClosed}
-            spi={spi}
-            // purchaseState={purchaseState}
-            onNoThanks={handleNoThanks}
-            setTransactionStatus={setTransactionStatus}
-            transactionStatus={transactionStatus}
+            isRefund={refund}
           />
         </Col>
       </Row>

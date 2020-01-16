@@ -1,0 +1,111 @@
+import React, { useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
+import Input from '../Input/Input';
+
+enum PaymentType {
+  // Cash,
+  Moto,
+  CreditCard,
+}
+
+function OrderPay(props: { handleMotoPay: Function; handleCreditCardPay: Function; totalBillAmount: string }) {
+  const { handleMotoPay, handleCreditCardPay, totalBillAmount } = props;
+  const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
+
+  function CreditCard() {
+    const [tipAmount, setTipAmount] = useState(0);
+    const [cashoutAmount, setCashoutAmount] = useState(0);
+
+    function handleKeyPress(event: any) {
+      if (event.key === '-') {
+        alert('invalid input');
+        setCashoutAmount(0);
+      }
+    }
+
+    return (
+      <div className="ml-4 mr-4">
+        <Input
+          id="Tip"
+          name="Tip"
+          label="Tip Amount"
+          disabled={cashoutAmount > 0}
+          min="0"
+          type="number"
+          onKeyPress={handleKeyPress}
+          onChange={(e: any) => setTipAmount(parseInt(e.target.value, 10))}
+        />
+        <p className="ml-2">Cents</p>
+        <Input
+          id="cashout-amount"
+          name="Cashout amount"
+          label="cashout Amount"
+          disabled={tipAmount > 0}
+          min="0"
+          onKeyPress={handleKeyPress}
+          type="number"
+          onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10))}
+        />
+        <p className="ml-2">Cents</p>
+        <button className="primary-button" type="button" onClick={() => handleCreditCardPay(tipAmount, cashoutAmount)}>
+          Pay
+        </button>
+      </div>
+    );
+  }
+  function Moto() {
+    return (
+      <div className="ml-4 mr-4">
+        <p>
+          Please click process as Moto button{' '}
+          <span role="img" aria-label="down arrow">
+            👇
+          </span>{' '}
+          to process your payment
+        </p>
+        <button className="primary-button" type="button" onClick={() => handleMotoPay()}>
+          MOTO
+        </button>
+      </div>
+    );
+  }
+
+  function showPaymentType() {
+    switch (paymentType) {
+      // case PaymentType.Cash:
+      //   return <Cash />;
+      case PaymentType.Moto:
+        return <Moto />;
+      case PaymentType.CreditCard:
+        return <CreditCard />;
+      default:
+        return <CreditCard />;
+    }
+  }
+
+  return (
+    <>
+      <h2 className="sub-header mb-0">Order total ${parseInt(totalBillAmount, 10)}</h2>
+      <Row className="order-header-buttons no-gutters">
+        {/* <Col sm={4}>
+                <button type="button" onClick={() => setPaymentType(PaymentType.Cash)}>
+                  Cash
+                </button>
+              </Col> */}
+        <Col sm={6}>
+          <button type="button" onClick={() => setPaymentType(PaymentType.Moto)}>
+            Moto
+          </button>
+        </Col>
+        <Col sm={6}>
+          <button type="button" onClick={() => setPaymentType(PaymentType.CreditCard)}>
+            Credit card
+          </button>
+        </Col>
+      </Row>
+      <Row>{showPaymentType()}</Row>
+    </>
+  );
+}
+
+export default OrderPay;

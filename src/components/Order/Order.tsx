@@ -54,8 +54,8 @@ function Order(props: {
   const {
     list,
     onCheckout,
-    onChangeProductQuantity,
     onRefund,
+    onChangeProductQuantity,
     handleApplySurcharge,
     surchargeAmount,
     setSurchargeAmount,

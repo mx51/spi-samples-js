@@ -3,22 +3,18 @@ import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { TransactionOptions, SuccessState, PurchaseResponse, Logger } from '@assemblypayments/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
-import Input from '../Input/Input';
 import Tick from '../Tick';
+import OrderPay from '../OrderPay/OrderPay';
+import RefundPay from '../RefundPay/RefundPay';
 import PosUtils from '../../services/_common/pos';
 import {
   purchase as purchaseService,
   moto as motoService,
   transactionFlow as transactionFlowService,
+  refund as refundService,
 } from '../../services';
 
 // import { moto as motoService } from '../../services';
-
-enum PaymentType {
-  // Cash,
-  Moto,
-  CreditCard,
-}
 
 function CheckoutNew(props: {
   visible: Boolean;
@@ -31,6 +27,7 @@ function CheckoutNew(props: {
   // purchaseState: any;
   setTransactionStatus: any;
   transactionStatus: any;
+  isRefund: boolean;
 }) {
   const {
     onClose,
@@ -43,9 +40,9 @@ function CheckoutNew(props: {
     // purchaseState,
     setTransactionStatus,
     transactionStatus,
+    isRefund,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
-  const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
   const flowEl = useRef(null);
   const receiptEl = useRef(null);
 
@@ -74,12 +71,36 @@ function CheckoutNew(props: {
 
   function handleNoThanks() {
     console.log(totalPaid);
-    console.log(onNoThanks, setPaymentType, surchargeAmount);
+    console.log(onNoThanks, surchargeAmount);
     onNoThanks();
     // setTransactionStatus(false);
     setTotalPaid(0);
     setSurchargeAmount(0);
   }
+
+  function handleMotoPay() {
+    motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalBillAmount, 10) * 100, 0, false);
+    setTransactionStatus(true);
+  }
+
+  function handleCreditCardPay(tipAmount: number, cashoutAmount: number) {
+    purchaseService.initiatePurchase(
+      { Info: () => {} },
+      new TransactionOptions(),
+      spi,
+      parseInt(totalBillAmount, 10) * 100,
+      tipAmount,
+      cashoutAmount,
+      0,
+      false
+    );
+    setTransactionStatus(true);
+  }
+  function handleRefundPay(refundAmount: number) {
+    refundService.initiateRefund({ Info: () => {} }, spi, refundAmount * 100, false);
+    setTransactionStatus(true);
+  }
+
   function transactionSuccessful() {
     return (
       <div>
@@ -120,64 +141,6 @@ function CheckoutNew(props: {
     );
   }
 
-  function CreditCard() {
-    const [tipAmount, setTipAmount] = useState(0);
-    const [cashoutAmount, setCashoutAmount] = useState(0);
-
-    function creditCardPay() {
-      purchaseService.initiatePurchase(
-        { Info: () => {} },
-        new TransactionOptions(),
-        spi,
-        parseInt(totalBillAmount, 10) * 100,
-        tipAmount,
-        cashoutAmount,
-        0,
-        false
-      );
-      setTransactionStatus(true);
-    }
-    return (
-      <div className="ml-4 mr-4">
-        <Input
-          id="Tip"
-          name="Tip"
-          label="Tip Amount"
-          type="number"
-          onChange={(e: any) => setTipAmount(parseInt(e.target.value, 10))}
-        />
-        <p className="ml-2">Cents</p>
-        <Input
-          id="cashout-amount"
-          name="Cashout amount"
-          label="cashout Amount"
-          type="number"
-          onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10))}
-        />
-        <p className="ml-2">Cents</p>
-        <button className="primary-button" type="button" onClick={() => creditCardPay()}>
-          Pay
-        </button>
-      </div>
-    );
-  }
-  function Moto() {
-    function motoPay() {
-      motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalBillAmount, 10) * 100, 0, false);
-      setTransactionStatus(true);
-    }
-    return (
-      <div className="ml-4 mr-4">
-        <p>
-          Please click process as Moto button <span>👇</span> to process your payment
-        </p>
-        <button className="primary-button" type="button" onClick={() => motoPay()}>
-          MOTO
-        </button>
-      </div>
-    );
-  }
-
   // function Cash() {
   //   return (
   //     <div className="ml-4 mr-4">
@@ -186,18 +149,6 @@ function CheckoutNew(props: {
   //   );
   // }
 
-  function showPaymentType() {
-    switch (paymentType) {
-      // case PaymentType.Cash:
-      //   return <Cash />;
-      case PaymentType.Moto:
-        return <Moto />;
-      case PaymentType.CreditCard:
-        return <CreditCard />;
-      default:
-        return <CreditCard />;
-    }
-  }
   console.log('visible.......', visible);
   return (
     <div className={`checkout-page1 ${visible ? '' : 'd-none'}`}>
@@ -213,25 +164,15 @@ function CheckoutNew(props: {
           </button>
           <Row>
             <Col sm={4} className="sub-column">
-              <h2 className="sub-header mb-0">Order total ${parseInt(totalBillAmount, 10)}</h2>
-              <Row className="order-header-buttons no-gutters">
-                {/* <Col sm={4}>
-                  <button type="button" onClick={() => setPaymentType(PaymentType.Cash)}>
-                    Cash
-                  </button>
-                </Col> */}
-                <Col sm={6}>
-                  <button type="button" onClick={() => setPaymentType(PaymentType.Moto)}>
-                    Moto
-                  </button>
-                </Col>
-                <Col sm={6}>
-                  <button type="button" onClick={() => setPaymentType(PaymentType.CreditCard)}>
-                    Credit card
-                  </button>
-                </Col>
-              </Row>
-              <Row>{showPaymentType()}</Row>
+              {isRefund ? (
+                <RefundPay handleRefundPay={handleRefundPay} />
+              ) : (
+                <OrderPay
+                  handleCreditCardPay={handleCreditCardPay}
+                  handleMotoPay={handleMotoPay}
+                  totalBillAmount={totalBillAmount}
+                />
+              )}
             </Col>
             <Col sm={5} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
