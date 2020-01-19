@@ -8,16 +8,21 @@ function RefundPay(props: { handleRefundPay: Function }) {
   return (
     <>
       <h2 className="sub-header mb-0">Refund</h2>
-
-      <Input
-        id="Refund-Amount"
-        name="Refund"
-        label="Refund Amount"
-        type="number"
-        onChange={(e: any) => setRefundAmount(parseInt(e.target.value, 10) / 100)}
-      />
-      <p className="ml-2">Cents</p>
-      <button className="primary-button" type="button" onClick={() => handleRefundPay(refundAmount)}>
+      <div className="mr-4 ml-4 mt-4">
+        <Input
+          id="Refund-Amount"
+          name="Refund"
+          label="Refund Amount"
+          type="number"
+          onChange={(e: any) => setRefundAmount(parseInt(e.target.value, 10) / 100)}
+        />
+        <p className="ml-2">Cents</p>
+      </div>
+      <button
+        className="primary-button checkout-button mb-0"
+        type="button"
+        onClick={() => handleRefundPay(refundAmount)}
+      >
         Refund
       </button>
     </>

@@ -12,7 +12,7 @@ type Props = {
 function Setting({ spi }: Props) {
   const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
   const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
-  const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos') || '');
+  const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos_address') || '');
 
   return (
     <div>
@@ -56,9 +56,9 @@ function Setting({ spi }: Props) {
           }}
         />
         <div>
-          <Form.Check type="checkbox" id="check-auto-address" label="Auto Address" className="m-2" />
-          <Form.Check type="checkbox" id="check-receipt-eftpos" label="Receipt from EFTPOS" className="m-2" />
-          <Form.Check type="checkbox" id="check-sig-eftpos" label="Sig from EFTPOS" className="m-2" />
+          <Form.Check type="checkbox" id="Test Mode" label="Test Mode" className="m-2" />
+          <Form.Check type="checkbox" id="Secure WebSockets" label="Secure WebSockets" className="m-2" />
+          <Form.Check type="checkbox" id="Auto Address" label="Auto Address" className="m-2" />
           <button
             type="button"
             className="primary-button"
@@ -67,7 +67,7 @@ function Setting({ spi }: Props) {
               spi.SetPosId(posId);
               spi.SetEftposAddress(eftpos);
               spi.SetSerialNumber(serial);
-              window.localStorage.setItem('eftpos', eftpos);
+              window.localStorage.setItem('eftpos_address', eftpos);
               window.localStorage.setItem('posID', posId);
               window.localStorage.setItem('serial', serial);
             }}

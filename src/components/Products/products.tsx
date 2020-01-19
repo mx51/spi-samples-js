@@ -95,7 +95,7 @@ function Products({ spi }: Props) {
           id: '302',
           name: 'Kombucha',
           image: './images/kombuch.jpg',
-          price: '4',
+          price: '4.8',
         },
         {
           id: '303',

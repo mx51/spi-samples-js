@@ -57,7 +57,9 @@ button.primary-button {
   width: 100%;
   margin-bottom: 0.5rem;
 }
-
+button.primary-button:disabled{
+  background-color: #6b6b6b;
+}
 
 label.form-check-label {
   margin-left: 0.5rem;

@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/accessible-emoji */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { TransactionOptions, SuccessState, PurchaseResponse, Logger } from '@assemblypayments/spi-client-js';
+
 import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
 import Tick from '../Tick';
@@ -43,8 +44,8 @@ function CheckoutNew(props: {
     isRefund,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
-  const flowEl = useRef(null);
-  const receiptEl = useRef(null);
+  const flowEl = useRef<HTMLDivElement>(null);
+  const receiptEl = useRef<HTMLPreElement>(null);
 
   const [purchaseState, setPurchaseState] = useState({ Finished: false, Success: '', Response: '' });
   const handlePurchaseStatusChange = useCallback((event: any) => {
@@ -68,6 +69,7 @@ function CheckoutNew(props: {
   });
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
+  const totalAmount = totalBillAmount + surchargeAmount / 100;
 
   function handleNoThanks() {
     console.log(totalPaid);
@@ -79,7 +81,7 @@ function CheckoutNew(props: {
   }
 
   function handleMotoPay() {
-    motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalBillAmount, 10) * 100, 0, false);
+    motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalAmount, 10) * 100, 0, false);
     setTransactionStatus(true);
   }
 
@@ -88,7 +90,7 @@ function CheckoutNew(props: {
       { Info: () => {} },
       new TransactionOptions(),
       spi,
-      parseInt(totalBillAmount, 10) * 100,
+      parseInt(totalAmount, 10) * 100,
       tipAmount,
       cashoutAmount,
       0,
@@ -101,18 +103,41 @@ function CheckoutNew(props: {
     setTransactionStatus(true);
   }
 
+  function handleBack() {
+    if (purchaseState.Finished) {
+      onNoThanks();
+      setTotalPaid(0);
+      setSurchargeAmount(0);
+    }
+    setPurchaseState({ Finished: false, Success: '', Response: '' });
+    setTransactionStatus(false);
+
+    if (flowEl.current !== null) {
+      flowEl.current.innerHTML = '';
+    }
+    if (receiptEl.current !== null) {
+      receiptEl.current.innerHTML = '';
+    }
+
+    onClose();
+  }
+
   function transactionSuccessful() {
+    // if (purchaseState.Finished)
+    //   console.log('.................', new PurchaseResponse(purchaseState.Response).GetResponseText());
     return (
       <div>
         {!purchaseState.Finished && (
           <div className="transaction-successful">
             <p>Processing Transaction</p>
-            <button type="button">Cancel</button>
+            <button type="button" onClick={() => transactionFlowService.cancelTransaction(spi)}>
+              Cancel
+            </button>
           </div>
         )}
         {purchaseState.Finished && SuccessState.Failed === purchaseState.Success && (
           <div className="transaction-successful">
-            <p>Transaction Failed</p>
+            <p>{new PurchaseResponse(purchaseState.Response).GetResponseText()}</p>
             <button type="button" onClick={() => handleNoThanks()}>
               Sorry!! Try Again
             </button>
@@ -153,13 +178,23 @@ function CheckoutNew(props: {
   return (
     <div className={`checkout-page1 ${visible ? '' : 'd-none'}`}>
       <Col sm={2} className="checkout-order min-vh-100 sticky-top">
-        <button type="button" className="primary-button checkout-button" onClick={() => onClose()}>
+        <button
+          type="button"
+          disabled={transactionStatus}
+          className="primary-button checkout-button mb-0"
+          onClick={() => handleBack()}
+        >
           Back
         </button>
       </Col>
       <Col sm={10}>
         <div className="checkout-page-flyout">
-          <button type="button" className="checkout-flyout-toggle" onClick={() => onClose()}>
+          <button
+            type="button"
+            disabled={transactionStatus}
+            className="checkout-flyout-toggle"
+            onClick={() => handleBack()}
+          >
             {'▼'}
           </button>
           <Row>
@@ -170,7 +205,7 @@ function CheckoutNew(props: {
                 <OrderPay
                   handleCreditCardPay={handleCreditCardPay}
                   handleMotoPay={handleMotoPay}
-                  totalBillAmount={totalBillAmount}
+                  totalAmount={totalAmount}
                 />
               )}
             </Col>
