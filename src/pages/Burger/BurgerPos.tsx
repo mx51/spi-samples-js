@@ -81,7 +81,7 @@ function BurgerPos() {
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="setting">
-                <Setting />
+                <Setting spi={spiService._spi} />
               </Tab.Pane>
             </Tab.Content>
           </Col>

@@ -32,7 +32,7 @@ function Pairing({ spi }: Props) {
     });
     const flowMsg = new Logger(flowEl.current);
     pairingService.printPairingStatus(flowMsg, spi);
-    console.log(event.detail);
+    console.log('.......eventdetail', event.detail);
   }, []);
   useEffect(() => {
     document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);

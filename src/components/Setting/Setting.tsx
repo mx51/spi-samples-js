@@ -6,7 +6,8 @@ import Flow from '../Flow/Flow';
 
 import './Setting.css';
 
-function Setting() {
+function Setting(props: { spi: any }) {
+  const { spi } = props;
   const flowEl = useRef();
 
   return (
@@ -17,12 +18,17 @@ function Setting() {
             <SettingConfig />
           </div>
           <div className="flex-fill">
-            <Actions />
+            <Actions spi={spi} />
           </div>
         </Col>
-        <Col lg={8} className="sub-column d-flex flex-column">
+        <Col lg={5} className="sub-column d-flex flex-column">
           <div className="flex-fill ">
             <Flow ref={flowEl} />
+          </div>
+        </Col>
+        <Col lg={3} className="sub-column d-flex flex-column">
+          <div className="flex-fill ">
+            <h2 className="sub-header">receipt</h2>
           </div>
         </Col>
       </Row>
