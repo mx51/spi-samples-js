@@ -113,7 +113,7 @@ function Order(props: {
           <button type="button">Last Transaction</button>
         </Col>
         <Col sm={4}>
-          <button type="button" disabled={list.length === 0} onClick={() => setShowSurcharge(true)}>
+          <button type="button" onClick={() => setShowSurcharge(true)}>
             Add Surcharge
           </button>
         </Col>

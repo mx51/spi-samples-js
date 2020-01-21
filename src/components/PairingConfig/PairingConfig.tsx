@@ -142,7 +142,8 @@ function Setting({ spi }: Props) {
             className="primary-button"
             onClick={() => {
               spi.SetPosId(posId);
-              console.log('.......', autoAddress);
+              spi.SetTestMode(testMode);
+              console.log('.......', testMode, autoAddress);
               spi.SetEftposAddress(eftpos);
               spi.SetSerialNumber(serial);
               spi.SetDeviceApiKey(apiKey);

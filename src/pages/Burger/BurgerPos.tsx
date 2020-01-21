@@ -48,7 +48,7 @@ function BurgerPos() {
     <div>
       {/* <h1 className="bpos-heading h3">Welcome to BurgerPOS (v{getSpiVersion()})</h1> */}
 
-      <Tab.Container id="pos-tabs" defaultActiveKey="sample">
+      <Tab.Container id="pos-tabs" defaultActiveKey="sample" unmountOnExit>
         <Row className="window-fix">
           <Col sm={2} className="menu-sidebar min-vh-100">
             <div className="sticky-top">

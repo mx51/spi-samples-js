@@ -53,8 +53,8 @@ class Pos {
       [SuccessState.Success]: eventType.handleSuccessfulTransaction,
       [SuccessState.Unknown]: eventType.handleUnknownState,
     };
-
     const trasactionStateHandler = transactionStateMap[transactionState.Success];
+    console.log('###', transactionState.Success);
 
     if (!trasactionStateHandler) {
       throw new Error('Unknown transaction state');

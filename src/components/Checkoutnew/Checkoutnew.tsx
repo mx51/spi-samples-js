@@ -1,4 +1,4 @@
-/* eslint-disable jsx-a11y/accessible-emoji */
+/* eslint no-else-return: "error" */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { TransactionOptions, SuccessState, PurchaseResponse, Logger } from '@assemblypayments/spi-client-js';
 
@@ -7,12 +7,14 @@ import './Checkoutnew.css';
 import Tick from '../Tick';
 import OrderPay from '../OrderPay/OrderPay';
 import RefundPay from '../RefundPay/RefundPay';
+import CashOutPay from '../CashOutPay/CashOutPay';
 import PosUtils from '../../services/_common/pos';
 import {
   purchase as purchaseService,
   moto as motoService,
   transactionFlow as transactionFlowService,
   refund as refundService,
+  cashout as cashoutService,
 } from '../../services';
 
 // import { moto as motoService } from '../../services';
@@ -98,11 +100,17 @@ function CheckoutNew(props: {
     );
     setTransactionStatus(true);
   }
+
   function handleRefundPay(refundAmount: number) {
     refundService.initiateRefund({ Info: () => {} }, spi, refundAmount * 100, false);
     setTransactionStatus(true);
   }
 
+  function handleCashoutPay(cashoutAmount: number) {
+    console.log(cashoutAmount);
+    cashoutService.initiateCashout({ Info: () => {} }, console, spi, cashoutAmount, surchargeAmount);
+    setTransactionStatus(true);
+  }
   function handleBack() {
     if (purchaseState.Finished) {
       onNoThanks();
@@ -121,6 +129,18 @@ function CheckoutNew(props: {
 
     onClose();
   }
+
+  function showRelatedPay() {
+    if (isRefund) {
+      return <RefundPay handleRefundPay={handleRefundPay} />;
+    } else if (!isRefund && list.length === 0) {
+      return <CashOutPay handleCashoutPay={handleCashoutPay} />;
+    }
+    return (
+      <OrderPay handleCreditCardPay={handleCreditCardPay} handleMotoPay={handleMotoPay} totalAmount={totalAmount} />
+    );
+  }
+  console.log(showRelatedPay);
 
   function transactionSuccessful() {
     // if (purchaseState.Finished)
@@ -199,15 +219,7 @@ function CheckoutNew(props: {
           </button>
           <Row>
             <Col sm={4} className="sub-column">
-              {isRefund ? (
-                <RefundPay handleRefundPay={handleRefundPay} />
-              ) : (
-                <OrderPay
-                  handleCreditCardPay={handleCreditCardPay}
-                  handleMotoPay={handleMotoPay}
-                  totalAmount={totalAmount}
-                />
-              )}
+              {showRelatedPay()}
             </Col>
             <Col sm={5} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
