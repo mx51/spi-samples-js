@@ -7,19 +7,18 @@ import './PairingConfig.css';
 
 type Props = {
   spi: any;
+  isPaired: boolean;
 };
 
-function Setting({ spi }: Props) {
+function Setting({ spi, isPaired }: Props) {
   const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
   const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
   const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos_address') || '');
   const [apiKey, setApiKey] = useState(window.localStorage.getItem('') || 'RamenPosDeviceIpApiKey');
-  const [autoAddress, setAutoAddress] = useState(
-    Boolean(window.localStorage.getItem('auto_resolve_eftpos_address')) || false
-  );
-  const [testMode, setTestMode] = useState(Boolean(window.localStorage.getItem('test_mode')) || false);
+  const [testMode, setTestMode] = useState(window.localStorage.getItem('test_mode') === 'true');
+  const [autoAddress, setAutoAddress] = useState(window.localStorage.getItem('auto_address') === 'true');
   const [secureWebSocket, setSecureWebSocket] = useState(
-    Boolean(window.localStorage.getItem('use_secure_web_sockets')) || false
+    window.localStorage.getItem('use_secure_web_sockets') === 'true'
   );
 
   const [autoAddressState, setAutoAddressState] = useState();
@@ -32,6 +31,7 @@ function Setting({ spi }: Props) {
     switch (deviceAddressStatus.DeviceAddressResponseCode) {
       case DeviceAddressResponseCode.SUCCESS:
         setEftpos(deviceAddressStatus.Address);
+        window.localStorage.setItem('eftpos_address', deviceAddressStatus.Address);
         console.log(`Device Address has been updated to ${deviceAddressStatus.Address}`);
         break;
       default:
@@ -54,6 +54,7 @@ function Setting({ spi }: Props) {
           id="POS ID"
           name="POS ID"
           label="POS ID"
+          disabled={isPaired}
           value={posId}
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
@@ -65,6 +66,7 @@ function Setting({ spi }: Props) {
         <Input
           id="API key"
           name="API key"
+          disabled={isPaired}
           label="API key"
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
@@ -79,6 +81,7 @@ function Setting({ spi }: Props) {
           name="serial"
           label="Serial"
           value={serial}
+          disabled={isPaired}
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setSerial(e.currentTarget.value);
@@ -90,6 +93,7 @@ function Setting({ spi }: Props) {
           id="EFTPOS"
           name="EFTPOS"
           label="EFTPOS"
+          disabled={autoAddress && isPaired}
           value={eftpos}
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
@@ -103,6 +107,8 @@ function Setting({ spi }: Props) {
             type="checkbox"
             id="Test Mode"
             label="Test Mode"
+            checked={testMode}
+            disabled={isPaired}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setTestMode(e.currentTarget.checked);
@@ -116,6 +122,8 @@ function Setting({ spi }: Props) {
             type="checkbox"
             id="Secure WebSockets"
             label="Secure WebSockets"
+            disabled={!autoAddress || isPaired}
+            checked={secureWebSocket}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setSecureWebSocket(e.currentTarget.checked);
@@ -129,34 +137,37 @@ function Setting({ spi }: Props) {
             type="checkbox"
             id="Auto Address"
             label="Auto Address"
-            className="m-2"
+            disabled={isPaired}
+            checked={autoAddress}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setAutoAddress(e.currentTarget.checked);
                 console.log(e.currentTarget.checked);
               }
             }}
+            className="m-2"
           />
           <button
             type="button"
             className="primary-button"
+            disabled={isPaired}
             onClick={() => {
               spi.SetPosId(posId);
               spi.SetTestMode(testMode);
               console.log('.......', testMode, autoAddress);
-              spi.SetEftposAddress(eftpos);
               spi.SetSerialNumber(serial);
               spi.SetDeviceApiKey(apiKey);
               spi.SetTestMode(testMode);
-              spi.SetSecureWebSockets(secureWebSocket);
+              spi.SetSecureWebSockets(secureWebSocket && autoAddress);
               spi.SetAutoAddressResolution(autoAddress);
+              spi.SetEftposAddress(eftpos);
               console.log(spi);
               window.localStorage.setItem('eftpos_address', eftpos);
               window.localStorage.setItem('posID', posId);
               window.localStorage.setItem('serial', serial);
-              window.localStorage.setItem('auto_address', autoAddress.toString());
-              window.localStorage.setItem('use_secure_web_sockets', secureWebSocket.toString());
               window.localStorage.setItem('test_mode', testMode.toString());
+              window.localStorage.setItem('auto_address', autoAddress.toString());
+              window.localStorage.setItem('use_secure_web_sockets', (secureWebSocket && autoAddress).toString());
             }}
           >
             Save Setting

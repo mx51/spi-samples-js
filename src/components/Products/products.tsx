@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Checkoutnew from '../Checkoutnew/Checkoutnew';
 import Order from '../Order/Order';
+import './Products.scss';
 import ProductList from '../ProductList/ProductList';
 import { transactionFlow as transactionFlowService } from '../../services';
 
@@ -106,6 +107,7 @@ function Products({ spi }: Props) {
       ],
     },
   ];
+  const [isPaired] = useState(localStorage.getItem('isPaired') === 'true');
 
   const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
   const [checkout, setCheckout] = useState(false);
@@ -202,6 +204,8 @@ function Products({ spi }: Props) {
     <>
       <Row>
         <Col lg={8}>
+          <div className={isPaired ? 'd-none' : 'pairing_banner'}>Please Check your device Paring setting!!</div>
+
           {allProducts.map(cat => (
             <ProductList
               key={cat.categoryName}

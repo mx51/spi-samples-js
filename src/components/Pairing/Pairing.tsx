@@ -9,27 +9,31 @@ import './Pairing.css';
 import { pairing as pairingService } from '../../services';
 
 type Props = {
-  // isAwaitingConfirmation: boolean;
-  // isFinishedPairing: boolean;
+  isAwaitingConfirmation: boolean;
+  isFinishedPairing: boolean;
   spi: any;
 };
 
-function Pairing({ spi }: Props) {
-  const [isPaired, setIsPaired] = useState(false);
+function Pairing({ spi, isAwaitingConfirmation, isFinishedPairing }: Props) {
+  const [isPaired, setIsPaired] = useState(localStorage.getItem('isPaired') === 'true');
   const flowEl = useRef(null);
 
   console.log('@@@', flowEl);
 
-  const [pairingState, setPairingState] = useState({
-    AwaitingCheckFromPos: false,
-    Finished: false,
-  });
+  useEffect(() => {
+    localStorage.setItem('isPaired', isPaired.toString());
+  }, [isPaired]);
+
+  // const [pairingState, setPairingState] = useState({
+  //   AwaitingCheckFromPos: false,
+  //   Finished: false,
+  // });
   const handlePairingStatusChange = useCallback((event: any) => {
-    const { AwaitingCheckFromPos, Finished } = event.detail;
-    setPairingState({
-      AwaitingCheckFromPos,
-      Finished,
-    });
+    //   const { AwaitingCheckFromPos, Finished } = event.detail;
+    //   setPairingState({
+    //     AwaitingCheckFromPos,
+    //     Finished,
+    //   });
     const flowMsg = new Logger(flowEl.current);
     pairingService.printPairingStatus(flowMsg, spi);
     console.log('.......eventdetail', event.detail);
@@ -42,9 +46,10 @@ function Pairing({ spi }: Props) {
     };
   });
 
-  function onPairingStatusChange(status: boolean) {
-    setIsPaired(status);
-    if (status) {
+  // eslint-disable-next-line no-shadow
+  function onPairingStatusChange(isPaired: Boolean) {
+    setIsPaired(isPaired === true);
+    if (isPaired) {
       pairingService.pair(spi);
     } else {
       pairingService.unpair(spi);
@@ -57,14 +62,14 @@ function Pairing({ spi }: Props) {
       <Row>
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
-            <PairingConfig spi={spi} />
+            <PairingConfig spi={spi} isPaired={isPaired} />
           </div>
           <div className="flex-fill">
             <Status
               isPaired={isPaired}
               onChangeStatus={onPairingStatusChange}
-              isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
-              isFinishedPairing={pairingState.Finished}
+              isAwaitingConfirmation={isAwaitingConfirmation}
+              isFinishedPairing={isFinishedPairing}
               spi={spi}
             />
           </div>

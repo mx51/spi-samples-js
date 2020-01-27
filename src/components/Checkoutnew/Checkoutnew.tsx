@@ -46,6 +46,7 @@ function CheckoutNew(props: {
     isRefund,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
+  const [promptCashout, setPromptCashout] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -71,22 +72,14 @@ function CheckoutNew(props: {
   });
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
-  const totalAmount = totalBillAmount + surchargeAmount / 100;
-
-  function handleNoThanks() {
-    console.log(totalPaid);
-    console.log(onNoThanks, surchargeAmount);
-    onNoThanks();
-    // setTransactionStatus(false);
-    setTotalPaid(0);
-    setSurchargeAmount(0);
-  }
+  const totalAmount = totalBillAmount;
 
   function handleMotoPay() {
-    motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalAmount, 10) * 100, 0, false);
+    motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalAmount, 10) * 100, surchargeAmount, false);
     setTransactionStatus(true);
   }
 
+  // eslint-disable-next-line no-shadow
   function handleCreditCardPay(tipAmount: number, cashoutAmount: number) {
     purchaseService.initiatePurchase(
       { Info: () => {} },
@@ -95,8 +88,8 @@ function CheckoutNew(props: {
       parseInt(totalAmount, 10) * 100,
       tipAmount,
       cashoutAmount,
-      0,
-      false
+      surchargeAmount,
+      promptCashout
     );
     setTransactionStatus(true);
   }
@@ -106,12 +99,33 @@ function CheckoutNew(props: {
     setTransactionStatus(true);
   }
 
+  // eslint-disable-next-line no-shadow
   function handleCashoutPay(cashoutAmount: number) {
     console.log(cashoutAmount);
-    cashoutService.initiateCashout({ Info: () => {} }, console, spi, cashoutAmount, surchargeAmount);
+    console.log('surcharge......', surchargeAmount);
+    cashoutService.initiateCashout({ Info: () => {} }, console, spi, cashoutAmount * 100, surchargeAmount);
     setTransactionStatus(true);
   }
+  // function handleNoThanks() {
+  //   console.log(totalPaid);
+  //   console.log(onNoThanks, surchargeAmount);
+  //   onNoThanks();
+  //   // setTransactionStatus(false);
+  //   setTotalPaid(0);
+  //   setSurchargeAmount(0);
+  //   setPurchaseState({ Finished: false, Success: '', Response: '' });
+  //   setTransactionStatus(false);
+  //   if (flowEl.current !== null) {
+  //     flowEl.current.innerHTML = '';
+  //   }
+  //   if (receiptEl.current !== null) {
+  //     receiptEl.current.innerHTML = '';
+  //   }
+  //   onClose();
+  // }
+
   function handleBack() {
+    console.log(totalPaid);
     if (purchaseState.Finished) {
       onNoThanks();
       setTotalPaid(0);
@@ -137,7 +151,13 @@ function CheckoutNew(props: {
       return <CashOutPay handleCashoutPay={handleCashoutPay} />;
     }
     return (
-      <OrderPay handleCreditCardPay={handleCreditCardPay} handleMotoPay={handleMotoPay} totalAmount={totalAmount} />
+      <OrderPay
+        handleCreditCardPay={handleCreditCardPay}
+        handleMotoPay={handleMotoPay}
+        totalAmount={totalAmount}
+        promptCashout={promptCashout}
+        setPromptCashout={setPromptCashout}
+      />
     );
   }
   console.log(showRelatedPay);
@@ -158,7 +178,7 @@ function CheckoutNew(props: {
         {purchaseState.Finished && SuccessState.Failed === purchaseState.Success && (
           <div className="transaction-successful">
             <p>{new PurchaseResponse(purchaseState.Response).GetResponseText()}</p>
-            <button type="button" onClick={() => handleNoThanks()}>
+            <button type="button" onClick={() => handleBack()}>
               Sorry!! Try Again
             </button>
           </div>
@@ -168,16 +188,8 @@ function CheckoutNew(props: {
             <Tick className="color-purple" />
             <div className="transaction-successful-button">
               <p>Transaction successful!</p>
-              <button
-                type="button"
-                onClick={() =>
-                  transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {})
-                }
-              >
-                Receipt
-              </button>
-              <button type="button" onClick={() => handleNoThanks()}>
-                No Thanks!!
+              <button type="button" onClick={() => handleBack()}>
+                OK
               </button>
             </div>
           </div>

@@ -1,12 +1,14 @@
 import React from 'react';
+import { Logger } from '@assemblypayments/spi-client-js';
+
 import {
   settlement as settlementService,
   settlementEnquiry as settlementEnquiryService,
   // terminalStatus as terminalStatusService,
 } from '../../services';
 
-function Actions(props: { spi: any; setActionType: Function }) {
-  const { spi, setActionType } = props;
+function Actions(props: { spi: any; setActionType: Function; flowEl: any }) {
+  const { spi, setActionType, flowEl } = props;
 
   return (
     <div>
@@ -15,9 +17,12 @@ function Actions(props: { spi: any; setActionType: Function }) {
         type="button"
         className="primary-button"
         onClick={() => {
+          const flowMsg = new Logger(flowEl.current);
           setActionType('SETTLEMENT');
-          console.log('clicled settlement');
+          console.log('clicked settlement');
           settlementService.initiateSettlement({ Info: () => {} }, spi);
+          console.log('flow.........', flowMsg);
+          flowMsg.Clear();
         }}
       >
         Settlement
@@ -26,8 +31,11 @@ function Actions(props: { spi: any; setActionType: Function }) {
         type="button"
         className="primary-button"
         onClick={() => {
+          const flowMsg = new Logger(flowEl.current);
           setActionType('SETTLEMENT_ENQUIRY');
           settlementEnquiryService.initiateSettlementEnquiry({ Info: () => {} }, spi);
+          console.log('flow.........', flowMsg);
+          flowMsg.Clear();
         }}
       >
         Settlement Enquiry

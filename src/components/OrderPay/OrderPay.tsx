@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Form } from 'react-bootstrap';
 import Input from '../Input/Input';
 
 enum PaymentType {
@@ -8,8 +8,14 @@ enum PaymentType {
   CreditCard,
 }
 
-function OrderPay(props: { handleMotoPay: Function; handleCreditCardPay: Function; totalAmount: string }) {
-  const { handleMotoPay, handleCreditCardPay, totalAmount } = props;
+function OrderPay(props: {
+  handleMotoPay: Function;
+  handleCreditCardPay: Function;
+  totalAmount: string;
+  promptCashout: boolean;
+  setPromptCashout: Function;
+}) {
+  const { handleMotoPay, handleCreditCardPay, totalAmount, promptCashout, setPromptCashout } = props;
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
 
   function CreditCard() {
@@ -51,6 +57,14 @@ function OrderPay(props: { handleMotoPay: Function; handleCreditCardPay: Functio
           />
           <p className="ml-2">Cents</p>
         </div>
+        <Form.Check
+          type="checkbox"
+          id="prompt_cashout"
+          className="m-2"
+          checked={promptCashout}
+          label="Prompt for Cashout"
+          onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}
+        />
         <button
           className="primary-button checkout-button mb-0 pull-left"
           type="button"

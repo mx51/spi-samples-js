@@ -57,7 +57,7 @@ function Setting(props: { spi: any }) {
             <SettingConfig />
           </div>
           <div className="flex-fill">
-            <Actions spi={spi} setActionType={setActionType} />
+            <Actions spi={spi} setActionType={setActionType} flowEl={flowEl} />
           </div>
         </Col>
         <Col lg={5} className="sub-column d-flex flex-column">

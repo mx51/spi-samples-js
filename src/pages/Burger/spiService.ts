@@ -27,11 +27,11 @@ class Spi {
     this._rcptFromEftpos = false;
     this._sigFlowFromEftpos = false;
     this._apiKey = null;
-    this._serialNumber = '';
+    this._serialNumber = window.localStorage.getItem('serial') || '';
     this._acquirerCode = 'wbc';
-    this._autoResolveEftposAddress = false;
-    this._testMode = true;
-    this._useSecureWebSockets = false;
+    this._autoResolveEftposAddress = window.localStorage.getItem('auto_address') === 'true';
+    this._testMode = window.localStorage.getItem('test_mode') === 'true';
+    this._useSecureWebSockets = window.localStorage.getItem('use_secure_web_sockets') === 'true';
     this._log = console;
     const secretsString = window.localStorage.getItem('secrets') || '';
     try {

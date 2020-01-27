@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 // import { getSpiVersion } from '../../services/_common/uiHelpers';
 import Products from '../../components/Products/products';
@@ -8,28 +8,29 @@ import './BurgerPos.css';
 import SpiService from './spiService';
 
 const spiService = new SpiService();
+console.log(spiService);
 spiService.start();
 
 function BurgerPos() {
-  // const [pairingState, setPairingState] = useState({
-  //   AwaitingCheckFromPos: false,
-  //   Finished: false,
-  // });
-  // const handlePairingStatusChange = useCallback((event: any) => {
-  //   const { AwaitingCheckFromPos, Finished } = event.detail;
-  //   setPairingState({
-  //     AwaitingCheckFromPos,
-  //     Finished,
-  //   });
-  //   console.log(event.detail);
-  // }, []);
-  // useEffect(() => {
-  //   document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  const [pairingState, setPairingState] = useState({
+    AwaitingCheckFromPos: false,
+    Finished: false,
+  });
+  const handlePairingStatusChange = useCallback((event: any) => {
+    const { AwaitingCheckFromPos, Finished } = event.detail;
+    setPairingState({
+      AwaitingCheckFromPos,
+      Finished,
+    });
+    console.log(event.detail);
+  }, []);
+  useEffect(() => {
+    document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
 
-  //   return function cleanup() {
-  //     document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-  //   };
-  // });
+    return function cleanup() {
+      document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+    };
+  });
 
   // const [purchaseState, setPurchaseState] = useState({});
   // const handlePurchaseStatusChange = useCallback((event: any) => {
@@ -75,8 +76,8 @@ function BurgerPos() {
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing
-                  // isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
-                  // isFinishedPairing={pairingState.Finished}
+                  isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
+                  isFinishedPairing={pairingState.Finished}
                   spi={spiService._spi}
                 />
               </Tab.Pane>

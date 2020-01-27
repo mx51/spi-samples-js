@@ -6,13 +6,14 @@ import { pairing as pairingService } from '../../services';
 function Status(props: {
   isPaired: Boolean;
   onChangeStatus: Function;
-  isAwaitingConfirmation: boolean;
-  isFinishedPairing: boolean;
+  isAwaitingConfirmation: Boolean;
+  isFinishedPairing: Boolean;
   spi: any;
 }) {
   const { isPaired, onChangeStatus, isAwaitingConfirmation, isFinishedPairing, spi } = props;
   console.log('isAwaitingConfirmation', isAwaitingConfirmation);
   console.log('isFinishedPairing', isFinishedPairing);
+  console.log('isPaired', isPaired);
 
   return (
     <div>
@@ -40,7 +41,7 @@ function Status(props: {
                 Confirm code
               </button>
             )}
-            {!isFinishedPairing && (
+            {isPaired && (
               <button type="button" onClick={() => pairingService.pairingCancel(spi)}>
                 Cancel Pairing
               </button>
