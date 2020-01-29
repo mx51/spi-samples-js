@@ -7,8 +7,8 @@ import {
   // terminalStatus as terminalStatusService,
 } from '../../services';
 
-function Actions(props: { spi: any; setActionType: Function; flowEl: any }) {
-  const { spi, setActionType, flowEl } = props;
+function Actions(props: { spi: any; setActionType: Function; flowEl: any; getTerminalStatus: Function }) {
+  const { spi, setActionType, flowEl, getTerminalStatus } = props;
 
   return (
     <div>
@@ -40,7 +40,7 @@ function Actions(props: { spi: any; setActionType: Function; flowEl: any }) {
       >
         Settlement Enquiry
       </button>
-      <button type="button" className="primary-button">
+      <button type="button" className="primary-button" onClick={() => getTerminalStatus(spi)}>
         Terminal Status
       </button>
     </div>

@@ -7,6 +7,7 @@ import Flow from '../Flow/Flow';
 import {
   settlement as settlementService,
   settlementEnquiry as settlementEnquiryService,
+  terminalStatus as terminalStatusService,
   transactionFlow as transactionFlowService,
 } from '../../services';
 import PosUtils from '../../services/_common/pos';
@@ -49,15 +50,24 @@ function Setting(props: { spi: any }) {
     };
   });
 
+  // eslint-disable-next-line no-shadow
+  function getTerminalStatus(spi: any) {
+    spi.GetTerminalStatus();
+    const flowMsg = new Logger(flowEl.current);
+    // eslint-disable-next-line no-param-reassign
+    spi.TerminalStatusResponse = (message: Message) =>
+      terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
+  }
+
   return (
     <div>
       <Row>
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
-            <SettingConfig />
+            <SettingConfig spi={spi} />
           </div>
           <div className="flex-fill">
-            <Actions spi={spi} setActionType={setActionType} flowEl={flowEl} />
+            <Actions spi={spi} setActionType={setActionType} flowEl={flowEl} getTerminalStatus={getTerminalStatus} />
           </div>
         </Col>
         <Col lg={5} className="sub-column d-flex flex-column">

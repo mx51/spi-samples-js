@@ -1,7 +1,6 @@
 /* eslint no-else-return: "error" */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { TransactionOptions, SuccessState, PurchaseResponse, Logger } from '@assemblypayments/spi-client-js';
-
 import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
 import Tick from '../Tick';
@@ -9,6 +8,7 @@ import OrderPay from '../OrderPay/OrderPay';
 import RefundPay from '../RefundPay/RefundPay';
 import CashOutPay from '../CashOutPay/CashOutPay';
 import PosUtils from '../../services/_common/pos';
+import SigApproval from '../SigApproval/SigApproval';
 import {
   purchase as purchaseService,
   moto as motoService,
@@ -47,6 +47,7 @@ function CheckoutNew(props: {
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [promptCashout, setPromptCashout] = useState(false);
+  const [showSigApproval, setShowSigApproval] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -57,6 +58,11 @@ function CheckoutNew(props: {
     const receipt = new Logger(receiptEl.current);
 
     console.log('???', event.detail);
+
+    if (event.detail.AwaitingSignatureCheck) {
+      setShowSigApproval(true);
+    }
+
     if (event.detail.Finished) {
       console.log(receipt);
       PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
@@ -70,6 +76,19 @@ function CheckoutNew(props: {
       document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
     };
   });
+  // const handleSigApproval = useCallback((event: any) => {
+  //   setShowSigApproval({ ...event.detail });
+
+  //   if (event.detail.AwaitingSignatureCheck) {
+  //     setShowSigApproval(true);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   document.addEventListener('TxFlowStateChanged', handleSigApproval);
+  //   return function cleanup() {
+  //     document.removeEventListener('TxFlowStateChanged', handleSigApproval);
+  //   };
+  // });
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = totalBillAmount;
@@ -209,6 +228,14 @@ function CheckoutNew(props: {
   console.log('visible.......', visible);
   return (
     <div className={`checkout-page1 ${visible ? '' : 'd-none'}`}>
+      <SigApproval
+        show={showSigApproval}
+        handleClose={() => {
+          setShowSigApproval(false);
+        }}
+        setShowSigApproval={setShowSigApproval}
+        spi={spi}
+      />
       <Col sm={2} className="checkout-order min-vh-100 sticky-top">
         <button
           type="button"
@@ -234,7 +261,12 @@ function CheckoutNew(props: {
               {showRelatedPay()}
             </Col>
             <Col sm={5} className="sub-column">
-              <h2 className="sub-header mb-0">Flow</h2>
+              <h2 className="sub-header mb-0">
+                Flow
+                {/* <button type="button" onClick={() => setShowSigApproval(true)}>
+                  ShowSig
+                </button> */}
+              </h2>
               <div ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
             </Col>
