@@ -46,6 +46,7 @@ function Order(props: {
   list: any;
   onCheckout: Function;
   onRefund: Function;
+  onLastTransaction: Function;
   onChangeProductQuantity: Function;
   handleApplySurcharge: Function;
   surchargeAmount: number;
@@ -55,6 +56,7 @@ function Order(props: {
     list,
     onCheckout,
     onRefund,
+    onLastTransaction,
     onChangeProductQuantity,
     handleApplySurcharge,
     surchargeAmount,
@@ -110,7 +112,9 @@ function Order(props: {
       <h2 className="sub-header mb-0">Order</h2>
       <Row className="order-header-buttons no-gutters">
         <Col sm={4}>
-          <button type="button">Last Transaction</button>
+          <button type="button" onClick={() => onLastTransaction()}>
+            Last Transaction
+          </button>
         </Col>
         <Col sm={4}>
           <button type="button" onClick={() => setShowSurcharge(true)}>
@@ -161,7 +165,7 @@ function Order(props: {
       </ul>
 
       <div className="total">
-        <div className="">
+        <div>
           <Row>
             <Col sm={7}>Subtotal</Col>
             <Col sm={5} className="text-right">

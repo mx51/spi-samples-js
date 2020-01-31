@@ -83,12 +83,18 @@ function initiateGetLastTransaction(flowMsg: Logger, spi: Spi) {
   );
 }
 
-function handleGetLastTransaction(flowMsg: Logger, receipt: Logger, spi: Spi, txState: TransactionFlowState) {
+function handleGetLastTransaction(
+  flowMsg: Logger,
+  receipt: Logger,
+  spi: Spi,
+  txState: TransactionFlowState,
+  posRefId?: string
+) {
   if (txState.Response != null) {
     const gltResponse = new GetLastTransactionResponse(txState.Response);
-    const posRefId = (document.getElementById('pos_ref_id') as HTMLInputElement).value;
+    // const posRefId = (document.getElementById('pos_ref_id') as HTMLInputElement).value;
 
-    if (posRefId.length > 1) {
+    if (posRefId && posRefId.length > 1) {
       // User specified that he intended to retrieve a specific tx by pos_ref_id
       // This is how you can use a handy function to match it.
       const success = spi.GltMatch(gltResponse, posRefId);

@@ -228,7 +228,13 @@ class RamenPos extends Pos {
               Pos.processCompletedEvent(this._flowMsg, this._receipt, settlementEnquiry, txState);
               break;
             case TransactionType.GetLastTransaction:
-              transactionFlow.handleGetLastTransaction(this._flowMsg, this._receipt, this._spi, txState);
+              transactionFlow.handleGetLastTransaction(
+                this._flowMsg,
+                this._receipt,
+                this._spi,
+                txState,
+                (document.getElementById('pos_ref_id') as HTMLInputElement).value
+              );
               break;
             default:
               this._flowMsg.Error(`# CAN'T HANDLE TX TYPE: ${txState.Type}`);

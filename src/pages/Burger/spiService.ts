@@ -24,8 +24,8 @@ class Spi {
     this._spiSecrets = null;
     this._options = null;
     this._version = '2.6.3';
-    this._rcptFromEftpos = false;
-    this._sigFlowFromEftpos = false;
+    this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
+    this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
     this._apiKey = null;
     this._serialNumber = window.localStorage.getItem('serial') || '';
     this._acquirerCode = 'wbc';
@@ -54,10 +54,10 @@ class Spi {
       this._spi.SetAcquirerCode(this._acquirerCode);
       this._spi.SetDeviceApiKey(this._apiKey);
       this._options = new TransactionOptions();
-      this._options.SetCustomerReceiptHeader('');
-      this._options.SetCustomerReceiptFooter('');
-      this._options.SetMerchantReceiptHeader('');
-      this._options.SetMerchantReceiptFooter('');
+      this._options.SetCustomerReceiptHeader(window.localStorage.getItem('receipt_header_input') || '');
+      this._options.SetCustomerReceiptFooter(window.localStorage.getItem('receipt_footer_input') || '');
+      this._options.SetMerchantReceiptHeader(window.localStorage.getItem('receipt_header_input') || '');
+      this._options.SetMerchantReceiptFooter(window.localStorage.getItem('receipt_footer_input') || '');
     } catch (e) {
       this._log.info(e.Message);
       return;

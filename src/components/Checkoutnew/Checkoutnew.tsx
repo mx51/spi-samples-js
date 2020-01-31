@@ -1,6 +1,6 @@
 /* eslint no-else-return: "error" */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { TransactionOptions, SuccessState, PurchaseResponse, Logger } from '@assemblypayments/spi-client-js';
+import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@assemblypayments/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import './Checkoutnew.css';
 import Tick from '../Tick';
@@ -30,7 +30,7 @@ function CheckoutNew(props: {
   // purchaseState: any;
   setTransactionStatus: any;
   transactionStatus: any;
-  isRefund: boolean;
+  transactionAction: string;
 }) {
   const {
     onClose,
@@ -43,7 +43,7 @@ function CheckoutNew(props: {
     // purchaseState,
     setTransactionStatus,
     transactionStatus,
-    isRefund,
+    transactionAction,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [promptCashout, setPromptCashout] = useState(false);
@@ -64,8 +64,12 @@ function CheckoutNew(props: {
     }
 
     if (event.detail.Finished) {
-      console.log(receipt);
-      PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
+      if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
+        transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+      } else {
+        console.log(receipt);
+        PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
+      }
     } else {
       transactionFlowService.handleTransaction(flowMsg, event.detail);
     }
@@ -76,6 +80,14 @@ function CheckoutNew(props: {
       document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
     };
   });
+
+  useEffect(() => {
+    if (transactionAction === 'lastTransaction') {
+      const flowMsg = new Logger(flowEl.current);
+      transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
+    }
+  }, [transactionAction]);
+
   // const handleSigApproval = useCallback((event: any) => {
   //   setShowSigApproval({ ...event.detail });
 
@@ -102,7 +114,7 @@ function CheckoutNew(props: {
   function handleCreditCardPay(tipAmount: number, cashoutAmount: number) {
     purchaseService.initiatePurchase(
       { Info: () => {} },
-      new TransactionOptions(),
+      spi._options,
       spi,
       parseInt(totalAmount, 10) * 100,
       tipAmount,
@@ -164,9 +176,9 @@ function CheckoutNew(props: {
   }
 
   function showRelatedPay() {
-    if (isRefund) {
+    if (transactionAction === 'refund') {
       return <RefundPay handleRefundPay={handleRefundPay} />;
-    } else if (!isRefund && list.length === 0) {
+    } else if (transactionAction === '' && list.length === 0) {
       return <CashOutPay handleCashoutPay={handleCashoutPay} />;
     }
     return (
@@ -254,9 +266,9 @@ function CheckoutNew(props: {
             className="checkout-flyout-toggle"
             onClick={() => handleBack()}
           >
-            {'▼'}
+            ▼
           </button>
-          <Row>
+          <Row className={transactionAction !== 'lastTransaction' ? '' : 'd-none'}>
             <Col sm={4} className="sub-column">
               {showRelatedPay()}
             </Col>
@@ -275,6 +287,24 @@ function CheckoutNew(props: {
               <pre className="receipt-alignment" ref={receiptEl}>
                 {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
               </pre>
+            </Col>
+          </Row>
+          <Row className={transactionAction === 'lastTransaction' ? '' : 'd-none'}>
+            <Col sm={3} className="sub-column">
+              <h2 className="sub-header mb-0">Last Transaction</h2>
+              <pre className="receipt-alignment" ref={receiptEl}>
+                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
+              </pre>
+            </Col>
+            <Col sm={9} className="sub-column">
+              <h2 className="sub-header mb-0">
+                Flow
+                {/* <button type="button" onClick={() => setShowSigApproval(true)}>
+                  ShowSig
+                </button> */}
+              </h2>
+              <div ref={flowEl} />
+              {!transactionStatus ? '' : transactionSuccessful()}
             </Col>
           </Row>
         </div>

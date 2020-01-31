@@ -93,7 +93,7 @@ function Setting({ spi, isPaired }: Props) {
           id="EFTPOS"
           name="EFTPOS"
           label="EFTPOS"
-          disabled={autoAddress && isPaired}
+          disabled={autoAddress || isPaired}
           value={eftpos}
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {

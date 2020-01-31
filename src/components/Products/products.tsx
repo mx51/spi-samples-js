@@ -96,13 +96,13 @@ function Products({ spi }: Props) {
           id: '302',
           name: 'Kombucha',
           image: './images/kombuch.jpg',
-          price: '4.8',
+          price: '4',
         },
         {
           id: '303',
           name: 'Orange Juice',
           image: './images/orange juice.jpg',
-          price: '1',
+          price: '4',
         },
       ],
     },
@@ -111,7 +111,8 @@ function Products({ spi }: Props) {
 
   const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
   const [checkout, setCheckout] = useState(false);
-  const [refund, setRefund] = useState(false);
+  const [transactionAction, setTransactionAction] = useState('');
+
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
 
@@ -177,27 +178,31 @@ function Products({ spi }: Props) {
     setSurchargeAmount(surcharge);
     // setShowSurcharge(false);
   }
+  function handleLastTransaction() {
+    console.log('clicked last transaction');
+    setCheckout(true);
+    setTransactionAction('lastTransaction');
+  }
   function handleCheckout() {
     console.log('checkout clicked');
-    setRefund(false);
+    setTransactionAction('');
     setCheckout(true);
   }
   function handleRefund() {
-    console.log(refund);
-    setRefund(true);
     setCheckout(true);
+    setTransactionAction('refund');
   }
   function handleNoThanks() {
     transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
     setCheckout(false);
-    setRefund(false);
+    setTransactionAction('');
     updateShortlistedProducts([]);
     setTransactionStatus(false);
   }
 
   function handleCheckoutClosed() {
     setCheckout(false);
-    setRefund(false);
+    setTransactionAction('');
   }
   console.log('Checkout .........', checkout);
   return (
@@ -222,6 +227,7 @@ function Products({ spi }: Props) {
             list={shortlistedProducts}
             onChangeProductQuantity={handleChangeProductQuantity}
             onRefund={handleRefund}
+            onLastTransaction={handleLastTransaction}
             onCheckout={handleCheckout}
             handleApplySurcharge={handleApplySurcharge}
             surchargeAmount={surchargeAmount}
@@ -238,7 +244,7 @@ function Products({ spi }: Props) {
             // purchaseState={purchaseState}
             setTransactionStatus={setTransactionStatus}
             transactionStatus={transactionStatus}
-            isRefund={refund}
+            transactionAction={transactionAction}
           />
         </Col>
       </Row>
