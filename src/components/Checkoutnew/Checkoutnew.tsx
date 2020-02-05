@@ -17,8 +17,6 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
-// import { moto as motoService } from '../../services';
-
 function CheckoutNew(props: {
   visible: Boolean;
   list: any;
@@ -27,7 +25,6 @@ function CheckoutNew(props: {
   spi: any;
   surchargeAmount: number;
   setSurchargeAmount: Function;
-  // purchaseState: any;
   setTransactionStatus: any;
   transactionStatus: any;
   transactionAction: string;
@@ -40,7 +37,6 @@ function CheckoutNew(props: {
     list,
     surchargeAmount,
     setSurchargeAmount,
-    // purchaseState,
     setTransactionStatus,
     transactionStatus,
     transactionAction,
@@ -112,8 +108,9 @@ function CheckoutNew(props: {
 
   // eslint-disable-next-line no-shadow
   function handleCreditCardPay(tipAmount: number, cashoutAmount: number) {
+    const flowMsg = new Logger(flowEl.current);
     purchaseService.initiatePurchase(
-      { Info: () => {} },
+      flowMsg,
       spi._options,
       spi,
       parseInt(totalAmount, 10) * 100,
@@ -126,7 +123,8 @@ function CheckoutNew(props: {
   }
 
   function handleRefundPay(refundAmount: number) {
-    refundService.initiateRefund({ Info: () => {} }, spi, refundAmount * 100, false);
+    const flowMsg = new Logger(flowEl.current);
+    refundService.initiateRefund(flowMsg, spi, refundAmount * 100, false);
     setTransactionStatus(true);
   }
 
@@ -134,26 +132,11 @@ function CheckoutNew(props: {
   function handleCashoutPay(cashoutAmount: number) {
     console.log(cashoutAmount);
     console.log('surcharge......', surchargeAmount);
-    cashoutService.initiateCashout({ Info: () => {} }, console, spi, cashoutAmount * 100, surchargeAmount);
+    const flowMsg = new Logger(flowEl.current);
+
+    cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
     setTransactionStatus(true);
   }
-  // function handleNoThanks() {
-  //   console.log(totalPaid);
-  //   console.log(onNoThanks, surchargeAmount);
-  //   onNoThanks();
-  //   // setTransactionStatus(false);
-  //   setTotalPaid(0);
-  //   setSurchargeAmount(0);
-  //   setPurchaseState({ Finished: false, Success: '', Response: '' });
-  //   setTransactionStatus(false);
-  //   if (flowEl.current !== null) {
-  //     flowEl.current.innerHTML = '';
-  //   }
-  //   if (receiptEl.current !== null) {
-  //     receiptEl.current.innerHTML = '';
-  //   }
-  //   onClose();
-  // }
 
   function handleBack() {
     console.log(totalPaid);
@@ -194,8 +177,6 @@ function CheckoutNew(props: {
   console.log(showRelatedPay);
 
   function transactionSuccessful() {
-    // if (purchaseState.Finished)
-    //   console.log('.................', new PurchaseResponse(purchaseState.Response).GetResponseText());
     return (
       <div>
         {!purchaseState.Finished && (
@@ -229,14 +210,6 @@ function CheckoutNew(props: {
     );
   }
 
-  // function Cash() {
-  //   return (
-  //     <div className="ml-4 mr-4">
-  //       <p>Cash-Moto</p>
-  //     </div>
-  //   );
-  // }
-
   console.log('visible.......', visible);
   return (
     <div className={`checkout-page1 ${visible ? '' : 'd-none'}`}>
@@ -268,43 +241,24 @@ function CheckoutNew(props: {
           >
             ▼
           </button>
-          <Row className={transactionAction !== 'lastTransaction' ? '' : 'd-none'}>
-            <Col sm={4} className="sub-column">
-              {showRelatedPay()}
-            </Col>
-            <Col sm={5} className="sub-column">
-              <h2 className="sub-header mb-0">
-                Flow
-                {/* <button type="button" onClick={() => setShowSigApproval(true)}>
-                  ShowSig
-                </button> */}
-              </h2>
+          <Row style={transactionAction !== 'lastTransaction' ? {} : { flexDirection: 'row-reverse' }}>
+            {transactionAction !== 'lastTransaction' && (
+              <Col sm={4} className="sub-column">
+                {showRelatedPay()}
+              </Col>
+            )}
+            <Col sm={transactionAction !== 'lastTransaction' ? 5 : 9} className="sub-column">
+              <h2 className="sub-header mb-0">Flow</h2>
               <div ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
             </Col>
             <Col sm={3} className="sub-column">
-              <h2 className="sub-header mb-0">Receipt</h2>
-              <pre className="receipt-alignment" ref={receiptEl}>
-                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
-              </pre>
-            </Col>
-          </Row>
-          <Row className={transactionAction === 'lastTransaction' ? '' : 'd-none'}>
-            <Col sm={3} className="sub-column">
-              <h2 className="sub-header mb-0">Last Transaction</h2>
-              <pre className="receipt-alignment" ref={receiptEl}>
-                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
-              </pre>
-            </Col>
-            <Col sm={9} className="sub-column">
               <h2 className="sub-header mb-0">
-                Flow
-                {/* <button type="button" onClick={() => setShowSigApproval(true)}>
-                  ShowSig
-                </button> */}
+                {transactionAction !== 'lastTransaction' ? 'Receipt' : 'Last Transaction'}
               </h2>
-              <div ref={flowEl} />
-              {!transactionStatus ? '' : transactionSuccessful()}
+              <pre className="receipt-alignment" ref={receiptEl}>
+                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
+              </pre>
             </Col>
           </Row>
         </div>

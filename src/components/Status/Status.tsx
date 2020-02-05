@@ -15,16 +15,27 @@ function Status(props: {
   console.log('isFinishedPairing', isFinishedPairing);
   console.log('isPaired', isPaired);
 
+  let message = 'Unpaired';
+  let alert: 'danger' | 'success' | 'warning' = 'danger';
+
+  if (isPaired && isFinishedPairing) {
+    message = 'Paired connected';
+    alert = 'success';
+  } else if (isPaired && !isFinishedPairing) {
+    message = 'Pairing';
+    alert = 'warning';
+  } else {
+    message = 'Unpaired';
+    alert = 'danger';
+  }
+
   return (
     <div>
       <h2 className="sub-header">Status</h2>
 
       <div className="ml-3 mr-3">
-        {isPaired ? (
-          <Alert variant="success"> Paired Connected: Idle </Alert>
-        ) : (
-          <Alert variant="danger"> Unpaired : Idle </Alert>
-        )}
+        <Alert variant={alert}> {message} </Alert>
+
         {isPaired ? (
           <button type="button" onClick={() => onChangeStatus(false)}>
             Unpair

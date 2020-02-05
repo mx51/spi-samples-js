@@ -64,6 +64,11 @@ function Pairing({ spi, isAwaitingConfirmation, isFinishedPairing }: Props) {
           <div className="flex-fill d-flex flex-column">
             <PairingConfig spi={spi} isPaired={isPaired} />
           </div>
+        </Col>
+        <Col lg={8} className="sub-column d-flex flex-column">
+          <div className="flex-fill text-break">
+            <Flow ref={flowEl} />
+          </div>
           <div className="flex-fill">
             <Status
               isPaired={isPaired}
@@ -72,11 +77,6 @@ function Pairing({ spi, isAwaitingConfirmation, isFinishedPairing }: Props) {
               isFinishedPairing={isFinishedPairing}
               spi={spi}
             />
-          </div>
-        </Col>
-        <Col lg={8} className="sub-column d-flex flex-column">
-          <div className="flex-fill text-break">
-            <Flow ref={flowEl} />
           </div>
         </Col>
       </Row>

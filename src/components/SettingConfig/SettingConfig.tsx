@@ -39,7 +39,7 @@ function SettingConfig(props: { spi: any }) {
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setSigFlow(e.currentTarget.checked);
-              console.log(sigFlow);
+              console.log(e.currentTarget.checked);
             }
           }}
         />
@@ -59,6 +59,7 @@ function SettingConfig(props: { spi: any }) {
           id="Receipt header"
           name="Receipt header"
           label="Receipt header"
+          value={receiptHeader}
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setReceiptHeader(e.currentTarget.value);
@@ -70,6 +71,7 @@ function SettingConfig(props: { spi: any }) {
           id="Receipt footer"
           name="Receipt footer"
           label="Receipt footer"
+          value={receiptFooter}
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setReceiptFooter(e.currentTarget.value);
@@ -100,8 +102,8 @@ function SettingConfig(props: { spi: any }) {
               receiptFooter
             );
             window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
-            window.localStorage.setItem('check-sig-eftpos', sigFlow.toString());
-            window.localStorage.setItem('print-merchant-copy', printMerchantCopy.toString());
+            window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
+            window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
             window.localStorage.setItem('receipt_header_input', receiptHeader);
             window.localStorage.setItem('receipt_footer_input', receiptFooter);
             console.log(spi);

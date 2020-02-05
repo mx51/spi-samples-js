@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { Logger, SettleResponse } from '@assemblypayments/spi-client-js';
 import SettingConfig from '../SettingConfig/SettingConfig';
 import Actions from '../Actions/Actions';
@@ -20,6 +20,7 @@ function Setting(props: { spi: any }) {
 
   const [posSetting, setPosSetting] = useState();
   const [actionType, setActionType] = useState();
+  const [model, setModel] = useState('');
 
   const handleAction = useCallback((event: any) => {
     setPosSetting({ ...event.detail });
@@ -29,16 +30,23 @@ function Setting(props: { spi: any }) {
 
     if (event.detail.Finished) {
       console.log(receipt);
-      console.log('eventdetail........', event.detail);
-
+      console.log('eventdetail @@@@@@', event.detail);
+      console.log('error##########', event.detail.Response.Data.error_reason);
+      if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
+        // alert('wrong date');
+        setModel('Please enter current years date');
+      }
+      if (event.detail.Response.Data.error_reason === 'OPERATION_IN_PROGRESS') {
+        setModel('Please check your terminal is paired');
+      }
       let eventType = null;
       if (actionType === 'SETTLEMENT_ENQUIRY') {
         eventType = settlementEnquiryService;
       } else {
         eventType = settlementService;
       }
-
       PosUtils.processCompletedEvent(flowMsg, receipt, eventType, event.detail);
+      spi.AckFlowEndedAndBackToIdle();
     } else {
       transactionFlowService.handleTransaction(flowMsg, event.detail);
     }
@@ -67,7 +75,13 @@ function Setting(props: { spi: any }) {
             <SettingConfig spi={spi} />
           </div>
           <div className="flex-fill">
-            <Actions spi={spi} setActionType={setActionType} flowEl={flowEl} getTerminalStatus={getTerminalStatus} />
+            <Actions
+              spi={spi}
+              setActionType={setActionType}
+              flowEl={flowEl}
+              receiptEl={receiptEl}
+              getTerminalStatus={getTerminalStatus}
+            />
           </div>
         </Col>
         <Col lg={5} className="sub-column d-flex flex-column">
@@ -84,6 +98,17 @@ function Setting(props: { spi: any }) {
           </div>
         </Col>
       </Row>
+      <Modal show={model !== ''} onHide={() => setModel('')}>
+        <Modal.Header closeButton>
+          <Modal.Title>ERROR</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{model}</p>
+          <Button variant="primary" className="btn-custom" onClick={() => setModel('')} block>
+            OK
+          </Button>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }

@@ -7,9 +7,16 @@ import {
   // terminalStatus as terminalStatusService,
 } from '../../services';
 
-function Actions(props: { spi: any; setActionType: Function; flowEl: any; getTerminalStatus: Function }) {
-  const { spi, setActionType, flowEl, getTerminalStatus } = props;
-
+function Actions(props: {
+  spi: any;
+  setActionType: Function;
+  flowEl: any;
+  getTerminalStatus: Function;
+  receiptEl: any;
+}) {
+  const { spi, setActionType, flowEl, getTerminalStatus, receiptEl } = props;
+  const receipt = new Logger(receiptEl.current);
+  console.log(receipt);
   return (
     <div>
       <h2 className="sub-header">Actions</h2>
@@ -20,9 +27,11 @@ function Actions(props: { spi: any; setActionType: Function; flowEl: any; getTer
           const flowMsg = new Logger(flowEl.current);
           setActionType('SETTLEMENT');
           console.log('clicked settlement');
-          settlementService.initiateSettlement({ Info: () => {} }, spi);
+          if (receiptEl.current !== null) {
+            receiptEl.current.innerHTML = '';
+          }
+          settlementService.initiateSettlement(flowMsg, spi);
           console.log('flow.........', flowMsg);
-          flowMsg.Clear();
         }}
       >
         Settlement
@@ -33,14 +42,25 @@ function Actions(props: { spi: any; setActionType: Function; flowEl: any; getTer
         onClick={() => {
           const flowMsg = new Logger(flowEl.current);
           setActionType('SETTLEMENT_ENQUIRY');
-          settlementEnquiryService.initiateSettlementEnquiry({ Info: () => {} }, spi);
+          if (receiptEl.current !== null) {
+            receiptEl.current.innerHTML = '';
+          }
+          settlementEnquiryService.initiateSettlementEnquiry(flowMsg, spi);
           console.log('flow.........', flowMsg);
-          flowMsg.Clear();
         }}
       >
         Settlement Enquiry
       </button>
-      <button type="button" className="primary-button" onClick={() => getTerminalStatus(spi)}>
+      <button
+        type="button"
+        className="primary-button"
+        onClick={() => {
+          if (receiptEl.current !== null) {
+            receiptEl.current.innerHTML = '';
+          }
+          getTerminalStatus(spi);
+        }}
+      >
         Terminal Status
       </button>
     </div>
