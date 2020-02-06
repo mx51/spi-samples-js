@@ -23,7 +23,15 @@ function Setting({ spi, isPaired }: Props) {
 
   const [autoAddressState, setAutoAddressState] = useState();
 
+  useEffect(() => {
+    console.log('location', window.location.protocol);
+    setSecureWebSocket(window.location.protocol !== 'http:');
+  });
+
   const handleAutoAddressStateChange = useCallback((event: any) => {
+    if (autoAddress === true && serial === '') {
+      alert('Please enter serial Number');
+    }
     setAutoAddressState({ ...event.detail });
     console.log('.......eventdetail', event.detail);
     console.log(autoAddressState);
@@ -46,133 +54,141 @@ function Setting({ spi, isPaired }: Props) {
     };
   });
 
+  function handlePairingSaveSetting(e: React.SyntheticEvent) {
+    e.preventDefault();
+
+    spi.SetPosId(posId);
+    spi.SetTestMode(testMode);
+    spi.SetSerialNumber(serial);
+    spi.SetDeviceApiKey(apiKey);
+    spi.SetTestMode(testMode);
+    spi.SetSecureWebSockets(secureWebSocket && autoAddress);
+    spi.SetAutoAddressResolution(autoAddress);
+    spi.SetEftposAddress(eftpos);
+    window.localStorage.setItem('eftpos_address', eftpos);
+    window.localStorage.setItem('posID', posId);
+    window.localStorage.setItem('serial', serial);
+    window.localStorage.setItem('test_mode', testMode.toString());
+    window.localStorage.setItem('auto_address', autoAddress.toString());
+    window.localStorage.setItem('use_secure_web_sockets', secureWebSocket.toString());
+    return false;
+  }
+
   return (
     <div>
       <h2 className="sub-header">Pairing configuration</h2>
       <div className="ml-4 mr-4">
-        <Input
-          id="POS ID"
-          name="POS ID"
-          label="POS ID"
-          disabled={isPaired}
-          value={posId}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setPosId(e.currentTarget.value);
-              console.log(posId);
-            }
-          }}
-        />
-        <Input
-          id="API key"
-          name="API key"
-          disabled={isPaired}
-          label="API key"
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setApiKey(e.currentTarget.value);
-              console.log(serial);
-            }
-          }}
-          value="RamenPosDeviceIpApiKey"
-        />
-        <Input
-          id="serial"
-          name="serial"
-          label="Serial"
-          value={serial}
-          disabled={isPaired}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setSerial(e.currentTarget.value);
-              console.log(serial);
-            }
-          }}
-        />
-        <Input
-          id="EFTPOS"
-          name="EFTPOS"
-          label="EFTPOS"
-          disabled={autoAddress || isPaired}
-          value={eftpos}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setEftpos(e.currentTarget.value);
-              console.log(eftpos);
-            }
-          }}
-        />
-        <div>
-          <Form.Check
-            type="checkbox"
-            id="Test Mode"
-            label="Test Mode"
-            checked={testMode}
+        <form onSubmit={(e: React.SyntheticEvent) => handlePairingSaveSetting(e)}>
+          <Input
+            id="POS ID"
+            name="POS ID"
+            label="POS ID"
+            placeholder="POS ID"
+            pattern="\w+"
+            title="No special character Only alphanimeric"
+            disabled={isPaired}
+            value={posId}
+            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+              if (e && e.currentTarget) {
+                setPosId(e.currentTarget.value);
+                console.log(posId);
+              }
+            }}
+          />
+          <Input
+            id="API key"
+            name="API key"
+            disabled={isPaired}
+            label="API key"
+            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+              if (e && e.currentTarget) {
+                setApiKey(e.currentTarget.value);
+                console.log(serial);
+              }
+            }}
+            value="RamenPosDeviceIpApiKey"
+          />
+          <Input
+            id="serial"
+            name="serial"
+            label="Serial"
+            value={serial}
+            placeholder="000-000-000"
+            pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
+            minLength={0}
+            maxLength={11}
+            title="Please enter correct format of serial number"
             disabled={isPaired}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
-                setTestMode(e.currentTarget.checked);
-                console.log(e.currentTarget.checked);
-                console.log(testMode);
+                setSerial(e.currentTarget.value);
+                console.log(serial);
               }
             }}
-            className="m-2"
           />
-          <Form.Check
-            type="checkbox"
-            id="Secure WebSockets"
-            label="Secure WebSockets"
-            disabled={!autoAddress || isPaired}
-            checked={secureWebSocket}
+          <Input
+            id="EFTPOS"
+            name="EFTPOS"
+            label="EFTPOS"
+            disabled={autoAddress || isPaired}
+            value={eftpos}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
-                setSecureWebSocket(e.currentTarget.checked);
-                console.log(e.currentTarget.checked);
-                console.log(secureWebSocket);
+                setEftpos(e.currentTarget.value);
+                console.log(eftpos);
               }
             }}
-            className="m-2"
           />
-          <Form.Check
-            type="checkbox"
-            id="Auto Address"
-            label="Auto Address"
-            disabled={isPaired}
-            checked={autoAddress}
-            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              if (e && e.currentTarget) {
-                setAutoAddress(e.currentTarget.checked);
-                console.log(e.currentTarget.checked);
-              }
-            }}
-            className="m-2"
-          />
-          <button
-            type="button"
-            className="primary-button"
-            disabled={isPaired}
-            onClick={() => {
-              spi.SetPosId(posId);
-              spi.SetTestMode(testMode);
-              console.log('.......', testMode, autoAddress);
-              spi.SetSerialNumber(serial);
-              spi.SetDeviceApiKey(apiKey);
-              spi.SetTestMode(testMode);
-              spi.SetSecureWebSockets(secureWebSocket && autoAddress);
-              spi.SetAutoAddressResolution(autoAddress);
-              spi.SetEftposAddress(eftpos);
-              console.log(spi);
-              window.localStorage.setItem('eftpos_address', eftpos);
-              window.localStorage.setItem('posID', posId);
-              window.localStorage.setItem('serial', serial);
-              window.localStorage.setItem('test_mode', testMode.toString());
-              window.localStorage.setItem('auto_address', autoAddress.toString());
-              window.localStorage.setItem('use_secure_web_sockets', (secureWebSocket && autoAddress).toString());
-            }}
-          >
-            Save Setting
-          </button>
-        </div>
+          <div>
+            <Form.Check
+              type="checkbox"
+              id="Test Mode"
+              label="Test Mode"
+              checked={testMode}
+              disabled={isPaired}
+              onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                if (e && e.currentTarget) {
+                  setTestMode(e.currentTarget.checked);
+                  console.log(e.currentTarget.checked);
+                  console.log(testMode);
+                }
+              }}
+              className="m-2"
+            />
+            <Form.Check
+              type="checkbox"
+              id="Secure WebSockets"
+              label="Secure WebSockets"
+              disabled
+              checked={secureWebSocket}
+              onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                if (e && e.currentTarget) {
+                  setSecureWebSocket(e.currentTarget.checked);
+                  console.log(e.currentTarget.checked);
+                  console.log(secureWebSocket);
+                }
+              }}
+              className="m-2"
+            />
+            <Form.Check
+              type="checkbox"
+              id="Auto Address"
+              label="Auto Address"
+              disabled={isPaired}
+              checked={autoAddress}
+              onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                if (e && e.currentTarget) {
+                  setAutoAddress(e.currentTarget.checked);
+                  console.log(e.currentTarget.checked);
+                }
+              }}
+              className="m-2"
+            />
+            <button type="submit" className="primary-button" disabled={isPaired}>
+              Save Setting
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 
 fieldset.input {
   border-radius: 5px;
-  margin-bottom: 1rem;
+  margin-bottom: .7rem;
 }
 
 fieldset.input:focus-within {

@@ -11,8 +11,30 @@ function Input(props: {
   disabled?: boolean;
   min?: string;
   onKeyPress?: any;
+  pattern?: string;
+  minLength?: number;
+  maxLength?: number;
+  placeholder?: any;
+  title?: any;
+  defaultValue?: any;
 }) {
-  const { id, label, name, onChange, value, type, disabled, min, onKeyPress } = props;
+  const {
+    id,
+    label,
+    name,
+    onChange,
+    value,
+    type,
+    disabled,
+    min,
+    onKeyPress,
+    pattern,
+    maxLength,
+    minLength,
+    placeholder,
+    title,
+    defaultValue,
+  } = props;
   console.log(id, label, name, value);
 
   return (
@@ -26,7 +48,13 @@ function Input(props: {
           min={min}
           onKeyPress={onKeyPress}
           value={value}
+          pattern={pattern}
+          maxLength={maxLength}
+          minLength={minLength}
+          placeholder={placeholder}
+          title={title}
           required
+          defaultValue={defaultValue}
           onChange={e => {
             if (onChange) onChange(e);
           }}
@@ -38,7 +66,13 @@ function Input(props: {
           disabled={disabled}
           min={min}
           onKeyPress={onKeyPress}
+          pattern={pattern}
+          maxLength={maxLength}
+          minLength={minLength}
+          placeholder={placeholder}
+          title={title}
           required
+          defaultValue={defaultValue}
           onChange={e => {
             if (onChange) onChange(e);
           }}
