@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
+import { SpiStatus } from '@assemblypayments/spi-client-js';
 // import { getSpiVersion } from '../../services/_common/uiHelpers';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
@@ -14,12 +15,24 @@ spiService.start();
 function BurgerPos() {
   const [pairingState, setPairingState] = useState({
     AwaitingCheckFromPos: false,
-    Finished: false,
+    ConfirmationCode: '',
+    Finished: true,
+  });
+  const [statusState, setStatusState] = useState(SpiStatus.Unpaired);
+  const handleStatusChange = useCallback((event: any) => {
+    setStatusState(event.detail);
+  }, []);
+  useEffect(() => {
+    document.addEventListener('StatusChanged', handleStatusChange);
+    return function cleanup() {
+      document.addEventListener('StatusChanged', handleStatusChange);
+    };
   });
   const handlePairingStatusChange = useCallback((event: any) => {
-    const { AwaitingCheckFromPos, Finished } = event.detail;
+    const { AwaitingCheckFromPos, ConfirmationCode, Finished } = event.detail;
     setPairingState({
       AwaitingCheckFromPos,
+      ConfirmationCode,
       Finished,
     });
     console.log(event.detail);
@@ -76,8 +89,10 @@ function BurgerPos() {
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing
+                  confirmationCode={pairingState.ConfirmationCode}
                   isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
                   isFinishedPairing={pairingState.Finished}
+                  status={statusState}
                   spi={spiService._spi}
                 />
               </Tab.Pane>

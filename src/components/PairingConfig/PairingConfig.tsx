@@ -1,5 +1,5 @@
 import React, { useState, SyntheticEvent, useCallback, useEffect } from 'react';
-import { DeviceAddressResponseCode } from '@assemblypayments/spi-client-js';
+import { DeviceAddressResponseCode, SpiStatus } from '@assemblypayments/spi-client-js';
 import { Form } from 'react-bootstrap';
 import Input from '../Input/Input';
 // import { pairing } from '../../services';
@@ -7,10 +7,10 @@ import './PairingConfig.css';
 
 type Props = {
   spi: any;
-  isPaired: boolean;
+  status: string;
 };
 
-function Setting({ spi, isPaired }: Props) {
+function Setting({ spi, status }: Props) {
   const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
   const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
   const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos_address') || '');
@@ -29,9 +29,6 @@ function Setting({ spi, isPaired }: Props) {
   });
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
-    if (autoAddress === true && serial === '') {
-      alert('Please enter serial Number');
-    }
     setAutoAddressState({ ...event.detail });
     console.log('.......eventdetail', event.detail);
     console.log(autoAddressState);
@@ -56,7 +53,9 @@ function Setting({ spi, isPaired }: Props) {
 
   function handlePairingSaveSetting(e: React.SyntheticEvent) {
     e.preventDefault();
-
+    if (autoAddress === true && serial === '') {
+      return alert('Please enter serial Number');
+    }
     spi.SetPosId(posId);
     spi.SetTestMode(testMode);
     spi.SetSerialNumber(serial);
@@ -73,6 +72,7 @@ function Setting({ spi, isPaired }: Props) {
     window.localStorage.setItem('use_secure_web_sockets', secureWebSocket.toString());
     return false;
   }
+  const isDisabled = status !== SpiStatus.Unpaired;
 
   return (
     <div>
@@ -86,7 +86,7 @@ function Setting({ spi, isPaired }: Props) {
             placeholder="POS ID"
             pattern="\w+"
             title="No special character Only alphanimeric"
-            disabled={isPaired}
+            disabled={isDisabled}
             value={posId}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
@@ -98,7 +98,7 @@ function Setting({ spi, isPaired }: Props) {
           <Input
             id="API key"
             name="API key"
-            disabled={isPaired}
+            disabled={isDisabled}
             label="API key"
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
@@ -114,11 +114,12 @@ function Setting({ spi, isPaired }: Props) {
             label="Serial"
             value={serial}
             placeholder="000-000-000"
-            pattern="[0-9]{3}-[0-9]{3}-[0-9]{3}"
-            minLength={0}
+            pattern="(?:[0-9]{3}-[0-9]{3}-[0-9]{3})?"
+            required={autoAddress === true}
+            minLength={11}
             maxLength={11}
             title="Please enter correct format of serial number"
-            disabled={isPaired}
+            disabled={isDisabled}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setSerial(e.currentTarget.value);
@@ -130,7 +131,7 @@ function Setting({ spi, isPaired }: Props) {
             id="EFTPOS"
             name="EFTPOS"
             label="EFTPOS"
-            disabled={autoAddress || isPaired}
+            disabled={autoAddress || isDisabled}
             value={eftpos}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
@@ -145,7 +146,7 @@ function Setting({ spi, isPaired }: Props) {
               id="Test Mode"
               label="Test Mode"
               checked={testMode}
-              disabled={isPaired}
+              disabled={isDisabled}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
                   setTestMode(e.currentTarget.checked);
@@ -174,7 +175,7 @@ function Setting({ spi, isPaired }: Props) {
               type="checkbox"
               id="Auto Address"
               label="Auto Address"
-              disabled={isPaired}
+              disabled={isDisabled}
               checked={autoAddress}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
@@ -184,7 +185,7 @@ function Setting({ spi, isPaired }: Props) {
               }}
               className="m-2"
             />
-            <button type="submit" className="primary-button" disabled={isPaired}>
+            <button type="submit" className="primary-button" disabled={isDisabled}>
               Save Setting
             </button>
           </div>

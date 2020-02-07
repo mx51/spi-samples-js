@@ -17,6 +17,7 @@ function Input(props: {
   placeholder?: any;
   title?: any;
   defaultValue?: any;
+  required?: Boolean;
 }) {
   const {
     id,
@@ -34,8 +35,9 @@ function Input(props: {
     placeholder,
     title,
     defaultValue,
+    required,
   } = props;
-  console.log(id, label, name, value);
+  console.log(id, label, name, value, required);
 
   return (
     <fieldset className="input p-2">
@@ -53,7 +55,7 @@ function Input(props: {
           minLength={minLength}
           placeholder={placeholder}
           title={title}
-          required
+          required={required === true}
           defaultValue={defaultValue}
           onChange={e => {
             if (onChange) onChange(e);
@@ -71,7 +73,7 @@ function Input(props: {
           minLength={minLength}
           placeholder={placeholder}
           title={title}
-          required
+          required={required === true}
           defaultValue={defaultValue}
           onChange={e => {
             if (onChange) onChange(e);

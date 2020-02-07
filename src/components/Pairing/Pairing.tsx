@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import React, { useRef, useCallback, useEffect } from 'react';
+import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { Logger } from '@assemblypayments/spi-client-js';
 import PairingConfig from '../PairingConfig/PairingConfig';
 import Flow from '../Flow/Flow';
@@ -9,31 +9,20 @@ import './Pairing.css';
 import { pairing as pairingService } from '../../services';
 
 type Props = {
+  confirmationCode: string;
   isAwaitingConfirmation: boolean;
   isFinishedPairing: boolean;
   spi: any;
+  status: string;
 };
 
-function Pairing({ spi, isAwaitingConfirmation, isFinishedPairing }: Props) {
-  const [isPaired, setIsPaired] = useState(localStorage.getItem('isPaired') === 'true');
+function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPairing, status }: Props) {
   const flowEl = useRef(null);
+  // const [isModalShown, setIsModalShown] = useState(false);
 
   console.log('@@@', flowEl);
 
-  useEffect(() => {
-    localStorage.setItem('isPaired', isPaired.toString());
-  }, [isPaired]);
-
-  // const [pairingState, setPairingState] = useState({
-  //   AwaitingCheckFromPos: false,
-  //   Finished: false,
-  // });
   const handlePairingStatusChange = useCallback((event: any) => {
-    //   const { AwaitingCheckFromPos, Finished } = event.detail;
-    //   setPairingState({
-    //     AwaitingCheckFromPos,
-    //     Finished,
-    //   });
     const flowMsg = new Logger(flowEl.current);
     pairingService.printPairingStatus(flowMsg, spi);
     console.log('.......eventdetail', event.detail);
@@ -47,27 +36,16 @@ function Pairing({ spi, isAwaitingConfirmation, isFinishedPairing }: Props) {
   });
 
   // eslint-disable-next-line no-shadow
-  function onPairingStatusChange(isPaired: Boolean) {
-    setIsPaired(isPaired === true);
-    if (isPaired) {
-      pairingService.pair(spi);
-    } else {
-      pairingService.unpair(spi);
-    }
-    console.log(isPaired);
-  }
-
   return (
     <div>
       <Row>
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
-            <PairingConfig spi={spi} isPaired={isPaired} />
+            <PairingConfig spi={spi} status={status} />
           </div>
           <div className="flex-fill">
             <Status
-              isPaired={isPaired}
-              onChangeStatus={onPairingStatusChange}
+              status={status}
               isAwaitingConfirmation={isAwaitingConfirmation}
               isFinishedPairing={isFinishedPairing}
               spi={spi}
@@ -77,6 +55,25 @@ function Pairing({ spi, isAwaitingConfirmation, isFinishedPairing }: Props) {
         <Col lg={8} className="sub-column d-flex flex-column">
           <div className="flex-fill text-break">
             <Flow ref={flowEl} />
+            <Modal show={isAwaitingConfirmation} onHide={() => pairingService.pairingCancel(spi)}>
+              <Modal.Header closeButton>
+                <Modal.Title>Confirmation Code</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>
+                <h4>{confirmationCode}</h4>
+                <Button
+                  variant="primary"
+                  className="btn-custom"
+                  onClick={() => {
+                    pairingService.pairingConfirmCode(spi);
+                    // setModel('');
+                  }}
+                  block
+                >
+                  OK
+                </Button>
+              </Modal.Body>
+            </Modal>
           </div>
         </Col>
       </Row>

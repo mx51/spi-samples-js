@@ -1,28 +1,25 @@
 import React from 'react';
 import './Status.css';
+import { SpiStatus } from '@assemblypayments/spi-client-js';
 import { Alert } from 'react-bootstrap';
 import { pairing as pairingService } from '../../services';
 
-function Status(props: {
-  isPaired: Boolean;
-  onChangeStatus: Function;
-  isAwaitingConfirmation: Boolean;
-  isFinishedPairing: Boolean;
-  spi: any;
-}) {
-  const { isPaired, onChangeStatus, isAwaitingConfirmation, isFinishedPairing, spi } = props;
+function Status(props: { isAwaitingConfirmation: Boolean; isFinishedPairing: Boolean; spi: any; status: string }) {
+  const { isAwaitingConfirmation, isFinishedPairing, spi, status } = props;
   console.log('isAwaitingConfirmation', isAwaitingConfirmation);
   console.log('isFinishedPairing', isFinishedPairing);
-  console.log('isPaired', isPaired);
 
   let message = 'Unpaired';
   let alert: 'danger' | 'success' | 'warning' = 'danger';
 
-  if (isPaired && isFinishedPairing) {
+  if (status === SpiStatus.PairedConnected && isFinishedPairing) {
     message = 'Paired connected';
     alert = 'success';
-  } else if (isPaired && !isFinishedPairing) {
+  } else if (status === SpiStatus.Unpaired && !isFinishedPairing) {
     message = 'Pairing';
+    alert = 'warning';
+  } else if (status === SpiStatus.PairedConnecting) {
+    message = 'Attempting to Connect';
     alert = 'warning';
   } else {
     message = 'Unpaired';
@@ -35,30 +32,30 @@ function Status(props: {
 
       <div className="ml-3 mr-3">
         <Alert variant={alert}> {message} </Alert>
-
-        {isPaired ? (
-          <button type="button" onClick={() => onChangeStatus(false)}>
-            Unpair
-          </button>
-        ) : (
-          <button type="button" onClick={() => onChangeStatus(true)}>
-            Pair
-          </button>
+        {isFinishedPairing && (
+          <>
+            {status === SpiStatus.Unpaired ? (
+              <button type="button" onClick={() => pairingService.pair(spi)}>
+                Pair
+              </button>
+            ) : (
+              <button type="button" onClick={() => pairingService.unpair(spi)}>
+                Unpair
+              </button>
+            )}
+          </>
         )}
-        {isPaired && !isFinishedPairing && (
+        {status === SpiStatus.Unpaired && !isFinishedPairing && (
           <div>
-            {isAwaitingConfirmation && (
-              <button type="button" onClick={() => pairingService.pairingConfirmCode(spi)}>
-                Confirm code
-              </button>
-            )}
-            {isPaired && (
-              <button type="button" onClick={() => pairingService.pairingCancel(spi)}>
-                Cancel Pairing
-              </button>
-            )}
+            {/* {isAwaitingConfirmation && (
+              // <button type="button" onClick={() => pairingService.pairingConfirmCode(spi)}>
+              //   Confirm code
+              // </button>
+            )} */}
+            <button type="button" onClick={() => pairingService.pairingCancel(spi)}>
+              Cancel Pairing
+            </button>
           </div>
-          // {pairingState.Finished && <button type="button">Ok</button>}
         )}
       </div>
     </div>
