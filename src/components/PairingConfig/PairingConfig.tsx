@@ -61,7 +61,7 @@ function Setting({ spi, status }: Props) {
     spi.SetSerialNumber(serial);
     spi.SetDeviceApiKey(apiKey);
     spi.SetTestMode(testMode);
-    spi.SetSecureWebSockets(secureWebSocket && autoAddress);
+    spi.SetSecureWebSockets(secureWebSocket);
     spi.SetAutoAddressResolution(autoAddress);
     spi.SetEftposAddress(eftpos);
     window.localStorage.setItem('eftpos_address', eftpos);
