@@ -28,6 +28,7 @@ function OrderPay(props: {
         event.preventDefault();
         return false;
       }
+      setPromptCashout(false);
       return true;
     }
 
@@ -61,6 +62,7 @@ function OrderPay(props: {
           type="checkbox"
           id="prompt_cashout"
           className="m-2"
+          disabled={tipAmount > 0}
           checked={promptCashout}
           label="Prompt for Cashout"
           onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}

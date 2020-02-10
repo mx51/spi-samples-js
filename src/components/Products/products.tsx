@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { SpiStatus } from '@assemblypayments/spi-client-js';
 import Checkoutnew from '../Checkoutnew/Checkoutnew';
 import Order from '../Order/Order';
 import './Products.scss';
@@ -8,10 +9,11 @@ import { transactionFlow as transactionFlowService } from '../../services';
 
 type Props = {
   spi: any;
+  status: string;
   // purchaseState: any;
 };
 
-function Products({ spi }: Props) {
+function Products({ spi, status }: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -107,7 +109,7 @@ function Products({ spi }: Props) {
       ],
     },
   ];
-  const [isPaired] = useState(localStorage.getItem('isPaired') === 'true');
+  // const [isPaired] = useState(localStorage.getItem('isPaired') === 'true');
 
   const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
   const [checkout, setCheckout] = useState(false);
@@ -205,11 +207,16 @@ function Products({ spi }: Props) {
     setTransactionAction('');
   }
   console.log('Checkout .........', checkout);
+  console.log('pairedConnected .........', SpiStatus.PairedConnected);
   return (
     <>
       <Row>
         <Col lg={8}>
-          <div className={isPaired ? 'd-none' : 'pairing_banner'}>Please Check your device Paring setting!!</div>
+          {status === SpiStatus.PairedConnected ? (
+            ''
+          ) : (
+            <div className="pairing_banner">Please check your device Paring setting!!</div>
+          )}
 
           {allProducts.map(cat => (
             <ProductList

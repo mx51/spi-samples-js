@@ -54,7 +54,7 @@ function CheckoutNew(props: {
     const receipt = new Logger(receiptEl.current);
 
     console.log('???', event.detail);
-
+    console.log(totalPaid);
     if (event.detail.AwaitingSignatureCheck) {
       setShowSigApproval(true);
     }
@@ -130,8 +130,6 @@ function CheckoutNew(props: {
 
   // eslint-disable-next-line no-shadow
   function handleCashoutPay(cashoutAmount: number) {
-    console.log(cashoutAmount);
-    console.log('surcharge......', surchargeAmount);
     const flowMsg = new Logger(flowEl.current);
 
     cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
@@ -139,7 +137,6 @@ function CheckoutNew(props: {
   }
 
   function handleBack() {
-    console.log(totalPaid);
     if (purchaseState.Finished) {
       onNoThanks();
       setTotalPaid(0);
@@ -174,7 +171,6 @@ function CheckoutNew(props: {
       />
     );
   }
-  console.log(showRelatedPay);
 
   function transactionSuccessful() {
     return (
@@ -182,7 +178,12 @@ function CheckoutNew(props: {
         {!purchaseState.Finished && (
           <div className="transaction-successful">
             <p>Processing Transaction</p>
-            <button type="button" onClick={() => transactionFlowService.cancelTransaction(spi)}>
+            <button
+              type="button"
+              onClick={() => {
+                transactionFlowService.cancelTransaction(spi);
+              }}
+            >
               Cancel
             </button>
           </div>
@@ -210,7 +211,6 @@ function CheckoutNew(props: {
     );
   }
 
-  console.log('visible.......', visible);
   return (
     <div className={`checkout-page1 ${visible ? '' : 'd-none'}`}>
       <SigApproval

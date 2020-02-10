@@ -66,7 +66,6 @@ function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPair
                   className="btn-custom"
                   onClick={() => {
                     pairingService.pairingConfirmCode(spi);
-                    // setModel('');
                   }}
                   block
                 >

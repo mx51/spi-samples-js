@@ -85,7 +85,7 @@ function BurgerPos() {
           <Col sm={10}>
             <Tab.Content>
               <Tab.Pane eventKey="sample">
-                <Products spi={spiService._spi} />
+                <Products spi={spiService._spi} status={statusState} />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing

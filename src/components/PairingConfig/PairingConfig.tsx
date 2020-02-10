@@ -131,6 +131,7 @@ function Setting({ spi, status }: Props) {
             id="EFTPOS"
             name="EFTPOS"
             label="EFTPOS"
+            placeholder="00.000.0.000"
             disabled={autoAddress || isDisabled}
             value={eftpos}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
