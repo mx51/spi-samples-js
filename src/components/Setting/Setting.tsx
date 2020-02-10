@@ -30,8 +30,6 @@ function Setting(props: { spi: any }) {
 
     if (event.detail.Finished) {
       console.log(receipt);
-      console.log('eventdetail @@@@@@', event.detail);
-      console.log('error##########', event.detail.Response.Data.error_reason);
       if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
         // alert('wrong date');
         setModel('Please enter current years date');

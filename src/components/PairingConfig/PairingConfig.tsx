@@ -56,6 +56,9 @@ function Setting({ spi, status }: Props) {
     if (autoAddress === true && serial === '') {
       return alert('Please enter serial Number');
     }
+    if (secureWebSocket === true && autoAddress === false) {
+      return alert('Please click auto address and enter serial number as you are on secure connection');
+    }
     spi.SetPosId(posId);
     spi.SetTestMode(testMode);
     spi.SetSerialNumber(serial);
@@ -161,7 +164,7 @@ function Setting({ spi, status }: Props) {
               type="checkbox"
               id="Secure WebSockets"
               label="Secure WebSockets"
-              disabled
+              disabled={secureWebSocket === true}
               checked={secureWebSocket}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
