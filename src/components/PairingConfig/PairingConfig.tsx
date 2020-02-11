@@ -25,7 +25,9 @@ function Setting({ spi, status }: Props) {
 
   useEffect(() => {
     console.log('location', window.location.protocol);
-    setSecureWebSocket(window.location.protocol !== 'http:');
+    if (window.location.protocol === 'https:') {
+      setSecureWebSocket(true);
+    }
   });
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
@@ -164,7 +166,7 @@ function Setting({ spi, status }: Props) {
               type="checkbox"
               id="Secure WebSockets"
               label="Secure WebSockets"
-              disabled={secureWebSocket === true}
+              disabled={window.location.protocol !== 'http:'}
               checked={secureWebSocket}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
