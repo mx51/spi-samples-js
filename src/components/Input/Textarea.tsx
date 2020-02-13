@@ -1,5 +1,5 @@
 import React from 'react';
-import './Input.css';
+import './Input.scss';
 
 function Textarea(props: { id: string; label: string; name: string; onChange?: Function; value?: string }) {
   const { id, label, name, onChange, value } = props;

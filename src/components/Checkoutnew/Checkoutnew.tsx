@@ -2,7 +2,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@assemblypayments/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
-import './Checkoutnew.css';
+import './Checkoutnew.scss';
 import Tick from '../Tick';
 import OrderPay from '../OrderPay/OrderPay';
 import RefundPay from '../RefundPay/RefundPay';
@@ -180,6 +180,7 @@ function CheckoutNew(props: {
             <p>Processing Transaction</p>
             <button
               type="button"
+              className="primary-button"
               onClick={() => {
                 transactionFlowService.cancelTransaction(spi);
               }}
@@ -191,7 +192,7 @@ function CheckoutNew(props: {
         {purchaseState.Finished && SuccessState.Failed === purchaseState.Success && (
           <div className="transaction-successful">
             <p>{new PurchaseResponse(purchaseState.Response).GetResponseText()}</p>
-            <button type="button" onClick={() => handleBack()}>
+            <button type="button" className="primary-button" onClick={() => handleBack()}>
               Sorry!! Try Again
             </button>
           </div>
@@ -201,7 +202,7 @@ function CheckoutNew(props: {
             <Tick className="color-purple" />
             <div className="transaction-successful-button">
               <p>Transaction successful!</p>
-              <button type="button" onClick={() => handleBack()}>
+              <button type="button" className="primary-button" onClick={() => handleBack()}>
                 OK
               </button>
             </div>

@@ -1,7 +1,7 @@
 import React, { useState, SyntheticEvent } from 'react';
 import { TransactionOptions } from '@assemblypayments/spi-client-js';
-
-import { Form } from 'react-bootstrap';
+import Checkbox from '../Checkbox/Checkbox';
+// import { Form } from 'react-bootstrap';
 import Textarea from '../Input/Textarea';
 import { terminalStatus as terminalStatusService } from '../../services';
 
@@ -19,7 +19,7 @@ function SettingConfig(props: { spi: any }) {
     <div>
       <h2 className="sub-header">Setting</h2>
       <div className="mr-3 ml-3">
-        <Form.Check
+        <Checkbox
           type="checkbox"
           id="check-receipt-eftpos"
           label="Receipt from EFTPOS"
@@ -31,7 +31,7 @@ function SettingConfig(props: { spi: any }) {
             }
           }}
         />
-        <Form.Check
+        <Checkbox
           type="checkbox"
           id="check-sig-eftpos"
           label="Sig from EFTPOS"
@@ -43,7 +43,7 @@ function SettingConfig(props: { spi: any }) {
             }
           }}
         />
-        <Form.Check
+        <Checkbox
           type="checkbox"
           id="print-merchant-copy"
           label="Print Merchant Copy"

@@ -1,5 +1,4 @@
 import React from 'react';
-import './Status.css';
 import { SpiStatus } from '@assemblypayments/spi-client-js';
 import { Alert } from 'react-bootstrap';
 import { pairing as pairingService } from '../../services';
@@ -35,11 +34,11 @@ function Status(props: { isAwaitingConfirmation: Boolean; isFinishedPairing: Boo
         {isFinishedPairing && (
           <>
             {status === SpiStatus.Unpaired ? (
-              <button type="button" onClick={() => pairingService.pair(spi)}>
+              <button type="button" className="primary-button" onClick={() => pairingService.pair(spi)}>
                 Pair
               </button>
             ) : (
-              <button type="button" onClick={() => pairingService.unpair(spi)}>
+              <button type="button" className="primary-button" onClick={() => pairingService.unpair(spi)}>
                 Unpair
               </button>
             )}
@@ -52,7 +51,7 @@ function Status(props: { isAwaitingConfirmation: Boolean; isFinishedPairing: Boo
               //   Confirm code
               // </button>
             )} */}
-            <button type="button" onClick={() => pairingService.pairingCancel(spi)}>
+            <button type="button" className="primary-button" onClick={() => pairingService.pairingCancel(spi)}>
               Cancel Pairing
             </button>
           </div>

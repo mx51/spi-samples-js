@@ -1,5 +1,5 @@
 import React from 'react';
-import './Input.css';
+import './Input.scss';
 
 function Input(props: {
   id: string;

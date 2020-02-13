@@ -1,5 +1,4 @@
 import React, { forwardRef } from 'react';
-import './Flow.css';
 
 type Props = {};
 

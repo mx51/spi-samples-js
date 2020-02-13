@@ -1,26 +1,28 @@
+@import '../../components/_ColorPalette.scss';
+
+
  div.menu-sidebar {
-  background-color: #e9e5f5;
+  background-color: $tertiary;
   min-height:100vh;
-  color: #333;
   padding-right: 0;
 }
 
 .sidebar-links a.nav-link, .sidebar-links a.nav-link.active {
   border-radius: 0;
-  color:#130055;
+  color: $secoundry;
   text-align: right;
   letter-spacing: .2rem;
   padding: 22px;
 }
 
 .sidebar-links a.nav-link.active {
-  background-color: white;
+  background-color: $background;
   font-weight: bold;
 }
 
 h1.logo {
   background-color: transparent;
-  background-color: #e9e5f5;
+  background-color: $tertiary;
 }
 
 .window-fix {

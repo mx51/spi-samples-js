@@ -1,11 +1,15 @@
+
+@import '../ColorPalette';
+
+
 .window-fix {
   width: calc(100% + 15px);
 }
 .pairing_banner{
   margin-top: 1rem;
-  background-color: rgb(136, 32, 32);
+  background-color: $banner;
   font-weight: 900;
-  color:white;
+  color: $background;
   text-align: center;
   padding:.5rem;
   letter-spacing: .2rem;

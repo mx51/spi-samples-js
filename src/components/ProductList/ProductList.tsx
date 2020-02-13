@@ -1,6 +1,6 @@
 import React from 'react';
 import { Category } from '../types';
-import './ProductList.css';
+import './ProductList.scss';
 
 function ProductList(props: {
   category: Category;

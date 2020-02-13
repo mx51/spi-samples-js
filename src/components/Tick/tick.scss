@@ -1,12 +1,11 @@
-// Colors
-$green: #130055;
-$white: #130055;
+@import '../ColorPalette';
+
 
 // Misc
 $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
 
 .color-purple {
-  color:  #452d9e;
+  color: $primary;
   height:3rem;
   width:3rem;
   border-radius: 9rem;
@@ -20,7 +19,6 @@ $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
   stroke-width: 3;
   stroke: currentColor;
   stroke-miterlimit: 10;
-  box-shadow: inset 0px 0px 0px $green;
   animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both;
 }
 
@@ -55,11 +53,5 @@ $curve: cubic-bezier(0.650, 0.000, 0.450, 1.000);
   }
   50% {
     transform: scale3d(1.1, 1.1, 1);
-  }
-}
-
-@keyframes fill {
-  50% {
-    box-shadow: inset 0px 0px 0px 30px $green;
   }
 }

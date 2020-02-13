@@ -215,7 +215,7 @@ function Products({ spi, status }: Props) {
           {status === SpiStatus.PairedConnected ? (
             ''
           ) : (
-            <div className="pairing_banner">Please check your device Paring setting!!</div>
+            <div className="pairing_banner">Please check your device Pairing setting!!</div>
           )}
 
           {allProducts.map(cat => (

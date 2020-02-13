@@ -5,7 +5,6 @@ import PairingConfig from '../PairingConfig/PairingConfig';
 import Flow from '../Flow/Flow';
 import Status from '../Status/Status';
 // import Actions from '../Actions/Actions';
-import './Pairing.css';
 import { pairing as pairingService } from '../../services';
 
 type Props = {

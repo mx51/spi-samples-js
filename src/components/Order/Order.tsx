@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
-import './Order.css';
+import './Order.scss';
 
 function SurchargeModal(props: {
   show: boolean;
@@ -34,7 +34,7 @@ function SurchargeModal(props: {
           onChange={(e: any) => setSurcharge(Number.parseInt(e.target.value, 10))}
         />
         <p className="ml-2">Cents</p>
-        <Button variant="primary" className="btn-custom" onClick={() => applySurcharge()} block>
+        <Button variant="primary" className="btn-custom primary-button" onClick={() => applySurcharge()} block>
           Apply
         </Button>
       </Modal.Body>

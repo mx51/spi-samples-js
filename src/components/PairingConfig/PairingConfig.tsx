@@ -1,9 +1,9 @@
 import React, { useState, SyntheticEvent, useCallback, useEffect } from 'react';
 import { DeviceAddressResponseCode, SpiStatus } from '@assemblypayments/spi-client-js';
-import { Form } from 'react-bootstrap';
+import { Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
+import Checkbox from '../Checkbox/Checkbox';
 // import { pairing } from '../../services';
-import './PairingConfig.css';
 
 type Props = {
   spi: any;
@@ -22,11 +22,14 @@ function Setting({ spi, status }: Props) {
   );
 
   const [autoAddressState, setAutoAddressState] = useState();
+  const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
     console.log('location', window.location.protocol);
     if (window.location.protocol === 'https:') {
       setSecureWebSocket(true);
+      setAutoAddress(true);
+      setTestMode(true);
     }
   });
 
@@ -55,11 +58,13 @@ function Setting({ spi, status }: Props) {
 
   function handlePairingSaveSetting(e: React.SyntheticEvent) {
     e.preventDefault();
-    if (autoAddress === true && serial === '') {
-      return alert('Please enter serial Number');
+    if (autoAddress === false && eftpos === '') {
+      setErrorMsg('Please enter EFTPOS Number');
+      return;
     }
-    if (secureWebSocket === true && autoAddress === false) {
-      return alert('Please click auto address and enter serial number as you are on secure connection');
+    if (posId === '') {
+      setErrorMsg('Please enter pos ID');
+      return;
     }
     spi.SetPosId(posId);
     spi.SetTestMode(testMode);
@@ -75,7 +80,6 @@ function Setting({ spi, status }: Props) {
     window.localStorage.setItem('test_mode', testMode.toString());
     window.localStorage.setItem('auto_address', autoAddress.toString());
     window.localStorage.setItem('use_secure_web_sockets', secureWebSocket.toString());
-    return false;
   }
   const isDisabled = status !== SpiStatus.Unpaired;
 
@@ -83,6 +87,17 @@ function Setting({ spi, status }: Props) {
     <div>
       <h2 className="sub-header">Pairing configuration</h2>
       <div className="ml-4 mr-4">
+        <Modal show={errorMsg !== ''} onHide={() => setErrorMsg('')}>
+          <Modal.Header closeButton>
+            <Modal.Title>Alert</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{errorMsg}</p>
+            <Button variant="primary" className="btn-custom" onClick={() => setErrorMsg('')} block>
+              OK
+            </Button>
+          </Modal.Body>
+        </Modal>
         <form onSubmit={(e: React.SyntheticEvent) => handlePairingSaveSetting(e)}>
           <Input
             id="POS ID"
@@ -147,12 +162,12 @@ function Setting({ spi, status }: Props) {
             }}
           />
           <div>
-            <Form.Check
+            <Checkbox
               type="checkbox"
               id="Test Mode"
               label="Test Mode"
               checked={testMode}
-              disabled={isDisabled}
+              disabled={window.location.protocol !== 'http:' || isDisabled}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
                   setTestMode(e.currentTarget.checked);
@@ -160,36 +175,37 @@ function Setting({ spi, status }: Props) {
                   console.log(testMode);
                 }
               }}
-              className="m-2"
+              // className="m-2"
             />
-            <Form.Check
+            <Checkbox
               type="checkbox"
               id="Secure WebSockets"
               label="Secure WebSockets"
-              disabled={window.location.protocol !== 'http:'}
+              disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={secureWebSocket}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
                   setSecureWebSocket(e.currentTarget.checked);
+                  setAutoAddress(e.currentTarget.checked);
                   console.log(e.currentTarget.checked);
                   console.log(secureWebSocket);
                 }
               }}
-              className="m-2"
+              // className="m-2"
             />
-            <Form.Check
+            <Checkbox
               type="checkbox"
               id="Auto Address"
               label="Auto Address"
-              disabled={isDisabled}
+              disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={autoAddress}
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                if (e && e.currentTarget) {
+                if (e && e.currentTarget && !secureWebSocket) {
                   setAutoAddress(e.currentTarget.checked);
                   console.log(e.currentTarget.checked);
                 }
               }}
-              className="m-2"
+              // className="m-2"
             />
             <button type="submit" className="primary-button" disabled={isDisabled}>
               Save Setting

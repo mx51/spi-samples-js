@@ -1,5 +1,8 @@
+
+@import '../ColorPalette';
+
 div.order-sidebar {
-  border-left: 1px solid grey;
+  border-left: 1px solid $secoundryGrey;
   padding: 0;
   min-height: 100vh;
 }
@@ -9,44 +12,15 @@ ul {
   padding: 1rem;
 }
 
-.orderList {
-  border: none;
-  width: 100%;
-  text-align: left;
-  padding: 0;
-  display: flex;
-}
-.orderLists {
-  border: none;
-  width: 100%;
-  text-align: left;
-  padding: 0;
-  display: flex;
-  background-color: grey;
-}
-
 .total {
   position: absolute;
   bottom: 4rem;
   right: 0;
   left: 0;
   padding: 1rem;
-  color: #575656;
+  color: $primaryGrey;
   font-size: 1rem;
   letter-spacing: 1.25px;
-}
-
-.total-amount {
-  font-size: 1.5rem;
-}
-
-.order-amount {
-  display: inline-block;
-  position: relative;
-  font-size: 2rem;
-  margin-left: 14rem;
-  color: #575656;
-  font-weight: 400;
 }
 
 .quantity-buttons > button {
@@ -55,7 +29,7 @@ ul {
 }
 
 .quantity-buttons > div.quantity-label {
-  border: 1px solid rgb(186, 186, 186);
+  border: 1px solid $secoundryGrey;
   display: inline-block;
   padding: 0.5rem 0.8rem;
 }

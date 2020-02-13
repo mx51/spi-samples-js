@@ -11,7 +11,6 @@ import {
   transactionFlow as transactionFlowService,
 } from '../../services';
 import PosUtils from '../../services/_common/pos';
-import './Setting.css';
 
 function Setting(props: { spi: any }) {
   const { spi } = props;

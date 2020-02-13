@@ -1,16 +1,19 @@
 
+@import '../ColorPalette';
+
+
 fieldset.input {
   border-radius: 5px;
   margin-bottom: .7rem;
 }
 
 fieldset.input:focus-within {
-  border: 1px solid #210096;
+  border: 1px solid $primary;
 }
 
 
 fieldset.input legend {
-  color: #210096;
+  color: $primary;
   font-size: 1rem;
   letter-spacing: 1.25px;
   margin: 0;
