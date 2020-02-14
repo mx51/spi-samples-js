@@ -42,10 +42,10 @@ function Setting({ spi, status }: Props) {
       case DeviceAddressResponseCode.SUCCESS:
         setEftpos(deviceAddressStatus.Address);
         window.localStorage.setItem('eftpos_address', deviceAddressStatus.Address);
-        console.log(`Device Address has been updated to ${deviceAddressStatus.Address}`);
+        setErrorMsg(`Device Address has been updated to ${deviceAddressStatus.Address}`);
         break;
       default:
-        console.log('The serial number is invalid! or The IP address have not changed!');
+        setErrorMsg('The serial number is invalid!');
         break;
     }
   }, []);
