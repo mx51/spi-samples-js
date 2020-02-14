@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { SpiStatus } from '@assemblypayments/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import './Order.scss';
@@ -51,6 +52,7 @@ function Order(props: {
   handleApplySurcharge: Function;
   surchargeAmount: number;
   setSurchargeAmount: Function;
+  status: string;
 }) {
   const {
     list,
@@ -61,10 +63,12 @@ function Order(props: {
     handleApplySurcharge,
     surchargeAmount,
     setSurchargeAmount,
+    status,
   } = props;
 
   const [showSurcharge, setShowSurcharge] = useState(false);
   const [surcharge, setSurcharge] = useState<number>(0);
+  const [errorMsg, setErrorMsg] = useState('');
 
   // const [surchargeAmount, setSurchargeAmount] = useState(0);
 
@@ -94,6 +98,15 @@ function Order(props: {
       setSurchargeAmount(0);
     }
     onChangeProductQuantity(id, -1);
+  }
+
+  function handleCheckout() {
+    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+      console.log(SpiStatus.Unpaired, SpiStatus.PairedConnecting, status);
+      setErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+    } else {
+      onCheckout();
+    }
   }
 
   return (
@@ -127,6 +140,17 @@ function Order(props: {
           </button>
         </Col>
       </Row>
+      <Modal show={errorMsg !== ''} onHide={() => setErrorMsg('')}>
+        <Modal.Header closeButton>
+          <Modal.Title>Alert</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{errorMsg}</p>
+          <Button variant="primary" className="btn-custom" onClick={() => setErrorMsg('')} block>
+            OK
+          </Button>
+        </Modal.Body>
+      </Modal>
       <div className="orderListScroll">
         <ul className="nobull">
           {list.map((item: any) => (
@@ -191,7 +215,7 @@ function Order(props: {
           </Row>
         </div>
       </div>
-      <button type="button" className="primary-button checkout-button mb-0" onClick={() => onCheckout()}>
+      <button type="button" className="primary-button checkout-button mb-0" onClick={() => handleCheckout()}>
         Checkout
       </button>
     </div>

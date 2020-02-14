@@ -13,6 +13,7 @@ console.log(spiService);
 spiService.start();
 
 function BurgerPos() {
+  const [errorMsg, setErrorMsg] = useState('');
   const [pairingState, setPairingState] = useState({
     AwaitingCheckFromPos: false,
     ConfirmationCode: '',
@@ -97,7 +98,7 @@ function BurgerPos() {
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="setting">
-                <Setting spi={spiService._spi} />
+                <Setting spi={spiService._spi} status={statusState} errorMsg={errorMsg} onErrorMsg={setErrorMsg} />
               </Tab.Pane>
             </Tab.Content>
           </Col>

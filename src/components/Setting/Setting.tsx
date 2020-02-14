@@ -12,8 +12,8 @@ import {
 } from '../../services';
 import PosUtils from '../../services/_common/pos';
 
-function Setting(props: { spi: any }) {
-  const { spi } = props;
+function Setting(props: { spi: any; status: string; errorMsg: string; onErrorMsg: Function }) {
+  const { spi, status, errorMsg, onErrorMsg } = props;
   const flowEl = useRef();
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -78,6 +78,9 @@ function Setting(props: { spi: any }) {
               flowEl={flowEl}
               receiptEl={receiptEl}
               getTerminalStatus={getTerminalStatus}
+              status={status}
+              errorMsg={errorMsg}
+              onErrorMsg={onErrorMsg}
             />
           </div>
         </Col>

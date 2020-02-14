@@ -1,5 +1,6 @@
 import React from 'react';
-import { Logger } from '@assemblypayments/spi-client-js';
+import { Logger, SpiStatus } from '@assemblypayments/spi-client-js';
+import { Modal, Button } from 'react-bootstrap';
 
 import {
   settlement as settlementService,
@@ -13,54 +14,71 @@ function Actions(props: {
   flowEl: any;
   getTerminalStatus: Function;
   receiptEl: any;
+  status: string;
+  errorMsg: string;
+  onErrorMsg: Function;
 }) {
-  const { spi, setActionType, flowEl, getTerminalStatus, receiptEl } = props;
-  const receipt = new Logger(receiptEl.current);
-  console.log(receipt);
+  const { spi, setActionType, flowEl, getTerminalStatus, receiptEl, status, errorMsg, onErrorMsg } = props;
+  // const receipt = new Logger(receiptEl.current);
+
+  function handleSettlementEnquiry() {
+    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+    } else {
+      const flowMsg = new Logger(flowEl.current);
+      setActionType('SETTLEMENT_ENQUIRY');
+      if (receiptEl.current !== null) {
+        receiptEl.current.innerHTML = '';
+      }
+      settlementEnquiryService.initiateSettlementEnquiry(flowMsg, spi);
+    }
+  }
+
+  function handleSettlement() {
+    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+    } else {
+      const flowMsg = new Logger(flowEl.current);
+      setActionType('SETTLEMENT');
+      if (receiptEl.current !== null) {
+        receiptEl.current.innerHTML = '';
+      }
+      settlementService.initiateSettlement(flowMsg, spi);
+    }
+  }
+
+  function handleTerminalStatus() {
+    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+    } else {
+      if (receiptEl.current !== null) {
+        receiptEl.current.innerHTML = '';
+      }
+      getTerminalStatus(spi);
+    }
+  }
+
   return (
     <div>
       <h2 className="sub-header">Actions</h2>
-      <button
-        type="button"
-        className="primary-button"
-        onClick={() => {
-          const flowMsg = new Logger(flowEl.current);
-          setActionType('SETTLEMENT');
-          console.log('clicked settlement');
-          if (receiptEl.current !== null) {
-            receiptEl.current.innerHTML = '';
-          }
-          settlementService.initiateSettlement(flowMsg, spi);
-          console.log('flow.........', flowMsg);
-        }}
-      >
+      <Modal show={errorMsg !== ''} onHide={() => onErrorMsg('')}>
+        <Modal.Header closeButton>
+          <Modal.Title>Alert</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>{errorMsg}</p>
+          <Button variant="primary" className="btn-custom" onClick={() => onErrorMsg('')} block>
+            OK
+          </Button>
+        </Modal.Body>
+      </Modal>
+      <button type="button" className="primary-button" onClick={() => handleSettlement()}>
         Settlement
       </button>
-      <button
-        type="button"
-        className="primary-button"
-        onClick={() => {
-          const flowMsg = new Logger(flowEl.current);
-          setActionType('SETTLEMENT_ENQUIRY');
-          if (receiptEl.current !== null) {
-            receiptEl.current.innerHTML = '';
-          }
-          settlementEnquiryService.initiateSettlementEnquiry(flowMsg, spi);
-          console.log('flow.........', flowMsg);
-        }}
-      >
+      <button type="button" className="primary-button" onClick={() => handleSettlementEnquiry()}>
         Settlement Enquiry
       </button>
-      <button
-        type="button"
-        className="primary-button"
-        onClick={() => {
-          if (receiptEl.current !== null) {
-            receiptEl.current.innerHTML = '';
-          }
-          getTerminalStatus(spi);
-        }}
-      >
+      <button type="button" className="primary-button" onClick={() => handleTerminalStatus()}>
         Terminal Status
       </button>
     </div>

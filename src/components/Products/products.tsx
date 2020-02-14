@@ -239,6 +239,7 @@ function Products({ spi, status }: Props) {
             handleApplySurcharge={handleApplySurcharge}
             surchargeAmount={surchargeAmount}
             setSurchargeAmount={setSurchargeAmount}
+            status={status}
           />
           <Checkoutnew
             visible={checkout}
