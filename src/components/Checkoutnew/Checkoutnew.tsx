@@ -1,7 +1,7 @@
 /* eslint no-else-return: "error" */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@assemblypayments/spi-client-js';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Modal, Button } from 'react-bootstrap';
 import './Checkoutnew.scss';
 import Tick from '../Tick';
 import OrderPay from '../OrderPay/OrderPay';
@@ -28,6 +28,9 @@ function CheckoutNew(props: {
   setTransactionStatus: any;
   transactionStatus: any;
   transactionAction: string;
+  showUnknownModal: boolean;
+  setShowUnknownModal: Function;
+  handleOverrideTransaction: Function;
 }) {
   const {
     onClose,
@@ -40,14 +43,24 @@ function CheckoutNew(props: {
     setTransactionStatus,
     transactionStatus,
     transactionAction,
+    showUnknownModal,
+    setShowUnknownModal,
+    handleOverrideTransaction,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [promptCashout, setPromptCashout] = useState(false);
   const [showSigApproval, setShowSigApproval] = useState(false);
+  // const [showUnknownModal, setShowUnknownModal] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
   const [purchaseState, setPurchaseState] = useState({ Finished: false, Success: '', Response: '' });
+
+  // function handleOverrideTransaction() {
+  //   spi.AckFlowEndedAndBackToIdle();
+  //   setShowUnknownModal(false);
+  // }
+
   const handlePurchaseStatusChange = useCallback((event: any) => {
     setPurchaseState({ ...event.detail });
     const flowMsg = new Logger(flowEl.current);
@@ -58,12 +71,14 @@ function CheckoutNew(props: {
     if (event.detail.AwaitingSignatureCheck) {
       setShowSigApproval(true);
     }
+    if (event.detail.Finished && event.detail.Success === SuccessState.Unknown) {
+      setShowUnknownModal(true);
+    }
 
     if (event.detail.Finished) {
       if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
         transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
       } else {
-        console.log(receipt);
         PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
       }
     } else {
@@ -222,6 +237,33 @@ function CheckoutNew(props: {
         setShowSigApproval={setShowSigApproval}
         spi={spi}
       />
+      <Modal show={showUnknownModal} onHide={() => setShowUnknownModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Alert</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Button
+            variant="primary"
+            className="btn-custom"
+            onClick={() => {
+              handleOverrideTransaction();
+              handleBack();
+            }}
+          >
+            Paid
+          </Button>
+          <Button
+            variant="primary"
+            className="btn-custom"
+            onClick={() => {
+              handleOverrideTransaction();
+              handleBack();
+            }}
+          >
+            Fail
+          </Button>
+        </Modal.Body>
+      </Modal>
       <Col sm={2} className="checkout-order min-vh-100 sticky-top">
         <button
           type="button"
@@ -250,7 +292,7 @@ function CheckoutNew(props: {
             )}
             <Col sm={transactionAction !== 'lastTransaction' ? 5 : 9} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
-              <div ref={flowEl} />
+              <div className="flow-alignment" ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
             </Col>
             <Col sm={3} className="sub-column">

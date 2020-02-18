@@ -9,18 +9,33 @@ import './BurgerPos.scss';
 import SpiService from './spiService';
 
 const spiService = new SpiService();
-console.log(spiService);
+console.log(spiService.start);
 spiService.start();
 
 function BurgerPos() {
   const [errorMsg, setErrorMsg] = useState('');
+  const [showUnknownModal, setShowUnknownModal] = useState(false);
+  const [inProgressPayment, setInProgressPayment] = useState(
+    window.localStorage.getItem('payment_progress') === 'true'
+  );
+
   const [pairingState, setPairingState] = useState({
     AwaitingCheckFromPos: false,
     ConfirmationCode: '',
     Finished: true,
   });
   const [statusState, setStatusState] = useState(SpiStatus.Unpaired);
+
+  useEffect(() => {
+    if (spiService.start && inProgressPayment === true) {
+      setShowUnknownModal(true);
+    } else {
+      window.localStorage.setItem('payment_progress', false.toString());
+      setInProgressPayment(false);
+    }
+  }, []);
   const handleStatusChange = useCallback((event: any) => {
+    console.log('---------', event.detail);
     setStatusState(event.detail);
   }, []);
   useEffect(() => {
@@ -46,6 +61,23 @@ function BurgerPos() {
     };
   });
 
+  const handlePaymentInProgress = useCallback((event: any) => {
+    if (event.detail.Finished !== true) {
+      window.localStorage.setItem('payment_progress', true.toString());
+      setInProgressPayment(true);
+    } else {
+      window.localStorage.setItem('payment_progress', false.toString());
+      setInProgressPayment(false);
+    }
+  }, []);
+  useEffect(() => {
+    document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
+
+    return function cleanup() {
+      document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
+    };
+  });
+
   // const [purchaseState, setPurchaseState] = useState({});
   // const handlePurchaseStatusChange = useCallback((event: any) => {
   //   setPurchaseState({ ...event.detail });
@@ -62,7 +94,6 @@ function BurgerPos() {
   return (
     <div>
       {/* <h1 className="bpos-heading h3">Welcome to BurgerPOS (v{getSpiVersion()})</h1> */}
-
       <Tab.Container id="pos-tabs" defaultActiveKey="sample" unmountOnExit>
         <Row className="window-fix">
           <Col sm={2} className="menu-sidebar min-vh-100">
@@ -86,7 +117,12 @@ function BurgerPos() {
           <Col sm={10}>
             <Tab.Content>
               <Tab.Pane eventKey="sample">
-                <Products spi={spiService._spi} status={statusState} />
+                <Products
+                  spi={spiService._spi}
+                  status={statusState}
+                  showUnknownModal={showUnknownModal}
+                  setShowUnknownModal={setShowUnknownModal}
+                />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing

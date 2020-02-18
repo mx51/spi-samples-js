@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row } from 'react-bootstrap';
+import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { SpiStatus } from '@assemblypayments/spi-client-js';
 import Checkoutnew from '../Checkoutnew/Checkoutnew';
 import Order from '../Order/Order';
@@ -10,10 +10,13 @@ import { transactionFlow as transactionFlowService } from '../../services';
 type Props = {
   spi: any;
   status: string;
+  showUnknownModal: boolean;
+  setShowUnknownModal: Function;
+
   // purchaseState: any;
 };
 
-function Products({ spi, status }: Props) {
+function Products({ spi, status, showUnknownModal, setShowUnknownModal }: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -117,6 +120,29 @@ function Products({ spi, status }: Props) {
 
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
+  // const [inProgressPayment, setInProgressPayment] = useState(
+  //   window.localStorage.getItem('payment_progress') === 'true'
+  // );
+  function handleOverrideTransaction() {
+    spi.AckFlowEndedAndBackToIdle();
+    setShowUnknownModal(false);
+    // window.localStorage.setItem('payment_progress', true.toString());
+    // setInProgressPayment(false);
+  }
+
+  // const handlePaymentInProgress = useCallback((event: any) => {
+  //   if (event.detail.Finished !== true) {
+  //     window.localStorage.setItem('payment_progress', true.toString());
+  //     setInProgressPayment(true);
+  //   }
+  // }, []);
+  // useEffect(() => {
+  //   document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
+
+  //   return function cleanup() {
+  //     document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
+  //   };
+  // });
 
   const handleProductClick = (id: string) => {
     console.log(`clicked ... ${id}`);
@@ -211,6 +237,31 @@ function Products({ spi, status }: Props) {
   return (
     <>
       <Row>
+        <Modal show={showUnknownModal} onHide={() => setShowUnknownModal(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Alert</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Button
+              variant="primary"
+              className="btn-custom"
+              onClick={() => {
+                handleOverrideTransaction();
+              }}
+            >
+              Paid.....
+            </Button>
+            <Button
+              variant="primary"
+              className="btn-custom"
+              onClick={() => {
+                handleOverrideTransaction();
+              }}
+            >
+              Fail
+            </Button>
+          </Modal.Body>
+        </Modal>
         <Col lg={8}>
           {status === SpiStatus.PairedConnected ? (
             ''
@@ -253,6 +304,9 @@ function Products({ spi, status }: Props) {
             setTransactionStatus={setTransactionStatus}
             transactionStatus={transactionStatus}
             transactionAction={transactionAction}
+            showUnknownModal={showUnknownModal}
+            setShowUnknownModal={setShowUnknownModal}
+            handleOverrideTransaction={handleOverrideTransaction}
           />
         </Col>
       </Row>

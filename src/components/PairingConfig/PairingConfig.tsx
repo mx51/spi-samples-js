@@ -44,8 +44,13 @@ function Setting({ spi, status }: Props) {
         window.localStorage.setItem('eftpos_address', deviceAddressStatus.Address);
         setErrorMsg(`Device Address has been updated to ${deviceAddressStatus.Address}`);
         break;
+      case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
+        setEftpos('');
+        window.localStorage.setItem('eftpos_address', '');
+        setErrorMsg(`The serial number is invalid!`);
+        break;
       default:
-        setErrorMsg('The serial number is invalid!');
+        console.log('The serial number is invalid!.......');
         break;
     }
   }, []);
