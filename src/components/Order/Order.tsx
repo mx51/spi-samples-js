@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import { SpiStatus } from '@assemblypayments/spi-client-js';
+import { SpiStatus } from '@assemblypayments/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import './Order.scss';
@@ -63,7 +63,7 @@ function Order(props: {
     handleApplySurcharge,
     surchargeAmount,
     setSurchargeAmount,
-    // status,
+    status,
   } = props;
 
   const [showSurcharge, setShowSurcharge] = useState(false);
@@ -101,12 +101,12 @@ function Order(props: {
   }
 
   function handleCheckout() {
-    // if (status !== SpiStatus.PairedConnected) {
-    //   console.log(status);
-    //   setErrorMsg('Please pair your POS to the terminal or check your wifi connection');
-    // } else {
-    onCheckout();
-    // }
+    if (status !== SpiStatus.PairedConnected) {
+      console.log(status);
+      setErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+    } else {
+      onCheckout();
+    }
   }
 
   return (
