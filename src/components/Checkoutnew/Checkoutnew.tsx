@@ -242,9 +242,10 @@ function CheckoutNew(props: {
           <Modal.Title>Alert</Modal.Title>
         </Modal.Header>
         <Modal.Body>
+          <p>Let the POS know that customer actually paid?</p>
           <Button
             variant="primary"
-            className="btn-custom"
+            className="btn-custom unknownStatusButton"
             onClick={() => {
               handleOverrideTransaction();
               handleBack();
