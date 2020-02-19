@@ -70,29 +70,9 @@ function Order(props: {
   const [surcharge, setSurcharge] = useState<number>(0);
   const [errorMsg, setErrorMsg] = useState('');
 
-  // const [surchargeAmount, setSurchargeAmount] = useState(0);
-
-  // const groupedProducts: any = [];
-  console.log(list);
-
-  // list.forEach((item: Product) => {
-  //   if (!groupedProducts[item.id]) {
-  //     groupedProducts[item.id] = { ...item, count: 1 };
-  //   } else {
-  //     groupedProducts[item.id] = { ...item, count: groupedProducts[item.id].count + 1 };
-  //   }
-  //   // setgroupedProducts(groupedProducts);
-  // });
-
-  console.log('Grouped: ', list, setSurchargeAmount);
-
   const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = subTotalAmount + surchargeAmount / 100;
 
-  // function handleApplySurcharge(surcharge: number) {
-  //   setSurchargeAmount(surcharge);
-  //   setShowSurcharge(false);
-  // }
   function removeProductQuntity(id: any) {
     if (list.length === 1 && list[0].quantity === 1) {
       setSurchargeAmount(0);
@@ -102,7 +82,6 @@ function Order(props: {
 
   function handleCheckout() {
     if (status !== SpiStatus.PairedConnected) {
-      console.log(status);
       setErrorMsg('Please pair your POS to the terminal or check your wifi connection');
     } else {
       onCheckout();
@@ -158,21 +137,14 @@ function Order(props: {
               <Row>
                 <Col sm={12}>
                   <Row>
-                    {/* <button className="orderList" type="button" onClick={() => onRemoveProduct(item.id)}>
-                    <Col sm={1}>{item.quantity} </Col>
-                    <Col sm={1}> X </Col>
-                    <Col sm={5}>{item.name}</Col>
-                    <Col sm={3}>${item.price}.00</Col>
-                    <Col sm={2}>${item.price * item.quantity}.00</Col>
-                  </button> */}
                     <Col sm={5}>
                       <div className="quantity-buttons">
-                        <button type="button" onClick={() => onChangeProductQuantity(item.id, 1)}>
-                          +
-                        </button>
-                        <div className="quantity-label">{item.quantity}</div>
                         <button type="button" onClick={() => removeProductQuntity(item.id)}>
                           -
+                        </button>
+                        <div className="quantity-label">{item.quantity}</div>
+                        <button type="button" onClick={() => onChangeProductQuantity(item.id, 1)}>
+                          +
                         </button>
                       </div>
                     </Col>
