@@ -88,7 +88,7 @@ function SettingConfig(props: { spi: any }) {
             terminalStatusService.setIsMerchantReceiptPrinted(
               { Info: () => {}, Clear: () => {} },
               spi,
-              false,
+              printMerchantCopy,
               () => {}
             );
             terminalStatusService.setCustomReceiptStrings(
@@ -106,7 +106,6 @@ function SettingConfig(props: { spi: any }) {
             window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
             window.localStorage.setItem('receipt_header_input', receiptHeader);
             window.localStorage.setItem('receipt_footer_input', receiptFooter);
-            console.log(spi);
           }}
         >
           Save &amp; Apply
