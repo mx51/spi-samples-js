@@ -5,14 +5,16 @@ import Checkbox from '../Checkbox/Checkbox';
 import Textarea from '../Input/Textarea';
 import { terminalStatus as terminalStatusService } from '../../services';
 
-function SettingConfig(props: { spi: any }) {
-  const { spi } = props;
+function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; setSuppressMerchantPassword: Function }) {
+  const { spi, suppressMerchantPassword, setSuppressMerchantPassword } = props;
   const [sigFlow, setSigFlow] = useState(window.localStorage.getItem('sig_flow_from_eftpos') === 'true');
   const [eftposReceipt, setEftposReceipt] = useState(window.localStorage.getItem('rcpt_from_eftpos') === 'true');
   const [printMerchantCopy, setPrintMerchantCopy] = useState(
     window.localStorage.getItem('print_merchant_copy_input') === 'true'
   );
-
+  // const [suppressMerchantPassword, setSuppressMerchantPassword] = useState(
+  //   window.localStorage.getItem('suppress_merchant_password_input') === 'true'
+  // );
   const [receiptHeader, setReceiptHeader] = useState(window.localStorage.getItem('receipt_header_input') || '');
   const [receiptFooter, setReceiptFooter] = useState(window.localStorage.getItem('receipt_footer_input') || '');
   return (
@@ -51,6 +53,18 @@ function SettingConfig(props: { spi: any }) {
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setPrintMerchantCopy(e.currentTarget.checked);
+              console.log(printMerchantCopy);
+            }
+          }}
+        />
+        <Checkbox
+          type="checkbox"
+          id="suppress-merchant-password"
+          label="Suppress Merchant Password"
+          checked={suppressMerchantPassword}
+          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            if (e && e.currentTarget) {
+              setSuppressMerchantPassword(e.currentTarget.checked);
               console.log(printMerchantCopy);
             }
           }}
@@ -104,6 +118,7 @@ function SettingConfig(props: { spi: any }) {
             window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
             window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
             window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
+            window.localStorage.setItem('suppress_merchant_password_input', suppressMerchantPassword.toString());
             window.localStorage.setItem('receipt_header_input', receiptHeader);
             window.localStorage.setItem('receipt_footer_input', receiptFooter);
           }}

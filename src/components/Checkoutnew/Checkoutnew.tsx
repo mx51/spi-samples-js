@@ -31,6 +31,7 @@ function CheckoutNew(props: {
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
   handleOverrideTransaction: Function;
+  suppressMerchantPassword: boolean;
 }) {
   const {
     onClose,
@@ -46,6 +47,7 @@ function CheckoutNew(props: {
     showUnknownModal,
     setShowUnknownModal,
     handleOverrideTransaction,
+    suppressMerchantPassword,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [promptCashout, setPromptCashout] = useState(false);
@@ -117,7 +119,13 @@ function CheckoutNew(props: {
   const totalAmount = totalBillAmount;
 
   function handleMotoPay() {
-    motoService.initiateMotoPurchase({ Info: () => {} }, spi, parseInt(totalAmount, 10) * 100, surchargeAmount, false);
+    motoService.initiateMotoPurchase(
+      { Info: () => {} },
+      spi,
+      parseInt(totalAmount, 10) * 100,
+      surchargeAmount,
+      suppressMerchantPassword
+    );
     setTransactionStatus(true);
   }
 
@@ -139,7 +147,7 @@ function CheckoutNew(props: {
 
   function handleRefundPay(refundAmount: number) {
     const flowMsg = new Logger(flowEl.current);
-    refundService.initiateRefund(flowMsg, spi, refundAmount * 100, false);
+    refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
     setTransactionStatus(true);
   }
 

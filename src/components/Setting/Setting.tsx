@@ -12,8 +12,15 @@ import {
 } from '../../services';
 import PosUtils from '../../services/_common/pos';
 
-function Setting(props: { spi: any; status: string; errorMsg: string; onErrorMsg: Function }) {
-  const { spi, status, errorMsg, onErrorMsg } = props;
+function Setting(props: {
+  spi: any;
+  status: string;
+  errorMsg: string;
+  onErrorMsg: Function;
+  suppressMerchantPassword: boolean;
+  setSuppressMerchantPassword: Function;
+}) {
+  const { spi, status, errorMsg, onErrorMsg, suppressMerchantPassword, setSuppressMerchantPassword } = props;
   const flowEl = useRef();
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -69,7 +76,11 @@ function Setting(props: { spi: any; status: string; errorMsg: string; onErrorMsg
       <Row>
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
-            <SettingConfig spi={spi} />
+            <SettingConfig
+              spi={spi}
+              suppressMerchantPassword={suppressMerchantPassword}
+              setSuppressMerchantPassword={setSuppressMerchantPassword}
+            />
           </div>
           <div className="flex-fill">
             <Actions

@@ -12,11 +12,12 @@ type Props = {
   status: string;
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
+  suppressMerchantPassword: boolean;
 
   // purchaseState: any;
 };
 
-function Products({ spi, status, showUnknownModal, setShowUnknownModal }: Props) {
+function Products({ spi, status, showUnknownModal, setShowUnknownModal, suppressMerchantPassword }: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -308,6 +309,7 @@ function Products({ spi, status, showUnknownModal, setShowUnknownModal }: Props)
             showUnknownModal={showUnknownModal}
             setShowUnknownModal={setShowUnknownModal}
             handleOverrideTransaction={handleOverrideTransaction}
+            suppressMerchantPassword={suppressMerchantPassword}
           />
         </Col>
       </Row>

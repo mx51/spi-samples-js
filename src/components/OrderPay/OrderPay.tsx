@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Col, Row, Form } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
 import Input from '../Input/Input';
+import Checkbox from '../Checkbox/Checkbox';
 
 enum PaymentType {
   // Cash,
@@ -57,16 +58,15 @@ function OrderPay(props: {
             onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10))}
           />
           <p className="ml-2">Cents</p>
+          <Checkbox
+            type="checkbox"
+            id="prompt_cashout"
+            disabled={tipAmount > 0}
+            checked={promptCashout}
+            label="Prompt for Cashout"
+            onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}
+          />
         </div>
-        <Form.Check
-          type="checkbox"
-          id="prompt_cashout"
-          className="m-2"
-          disabled={tipAmount > 0}
-          checked={promptCashout}
-          label="Prompt for Cashout"
-          onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}
-        />
         <button
           className="primary-button checkout-button mb-0 pull-left"
           type="button"

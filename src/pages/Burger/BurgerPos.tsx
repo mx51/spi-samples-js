@@ -18,6 +18,9 @@ function BurgerPos() {
   const [inProgressPayment, setInProgressPayment] = useState(
     window.localStorage.getItem('payment_progress') === 'true'
   );
+  const [suppressMerchantPassword, setSuppressMerchantPassword] = useState(
+    window.localStorage.getItem('suppress_merchant_password_input') === 'true'
+  );
 
   const [pairingState, setPairingState] = useState({
     AwaitingCheckFromPos: false,
@@ -122,6 +125,7 @@ function BurgerPos() {
                   status={statusState}
                   showUnknownModal={showUnknownModal}
                   setShowUnknownModal={setShowUnknownModal}
+                  suppressMerchantPassword={suppressMerchantPassword}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
@@ -134,7 +138,14 @@ function BurgerPos() {
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="setting">
-                <Setting spi={spiService._spi} status={statusState} errorMsg={errorMsg} onErrorMsg={setErrorMsg} />
+                <Setting
+                  spi={spiService._spi}
+                  status={statusState}
+                  errorMsg={errorMsg}
+                  onErrorMsg={setErrorMsg}
+                  suppressMerchantPassword={suppressMerchantPassword}
+                  setSuppressMerchantPassword={setSuppressMerchantPassword}
+                />
               </Tab.Pane>
             </Tab.Content>
           </Col>
