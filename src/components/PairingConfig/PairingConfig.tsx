@@ -139,10 +139,7 @@ function Setting({ spi, status }: Props) {
             label="Serial"
             value={serial}
             placeholder="000-000-000"
-            pattern="(?:[0-9]{3}-[0-9]{3}-[0-9]{3})?"
             required={autoAddress === true}
-            minLength={11}
-            maxLength={11}
             title="Please enter correct format of serial number"
             disabled={isDisabled}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
