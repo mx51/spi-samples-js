@@ -1,5 +1,5 @@
 import React, { useState, SyntheticEvent } from 'react';
-import { TransactionOptions } from '@assemblypayments/spi-client-js';
+import { TransactionOptions } from '@mx51/spi-client-js';
 import Checkbox from '../Checkbox/Checkbox';
 // import { Form } from 'react-bootstrap';
 import Textarea from '../Input/Textarea';

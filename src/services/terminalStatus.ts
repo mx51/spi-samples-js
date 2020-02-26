@@ -5,7 +5,7 @@ import {
   TerminalBattery,
   SuccessState,
   SpiFlow,
-} from '@assemblypayments/spi-client-js';
+} from '@mx51/spi-client-js';
 import Pos from './_common/pos';
 
 function onTxFlowStateChanged(flowMsg: Logger, printStatusAndActions: Function) {

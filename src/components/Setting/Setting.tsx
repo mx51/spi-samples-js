@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { Logger, SettleResponse } from '@assemblypayments/spi-client-js';
+import { Logger, SettleResponse } from '@mx51/spi-client-js';
 import SettingConfig from '../SettingConfig/SettingConfig';
 import Actions from '../Actions/Actions';
 import Flow from '../Flow/Flow';
@@ -29,15 +29,13 @@ function Setting(props: {
   const [model, setModel] = useState('');
 
   const handleAction = useCallback((event: any) => {
-    setPosSetting({ ...event.detail });
     console.log(posSetting);
+    setPosSetting({ ...event.detail });
     const flowMsg = new Logger(flowEl.current);
     const receipt = new Logger(receiptEl.current);
 
     if (event.detail.Finished) {
-      console.log(receipt);
       if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
-        // alert('wrong date');
         setModel('Please enter current years date');
       }
       if (event.detail.Response.Data.error_reason === 'OPERATION_IN_PROGRESS') {

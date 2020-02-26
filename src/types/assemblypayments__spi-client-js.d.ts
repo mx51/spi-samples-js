@@ -1,4 +1,4 @@
-declare module '@assemblypayments/spi-client-js';
+declare module '@mx51/spi-client-js';
 
 type Config = any;
 type Logger = any;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
-import { SpiStatus } from '@assemblypayments/spi-client-js';
+import { SpiStatus } from '@mx51/spi-client-js';
 // import { getSpiVersion } from '../../services/_common/uiHelpers';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
@@ -126,6 +126,8 @@ function BurgerPos() {
                   showUnknownModal={showUnknownModal}
                   setShowUnknownModal={setShowUnknownModal}
                   suppressMerchantPassword={suppressMerchantPassword}
+                  errorMsg={errorMsg}
+                  onErrorMsg={setErrorMsg}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">

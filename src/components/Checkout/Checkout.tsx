@@ -1,8 +1,8 @@
 /* eslint no-else-return: "error" */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@assemblypayments/spi-client-js';
+import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import './Checkoutnew.scss';
+import './Checkout.scss';
 import Tick from '../Tick';
 import OrderPay from '../OrderPay/OrderPay';
 import RefundPay from '../RefundPay/RefundPay';
@@ -17,7 +17,7 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
-function CheckoutNew(props: {
+function Checkout(props: {
   visible: Boolean;
   list: any;
   onClose: Function;
@@ -65,11 +65,10 @@ function CheckoutNew(props: {
 
   const handlePurchaseStatusChange = useCallback((event: any) => {
     setPurchaseState({ ...event.detail });
+    console.log(totalPaid);
     const flowMsg = new Logger(flowEl.current);
     const receipt = new Logger(receiptEl.current);
 
-    console.log('???', event.detail);
-    console.log(totalPaid);
     if (event.detail.AwaitingSignatureCheck) {
       setShowSigApproval(true);
     }
@@ -101,20 +100,6 @@ function CheckoutNew(props: {
     }
   }, [transactionAction]);
 
-  // const handleSigApproval = useCallback((event: any) => {
-  //   setShowSigApproval({ ...event.detail });
-
-  //   if (event.detail.AwaitingSignatureCheck) {
-  //     setShowSigApproval(true);
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   document.addEventListener('TxFlowStateChanged', handleSigApproval);
-  //   return function cleanup() {
-  //     document.removeEventListener('TxFlowStateChanged', handleSigApproval);
-  //   };
-  // });
-
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = totalBillAmount;
 
@@ -129,7 +114,6 @@ function CheckoutNew(props: {
     setTransactionStatus(true);
   }
 
-  // eslint-disable-next-line no-shadow
   function handleCreditCardPay(tipAmount: number, cashoutAmount: number) {
     const flowMsg = new Logger(flowEl.current);
     purchaseService.initiatePurchase(
@@ -151,7 +135,6 @@ function CheckoutNew(props: {
     setTransactionStatus(true);
   }
 
-  // eslint-disable-next-line no-shadow
   function handleCashoutPay(cashoutAmount: number) {
     const flowMsg = new Logger(flowEl.current);
 
@@ -216,7 +199,7 @@ function CheckoutNew(props: {
           <div className="transaction-successful">
             <p>{new PurchaseResponse(purchaseState.Response).GetResponseText()}</p>
             <button type="button" className="primary-button" onClick={() => handleBack()}>
-              Sorry!! Try Again
+              Back
             </button>
           </div>
         )}
@@ -319,4 +302,4 @@ function CheckoutNew(props: {
   );
 }
 
-export default CheckoutNew;
+export default Checkout;

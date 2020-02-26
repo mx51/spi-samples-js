@@ -7,7 +7,7 @@ import {
   SuccessState,
   TransactionOptions,
   TransactionType,
-} from '@assemblypayments/spi-client-js';
+} from '@mx51/spi-client-js';
 
 import {
   cashout,

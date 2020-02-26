@@ -1,4 +1,4 @@
-import { Spi } from '@assemblypayments/spi-client-js';
+import { Spi } from '@mx51/spi-client-js';
 
 // Pairing operations
 

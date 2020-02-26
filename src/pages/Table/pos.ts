@@ -9,7 +9,7 @@ import {
   SpiFlow,
   SpiStatus,
   TransactionType,
-} from '@assemblypayments/spi-client-js';
+} from '@mx51/spi-client-js';
 import Bill from '../../services/_common/bill';
 import { pairing, purchase, refund, settlement, terminalStatus, transactionFlow } from '../../services';
 import Pos from '../../services/_common/pos';

@@ -1,5 +1,5 @@
 import React, { useState, SyntheticEvent, useCallback, useEffect } from 'react';
-import { DeviceAddressResponseCode, SpiStatus } from '@assemblypayments/spi-client-js';
+import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import Checkbox from '../Checkbox/Checkbox';

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { SpiStatus } from '@assemblypayments/spi-client-js';
+import { SpiStatus } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import './Order.scss';
@@ -53,6 +53,8 @@ function Order(props: {
   surchargeAmount: number;
   setSurchargeAmount: Function;
   status: string;
+  errorMsg: string;
+  onErrorMsg: Function;
 }) {
   const {
     list,
@@ -64,11 +66,13 @@ function Order(props: {
     surchargeAmount,
     setSurchargeAmount,
     status,
+    errorMsg,
+    onErrorMsg,
   } = props;
 
   const [showSurcharge, setShowSurcharge] = useState(false);
   const [surcharge, setSurcharge] = useState<number>(0);
-  const [errorMsg, setErrorMsg] = useState('');
+  // const [errorMsg, setErrorMsg] = useState('');
 
   const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = subTotalAmount + surchargeAmount / 100;
@@ -82,7 +86,7 @@ function Order(props: {
 
   function handleCheckout() {
     if (status !== SpiStatus.PairedConnected) {
-      setErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
     } else {
       onCheckout();
     }
@@ -119,13 +123,13 @@ function Order(props: {
           </button>
         </Col>
       </Row>
-      <Modal show={errorMsg !== ''} onHide={() => setErrorMsg('')}>
+      <Modal show={errorMsg !== ''} onHide={() => onErrorMsg('')}>
         <Modal.Header closeButton>
           <Modal.Title>Alert</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <p>{errorMsg}</p>
-          <Button variant="primary" className="btn-custom" onClick={() => setErrorMsg('')} block>
+          <Button variant="primary" className="btn-custom" onClick={() => onErrorMsg('')} block>
             OK
           </Button>
         </Modal.Body>

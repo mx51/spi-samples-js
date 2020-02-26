@@ -1,11 +1,11 @@
 {
   "name": "spi-samples-js",
   "version": "2.6.8",
-  "description": "Point of service samples which integrate with assembly payments spi module",
+  "description": "Point of service samples which integrate with mx51 spi module",
   "main": "index.html",
-  "author": "Assembly Payments",
+  "author": "mx51",
   "license": "Apache-2.0",
-  "homepage": "https://github.com/AssemblyPayments/spi-samples-js",
+  "homepage": "https://github.com/mx51/spi-samples-js",
   "browserslist": [
     "ie 11",
     "Firefox ESR",
@@ -20,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/AssemblyPayments/spi-samples-js.git"
+    "url": "git+https://github.com/mx51/spi-samples-js.git"
   },
   "scripts": {
     "analyze": "npm run build && source-map-explorer 'build/static/js/*.js'",
@@ -29,7 +29,7 @@
     "test": "react-scripts test"
   },
   "dependencies": {
-    "@assemblypayments/spi-client-js": "https://github.com/AssemblyPayments/spi-client-js.git#feature/eftpos-address-regex",
+    "@mx51/spi-client-js": "https://github.com/mx51/spi-client-js.git#feature/eftpos-address-regex",
     "@types/jest": "^24.0.23",
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.9.4",

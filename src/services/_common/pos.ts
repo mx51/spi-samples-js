@@ -1,4 +1,4 @@
-import { SuccessState } from '@assemblypayments/spi-client-js';
+import { SuccessState } from '@mx51/spi-client-js';
 
 class Pos {
   registeredEventListeners: any = [];

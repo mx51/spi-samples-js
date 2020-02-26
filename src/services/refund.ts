@@ -1,4 +1,4 @@
-import { RefundResponse } from '@assemblypayments/spi-client-js';
+import { RefundResponse } from '@mx51/spi-client-js';
 
 // Initiate a transaction
 function initiateRefund(flowMsg: Logger, spi: Spi, refundAmount: number, isMerchantPasswordSuppressed: boolean) {

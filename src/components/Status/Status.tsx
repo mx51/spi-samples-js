@@ -1,5 +1,5 @@
 import React from 'react';
-import { SpiStatus } from '@assemblypayments/spi-client-js';
+import { SpiStatus } from '@mx51/spi-client-js';
 import { Alert } from 'react-bootstrap';
 import { pairing as pairingService } from '../../services';
 

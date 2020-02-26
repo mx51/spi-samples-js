@@ -1,4 +1,4 @@
-import { MotoPurchaseResponse } from '@assemblypayments/spi-client-js';
+import { MotoPurchaseResponse } from '@mx51/spi-client-js';
 
 // Initiate a transaction
 function initiateMotoPurchase(

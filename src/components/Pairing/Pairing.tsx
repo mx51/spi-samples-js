@@ -1,10 +1,9 @@
-import React, { useRef, useCallback, useEffect } from 'react';
+import React, { useRef /* useCallback, useEffect */ } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { Logger } from '@assemblypayments/spi-client-js';
+// import { Logger } from '@mx51/spi-client-js';
 import PairingConfig from '../PairingConfig/PairingConfig';
 import Flow from '../Flow/Flow';
 import Status from '../Status/Status';
-// import Actions from '../Actions/Actions';
 import { pairing as pairingService } from '../../services';
 
 type Props = {
@@ -17,24 +16,20 @@ type Props = {
 
 function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPairing, status }: Props) {
   const flowEl = useRef(null);
-  // const [isModalShown, setIsModalShown] = useState(false);
 
-  console.log('@@@', flowEl);
+  // const handlePairingStatusChange = useCallback((event: any) => {
+  //   const flowMsg = new Logger(flowEl.current);
+  //   pairingService.printPairingStatus(flowMsg, spi);
+  //   console.log('.......eventdetail', event.detail);
+  // }, []);
+  // useEffect(() => {
+  //   document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
 
-  const handlePairingStatusChange = useCallback((event: any) => {
-    const flowMsg = new Logger(flowEl.current);
-    pairingService.printPairingStatus(flowMsg, spi);
-    console.log('.......eventdetail', event.detail);
-  }, []);
-  useEffect(() => {
-    document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  //   return function cleanup() {
+  //     document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  //   };
+  // });
 
-    return function cleanup() {
-      document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-    };
-  });
-
-  // eslint-disable-next-line no-shadow
   return (
     <div>
       <Row>

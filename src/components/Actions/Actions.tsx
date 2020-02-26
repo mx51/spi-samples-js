@@ -1,5 +1,5 @@
 import React from 'react';
-import { Logger, SpiStatus } from '@assemblypayments/spi-client-js';
+import { Logger, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 
 import {

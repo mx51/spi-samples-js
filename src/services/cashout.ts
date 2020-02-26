@@ -1,4 +1,4 @@
-import { CashoutOnlyResponse } from '@assemblypayments/spi-client-js';
+import { CashoutOnlyResponse } from '@mx51/spi-client-js';
 
 // Initiate a transaction
 function initiateCashout(flowMsg: Logger, log: Console, spi: Spi, cashoutAmount: number, surchargeAmount: number) {

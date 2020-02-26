@@ -1,4 +1,4 @@
-import { Spi, Secrets, TransactionType, SpiFlow, SpiStatus } from '@assemblypayments/spi-client-js';
+import { Spi, Secrets, TransactionType, SpiFlow, SpiStatus } from '@mx51/spi-client-js';
 import { accountVerify, pairing, preAuth, terminalStatus, transactionFlow } from '../../services';
 import Pos from '../../services/_common/pos';
 import { getSpiVersion } from '../../services/_common/uiHelpers';

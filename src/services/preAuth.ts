@@ -1,4 +1,4 @@
-import { PreauthResponse, PurchaseResponse } from '@assemblypayments/spi-client-js';
+import { PreauthResponse, PurchaseResponse } from '@mx51/spi-client-js';
 
 // Initiate a transaction
 

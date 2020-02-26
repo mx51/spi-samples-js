@@ -1,4 +1,4 @@
-import { Spi, Secrets, TransactionType, SuccessState, SpiFlow, SpiStatus } from '@assemblypayments/spi-client-js';
+import { Spi, Secrets, TransactionType, SuccessState, SpiFlow, SpiStatus } from '@mx51/spi-client-js';
 import {
   cashout,
   moto,

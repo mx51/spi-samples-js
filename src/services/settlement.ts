@@ -1,4 +1,4 @@
-import { RequestIdHelper, Settlement } from '@assemblypayments/spi-client-js';
+import { RequestIdHelper, Settlement } from '@mx51/spi-client-js';
 
 // Initiate a transaction
 function initiateSettlement(flowMsg: Logger, spi: Spi) {

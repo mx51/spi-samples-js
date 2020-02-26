@@ -2,7 +2,7 @@
 /* eslint jsx-a11y/label-has-associated-control: ["error", { assert: "either" } ] */
 
 import React, { Component } from 'react';
-import { Logger } from '@assemblypayments/spi-client-js';
+import { Logger } from '@mx51/spi-client-js';
 import TablePos from './pos';
 
 class Page extends Component {

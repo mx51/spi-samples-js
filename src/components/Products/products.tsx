@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { SpiStatus } from '@assemblypayments/spi-client-js';
-import Checkoutnew from '../Checkoutnew/Checkoutnew';
+import { SpiStatus } from '@mx51/spi-client-js';
+import Checkoutnew from '../Checkout/Checkout';
 import Order from '../Order/Order';
 import './Products.scss';
 import ProductList from '../ProductList/ProductList';
@@ -13,11 +13,21 @@ type Props = {
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
   suppressMerchantPassword: boolean;
+  errorMsg: string;
+  onErrorMsg: Function;
 
   // purchaseState: any;
 };
 
-function Products({ spi, status, showUnknownModal, setShowUnknownModal, suppressMerchantPassword }: Props) {
+function Products({
+  spi,
+  status,
+  showUnknownModal,
+  setShowUnknownModal,
+  suppressMerchantPassword,
+  errorMsg,
+  onErrorMsg,
+}: Props) {
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -293,6 +303,8 @@ function Products({ spi, status, showUnknownModal, setShowUnknownModal, suppress
             surchargeAmount={surchargeAmount}
             setSurchargeAmount={setSurchargeAmount}
             status={status}
+            errorMsg={errorMsg}
+            onErrorMsg={onErrorMsg}
           />
           <Checkoutnew
             visible={checkout}

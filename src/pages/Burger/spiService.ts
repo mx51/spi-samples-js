@@ -1,4 +1,4 @@
-import { Spi as SpiClient, SpiFlow, TransactionOptions } from '@assemblypayments/spi-client-js';
+import { Spi as SpiClient, SpiFlow, TransactionOptions } from '@mx51/spi-client-js';
 
 class Spi {
   _spi: any;

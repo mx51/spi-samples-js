@@ -1,4 +1,4 @@
-import { AccountVerifyResponse } from '@assemblypayments/spi-client-js';
+import { AccountVerifyResponse } from '@mx51/spi-client-js';
 
 // Initiate a transaction
 function initiateAccountVerify(flowMsg: Logger, spiPreauth: any) {

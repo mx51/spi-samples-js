@@ -1,9 +1,4 @@
-import {
-  GetLastTransactionResponse,
-  PurchaseResponse,
-  SuccessState,
-  TransactionType,
-} from '@assemblypayments/spi-client-js';
+import { GetLastTransactionResponse, PurchaseResponse, SuccessState, TransactionType } from '@mx51/spi-client-js';
 import Pos from './_common/pos';
 
 // Handle generic transaction completion flows
