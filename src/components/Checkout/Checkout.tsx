@@ -123,6 +123,12 @@ function Checkout(props: {
       suppressMerchantPassword
     );
     setTransactionStatus(true);
+    setFinalTipAmount(0);
+    setFinalSurcharge(surchargeAmount);
+    setFinalCashout(0);
+    setFinalRefund(0);
+    setPurchaseAmount(totalAmount);
+    setFinalTotal(totalAmount);
   }
 
   function handleCreditCardPay(tipAmount: number, cashoutAmount: number, manualAmount: number) {
@@ -165,6 +171,7 @@ function Checkout(props: {
       setFinalSurcharge(surchargeAmount / 100);
       setFinalCashout(cashoutAmount / 100);
       setPurchaseAmount(amount);
+      setFinalRefund(0);
     }
   }
 
