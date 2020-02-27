@@ -72,7 +72,6 @@ function Order(props: {
 
   const [showSurcharge, setShowSurcharge] = useState(false);
   const [surcharge, setSurcharge] = useState<number>(0);
-  // const [errorMsg, setErrorMsg] = useState('');
 
   const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = subTotalAmount + surchargeAmount / 100;
@@ -85,6 +84,8 @@ function Order(props: {
   }
 
   function handleCheckout() {
+    // const flowMsg = new Logger(flowEl.current);
+
     if (status !== SpiStatus.PairedConnected) {
       onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
     } else {
@@ -191,7 +192,13 @@ function Order(props: {
           </Row>
         </div>
       </div>
-      <button type="button" className="primary-button checkout-button mb-0" onClick={() => handleCheckout()}>
+      <button
+        type="button"
+        className="primary-button checkout-button mb-0"
+        onClick={() => {
+          handleCheckout();
+        }}
+      >
         Checkout
       </button>
     </div>

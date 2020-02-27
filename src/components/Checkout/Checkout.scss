@@ -96,6 +96,13 @@ div.checkout-order {
   margin-top: 30%;
   width: 50%;
   font-size: 1.4rem;
+  border: 1px solid rgb(62, 214, 194);
+  padding: 1rem;
+  border-radius: 5px;
+  box-shadow: 10px 10px 5px rgba(195, 245, 234, 0.959);
+}
+.transaction-successful div{
+  text-align: left;
 }
 .transaction-successful-button button {
   margin: 0.5rem;

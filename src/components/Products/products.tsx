@@ -15,6 +15,8 @@ type Props = {
   suppressMerchantPassword: boolean;
   errorMsg: string;
   onErrorMsg: Function;
+  openPricing: boolean;
+  setOpenPricing: Function;
 
   // purchaseState: any;
 };
@@ -27,6 +29,8 @@ function Products({
   suppressMerchantPassword,
   errorMsg,
   onErrorMsg,
+  openPricing,
+  setOpenPricing,
 }: Props) {
   const allProducts = [
     {
@@ -322,6 +326,8 @@ function Products({
             setShowUnknownModal={setShowUnknownModal}
             handleOverrideTransaction={handleOverrideTransaction}
             suppressMerchantPassword={suppressMerchantPassword}
+            openPricing={openPricing}
+            setOpenPricing={setOpenPricing}
           />
         </Col>
       </Row>

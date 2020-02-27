@@ -32,6 +32,8 @@ function Checkout(props: {
   setShowUnknownModal: Function;
   handleOverrideTransaction: Function;
   suppressMerchantPassword: boolean;
+  openPricing: boolean;
+  setOpenPricing: Function;
 }) {
   const {
     onClose,
@@ -48,10 +50,17 @@ function Checkout(props: {
     setShowUnknownModal,
     handleOverrideTransaction,
     suppressMerchantPassword,
+    openPricing,
+    setOpenPricing,
   } = props;
   const [totalPaid, setTotalPaid] = useState<number>(0);
   const [promptCashout, setPromptCashout] = useState(false);
   const [showSigApproval, setShowSigApproval] = useState(false);
+  const [finalTotal, setFinalTotal] = useState(0);
+  const [finalSurcharge, setFinalSurcharge] = useState(0);
+  const [finalCashout, setFinalCashout] = useState(0);
+  const [finalTipAmount, setFinalTipAmount] = useState(0);
+  const [purchaseAmount, setPurchaseAmount] = useState(0);
   // const [showUnknownModal, setShowUnknownModal] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
@@ -101,32 +110,60 @@ function Checkout(props: {
   }, [transactionAction]);
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
-  const totalAmount = totalBillAmount;
+  const totalAmount = parseInt(totalBillAmount, 10) + surchargeAmount / 100;
+  const amount = parseInt(totalBillAmount, 10);
 
   function handleMotoPay() {
     motoService.initiateMotoPurchase(
       { Info: () => {} },
       spi,
-      parseInt(totalAmount, 10) * 100,
+      totalAmount * 100,
       surchargeAmount,
       suppressMerchantPassword
     );
     setTransactionStatus(true);
   }
 
-  function handleCreditCardPay(tipAmount: number, cashoutAmount: number) {
-    const flowMsg = new Logger(flowEl.current);
-    purchaseService.initiatePurchase(
-      flowMsg,
-      spi._options,
-      spi,
-      parseInt(totalAmount, 10) * 100,
-      tipAmount,
-      cashoutAmount,
-      surchargeAmount,
-      promptCashout
-    );
-    setTransactionStatus(true);
+  function handleCreditCardPay(tipAmount: number, cashoutAmount: number, manualAmount: number) {
+    if (openPricing === true && manualAmount > 0) {
+      const flowMsg = new Logger(flowEl.current);
+      purchaseService.initiatePurchase(
+        flowMsg,
+        spi._options,
+        spi,
+        manualAmount * 100,
+        tipAmount,
+        cashoutAmount,
+        surchargeAmount,
+        promptCashout
+      );
+      const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + manualAmount;
+      setTransactionStatus(true);
+      setFinalTotal(total);
+      setFinalTipAmount(tipAmount / 100);
+      setFinalSurcharge(surchargeAmount / 100);
+      setFinalCashout(cashoutAmount / 100);
+      setPurchaseAmount(manualAmount);
+    } else {
+      const flowMsg = new Logger(flowEl.current);
+      purchaseService.initiatePurchase(
+        flowMsg,
+        spi._options,
+        spi,
+        amount * 100,
+        tipAmount,
+        cashoutAmount,
+        surchargeAmount,
+        promptCashout
+      );
+      setTransactionStatus(true);
+      const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + amount;
+      setFinalTotal(total);
+      setFinalTipAmount(tipAmount / 100);
+      setFinalSurcharge(surchargeAmount / 100);
+      setFinalCashout(cashoutAmount / 100);
+      setPurchaseAmount(amount);
+    }
   }
 
   function handleRefundPay(refundAmount: number) {
@@ -174,6 +211,8 @@ function Checkout(props: {
         totalAmount={totalAmount}
         promptCashout={promptCashout}
         setPromptCashout={setPromptCashout}
+        openPricing={openPricing}
+        setOpenPricing={setOpenPricing}
       />
     );
   }
@@ -183,6 +222,11 @@ function Checkout(props: {
       <div>
         {!purchaseState.Finished && (
           <div className="transaction-successful">
+            <h6>Purchase: ${purchaseAmount}</h6>
+            <h6>Tip amount: ${finalTipAmount}</h6>
+            <h6>Cashout: ${finalCashout}</h6>
+            <h6>Surcharge: ${finalSurcharge}</h6>
+            <p>Total amount: ${finalTotal}</p>
             <p>Processing Transaction</p>
             <button
               type="button"

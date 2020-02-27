@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, SyntheticEvent } from 'react';
 import { Col, Row } from 'react-bootstrap';
 import Input from '../Input/Input';
 import Checkbox from '../Checkbox/Checkbox';
@@ -12,16 +12,27 @@ enum PaymentType {
 function OrderPay(props: {
   handleMotoPay: Function;
   handleCreditCardPay: Function;
-  totalAmount: string;
+  totalAmount: number;
   promptCashout: boolean;
   setPromptCashout: Function;
+  openPricing: boolean;
+  setOpenPricing: Function;
 }) {
-  const { handleMotoPay, handleCreditCardPay, totalAmount, promptCashout, setPromptCashout } = props;
+  const {
+    handleMotoPay,
+    handleCreditCardPay,
+    totalAmount,
+    promptCashout,
+    setPromptCashout,
+    openPricing,
+    setOpenPricing,
+  } = props;
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
 
   function CreditCard() {
     const [tipAmount, setTipAmount] = useState(0);
     const [cashoutAmount, setCashoutAmount] = useState(0);
+    const [manualAmount, setManualAmount] = useState<number>(0);
 
     function handleKeyPress(event: any) {
       if (event.key < '0' || event.key > '9') {
@@ -32,7 +43,6 @@ function OrderPay(props: {
       setPromptCashout(false);
       return true;
     }
-
     return (
       <>
         <div className="ml-4 mr-4">
@@ -66,11 +76,38 @@ function OrderPay(props: {
             label="Prompt for Cashout"
             onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}
           />
+          <hr />
+          <hr />
+          <Input
+            id="open-price"
+            name="Open Price"
+            label="Order Amount"
+            disabled={openPricing === false}
+            min="0"
+            value={manualAmount === 0 ? '' : manualAmount.toString()}
+            type="number"
+            onChange={(e: any) => setManualAmount(parseInt(e.target.value, 10))}
+          />
+          <p className="ml-2">Cents</p>
+          <Checkbox
+            type="checkbox"
+            id="open-pricing"
+            label="Override Order Total"
+            checked={openPricing}
+            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+              if (e && e.currentTarget) {
+                setOpenPricing(e.currentTarget.checked);
+              }
+            }}
+          />
         </div>
         <button
           className="primary-button checkout-button mb-0 pull-left"
           type="button"
-          onClick={() => handleCreditCardPay(tipAmount, cashoutAmount)}
+          onClick={() => {
+            handleCreditCardPay(tipAmount, cashoutAmount, manualAmount);
+            window.localStorage.setItem('open_pricing', openPricing.toString());
+          }}
         >
           Pay
         </button>
@@ -108,10 +145,9 @@ function OrderPay(props: {
         return <CreditCard />;
     }
   }
-
   return (
     <>
-      <h2 className="sub-header mb-0">Order total ${parseInt(totalAmount, 10)}</h2>
+      <h2 className="sub-header mb-0">Order total ${totalAmount}</h2>
       <Row className="order-header-buttons no-gutters">
         <Col sm={6}>
           <button type="button" onClick={() => setPaymentType(PaymentType.Moto)}>

@@ -21,6 +21,7 @@ function BurgerPos() {
   const [suppressMerchantPassword, setSuppressMerchantPassword] = useState(
     window.localStorage.getItem('suppress_merchant_password_input') === 'true'
   );
+  const [openPricing, setOpenPricing] = useState(window.localStorage.getItem('open_pricing') === 'true');
 
   const [pairingState, setPairingState] = useState({
     AwaitingCheckFromPos: false,
@@ -128,6 +129,8 @@ function BurgerPos() {
                   suppressMerchantPassword={suppressMerchantPassword}
                   errorMsg={errorMsg}
                   onErrorMsg={setErrorMsg}
+                  openPricing={openPricing}
+                  setOpenPricing={setOpenPricing}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
