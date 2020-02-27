@@ -10,11 +10,12 @@ type Props = {
   confirmationCode: string;
   isAwaitingConfirmation: boolean;
   isFinishedPairing: boolean;
+  Message: String;
   spi: any;
   status: string;
 };
 
-function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPairing, status }: Props) {
+function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPairing, status, Message }: Props) {
   const flowEl = useRef(null);
 
   // const handlePairingStatusChange = useCallback((event: any) => {
@@ -43,6 +44,7 @@ function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPair
               isAwaitingConfirmation={isAwaitingConfirmation}
               isFinishedPairing={isFinishedPairing}
               spi={spi}
+              Message={Message}
             />
           </div>
         </Col>

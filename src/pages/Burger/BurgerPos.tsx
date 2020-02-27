@@ -27,6 +27,7 @@ function BurgerPos() {
     AwaitingCheckFromPos: false,
     ConfirmationCode: '',
     Finished: true,
+    Message: '',
   });
   const [statusState, setStatusState] = useState(SpiStatus.Unpaired);
 
@@ -49,11 +50,12 @@ function BurgerPos() {
     };
   });
   const handlePairingStatusChange = useCallback((event: any) => {
-    const { AwaitingCheckFromPos, ConfirmationCode, Finished } = event.detail;
+    const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
     setPairingState({
       AwaitingCheckFromPos,
       ConfirmationCode,
       Finished,
+      Message,
     });
     console.log(event.detail);
   }, []);
@@ -140,6 +142,7 @@ function BurgerPos() {
                   isFinishedPairing={pairingState.Finished}
                   status={statusState}
                   spi={spiService._spi}
+                  Message={pairingState.Message}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="setting">

@@ -61,6 +61,7 @@ function Checkout(props: {
   const [finalCashout, setFinalCashout] = useState(0);
   const [finalTipAmount, setFinalTipAmount] = useState(0);
   const [purchaseAmount, setPurchaseAmount] = useState(0);
+  const [finalRefund, setFinalRefund] = useState(0);
   // const [showUnknownModal, setShowUnknownModal] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
@@ -131,19 +132,20 @@ function Checkout(props: {
         flowMsg,
         spi._options,
         spi,
-        manualAmount * 100,
+        manualAmount,
         tipAmount,
         cashoutAmount,
         surchargeAmount,
         promptCashout
       );
-      const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + manualAmount;
+      const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + manualAmount / 100;
       setTransactionStatus(true);
       setFinalTotal(total);
       setFinalTipAmount(tipAmount / 100);
       setFinalSurcharge(surchargeAmount / 100);
       setFinalCashout(cashoutAmount / 100);
-      setPurchaseAmount(manualAmount);
+      setFinalRefund(0);
+      setPurchaseAmount(manualAmount / 100);
     } else {
       const flowMsg = new Logger(flowEl.current);
       purchaseService.initiatePurchase(
@@ -170,6 +172,12 @@ function Checkout(props: {
     const flowMsg = new Logger(flowEl.current);
     refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
     setTransactionStatus(true);
+    setFinalRefund(refundAmount);
+    setFinalTotal(refundAmount);
+    setPurchaseAmount(0);
+    setFinalTipAmount(0);
+    setFinalSurcharge(0);
+    setFinalCashout(0);
   }
 
   function handleCashoutPay(cashoutAmount: number) {
@@ -177,6 +185,12 @@ function Checkout(props: {
 
     cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
     setTransactionStatus(true);
+    setFinalCashout(cashoutAmount);
+    setFinalSurcharge(surchargeAmount);
+    setFinalTotal(cashoutAmount + surchargeAmount / 100);
+    setPurchaseAmount(0);
+    setFinalRefund(0);
+    setFinalTipAmount(0);
   }
 
   function handleBack() {
@@ -225,6 +239,7 @@ function Checkout(props: {
             <h6>Purchase: ${purchaseAmount}</h6>
             <h6>Tip amount: ${finalTipAmount}</h6>
             <h6>Cashout: ${finalCashout}</h6>
+            <h6>Refund: ${finalRefund}</h6>
             <h6>Surcharge: ${finalSurcharge}</h6>
             <p>Total amount: ${finalTotal}</p>
             <p>Processing Transaction</p>
