@@ -63,14 +63,14 @@ function Setting({ spi, status }: Props) {
 
   function handlePairingSaveSetting(e: React.SyntheticEvent) {
     e.preventDefault();
-    if (autoAddress === false && eftpos === '') {
-      setErrorMsg('Please enter EFTPOS Number');
-      return;
-    }
-    if (posId === '') {
-      setErrorMsg('Please enter pos ID');
-      return;
-    }
+    // if (autoAddress === false && eftpos === '') {
+    //   setErrorMsg('Please enter EFTPOS Number');
+    //   return;
+    // }
+    // if (posId === '') {
+    //   setErrorMsg('Please enter pos ID');
+    //   return;
+    // }
     spi.SetPosId(posId);
     spi.SetTestMode(testMode);
     spi.SetSerialNumber(serial);
@@ -110,7 +110,8 @@ function Setting({ spi, status }: Props) {
             label="POS ID"
             placeholder="POS ID"
             pattern="\w+"
-            title="No special character Only alphanimeric"
+            required
+            title="No special character Only alphanumeric"
             disabled={isDisabled}
             value={posId}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
@@ -140,7 +141,6 @@ function Setting({ spi, status }: Props) {
             value={serial}
             placeholder="000-000-000"
             required={autoAddress === true}
-            title="Please enter correct format of serial number"
             disabled={isDisabled}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
@@ -155,6 +155,7 @@ function Setting({ spi, status }: Props) {
             label="EFTPOS"
             placeholder="00.000.0.000"
             disabled={autoAddress || isDisabled}
+            required
             value={eftpos}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
