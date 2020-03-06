@@ -254,6 +254,7 @@ function Checkout(props: {
         setPromptCashout={setPromptCashout}
         openPricing={openPricing}
         setOpenPricing={setOpenPricing}
+        transactionStatus={transactionStatus}
       />
     );
   }

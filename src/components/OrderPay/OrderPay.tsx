@@ -17,6 +17,7 @@ function OrderPay(props: {
   setPromptCashout: Function;
   openPricing: boolean;
   setOpenPricing: Function;
+  transactionStatus: any;
 }) {
   const {
     handleMotoPay,
@@ -26,6 +27,7 @@ function OrderPay(props: {
     setPromptCashout,
     openPricing,
     setOpenPricing,
+    transactionStatus,
   } = props;
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCard);
 
@@ -50,7 +52,7 @@ function OrderPay(props: {
             id="Tip"
             name="Tip"
             label="Tip Amount"
-            disabled={cashoutAmount > 0}
+            disabled={cashoutAmount > 0 || transactionStatus}
             min="0"
             type="number"
             onKeyPress={handleKeyPress}
@@ -61,7 +63,7 @@ function OrderPay(props: {
             id="cashout-amount"
             name="Cashout amount"
             label="cashout Amount"
-            disabled={tipAmount > 0}
+            disabled={tipAmount > 0 || transactionStatus}
             min="0"
             onKeyPress={handleKeyPress}
             type="number"
@@ -71,7 +73,7 @@ function OrderPay(props: {
           <Checkbox
             type="checkbox"
             id="prompt_cashout"
-            disabled={tipAmount > 0}
+            disabled={tipAmount > 0 || transactionStatus}
             checked={promptCashout}
             label="Prompt for Cashout"
             onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}
@@ -82,7 +84,7 @@ function OrderPay(props: {
             id="open-price"
             name="Open Price"
             label="Order Amount"
-            disabled={openPricing === false}
+            disabled={openPricing === false || transactionStatus}
             min="0"
             value={manualAmount === 0 ? '' : manualAmount.toString()}
             type="number"
@@ -93,6 +95,7 @@ function OrderPay(props: {
             type="checkbox"
             id="open-pricing"
             label="Override Order Total"
+            disabled={transactionStatus}
             checked={openPricing}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
@@ -104,6 +107,7 @@ function OrderPay(props: {
         <button
           className="primary-button checkout-button mb-0 pull-left"
           type="button"
+          disabled={transactionStatus}
           onClick={() => {
             handleCreditCardPay(tipAmount, cashoutAmount, manualAmount);
             window.localStorage.setItem('open_pricing', openPricing.toString());
@@ -126,7 +130,12 @@ function OrderPay(props: {
             to process your payment
           </p>
         </div>
-        <button className="primary-button checkout-button mb-0" type="button" onClick={() => handleMotoPay()}>
+        <button
+          className="primary-button checkout-button mb-0"
+          type="button"
+          disabled={transactionStatus}
+          onClick={() => handleMotoPay()}
+        >
           MOTO
         </button>
       </>
@@ -150,12 +159,12 @@ function OrderPay(props: {
       <h2 className="sub-header mb-0">Order total ${totalAmount}</h2>
       <Row className="order-header-buttons no-gutters">
         <Col sm={6}>
-          <button type="button" onClick={() => setPaymentType(PaymentType.Moto)}>
+          <button type="button" disabled={transactionStatus} onClick={() => setPaymentType(PaymentType.Moto)}>
             Moto
           </button>
         </Col>
         <Col sm={6}>
-          <button type="button" onClick={() => setPaymentType(PaymentType.CreditCard)}>
+          <button type="button" disabled={transactionStatus} onClick={() => setPaymentType(PaymentType.CreditCard)}>
             Credit card
           </button>
         </Col>
