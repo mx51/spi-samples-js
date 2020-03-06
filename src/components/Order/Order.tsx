@@ -87,7 +87,7 @@ function Order(props: {
     // const flowMsg = new Logger(flowEl.current);
 
     if (status !== SpiStatus.PairedConnected) {
-      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+      onErrorMsg('Please pair your POS to the terminal or check your network connection');
     } else {
       onCheckout();
     }
