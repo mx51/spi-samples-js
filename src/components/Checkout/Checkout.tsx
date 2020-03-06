@@ -323,10 +323,11 @@ function Checkout(props: {
       />
       <Modal show={showUnknownModal} onHide={() => setShowUnknownModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Alert</Modal.Title>
+          <Modal.Title>Unable to verify transaction status.</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <p>Let the POS know that customer actually paid?</p>
+          <p>Please confirm the transaction status on the EFTPOS terminal.</p>
+          <p>Does it show the transaction was successful? </p>
           <Button
             variant="primary"
             className="btn-custom unknownStatusButton"
@@ -335,7 +336,7 @@ function Checkout(props: {
               handleBack();
             }}
           >
-            Paid
+            Yes
           </Button>
           <Button
             variant="primary"
@@ -345,7 +346,7 @@ function Checkout(props: {
               handleBack();
             }}
           >
-            Fail
+            No
           </Button>
         </Modal.Body>
       </Modal>

@@ -105,7 +105,7 @@ function BurgerPos() {
           <Col sm={2} className="menu-sidebar min-vh-100">
             <div className="sticky-top">
               <h1 className="logo">
-                <img src="/images/mx51.svg" width="100" height="50" alt="Assembly Payments Logo" />
+                <img src="/images/mx51.svg" width="100" height="50" alt="mx51 Logo" />
               </h1>
               <Nav variant="pills" className="flex-column sidebar-links">
                 <Nav.Item>
