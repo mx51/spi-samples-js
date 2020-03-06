@@ -5,8 +5,8 @@ import { SpiStatus } from '@mx51/spi-client-js';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
 import Setting from '../../components/Setting/Setting';
-import './BurgerPos.scss';
 import SpiService from './spiService';
+import './BurgerPos.scss';
 
 const spiService = new SpiService();
 console.log(spiService.start);
@@ -105,7 +105,7 @@ function BurgerPos() {
           <Col sm={2} className="menu-sidebar min-vh-100">
             <div className="sticky-top">
               <h1 className="logo">
-                <img src="./images/assembly-logo-old.png" width="100" height="50" alt="Assembly Payments Logo" />
+                <img src="/images/mx51.svg" width="100" height="50" alt="Assembly Payments Logo" />
               </h1>
               <Nav variant="pills" className="flex-column sidebar-links">
                 <Nav.Item>

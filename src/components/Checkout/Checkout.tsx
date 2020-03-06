@@ -61,20 +61,35 @@ function Checkout(props: {
   const [finalCashout, setFinalCashout] = useState(0);
   const [finalTipAmount, setFinalTipAmount] = useState(0);
   const [purchaseAmount, setPurchaseAmount] = useState(0);
-  const [finalRefund, setFinalRefund] = useState(0);
+  // const [finalRefund, setFinalRefund] = useState(0);
   // const [showUnknownModal, setShowUnknownModal] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
-  const [purchaseState, setPurchaseState] = useState({ Finished: false, Success: '', Response: '' });
+  // const [purchaseState, setPurchaseState] = useState({ Finished: false, Success: '', Response: '' });
+  // const [refundState, setRefundState] = useState({ Finished: false, Success: '', Response: '' });
+
+  const [stateChange, setStateChange] = useState({
+    Finished: false,
+    Success: SuccessState.Unknown,
+  } as any);
 
   // function handleOverrideTransaction() {
   //   spi.AckFlowEndedAndBackToIdle();
   //   setShowUnknownModal(false);
   // }
+  // const hnadleRegundStatusChange = useCallBack((event: any) => {
+  //   setRefundState({...event.detail});
+  // })
 
   const handlePurchaseStatusChange = useCallback((event: any) => {
-    setPurchaseState({ ...event.detail });
+    // if (TransactionType.Refund) {
+    //   setRefundState({ ...event.detail });
+    // } else {
+    //   setPurchaseState({ ...event.detail });
+    // }
+    setStateChange({ ...event.detail });
+
     console.log(totalPaid);
     const flowMsg = new Logger(flowEl.current);
     const receipt = new Logger(receiptEl.current);
@@ -90,7 +105,12 @@ function Checkout(props: {
       if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
         transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
       } else {
-        PosUtils.processCompletedEvent(flowMsg, receipt, purchaseService, event.detail);
+        PosUtils.processCompletedEvent(
+          flowMsg,
+          receipt,
+          transactionAction === 'purchase' ? purchaseService : refundService,
+          event.detail
+        );
       }
     } else {
       transactionFlowService.handleTransaction(flowMsg, event.detail);
@@ -124,10 +144,10 @@ function Checkout(props: {
     );
     setTransactionStatus(true);
     setFinalTipAmount(0);
-    setFinalSurcharge(surchargeAmount);
+    setFinalSurcharge(surchargeAmount / 100);
     setFinalCashout(0);
-    setFinalRefund(0);
-    setPurchaseAmount(totalAmount);
+    // setFinalRefund(0);
+    setPurchaseAmount(amount);
     setFinalTotal(totalAmount);
   }
 
@@ -150,7 +170,7 @@ function Checkout(props: {
       setFinalTipAmount(tipAmount / 100);
       setFinalSurcharge(surchargeAmount / 100);
       setFinalCashout(cashoutAmount / 100);
-      setFinalRefund(0);
+      // setFinalRefund(0);
       setPurchaseAmount(manualAmount / 100);
     } else {
       const flowMsg = new Logger(flowEl.current);
@@ -171,7 +191,7 @@ function Checkout(props: {
       setFinalSurcharge(surchargeAmount / 100);
       setFinalCashout(cashoutAmount / 100);
       setPurchaseAmount(amount);
-      setFinalRefund(0);
+      // setFinalRefund(0);
     }
   }
 
@@ -179,7 +199,7 @@ function Checkout(props: {
     const flowMsg = new Logger(flowEl.current);
     refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
     setTransactionStatus(true);
-    setFinalRefund(refundAmount);
+    // setFinalRefund(refundAmount);
     setFinalTotal(refundAmount);
     setPurchaseAmount(0);
     setFinalTipAmount(0);
@@ -196,17 +216,17 @@ function Checkout(props: {
     setFinalSurcharge(surchargeAmount);
     setFinalTotal(cashoutAmount + surchargeAmount / 100);
     setPurchaseAmount(0);
-    setFinalRefund(0);
+    // setFinalRefund(0);
     setFinalTipAmount(0);
   }
 
   function handleBack() {
-    if (purchaseState.Finished) {
+    if (stateChange.Finished) {
       onNoThanks();
       setTotalPaid(0);
       setSurchargeAmount(0);
     }
-    setPurchaseState({ Finished: false, Success: '', Response: '' });
+    setStateChange({ Finished: false, Success: SuccessState.Unknown });
     setTransactionStatus(false);
 
     if (flowEl.current !== null) {
@@ -241,14 +261,17 @@ function Checkout(props: {
   function transactionSuccessful() {
     return (
       <div>
-        {!purchaseState.Finished && (
+        {!stateChange.Finished && (
           <div className="transaction-successful">
             <h6>Purchase: ${purchaseAmount}</h6>
             <h6>Tip amount: ${finalTipAmount}</h6>
             <h6>Cashout: ${finalCashout}</h6>
-            <h6>Refund: ${finalRefund}</h6>
             <h6>Surcharge: ${finalSurcharge}</h6>
-            <p>Total amount: ${finalTotal}</p>
+            {transactionAction === 'refund' ? (
+              <p>Total Refund amount: ${finalTotal}</p>
+            ) : (
+              <p>Total amount: ${finalTotal}</p>
+            )}
             <p>Processing Transaction</p>
             <button
               type="button"
@@ -261,15 +284,19 @@ function Checkout(props: {
             </button>
           </div>
         )}
-        {purchaseState.Finished && SuccessState.Failed === purchaseState.Success && (
+        {stateChange.Finished && SuccessState.Failed === stateChange.Success && (
           <div className="transaction-successful">
-            <p>{new PurchaseResponse(purchaseState.Response).GetResponseText()}</p>
+            <p>
+              {stateChange.Response && stateChange.Response.GetErrorDetail && transactionAction === 'refund'
+                ? stateChange.Response.GetErrorDetail()
+                : new PurchaseResponse(stateChange.Response).GetResponseText()}
+            </p>
             <button type="button" className="primary-button" onClick={() => handleBack()}>
               Back
             </button>
           </div>
         )}
-        {purchaseState.Finished && SuccessState.Success === purchaseState.Success && (
+        {stateChange.Finished && SuccessState.Success === stateChange.Success && (
           <div className="transaction-successful">
             <Tick className="color-purple" />
             <div className="transaction-successful-button">
@@ -358,7 +385,7 @@ function Checkout(props: {
                 {transactionAction !== 'lastTransaction' ? 'Receipt' : 'Last Transaction'}
               </h2>
               <pre className="receipt-alignment" ref={receiptEl}>
-                {purchaseState.Response && new PurchaseResponse(purchaseState.Response).GetCustomerReceipt().trim()}
+                {stateChange.Response && new PurchaseResponse(stateChange.Response).GetCustomerReceipt().trim()}
               </pre>
             </Col>
           </Row>
