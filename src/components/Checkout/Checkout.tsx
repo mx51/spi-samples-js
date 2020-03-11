@@ -17,6 +17,18 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
+function displayReceipt(txState: any) {
+  const { Response, SignatureRequiredMessage } = txState;
+
+  if (Response) {
+    return new PurchaseResponse(Response).GetCustomerReceipt().trim();
+  } else if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
+    return SignatureRequiredMessage.GetMerchantReceipt().trim();
+  }
+
+  return undefined;
+}
+
 function Checkout(props: {
   visible: Boolean;
   list: any;
@@ -387,7 +399,7 @@ function Checkout(props: {
                 {transactionAction !== 'lastTransaction' ? 'Receipt' : 'Last Transaction'}
               </h2>
               <pre className="receipt-alignment" ref={receiptEl}>
-                {stateChange.Response && new PurchaseResponse(stateChange.Response).GetCustomerReceipt().trim()}
+                {displayReceipt(stateChange)}
               </pre>
             </Col>
           </Row>
