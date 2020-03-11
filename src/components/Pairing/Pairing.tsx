@@ -53,20 +53,33 @@ function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPair
             <Flow ref={flowEl} />
             <Modal show={isAwaitingConfirmation} onHide={() => pairingService.pairingCancel(spi)}>
               <Modal.Header closeButton>
-                <Modal.Title>Confirmation Code</Modal.Title>
+                <Modal.Title>Confirm Pairing Code</Modal.Title>
               </Modal.Header>
               <Modal.Body>
-                <h4>{confirmationCode}</h4>
-                <Button
-                  variant="primary"
-                  className="btn-custom"
-                  onClick={() => {
-                    pairingService.pairingConfirmCode(spi);
-                  }}
-                  block
-                >
-                  OK
-                </Button>
+                <p>Please confirm the following code is shown on the EFTPOS terminal:</p>
+                <h4 className="text-center">{confirmationCode}</h4>
+                <div>
+                  <Button
+                    variant="primary"
+                    className="btn-custom"
+                    onClick={() => {
+                      pairingService.pairingConfirmCode(spi);
+                    }}
+                    block
+                  >
+                    OK
+                  </Button>
+                  <Button
+                    variant="primary"
+                    className="btn-custom"
+                    onClick={() => {
+                      pairingService.pairingCancel(spi);
+                    }}
+                    block
+                  >
+                    cancel
+                  </Button>
+                </div>
               </Modal.Body>
             </Modal>
           </div>
