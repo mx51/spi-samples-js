@@ -32,6 +32,7 @@ function Products({
   openPricing,
   setOpenPricing,
 }: Props) {
+  console.log('products =======', spi);
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -222,9 +223,13 @@ function Products({
     // setShowSurcharge(false);
   }
   function handleLastTransaction() {
-    console.log('clicked last transaction');
-    setCheckout(true);
-    setTransactionAction('lastTransaction');
+    if (status !== SpiStatus.PairedConnected) {
+      onErrorMsg('Please pair your POS to the terminal or check your network connection');
+    } else {
+      console.log('clicked last transaction');
+      setCheckout(true);
+      setTransactionAction('lastTransaction');
+    }
   }
   function handleCheckout() {
     console.log('checkout clicked');
@@ -310,25 +315,27 @@ function Products({
             errorMsg={errorMsg}
             onErrorMsg={onErrorMsg}
           />
-          <Checkoutnew
-            visible={checkout}
-            list={shortlistedProducts}
-            onClose={handleCheckoutClosed}
-            onNoThanks={handleNoThanks}
-            spi={spi}
-            surchargeAmount={surchargeAmount}
-            setSurchargeAmount={setSurchargeAmount}
-            // purchaseState={purchaseState}
-            setTransactionStatus={setTransactionStatus}
-            transactionStatus={transactionStatus}
-            transactionAction={transactionAction}
-            showUnknownModal={showUnknownModal}
-            setShowUnknownModal={setShowUnknownModal}
-            handleOverrideTransaction={handleOverrideTransaction}
-            suppressMerchantPassword={suppressMerchantPassword}
-            openPricing={openPricing}
-            setOpenPricing={setOpenPricing}
-          />
+          {checkout && (
+            <Checkoutnew
+              visible={checkout}
+              list={shortlistedProducts}
+              onClose={handleCheckoutClosed}
+              onNoThanks={handleNoThanks}
+              spi={spi}
+              surchargeAmount={surchargeAmount}
+              setSurchargeAmount={setSurchargeAmount}
+              // purchaseState={purchaseState}
+              setTransactionStatus={setTransactionStatus}
+              transactionStatus={transactionStatus}
+              transactionAction={transactionAction}
+              showUnknownModal={showUnknownModal}
+              setShowUnknownModal={setShowUnknownModal}
+              handleOverrideTransaction={handleOverrideTransaction}
+              suppressMerchantPassword={suppressMerchantPassword}
+              openPricing={openPricing}
+              setOpenPricing={setOpenPricing}
+            />
+          )}
         </Col>
       </Row>
     </>

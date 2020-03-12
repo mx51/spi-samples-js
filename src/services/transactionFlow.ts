@@ -36,6 +36,11 @@ function acknowledgeCancellation(flowMsg: Logger, spi: Spi, printStatusAndAction
   printStatusAndActions();
 }
 
+function clearAll(flowMsg: Logger, receipt: Logger) {
+  flowMsg.Clear();
+  receipt.Clear();
+}
+
 function printReceipt(spi: Spi, header: string, footer: string, apiKey: string) {
   const payload = Pos.sanitizePrintText(header + footer);
   spi.PrintReceipt(apiKey, payload);
@@ -125,4 +130,5 @@ export default {
   initiateRecovery,
   printReceipt,
   submitAuthCode,
+  clearAll,
 };

@@ -18,15 +18,18 @@ import {
 } from '../../services';
 
 function displayReceipt(txState: any) {
-  const { Response, SignatureRequiredMessage } = txState;
+  // debugger; // eslint-disable-line
+  const { Response, SignatureRequiredMessage, Type } = txState;
 
-  if (Response) {
+  if (Response && Type !== 'GetLastTransaction') {
     return new PurchaseResponse(Response).GetCustomerReceipt().trim();
   } else if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
     return SignatureRequiredMessage.GetMerchantReceipt().trim();
   }
-
   return undefined;
+  // if (spi.CurrentTxFlowState && spi.CurrentTxFlowState.Type !== 'GetLastTransaction') {
+  //   return;
+  // }
 }
 
 function Checkout(props: {
@@ -116,6 +119,8 @@ function Checkout(props: {
     if (event.detail.Finished) {
       if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
         transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+        spi.AckFlowEndedAndBackToIdle();
+        // transactionFlowService.clearAll(flowMsg, receipt);
       } else {
         PosUtils.processCompletedEvent(
           flowMsg,
@@ -240,7 +245,6 @@ function Checkout(props: {
     }
     setStateChange({ Finished: false, Success: SuccessState.Unknown });
     setTransactionStatus(false);
-
     if (flowEl.current !== null) {
       flowEl.current.innerHTML = '';
     }
@@ -379,7 +383,9 @@ function Checkout(props: {
             type="button"
             disabled={transactionStatus}
             className="checkout-flyout-toggle"
-            onClick={() => handleBack()}
+            onClick={() => {
+              handleBack();
+            }}
           >
             ▼
           </button>
@@ -393,6 +399,7 @@ function Checkout(props: {
               <h2 className="sub-header mb-0">Flow</h2>
               <div className="flow-alignment" ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
+              {/* {transactionStatus && transactionSuccessful()} */}
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">
@@ -400,6 +407,7 @@ function Checkout(props: {
               </h2>
               <pre className="receipt-alignment" ref={receiptEl}>
                 {displayReceipt(stateChange)}
+                {/* {displayReceipt(stateChange)} */}
               </pre>
             </Col>
           </Row>
