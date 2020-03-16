@@ -233,7 +233,7 @@ function Products({
   }
   function handleCheckout() {
     console.log('checkout clicked');
-    setTransactionAction('');
+    setTransactionAction('purchase');
     setCheckout(true);
   }
   function handleRefund() {

@@ -27,9 +27,6 @@ function displayReceipt(txState: any) {
     return SignatureRequiredMessage.GetMerchantReceipt().trim();
   }
   return undefined;
-  // if (spi.CurrentTxFlowState && spi.CurrentTxFlowState.Type !== 'GetLastTransaction') {
-  //   return;
-  // }
 }
 
 function Checkout(props: {
@@ -120,7 +117,6 @@ function Checkout(props: {
       if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
         transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
         spi.AckFlowEndedAndBackToIdle();
-        // transactionFlowService.clearAll(flowMsg, receipt);
       } else {
         PosUtils.processCompletedEvent(
           flowMsg,
