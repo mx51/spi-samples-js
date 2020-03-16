@@ -23,7 +23,7 @@ function Actions(props: {
 
   function handleSettlementEnquiry() {
     if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
-      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+      onErrorMsg('Please pair your POS to the terminal or check your network connection');
     } else {
       const flowMsg = new Logger(flowEl.current);
       setActionType('SETTLEMENT_ENQUIRY');
@@ -36,7 +36,7 @@ function Actions(props: {
 
   function handleSettlement() {
     if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
-      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+      onErrorMsg('Please pair your POS to the terminal or check your network connection');
     } else {
       const flowMsg = new Logger(flowEl.current);
       setActionType('SETTLEMENT');
@@ -49,7 +49,7 @@ function Actions(props: {
 
   function handleTerminalStatus() {
     if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
-      onErrorMsg('Please pair your POS to the terminal or check your wifi connection');
+      onErrorMsg('Please pair your POS to the terminal or check your network connection');
     } else {
       if (receiptEl.current !== null) {
         receiptEl.current.innerHTML = '';

@@ -36,7 +36,7 @@ function Setting(props: {
 
     if (event.detail.Finished) {
       if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
-        setModel('Please enter current years date');
+        setModel('Please enter currect date');
       }
       if (event.detail.Response.Data.error_reason === 'OPERATION_IN_PROGRESS') {
         setModel('Please check your terminal is paired');
