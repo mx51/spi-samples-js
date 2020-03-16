@@ -4,6 +4,14 @@ import Input from '../Input/Input';
 function RefundPay(props: { handleRefundPay: Function }) {
   const { handleRefundPay } = props;
   const [refundAmount, setRefundAmount] = useState(0);
+  function handleKeyPress(event: any) {
+    if (event.key < '0' || event.key > '9') {
+      alert('invalid input');
+      event.preventDefault();
+      return false;
+    }
+    return false;
+  }
 
   return (
     <>
@@ -14,6 +22,7 @@ function RefundPay(props: { handleRefundPay: Function }) {
           name="Refund"
           label="Refund Amount"
           type="number"
+          onKeyPress={handleKeyPress}
           onChange={(e: any) => setRefundAmount(parseInt(e.target.value, 10) / 100)}
         />
         <p className="ml-2">Cents</p>

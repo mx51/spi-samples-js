@@ -19,6 +19,14 @@ function SurchargeModal(props: {
     handleApplySurcharge(surcharge / 100);
     setSurcharge(0);
   }
+  function handleKeyPress(event: any) {
+    if (event.key < '0' || event.key > '9') {
+      alert('invalid input');
+      event.preventDefault();
+      return false;
+    }
+    return false;
+  }
 
   return (
     <Modal show={show} onHide={() => handleClose()}>
@@ -31,6 +39,8 @@ function SurchargeModal(props: {
           name="surcharge"
           label="Surcharge Amount"
           type="number"
+          min="0"
+          onKeyPress={handleKeyPress}
           value={surcharge === 0 ? '' : surcharge.toString()}
           onChange={(e: any) => setSurcharge(Number.parseInt(e.target.value, 10))}
         />
