@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './pages/App';
 import BurgerPos from './pages/Burger';
-import MotelPos from './pages/Motel';
-import RamenPos from './pages/Ramen';
-import TablePos from './pages/Table';
+// import MotelPos from './pages/Motel';
+import Default from './pages/Default';
+// import RamenPos from './pages/Ramen';
+// import TablePos from './pages/Table';
 
 import './index.scss';
 
@@ -19,13 +20,16 @@ const Routes = () => (
         <BurgerPos />
       </Route>
       <Route path="/motel">
-        <MotelPos />
+        {/* <MotelPos /> */}
+        <Default />
       </Route>
       <Route path="/ramen">
-        <RamenPos />
+        {/* <RamenPos /> */}
+        <Default />
       </Route>
       <Route path="/table">
-        <TablePos />
+        {/* <TablePos /> */}
+        <Default />
       </Route>
     </Switch>
   </BrowserRouter>
