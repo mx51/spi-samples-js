@@ -5,6 +5,7 @@ import { SpiStatus } from '@mx51/spi-client-js';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
 import Setting from '../../components/Setting/Setting';
+// import { pairing as pairingService } from '../../services';
 import SpiService from './spiService';
 import './BurgerPos.scss';
 
@@ -49,23 +50,33 @@ function BurgerPos() {
       document.addEventListener('StatusChanged', handleStatusChange);
     };
   });
-  const handlePairingStatusChange = useCallback((event: any) => {
-    const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
-    setPairingState({
-      AwaitingCheckFromPos,
-      ConfirmationCode,
-      Finished,
-      Message,
-    });
-    console.log(event.detail);
-  }, []);
-  useEffect(() => {
-    document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  // const flowEl = useRef(null);
 
-    return function cleanup() {
-      document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-    };
-  });
+  // const handlePairingStatusChange = useCallback((event: any) => {
+  //   const flowMsg = new Logger(flowEl.current);
+  //   console.log(flowMsg, pairingService);
+  //   const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
+  //   // eslint-disable-next-line no-debugger
+  //   // debugger;
+  //   // if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spiService._spi);
+  //   setTimeout(() => {
+  //     if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spiService._spi);
+  //   }, 1);
+  //   setPairingState({
+  //     AwaitingCheckFromPos,
+  //     ConfirmationCode,
+  //     Finished,
+  //     Message,
+  //   });
+
+  //   console.log(event.detail);
+  // }, []);
+  // useEffect(() => {
+  //   document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  //   return function cleanup() {
+  //     document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+  //   };
+  // }, []);
 
   const handlePaymentInProgress = useCallback((event: any) => {
     if (event.detail.Finished !== true) {
@@ -142,7 +153,8 @@ function BurgerPos() {
                   isFinishedPairing={pairingState.Finished}
                   status={statusState}
                   spi={spiService._spi}
-                  Message={pairingState.Message}
+                  message={pairingState.Message}
+                  setPairingState={setPairingState}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="setting">

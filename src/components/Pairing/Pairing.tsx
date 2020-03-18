@@ -1,6 +1,6 @@
-import React, { useRef /* useCallback, useEffect */ } from 'react';
+import React, { useRef, useCallback, useEffect } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-// import { Logger } from '@mx51/spi-client-js';
+import { Logger } from '@mx51/spi-client-js';
 import PairingConfig from '../PairingConfig/PairingConfig';
 import Flow from '../Flow/Flow';
 import Status from '../Status/Status';
@@ -10,13 +10,49 @@ type Props = {
   confirmationCode: string;
   isAwaitingConfirmation: boolean;
   isFinishedPairing: boolean;
-  Message: String;
+  message: String;
   spi: any;
   status: string;
+  setPairingState: Function;
 };
 
-function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPairing, status, Message }: Props) {
+function Pairing({
+  confirmationCode,
+  spi,
+  isAwaitingConfirmation,
+  isFinishedPairing,
+  status,
+  message,
+  setPairingState,
+}: Props) {
   const flowEl = useRef(null);
+
+  const handlePairingStatusChange = useCallback((event: any) => {
+    const flowMsg = new Logger(flowEl.current);
+    console.log(flowMsg, pairingService);
+    const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
+    // eslint-disable-next-line no-debugger
+    // debugger;
+    // if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spiService._spi);
+    setTimeout(() => {
+      if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
+    }, 1);
+    setPairingState({
+      AwaitingCheckFromPos,
+      ConfirmationCode,
+      Finished,
+      Message,
+    });
+
+    console.log(event.detail);
+  }, []);
+  useEffect(() => {
+    document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+    return function cleanup() {
+      document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
+    };
+  }, []);
+  // const flowEl = useRef(null);
 
   // const handlePairingStatusChange = useCallback((event: any) => {
   //   const flowMsg = new Logger(flowEl.current);
@@ -44,7 +80,7 @@ function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPair
               isAwaitingConfirmation={isAwaitingConfirmation}
               isFinishedPairing={isFinishedPairing}
               spi={spi}
-              Message={Message}
+              Message={message}
             />
           </div>
         </Col>
@@ -77,7 +113,7 @@ function Pairing({ confirmationCode, spi, isAwaitingConfirmation, isFinishedPair
                     }}
                     block
                   >
-                    cancel
+                    Cancel
                   </Button>
                 </div>
               </Modal.Body>
