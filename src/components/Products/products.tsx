@@ -17,8 +17,6 @@ type Props = {
   onErrorMsg: Function;
   openPricing: boolean;
   setOpenPricing: Function;
-
-  // purchaseState: any;
 };
 
 function Products({
@@ -32,7 +30,6 @@ function Products({
   openPricing,
   setOpenPricing,
 }: Props) {
-  console.log('products =======', spi);
   const allProducts = [
     {
       categoryName: 'Burger',
@@ -128,7 +125,6 @@ function Products({
       ],
     },
   ];
-  // const [isPaired] = useState(localStorage.getItem('isPaired') === 'true');
 
   const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
   const [checkout, setCheckout] = useState(false);
@@ -136,34 +132,13 @@ function Products({
 
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
-  // const [inProgressPayment, setInProgressPayment] = useState(
-  //   window.localStorage.getItem('payment_progress') === 'true'
-  // );
   function handleOverrideTransaction() {
     spi.AckFlowEndedAndBackToIdle();
     setShowUnknownModal(false);
-    // window.localStorage.setItem('payment_progress', true.toString());
-    // setInProgressPayment(false);
   }
 
-  // const handlePaymentInProgress = useCallback((event: any) => {
-  //   if (event.detail.Finished !== true) {
-  //     window.localStorage.setItem('payment_progress', true.toString());
-  //     setInProgressPayment(true);
-  //   }
-  // }, []);
-  // useEffect(() => {
-  //   document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
-
-  //   return function cleanup() {
-  //     document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
-  //   };
-  // });
-
   const handleProductClick = (id: string) => {
-    console.log(`clicked ... ${id}`);
     const products = [...shortlistedProducts];
-
     // find the clicked product id in existing shortlisted products list
     let shortlistedId = -1;
     shortlistedProducts.forEach((p, index) => {
@@ -171,7 +146,6 @@ function Products({
         shortlistedId = index;
       }
     });
-    console.log('shortlistedId', shortlistedId);
 
     // if clicked product found in shortlisted product list then increment the quantity
     if (shortlistedId > -1) {
@@ -220,19 +194,16 @@ function Products({
 
   function handleApplySurcharge(surcharge: number) {
     setSurchargeAmount(surcharge);
-    // setShowSurcharge(false);
   }
   function handleLastTransaction() {
     if (status !== SpiStatus.PairedConnected) {
       onErrorMsg('Please pair your POS to the terminal or check your network connection');
     } else {
-      console.log('clicked last transaction');
       setCheckout(true);
       setTransactionAction('lastTransaction');
     }
   }
   function handleCheckout() {
-    console.log('checkout clicked');
     setTransactionAction('purchase');
     setCheckout(true);
   }
@@ -252,8 +223,6 @@ function Products({
     setCheckout(false);
     setTransactionAction('');
   }
-  console.log('Checkout .........', checkout);
-  console.log('pairedConnected .........', SpiStatus.PairedConnected);
   return (
     <>
       <Row>
@@ -324,7 +293,6 @@ function Products({
               spi={spi}
               surchargeAmount={surchargeAmount}
               setSurchargeAmount={setSurchargeAmount}
-              // purchaseState={purchaseState}
               setTransactionStatus={setTransactionStatus}
               transactionStatus={transactionStatus}
               transactionAction={transactionAction}

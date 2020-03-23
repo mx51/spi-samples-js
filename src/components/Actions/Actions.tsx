@@ -2,11 +2,7 @@ import React from 'react';
 import { Logger, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 
-import {
-  settlement as settlementService,
-  settlementEnquiry as settlementEnquiryService,
-  // terminalStatus as terminalStatusService,
-} from '../../services';
+import { settlement as settlementService, settlementEnquiry as settlementEnquiryService } from '../../services';
 
 function Actions(props: {
   spi: any;
@@ -19,7 +15,6 @@ function Actions(props: {
   onErrorMsg: Function;
 }) {
   const { spi, setActionType, flowEl, getTerminalStatus, receiptEl, status, errorMsg, onErrorMsg } = props;
-  // const receipt = new Logger(receiptEl.current);
 
   function handleSettlementEnquiry() {
     if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {

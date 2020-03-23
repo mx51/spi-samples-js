@@ -10,9 +10,7 @@ function SurchargeModal(props: {
   setSurcharge: Function;
 }) {
   const { show, handleClose, handleApplySurcharge, surcharge, setSurcharge } = props;
-  console.log('Modal show', show, handleApplySurcharge);
 
-  // const [surcharge, setSurcharge] = useState<number>(0);
   function applySurcharge() {
     handleApplySurcharge(surcharge / 100);
     setSurcharge(0);

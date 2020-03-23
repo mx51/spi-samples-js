@@ -31,9 +31,6 @@ function Pairing({
     const flowMsg = new Logger(flowEl.current);
     console.log(flowMsg, pairingService);
     const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
-    // eslint-disable-next-line no-debugger
-    // debugger;
-    // if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spiService._spi);
     setTimeout(() => {
       if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
     }, 1);
@@ -52,20 +49,6 @@ function Pairing({
       document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
     };
   }, []);
-  // const flowEl = useRef(null);
-
-  // const handlePairingStatusChange = useCallback((event: any) => {
-  //   const flowMsg = new Logger(flowEl.current);
-  //   pairingService.printPairingStatus(flowMsg, spi);
-  //   console.log('.......eventdetail', event.detail);
-  // }, []);
-  // useEffect(() => {
-  //   document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-
-  //   return function cleanup() {
-  //     document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-  //   };
-  // });
 
   return (
     <div>
@@ -75,13 +58,7 @@ function Pairing({
             <PairingConfig spi={spi} status={status} />
           </div>
           <div className="flex-fill">
-            <Status
-              status={status}
-              isAwaitingConfirmation={isAwaitingConfirmation}
-              isFinishedPairing={isFinishedPairing}
-              spi={spi}
-              Message={message}
-            />
+            <Status status={status} isFinishedPairing={isFinishedPairing} spi={spi} Message={message} />
           </div>
         </Col>
         <Col lg={8} className="sub-column d-flex flex-column">

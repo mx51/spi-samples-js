@@ -167,7 +167,6 @@ class Pairing {
 class Status {
     ==props==
         status: any
-        isAwaitingConfirmation: boolean
         isFinishedPairing: boolean
         spi: object
         Message: string

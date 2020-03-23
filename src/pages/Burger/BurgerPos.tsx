@@ -1,16 +1,13 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 import { SpiStatus } from '@mx51/spi-client-js';
-// import { getSpiVersion } from '../../services/_common/uiHelpers';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
 import Setting from '../../components/Setting/Setting';
-// import { pairing as pairingService } from '../../services';
 import SpiService from './spiService';
 import './BurgerPos.scss';
 
 const spiService = new SpiService();
-console.log(spiService.start);
 spiService.start();
 
 function BurgerPos() {
@@ -50,33 +47,6 @@ function BurgerPos() {
       document.addEventListener('StatusChanged', handleStatusChange);
     };
   });
-  // const flowEl = useRef(null);
-
-  // const handlePairingStatusChange = useCallback((event: any) => {
-  //   const flowMsg = new Logger(flowEl.current);
-  //   console.log(flowMsg, pairingService);
-  //   const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
-  //   // eslint-disable-next-line no-debugger
-  //   // debugger;
-  //   // if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spiService._spi);
-  //   setTimeout(() => {
-  //     if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spiService._spi);
-  //   }, 1);
-  //   setPairingState({
-  //     AwaitingCheckFromPos,
-  //     ConfirmationCode,
-  //     Finished,
-  //     Message,
-  //   });
-
-  //   console.log(event.detail);
-  // }, []);
-  // useEffect(() => {
-  //   document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-  //   return function cleanup() {
-  //     document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
-  //   };
-  // }, []);
 
   const handlePaymentInProgress = useCallback((event: any) => {
     if (event.detail.Finished !== true) {
@@ -95,22 +65,8 @@ function BurgerPos() {
     };
   });
 
-  // const [purchaseState, setPurchaseState] = useState({});
-  // const handlePurchaseStatusChange = useCallback((event: any) => {
-  //   setPurchaseState({ ...event.detail });
-  //   console.log(event.detail);
-  // }, []);
-  // useEffect(() => {
-  //   document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
-
-  //   return function cleanup() {
-  //     document.removeEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
-  //   };
-  // });
-
   return (
     <div>
-      {/* <h1 className="bpos-heading h3">Welcome to BurgerPOS (v{getSpiVersion()})</h1> */}
       <Tab.Container id="pos-tabs" defaultActiveKey="sample" unmountOnExit>
         <Row className="window-fix">
           <Col sm={2} className="menu-sidebar min-vh-100">

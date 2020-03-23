@@ -4,7 +4,6 @@ import Input from '../Input/Input';
 import Checkbox from '../Checkbox/Checkbox';
 
 enum PaymentType {
-  // Cash,
   Moto,
   CreditCard,
 }
@@ -144,8 +143,6 @@ function OrderPay(props: {
 
   function showPaymentType() {
     switch (paymentType) {
-      // case PaymentType.Cash:
-      //   return <Cash />;
       case PaymentType.Moto:
         return <Moto />;
       case PaymentType.CreditCard:

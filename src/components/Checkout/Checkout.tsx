@@ -18,7 +18,6 @@ import {
 } from '../../services';
 
 function displayReceipt(txState: any) {
-  // debugger; // eslint-disable-line
   const { Response, SignatureRequiredMessage, Type } = txState;
 
   if (Response && Type !== 'GetLastTransaction') {
@@ -73,33 +72,15 @@ function Checkout(props: {
   const [finalCashout, setFinalCashout] = useState(0);
   const [finalTipAmount, setFinalTipAmount] = useState(0);
   const [purchaseAmount, setPurchaseAmount] = useState(0);
-  // const [finalRefund, setFinalRefund] = useState(0);
-  // const [showUnknownModal, setShowUnknownModal] = useState(false);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
-
-  // const [purchaseState, setPurchaseState] = useState({ Finished: false, Success: '', Response: '' });
-  // const [refundState, setRefundState] = useState({ Finished: false, Success: '', Response: '' });
 
   const [stateChange, setStateChange] = useState({
     Finished: false,
     Success: SuccessState.Unknown,
   } as any);
 
-  // function handleOverrideTransaction() {
-  //   spi.AckFlowEndedAndBackToIdle();
-  //   setShowUnknownModal(false);
-  // }
-  // const hnadleRegundStatusChange = useCallBack((event: any) => {
-  //   setRefundState({...event.detail});
-  // })
-
   const handlePurchaseStatusChange = useCallback((event: any) => {
-    // if (TransactionType.Refund) {
-    //   setRefundState({ ...event.detail });
-    // } else {
-    //   setPurchaseState({ ...event.detail });
-    // }
     setStateChange({ ...event.detail });
 
     console.log(totalPaid);
@@ -159,7 +140,6 @@ function Checkout(props: {
     setFinalTipAmount(0);
     setFinalSurcharge(surchargeAmount / 100);
     setFinalCashout(0);
-    // setFinalRefund(0);
     setPurchaseAmount(amount);
     setFinalTotal(totalAmount);
   }
@@ -183,7 +163,6 @@ function Checkout(props: {
       setFinalTipAmount(tipAmount / 100);
       setFinalSurcharge(surchargeAmount / 100);
       setFinalCashout(cashoutAmount / 100);
-      // setFinalRefund(0);
       setPurchaseAmount(manualAmount / 100);
     } else {
       const flowMsg = new Logger(flowEl.current);
@@ -204,7 +183,6 @@ function Checkout(props: {
       setFinalSurcharge(surchargeAmount / 100);
       setFinalCashout(cashoutAmount / 100);
       setPurchaseAmount(amount);
-      // setFinalRefund(0);
     }
   }
 
@@ -212,7 +190,6 @@ function Checkout(props: {
     const flowMsg = new Logger(flowEl.current);
     refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
     setTransactionStatus(true);
-    // setFinalRefund(refundAmount);
     setFinalTotal(refundAmount);
     setPurchaseAmount(0);
     setFinalTipAmount(0);
@@ -229,7 +206,6 @@ function Checkout(props: {
     setFinalSurcharge(surchargeAmount);
     setFinalTotal(cashoutAmount + surchargeAmount / 100);
     setPurchaseAmount(0);
-    // setFinalRefund(0);
     setFinalTipAmount(0);
   }
 
@@ -395,7 +371,6 @@ function Checkout(props: {
               <h2 className="sub-header mb-0">Flow</h2>
               <div className="flow-alignment" ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
-              {/* {transactionStatus && transactionSuccessful()} */}
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">
@@ -403,7 +378,6 @@ function Checkout(props: {
               </h2>
               <pre className="receipt-alignment" ref={receiptEl}>
                 {displayReceipt(stateChange)}
-                {/* {displayReceipt(stateChange)} */}
               </pre>
             </Col>
           </Row>

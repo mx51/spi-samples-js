@@ -21,7 +21,6 @@ function Setting({ spi, status }: Props) {
     window.localStorage.getItem('use_secure_web_sockets') === 'true'
   );
 
-  // const [autoAddressState, setAutoAddressState] = useState();
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -34,9 +33,7 @@ function Setting({ spi, status }: Props) {
   });
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
-    // setAutoAddressState({ ...event.detail });
     console.log('.......eventdetail', event.detail);
-    // console.log(autoAddressState);
     const deviceAddressStatus = event.detail;
     switch (deviceAddressStatus.DeviceAddressResponseCode) {
       case DeviceAddressResponseCode.SUCCESS:
@@ -63,14 +60,6 @@ function Setting({ spi, status }: Props) {
 
   function handlePairingSaveSetting(e: React.SyntheticEvent) {
     e.preventDefault();
-    // if (autoAddress === false && eftpos === '') {
-    //   setErrorMsg('Please enter EFTPOS Number');
-    //   return;
-    // }
-    // if (posId === '') {
-    //   setErrorMsg('Please enter pos ID');
-    //   return;
-    // }
     spi.SetPosId(posId);
     spi.SetTestMode(testMode);
     spi.SetSerialNumber(serial);
@@ -117,7 +106,6 @@ function Setting({ spi, status }: Props) {
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setPosId(e.currentTarget.value);
-                console.log(posId);
               }
             }}
           />
@@ -129,7 +117,6 @@ function Setting({ spi, status }: Props) {
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setApiKey(e.currentTarget.value);
-                console.log(serial);
               }
             }}
             value="RamenPosDeviceIpApiKey"
@@ -145,7 +132,6 @@ function Setting({ spi, status }: Props) {
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setSerial(e.currentTarget.value);
-                console.log(serial);
               }
             }}
           />
@@ -160,7 +146,6 @@ function Setting({ spi, status }: Props) {
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setEftpos(e.currentTarget.value);
-                console.log(eftpos);
               }
             }}
           />
@@ -174,11 +159,8 @@ function Setting({ spi, status }: Props) {
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget) {
                   setTestMode(e.currentTarget.checked);
-                  console.log(e.currentTarget.checked);
-                  console.log(testMode);
                 }
               }}
-              // className="m-2"
             />
             <Checkbox
               type="checkbox"
@@ -190,11 +172,8 @@ function Setting({ spi, status }: Props) {
                 if (e && e.currentTarget) {
                   setSecureWebSocket(e.currentTarget.checked);
                   setAutoAddress(e.currentTarget.checked);
-                  console.log(e.currentTarget.checked);
-                  console.log(secureWebSocket);
                 }
               }}
-              // className="m-2"
             />
             <Checkbox
               type="checkbox"
@@ -205,10 +184,8 @@ function Setting({ spi, status }: Props) {
               onChange={(e: SyntheticEvent<HTMLInputElement>) => {
                 if (e && e.currentTarget && !secureWebSocket) {
                   setAutoAddress(e.currentTarget.checked);
-                  console.log(e.currentTarget.checked);
                 }
               }}
-              // className="m-2"
             />
             <button type="submit" className="primary-button" disabled={isDisabled}>
               Save Setting

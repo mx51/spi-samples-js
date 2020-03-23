@@ -3,16 +3,8 @@ import { SpiStatus } from '@mx51/spi-client-js';
 import { Alert } from 'react-bootstrap';
 import { pairing as pairingService } from '../../services';
 
-function Status(props: {
-  isAwaitingConfirmation: Boolean;
-  isFinishedPairing: Boolean;
-  spi: any;
-  status: string;
-  Message: String;
-}) {
-  const { isAwaitingConfirmation, isFinishedPairing, spi, status, Message } = props;
-  console.log('isAwaitingConfirmation', isAwaitingConfirmation);
-  console.log('isFinishedPairing', isFinishedPairing);
+function Status(props: { isFinishedPairing: Boolean; spi: any; status: string; Message: String }) {
+  const { isFinishedPairing, spi, status, Message } = props;
 
   let message = 'Unpaired';
   let alert: 'danger' | 'success' | 'warning' = 'danger';

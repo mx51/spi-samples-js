@@ -1,7 +1,6 @@
 import React, { useState, SyntheticEvent } from 'react';
 import { TransactionOptions } from '@mx51/spi-client-js';
 import Checkbox from '../Checkbox/Checkbox';
-// import { Form } from 'react-bootstrap';
 import Textarea from '../Input/Textarea';
 import { terminalStatus as terminalStatusService } from '../../services';
 
@@ -12,9 +11,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
   const [printMerchantCopy, setPrintMerchantCopy] = useState(
     window.localStorage.getItem('print_merchant_copy_input') === 'true'
   );
-  // const [suppressMerchantPassword, setSuppressMerchantPassword] = useState(
-  //   window.localStorage.getItem('suppress_merchant_password_input') === 'true'
-  // );
   const [receiptHeader, setReceiptHeader] = useState(window.localStorage.getItem('receipt_header_input') || '');
   const [receiptFooter, setReceiptFooter] = useState(window.localStorage.getItem('receipt_footer_input') || '');
   return (
@@ -29,7 +25,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setEftposReceipt(e.currentTarget.checked);
-              console.log(sigFlow);
             }
           }}
         />
@@ -41,7 +36,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setSigFlow(e.currentTarget.checked);
-              console.log(e.currentTarget.checked);
             }
           }}
         />
@@ -53,7 +47,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setPrintMerchantCopy(e.currentTarget.checked);
-              console.log(printMerchantCopy);
             }
           }}
         />
@@ -65,7 +58,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setSuppressMerchantPassword(e.currentTarget.checked);
-              console.log(printMerchantCopy);
             }
           }}
         />
@@ -77,7 +69,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setReceiptHeader(e.currentTarget.value);
-              console.log(receiptHeader);
             }
           }}
         />
@@ -89,7 +80,6 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           onChange={(e: SyntheticEvent<HTMLInputElement>) => {
             if (e && e.currentTarget) {
               setReceiptFooter(e.currentTarget.value);
-              console.log(receiptFooter);
             }
           }}
         />
