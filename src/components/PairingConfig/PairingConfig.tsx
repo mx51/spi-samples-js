@@ -21,7 +21,7 @@ function Setting({ spi, status }: Props) {
     window.localStorage.getItem('use_secure_web_sockets') === 'true'
   );
 
-  const [autoAddressState, setAutoAddressState] = useState();
+  // const [autoAddressState, setAutoAddressState] = useState();
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -34,9 +34,9 @@ function Setting({ spi, status }: Props) {
   });
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
-    setAutoAddressState({ ...event.detail });
+    // setAutoAddressState({ ...event.detail });
     console.log('.......eventdetail', event.detail);
-    console.log(autoAddressState);
+    // console.log(autoAddressState);
     const deviceAddressStatus = event.detail;
     switch (deviceAddressStatus.DeviceAddressResponseCode) {
       case DeviceAddressResponseCode.SUCCESS:

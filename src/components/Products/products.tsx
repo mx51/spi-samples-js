@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { SpiStatus } from '@mx51/spi-client-js';
-import Checkoutnew from '../Checkout/Checkout';
+import Checkout from '../Checkout/Checkout';
 import Order from '../Order/Order';
 import './Products.scss';
 import ProductList from '../ProductList/ProductList';
@@ -316,7 +316,7 @@ function Products({
             onErrorMsg={onErrorMsg}
           />
           {checkout && (
-            <Checkoutnew
+            <Checkout
               visible={checkout}
               list={shortlistedProducts}
               onClose={handleCheckoutClosed}
