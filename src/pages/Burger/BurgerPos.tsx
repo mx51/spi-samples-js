@@ -38,7 +38,6 @@ function BurgerPos() {
     }
   }, []);
   const handleStatusChange = useCallback((event: any) => {
-    console.log('---------', event.detail);
     setStatusState(event.detail);
   }, []);
   useEffect(() => {
