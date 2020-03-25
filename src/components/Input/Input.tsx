@@ -37,7 +37,7 @@ function Input(props: {
     defaultValue,
     required,
   } = props;
-  // console.log(id, label, name, value, required);
+  console.log(id, label, name, value, required);
 
   return (
     <fieldset className="input p-2">
