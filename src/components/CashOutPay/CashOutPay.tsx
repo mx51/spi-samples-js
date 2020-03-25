@@ -14,6 +14,7 @@ function CashOutPay(props: { handleCashoutPay: Function }) {
           name="Cashout"
           label="Cashout Amount"
           type="number"
+          min="0"
           onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10) / 100)}
         />
         <p className="ml-2">Cents</p>
