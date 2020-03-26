@@ -204,7 +204,11 @@ function Products({
     }
   }
   function handleCheckout() {
-    setTransactionAction('purchase');
+    if (shortlistedProducts.length === 0) {
+      setTransactionAction('');
+    } else {
+      setTransactionAction('purchase');
+    }
     setCheckout(true);
   }
   function handleRefund() {
