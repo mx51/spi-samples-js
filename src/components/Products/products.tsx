@@ -283,7 +283,6 @@ function Products({
             onCheckout={handleCheckout}
             handleApplySurcharge={handleApplySurcharge}
             surchargeAmount={surchargeAmount}
-            setSurchargeAmount={setSurchargeAmount}
             status={status}
             errorMsg={errorMsg}
             onErrorMsg={onErrorMsg}

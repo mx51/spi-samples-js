@@ -6,7 +6,6 @@ function Input(props: {
   label: string;
   name: string;
   onChange?: Function;
-  value?: string;
   type?: string;
   disabled?: boolean;
   min?: string;
@@ -24,7 +23,6 @@ function Input(props: {
     label,
     name,
     onChange,
-    value,
     type,
     disabled,
     min,
@@ -37,49 +35,29 @@ function Input(props: {
     defaultValue,
     required,
   } = props;
-  console.log(id, label, name, value, required);
 
   return (
     <fieldset className="input p-2">
       <legend className={disabled ? 'text-muted w-auto' : 'w-auto'}>{label}</legend>
-      {value ? (
-        <input
-          id={id}
-          type={type || 'text'}
-          disabled={disabled}
-          min={min}
-          onKeyPress={onKeyPress}
-          value={value}
-          pattern={pattern}
-          maxLength={maxLength}
-          minLength={minLength}
-          placeholder={placeholder}
-          title={title}
-          required={required === true}
-          defaultValue={defaultValue}
-          onChange={e => {
-            if (onChange) onChange(e);
-          }}
-        />
-      ) : (
-        <input
-          id={id}
-          type={type || 'text'}
-          disabled={disabled}
-          min={min}
-          onKeyPress={onKeyPress}
-          pattern={pattern}
-          maxLength={maxLength}
-          minLength={minLength}
-          placeholder={placeholder}
-          title={title}
-          required={required === true}
-          defaultValue={defaultValue}
-          onChange={e => {
-            if (onChange) onChange(e);
-          }}
-        />
-      )}
+
+      <input
+        id={id}
+        name={name}
+        type={type || 'text'}
+        disabled={disabled}
+        min={min}
+        onKeyPress={onKeyPress}
+        pattern={pattern}
+        maxLength={maxLength}
+        minLength={minLength}
+        placeholder={placeholder}
+        title={title}
+        required={required === true}
+        defaultValue={defaultValue}
+        onChange={e => {
+          if (onChange) onChange(e);
+        }}
+      />
     </fieldset>
   );
 }

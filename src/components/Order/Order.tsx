@@ -12,7 +12,6 @@ function Order(props: {
   onChangeProductQuantity: Function;
   handleApplySurcharge: Function;
   surchargeAmount: number;
-  setSurchargeAmount: Function;
   status: string;
   errorMsg: string;
   onErrorMsg: Function;
@@ -25,7 +24,6 @@ function Order(props: {
     onChangeProductQuantity,
     handleApplySurcharge,
     surchargeAmount,
-    setSurchargeAmount,
     status,
     errorMsg,
     onErrorMsg,
@@ -39,7 +37,7 @@ function Order(props: {
 
   function removeProductQuntity(id: any) {
     if (list.length === 1 && list[0].quantity === 1) {
-      setSurchargeAmount(0);
+      handleApplySurcharge(0);
     }
     onChangeProductQuantity(id, -1);
   }
@@ -68,17 +66,17 @@ function Order(props: {
       <h2 className="sub-header mb-0">Order</h2>
       <Row className="order-header-buttons no-gutters">
         <Col sm={4}>
-          <button type="button" onClick={() => onLastTransaction()}>
+          <button id="lastTransactionButton" type="button" onClick={() => onLastTransaction()}>
             Last Transaction
           </button>
         </Col>
         <Col sm={4}>
-          <button type="button" onClick={() => setShowSurcharge(true)}>
+          <button id="surchargeButton" type="button" onClick={() => setShowSurcharge(true)}>
             Add Surcharge
           </button>
         </Col>
         <Col sm={4}>
-          <button type="button" onClick={() => onRefund()}>
+          <button id="refundButton" type="button" onClick={() => onRefund()}>
             Refund
           </button>
         </Col>
@@ -97,17 +95,23 @@ function Order(props: {
       <div className="orderListScroll">
         <ul className="nobull">
           {list.map((item: any) => (
-            <li className="space" key={item.id}>
+            <li className="space" key={`order-list-${item.id}`}>
               <Row>
                 <Col sm={12}>
                   <Row>
                     <Col sm={5}>
                       <div className="quantity-buttons">
-                        <button type="button" onClick={() => removeProductQuntity(item.id)}>
+                        <button id={`btnItemDec${item.id}`} type="button" onClick={() => removeProductQuntity(item.id)}>
                           -
                         </button>
-                        <div className="quantity-label">{item.quantity}</div>
-                        <button type="button" onClick={() => onChangeProductQuantity(item.id, 1)}>
+                        <div id={`itemQuantity${item.id}`} className="quantity-label">
+                          {item.quantity}
+                        </div>
+                        <button
+                          id={`btnItemInc${item.id}`}
+                          type="button"
+                          onClick={() => onChangeProductQuantity(item.id, 1)}
+                        >
                           +
                         </button>
                       </div>

@@ -85,7 +85,7 @@ function OrderPay(props: {
             label="Order Amount"
             disabled={openPricing === false || transactionStatus}
             min="0"
-            value={manualAmount === 0 ? '' : manualAmount.toString()}
+            defaultValue={manualAmount === 0 ? '' : manualAmount.toString()}
             type="number"
             onChange={(e: any) => setManualAmount(parseInt(e.target.value, 10))}
           />

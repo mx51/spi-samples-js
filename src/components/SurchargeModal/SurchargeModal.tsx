@@ -37,11 +37,17 @@ function SurchargeModal(props: {
           type="number"
           min="0"
           onKeyPress={handleKeyPress}
-          value={surcharge === 0 ? '' : surcharge.toString()}
+          defaultValue={surcharge === 0 ? '' : surcharge.toString()}
           onChange={(e: any) => setSurcharge(Number.parseInt(e.target.value, 10))}
         />
         <p className="ml-2">Cents</p>
-        <Button variant="primary" className="btn-custom primary-button" onClick={() => applySurcharge()} block>
+        <Button
+          id="btnApplySurcharge"
+          variant="primary"
+          className="btn-custom primary-button"
+          onClick={() => applySurcharge()}
+          block
+        >
           Apply
         </Button>
       </Modal.Body>

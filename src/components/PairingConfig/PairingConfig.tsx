@@ -102,7 +102,7 @@ function Setting({ spi, status }: Props) {
             required
             title="No special character Only alphanumeric"
             disabled={isDisabled}
-            value={posId}
+            defaultValue={posId}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setPosId(e.currentTarget.value);
@@ -119,13 +119,13 @@ function Setting({ spi, status }: Props) {
                 setApiKey(e.currentTarget.value);
               }
             }}
-            value="RamenPosDeviceIpApiKey"
+            defaultValue="RamenPosDeviceIpApiKey"
           />
           <Input
             id="serial"
             name="serial"
             label="Serial"
-            value={serial}
+            defaultValue={serial}
             placeholder="000-000-000"
             required={autoAddress === true}
             disabled={isDisabled}
@@ -142,7 +142,7 @@ function Setting({ spi, status }: Props) {
             placeholder="00.000.0.000"
             disabled={autoAddress || isDisabled}
             required
-            value={eftpos}
+            defaultValue={eftpos}
             onChange={(e: SyntheticEvent<HTMLInputElement>) => {
               if (e && e.currentTarget) {
                 setEftpos(e.currentTarget.value);
