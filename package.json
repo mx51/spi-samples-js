@@ -26,6 +26,7 @@
     "analyze": "npm run build && source-map-explorer 'build/static/js/*.js'",
     "build": "react-scripts build",
     "start": "react-scripts start",
+    "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "test": "react-scripts test"
   },
   "dependencies": {

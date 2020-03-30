@@ -6,11 +6,10 @@ function RefundPay(props: { handleRefundPay: Function }) {
   const [refundAmount, setRefundAmount] = useState(0);
   function handleKeyPress(event: any) {
     if (event.key < '0' || event.key > '9') {
-      alert('invalid input');
       event.preventDefault();
       return false;
     }
-    return false;
+    return true;
   }
 
   return (

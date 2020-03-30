@@ -37,7 +37,7 @@ function Checkout(props: {
   surchargeAmount: number;
   setSurchargeAmount: Function;
   setTransactionStatus: any;
-  transactionStatus: any;
+  transactionStatus: boolean;
   transactionAction: string;
   showUnknownModal: boolean;
   setShowUnknownModal: Function;

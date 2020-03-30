@@ -18,9 +18,9 @@ describe('CashOutPay', () => {
     component
       .find('input')
       .at(0)
-      .simulate('change', { target: { value: 100 } });
+      .simulate('change', { target: { value: -100 } });
 
     component.find('button').simulate('click');
-    expect(handleCashoutPay.mock.calls[0][0]).toBe(1);
+    expect(handleCashoutPay.mock.calls[0][0]).toBe(-1);
   });
 });

@@ -135,7 +135,7 @@ class OrderPay {
         setPromptCashout: function
         openPricing: boolean
         setOpenPricing: function
-        transactionStatus: any
+        transactionStatus: boolean
 }
 class CreditCard {
     ==state==
