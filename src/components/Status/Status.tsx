@@ -28,15 +28,22 @@ function Status(props: { isFinishedPairing: Boolean; spi: any; status: string; M
       <h2 className="sub-header">Status</h2>
 
       <div className="ml-3 mr-3">
-        <Alert variant={alert}> {message} </Alert>
+        <Alert id="alertMessage" variant={alert}>
+          {message}
+        </Alert>
         {isFinishedPairing && (
           <>
             {status === SpiStatus.Unpaired ? (
-              <button type="button" className="primary-button" onClick={() => pairingService.pair(spi)}>
+              <button id="btnPair" type="button" className="primary-button" onClick={() => pairingService.pair(spi)}>
                 Pair
               </button>
             ) : (
-              <button type="button" className="primary-button" onClick={() => pairingService.unpair(spi)}>
+              <button
+                id="btnUnpair"
+                type="button"
+                className="primary-button"
+                onClick={() => pairingService.unpair(spi)}
+              >
                 Unpair
               </button>
             )}
@@ -44,7 +51,12 @@ function Status(props: { isFinishedPairing: Boolean; spi: any; status: string; M
         )}
         {status === SpiStatus.Unpaired && !isFinishedPairing && (
           <div>
-            <button type="button" className="primary-button" onClick={() => pairingService.pairingCancel(spi)}>
+            <button
+              id="btnCancelPairing"
+              type="button"
+              className="primary-button"
+              onClick={() => pairingService.pairingCancel(spi)}
+            >
               Cancel Pairing
             </button>
           </div>

@@ -71,7 +71,7 @@ function Setting(props: {
   function handleSaveSetting(
     eftposReceipt: boolean,
     sigFlow: boolean,
-    printMerchantCopy: any,
+    printMerchantCopy: boolean,
     receiptHeader: string,
     receiptFooter: string
   ) {
