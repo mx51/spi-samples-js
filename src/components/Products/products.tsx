@@ -264,14 +264,7 @@ function Products({
           )}
 
           {allProducts.map(cat => (
-            <ProductList
-              key={cat.categoryName}
-              category={cat}
-              onProductClick={handleProductClick}
-              allProducts={allProducts}
-              shortlistedProducts={shortlistedProducts}
-              updateShortlistedProducts={updateShortlistedProducts}
-            />
+            <ProductList key={cat.categoryName} category={cat} onProductClick={handleProductClick} />
           ))}
         </Col>
         <Col lg={4} className="order-sidebar">

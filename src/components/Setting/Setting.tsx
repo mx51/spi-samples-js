@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { Logger, SettleResponse } from '@mx51/spi-client-js';
+import { Logger, SettleResponse, TransactionOptions } from '@mx51/spi-client-js';
 import SettingConfig from '../SettingConfig/SettingConfig';
 import Actions from '../Actions/Actions';
 import Flow from '../Flow/Flow';
@@ -68,6 +68,38 @@ function Setting(props: {
     spi.TerminalStatusResponse = (message: Message) =>
       terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
   }
+  function handleSaveSetting(
+    eftposReceipt: boolean,
+    sigFlow: boolean,
+    printMerchantCopy: any,
+    receiptHeader: string,
+    receiptFooter: string
+  ) {
+    spi.Config.PromptForCustomerCopyOnEftpos = eftposReceipt;
+    spi.Config.SignatureFlowOnEftpos = sigFlow;
+    terminalStatusService.setIsMerchantReceiptPrinted(
+      { Info: () => {}, Clear: () => {} },
+      spi,
+      printMerchantCopy,
+      () => {}
+    );
+    terminalStatusService.setCustomReceiptStrings(
+      { Info: () => {}, Clear: () => {} },
+      new TransactionOptions(),
+      spi,
+      () => {},
+      receiptHeader,
+      receiptFooter,
+      receiptHeader,
+      receiptFooter
+    );
+    window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
+    window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
+    window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
+    window.localStorage.setItem('suppress_merchant_password_input', suppressMerchantPassword.toString());
+    window.localStorage.setItem('receipt_header_input', receiptHeader);
+    window.localStorage.setItem('receipt_footer_input', receiptFooter);
+  }
 
   return (
     <div>
@@ -75,9 +107,9 @@ function Setting(props: {
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
             <SettingConfig
-              spi={spi}
               suppressMerchantPassword={suppressMerchantPassword}
               setSuppressMerchantPassword={setSuppressMerchantPassword}
+              handleSaveSetting={handleSaveSetting}
             />
           </div>
           <div className="flex-fill">

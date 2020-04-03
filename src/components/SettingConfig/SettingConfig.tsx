@@ -1,11 +1,13 @@
-import React, { useState, SyntheticEvent } from 'react';
-import { TransactionOptions } from '@mx51/spi-client-js';
+import React, { useState } from 'react';
 import Checkbox from '../Checkbox/Checkbox';
 import Textarea from '../Input/Textarea';
-import { terminalStatus as terminalStatusService } from '../../services';
 
-function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; setSuppressMerchantPassword: Function }) {
-  const { spi, suppressMerchantPassword, setSuppressMerchantPassword } = props;
+function SettingConfig(props: {
+  suppressMerchantPassword: boolean;
+  setSuppressMerchantPassword: Function;
+  handleSaveSetting: Function;
+}) {
+  const { suppressMerchantPassword, setSuppressMerchantPassword, handleSaveSetting } = props;
   const [sigFlow, setSigFlow] = useState(window.localStorage.getItem('sig_flow_from_eftpos') === 'true');
   const [eftposReceipt, setEftposReceipt] = useState(window.localStorage.getItem('rcpt_from_eftpos') === 'true');
   const [printMerchantCopy, setPrintMerchantCopy] = useState(
@@ -22,10 +24,12 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           id="check-receipt-eftpos"
           label="Receipt from EFTPOS"
           checked={eftposReceipt}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setEftposReceipt(e.currentTarget.checked);
-            }
+          onChange={(e: any) => {
+            setEftposReceipt(e.target.checked);
+            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            //   if (e && e.currentTarget) {
+            //     setEftposReceipt(e.currentTarget.checked);
+            //   }
           }}
         />
         <Checkbox
@@ -33,10 +37,12 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           id="check-sig-eftpos"
           label="Sig from EFTPOS"
           checked={sigFlow}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setSigFlow(e.currentTarget.checked);
-            }
+          onChange={(e: any) => {
+            setSigFlow(e.target.checked);
+            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            //   if (e && e.currentTarget) {
+            //     setSigFlow(e.currentTarget.checked);
+            //   }
           }}
         />
         <Checkbox
@@ -44,10 +50,12 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           id="print-merchant-copy"
           label="Print Merchant Copy"
           checked={printMerchantCopy}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setPrintMerchantCopy(e.currentTarget.checked);
-            }
+          onChange={(e: any) => {
+            setPrintMerchantCopy(e.target.checked);
+            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            //   if (e && e.currentTarget) {
+            //     setPrintMerchantCopy(e.currentTarget.checked);
+            //   }
           }}
         />
         <Checkbox
@@ -55,62 +63,46 @@ function SettingConfig(props: { spi: any; suppressMerchantPassword: boolean; set
           id="suppress-merchant-password"
           label="Suppress Merchant Password"
           checked={suppressMerchantPassword}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setSuppressMerchantPassword(e.currentTarget.checked);
-            }
+          onChange={(e: any) => {
+            setSuppressMerchantPassword(e.target.checked);
+            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            // if (e && e.currentTarget) {
+            // setSuppressMerchantPassword(e.currentTarget.checked);
+            //   }
           }}
         />
         <Textarea
-          id="Receipt header"
-          name="Receipt header"
+          id="receipt-header"
+          name="Receipt-header"
           label="Receipt header"
           value={receiptHeader}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setReceiptHeader(e.currentTarget.value);
-            }
+          onChange={(e: any) => {
+            setReceiptHeader(e.target.value);
+            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            //   if (e && e.currentTarget) {
+            //     setReceiptHeader(e.currentTarget.value);
+            //   }
           }}
         />
         <Textarea
-          id="Receipt footer"
-          name="Receipt footer"
+          id="receipt-footer"
+          name="Receipt-footer"
           label="Receipt footer"
           value={receiptFooter}
-          onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            if (e && e.currentTarget) {
-              setReceiptFooter(e.currentTarget.value);
-            }
+          onChange={(e: any) => {
+            setReceiptFooter(e.target.value);
+            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+            //   if (e && e.currentTarget) {
+            //     setReceiptFooter(e.currentTarget.value);
+            //   }
           }}
         />
         <button
           type="button"
           className="primary-button"
+          id="btnApply"
           onClick={() => {
-            spi.Config.PromptForCustomerCopyOnEftpos = eftposReceipt;
-            spi.Config.SignatureFlowOnEftpos = sigFlow;
-            terminalStatusService.setIsMerchantReceiptPrinted(
-              { Info: () => {}, Clear: () => {} },
-              spi,
-              printMerchantCopy,
-              () => {}
-            );
-            terminalStatusService.setCustomReceiptStrings(
-              { Info: () => {}, Clear: () => {} },
-              new TransactionOptions(),
-              spi,
-              () => {},
-              receiptHeader,
-              receiptFooter,
-              receiptHeader,
-              receiptFooter
-            );
-            window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
-            window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
-            window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
-            window.localStorage.setItem('suppress_merchant_password_input', suppressMerchantPassword.toString());
-            window.localStorage.setItem('receipt_header_input', receiptHeader);
-            window.localStorage.setItem('receipt_footer_input', receiptFooter);
+            handleSaveSetting(eftposReceipt, sigFlow, printMerchantCopy, receiptHeader, receiptFooter);
           }}
         >
           Save &amp; Apply

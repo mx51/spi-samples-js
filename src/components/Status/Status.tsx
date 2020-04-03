@@ -44,11 +44,6 @@ function Status(props: { isFinishedPairing: Boolean; spi: any; status: string; M
         )}
         {status === SpiStatus.Unpaired && !isFinishedPairing && (
           <div>
-            {/* {isAwaitingConfirmation && (
-              // <button type="button" onClick={() => pairingService.pairingConfirmCode(spi)}>
-              //   Confirm code
-              // </button>
-            )} */}
             <button type="button" className="primary-button" onClick={() => pairingService.pairingCancel(spi)}>
               Cancel Pairing
             </button>

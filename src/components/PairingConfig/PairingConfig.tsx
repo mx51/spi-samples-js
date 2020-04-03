@@ -3,14 +3,13 @@ import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 import Input from '../Input/Input';
 import Checkbox from '../Checkbox/Checkbox';
-// import { pairing } from '../../services';
 
 type Props = {
   spi: any;
   status: string;
 };
 
-function Setting({ spi, status }: Props) {
+function PairingConfig({ spi, status }: Props) {
   const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
   const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
   const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos_address') || '');
@@ -64,7 +63,6 @@ function Setting({ spi, status }: Props) {
     spi.SetTestMode(testMode);
     spi.SetSerialNumber(serial);
     spi.SetDeviceApiKey(apiKey);
-    spi.SetTestMode(testMode);
     spi.SetSecureWebSockets(secureWebSocket);
     spi.SetAutoAddressResolution(autoAddress);
     spi.SetEftposAddress(eftpos);
@@ -92,9 +90,9 @@ function Setting({ spi, status }: Props) {
             </Button>
           </Modal.Body>
         </Modal>
-        <form onSubmit={(e: React.SyntheticEvent) => handlePairingSaveSetting(e)}>
+        <form id="formPairingConfig" onSubmit={(e: React.SyntheticEvent) => handlePairingSaveSetting(e)}>
           <Input
-            id="POS ID"
+            id="inpPostId"
             name="POS ID"
             label="POS ID"
             placeholder="POS ID"
@@ -103,91 +101,105 @@ function Setting({ spi, status }: Props) {
             title="No special character Only alphanumeric"
             disabled={isDisabled}
             defaultValue={posId}
-            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              if (e && e.currentTarget) {
+            onChange={(e: any) => {
+              setPosId(e.target.value);
+
+              /* if (e && e.currentTarget) {
                 setPosId(e.currentTarget.value);
-              }
+              } */
             }}
           />
           <Input
-            id="API key"
+            id="inpAPIkey"
             name="API key"
             disabled={isDisabled}
             label="API key"
-            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              if (e && e.currentTarget) {
-                setApiKey(e.currentTarget.value);
-              }
+            onChange={(e: any) => {
+              setApiKey(e.target.value);
+              // if (e && e.currentTarget) {
+              //   setApiKey(e.currentTarget.value);
+              // }
             }}
             defaultValue="RamenPosDeviceIpApiKey"
           />
           <Input
-            id="serial"
+            id="inpSerial"
             name="serial"
             label="Serial"
             defaultValue={serial}
             placeholder="000-000-000"
             required={autoAddress === true}
             disabled={isDisabled}
-            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              if (e && e.currentTarget) {
-                setSerial(e.currentTarget.value);
-              }
+            onChange={(e: any) => {
+              setSerial(e.target.value);
+              // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+              //   if (e && e.currentTarget) {
+              //     setSerial(e.currentTarget.value);
+              //   }
             }}
           />
           <Input
-            id="EFTPOS"
+            id="inpEFTPOS"
             name="EFTPOS"
             label="EFTPOS"
             placeholder="00.000.0.000"
             disabled={autoAddress || isDisabled}
             required
             defaultValue={eftpos}
-            onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              if (e && e.currentTarget) {
-                setEftpos(e.currentTarget.value);
-              }
+            onChange={(e: any) => {
+              setEftpos(e.target.value);
+              // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+              //   if (e && e.currentTarget) {
+              //     setEftpos(e.currentTarget.value);
+              //   }
             }}
           />
           <div>
             <Checkbox
               type="checkbox"
-              id="Test Mode"
+              id="ckbTestMode"
               label="Test Mode"
               checked={testMode}
               disabled={window.location.protocol !== 'http:' || isDisabled}
-              onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                if (e && e.currentTarget) {
-                  setTestMode(e.currentTarget.checked);
-                }
+              onChange={(e: any) => {
+                setTestMode(e.target.checked);
+                // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                //   if (e && e.currentTarget) {
+                //     setTestMode(e.currentTarget.checked);
+                //   }
               }}
             />
             <Checkbox
               type="checkbox"
-              id="Secure WebSockets"
+              id="ckbSecureWebSockets"
               label="Secure WebSockets"
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={secureWebSocket}
-              onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                if (e && e.currentTarget) {
-                  setSecureWebSocket(e.currentTarget.checked);
-                  setAutoAddress(e.currentTarget.checked);
-                }
+              onChange={(e: any) => {
+                setSecureWebSocket(e.target.checked);
+                setAutoAddress(e.target.checked);
+                // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                //   if (e && e.currentTarget) {
+                //     setSecureWebSocket(e.currentTarget.checked);
+                //     setAutoAddress(e.currentTarget.checked);
+                //   }
               }}
             />
             <Checkbox
               type="checkbox"
-              id="Auto Address"
+              id="ckbAutoAddress"
               label="Auto Address"
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={autoAddress}
-              onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                if (e && e.currentTarget && !secureWebSocket) {
-                  setAutoAddress(e.currentTarget.checked);
-                }
+              // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+              //   if (e && e.currentTarget && !secureWebSocket) {
+              //     setAutoAddress(e.currentTarget.checked);
+              //   }
+              onChange={(e: any) => {
+                setAutoAddress(e.target.checked);
               }}
             />
-            <button type="submit" className="primary-button" disabled={isDisabled}>
+            <button id="btnSaveSetting" type="submit" className="primary-button" disabled={isDisabled}>
               Save Setting
             </button>
           </div>
@@ -197,4 +209,4 @@ function Setting({ spi, status }: Props) {
   );
 }
 
-export default Setting;
+export default PairingConfig;

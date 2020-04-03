@@ -67,6 +67,10 @@
   "jest": {
     "snapshotSerializers": [
       "enzyme-to-json/serializer"
+    ],
+    "collectCoverageFrom": [
+      "<rootDir>/src/components/**",
+      "<rootDir>/src/pages/Burger/BurgerPos.tsx"
     ]
   }
 }

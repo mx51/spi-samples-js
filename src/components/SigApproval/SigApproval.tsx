@@ -12,6 +12,7 @@ function SigApproval(props: { show: any; handleClose: Function; spi: any; setSho
       <Modal.Body>
         <p className="ml-2">Please confirm</p>
         <Button
+          id="btnSigApproval"
           variant="primary"
           className="btn-custom"
           onClick={() => {
@@ -23,6 +24,7 @@ function SigApproval(props: { show: any; handleClose: Function; spi: any; setSho
           Approve
         </Button>
         <Button
+          id="btnSigDecline"
           variant="primary"
           className="btn-custom"
           onClick={() => {
