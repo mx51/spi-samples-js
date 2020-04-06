@@ -56,4 +56,13 @@ describe('OrderPay', () => {
     expect(handleCreditCardPay.mock.calls[0][1]).toBe(0);
     expect(handleCreditCardPay.mock.calls[0][2]).toBe(0);
   });
+
+  it('should call creditCardPay when openPrice entered', () => {
+    component.find('input#inpOpenPrice').simulate('change', { target: { value: 1000 } });
+    component.find('button#creditCardPay').simulate('click');
+
+    expect(handleCreditCardPay.mock.calls[0][0]).toBe(0);
+    expect(handleCreditCardPay.mock.calls[0][1]).toBe(0);
+    expect(handleCreditCardPay.mock.calls[0][2]).toBe(1000);
+  });
 });

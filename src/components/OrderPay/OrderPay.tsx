@@ -59,7 +59,7 @@ function OrderPay(props: {
           />
           <p className="ml-2">Cents</p>
           <Input
-            id="cashout-amount"
+            id="inpCashoutAmount"
             name="Cashout amount"
             label="cashout Amount"
             disabled={tipAmount > 0 || transactionStatus}
@@ -80,7 +80,7 @@ function OrderPay(props: {
           <hr />
           <hr />
           <Input
-            id="open-price"
+            id="inpOpenPrice"
             name="Open Price"
             label="Order Amount"
             disabled={openPricing === false || transactionStatus}
