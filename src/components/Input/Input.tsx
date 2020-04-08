@@ -54,7 +54,7 @@ function Input(props: {
         title={title}
         required={required === true}
         defaultValue={defaultValue}
-        onChange={e => {
+        onChange={(e) => {
           if (onChange) onChange(e);
         }}
       />

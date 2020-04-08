@@ -17,7 +17,7 @@ function Checkbox(props: {
           type={type}
           checked={checked}
           id={id}
-          onChange={e => {
+          onChange={(e) => {
             onChange(e);
           }}
           disabled={disabled}

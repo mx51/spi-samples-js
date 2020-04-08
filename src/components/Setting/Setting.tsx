@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { Logger, SettleResponse, TransactionOptions } from '@mx51/spi-client-js';
+import { Logger, TransactionOptions } from '@mx51/spi-client-js';
 import SettingConfig from '../SettingConfig/SettingConfig';
 import Actions from '../Actions/Actions';
 import Flow from '../Flow/Flow';
@@ -25,11 +25,10 @@ function Setting(props: {
   const receiptEl = useRef<HTMLPreElement>(null);
 
   const [posSetting, setPosSetting] = useState();
-  const [actionType, setActionType] = useState();
+  const [actionType, setActionType] = useState<string>('');
   const [model, setModel] = useState('');
 
   const handleAction = useCallback((event: any) => {
-    console.log(posSetting);
     setPosSetting({ ...event.detail });
     const flowMsg = new Logger(flowEl.current);
     const receipt = new Logger(receiptEl.current);
@@ -133,9 +132,6 @@ function Setting(props: {
         <Col lg={3} className="sub-column d-flex flex-column">
           <div className="flex-fill ">
             <h2 className="sub-header">receipt</h2>
-            <pre className="receipt-alignment" ref={receiptEl}>
-              {actionType && actionType.Response && new SettleResponse(actionType.Response).GetReceipt().trim()}
-            </pre>
           </div>
         </Col>
       </Row>

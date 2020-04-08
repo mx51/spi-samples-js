@@ -29,7 +29,6 @@ function Pairing({
 
   const handlePairingStatusChange = useCallback((event: any) => {
     const flowMsg = new Logger(flowEl.current);
-    console.log(flowMsg, pairingService);
     const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
     setTimeout(() => {
       if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
@@ -40,8 +39,6 @@ function Pairing({
       Finished,
       Message,
     });
-
-    console.log(event.detail);
   }, []);
   useEffect(() => {
     document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);

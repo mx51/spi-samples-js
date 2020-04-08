@@ -38,7 +38,6 @@ class Spi {
       const secrets = JSON.parse(secretsString);
       if (secrets) {
         this._spiSecrets = secrets;
-        console.log(this._spiSecrets);
       }
     } catch (error) {
       this._log.error('unable to access secrets');
@@ -77,7 +76,6 @@ class Spi {
   }
 
   onSpiStateChange(e: any) {
-    console.log(e);
     if (e.detail && e.detail === 'PairedConnected') {
       this._spi.AckFlowEndedAndBackToIdle();
     }

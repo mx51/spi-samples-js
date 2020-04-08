@@ -8,7 +8,7 @@ function ProductList(props: { category: Category; onProductClick: Function }) {
     <div>
       <h3 className="product-category">{category.categoryName}</h3>
       <hr />
-      {category.list.map(p => (
+      {category.list.map((p) => (
         <span key={`${category.categoryName}-${p.id}`}>
           <button
             id={`btnProductItem${p.id}`}

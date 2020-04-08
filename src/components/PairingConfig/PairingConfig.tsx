@@ -23,7 +23,6 @@ function PairingConfig({ spi, status }: Props) {
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
-    console.log('location', window.location.protocol);
     if (window.location.protocol === 'https:') {
       setSecureWebSocket(true);
       setAutoAddress(true);
@@ -32,7 +31,6 @@ function PairingConfig({ spi, status }: Props) {
   });
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
-    console.log('.......eventdetail', event.detail);
     const deviceAddressStatus = event.detail;
     switch (deviceAddressStatus.DeviceAddressResponseCode) {
       case DeviceAddressResponseCode.SUCCESS:

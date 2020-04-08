@@ -83,7 +83,6 @@ function Checkout(props: {
   const handlePurchaseStatusChange = useCallback((event: any) => {
     setStateChange({ ...event.detail });
 
-    console.log(totalPaid);
     const flowMsg = new Logger(flowEl.current);
     const receipt = new Logger(receiptEl.current);
 

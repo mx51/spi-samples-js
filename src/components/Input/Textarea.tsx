@@ -3,7 +3,6 @@ import './Input.scss';
 
 function Textarea(props: { id: string; label: string; name: string; onChange?: Function; value?: string }) {
   const { id, label, name, onChange, value } = props;
-  console.log(id, label, name, value);
 
   return (
     <fieldset className="input p-2">
@@ -12,8 +11,9 @@ function Textarea(props: { id: string; label: string; name: string; onChange?: F
         <textarea
           id={id}
           value={value}
+          name={name}
           required
-          onChange={e => {
+          onChange={(e) => {
             if (onChange) onChange(e);
           }}
         />
@@ -21,7 +21,7 @@ function Textarea(props: { id: string; label: string; name: string; onChange?: F
         <textarea
           id={id}
           required
-          onChange={e => {
+          onChange={(e) => {
             if (onChange) onChange(e);
           }}
         />

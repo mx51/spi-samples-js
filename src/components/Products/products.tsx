@@ -43,7 +43,7 @@ function Products({
         {
           id: '102',
           name: 'Bacon burger',
-          image: '/images/bacon and cheese.png',
+          image: '/images/bacon and cheese.jpg',
           price: '12',
         },
         {
@@ -55,7 +55,7 @@ function Products({
         {
           id: '104',
           name: 'Beef burger',
-          image: '/images/beef.png',
+          image: '/images/beef.jpg',
           price: '12',
         },
         {
@@ -154,8 +154,8 @@ function Products({
       // else find the clicked product details in allProducts array and insert it at top
       // of short listed product list.
       let clickedProduct: any;
-      allProducts.forEach(c =>
-        c.list.forEach(p => {
+      allProducts.forEach((c) =>
+        c.list.forEach((p) => {
           if (p.id === id) {
             clickedProduct = p;
           }
@@ -168,8 +168,6 @@ function Products({
   };
 
   function handleChangeProductQuantity(id: any, quantity: number) {
-    console.log('Remove product', id);
-
     const products = [...shortlistedProducts];
 
     // find the clicked product id in existing shortlisted products list
@@ -263,7 +261,7 @@ function Products({
             <div className="pairing_banner">Please check your device Pairing setting!!</div>
           )}
 
-          {allProducts.map(cat => (
+          {allProducts.map((cat) => (
             <ProductList key={cat.categoryName} category={cat} onProductClick={handleProductClick} />
           ))}
         </Col>
