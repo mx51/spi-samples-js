@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 import { SpiStatus } from '@mx51/spi-client-js';
+import { ReactComponent as Logo } from '../../images/mx51.svg';
 import Products from '../../components/Products/products';
 import Pairing from '../../components/Pairing/Pairing';
 import Setting from '../../components/Setting/Setting';
@@ -71,7 +72,7 @@ function BurgerPos() {
           <Col sm={2} className="menu-sidebar min-vh-100">
             <div className="sticky-top">
               <h1 className="logo">
-                <img src="/images/mx51.svg" width="100" height="50" alt="mx51 Logo" />
+                <Logo width="100" height="50" title="mx51 Logo" />
               </h1>
               <Nav variant="pills" className="flex-column sidebar-links">
                 <Nav.Item>
