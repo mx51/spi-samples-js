@@ -109,6 +109,7 @@ class Spi {
         this._log.info(this._spi.CurrentTxFlowState);
         break;
       default:
+        // eslint-disable-next-line no-console
         console.log('Unable to handle flow state');
     }
   }

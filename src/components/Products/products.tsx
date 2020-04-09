@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { SpiStatus } from '@mx51/spi-client-js';
-import Checkout from '../Checkout/Checkout';
-import Order from '../Order/Order';
+import Checkout from '../Checkout';
+import Order from '../Order';
 import './Products.scss';
-import ProductList from '../ProductList/ProductList';
+import ProductList from '../ProductList';
 import { transactionFlow as transactionFlowService } from '../../services';
 
 type Props = {

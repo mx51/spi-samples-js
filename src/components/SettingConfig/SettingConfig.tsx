@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import Checkbox from '../Checkbox/Checkbox';
-import Textarea from '../Input/Textarea';
+import Checkbox from '../Checkbox';
+import { Textarea } from '../Input';
 
 function SettingConfig(props: {
   suppressMerchantPassword: boolean;

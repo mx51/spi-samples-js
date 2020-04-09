@@ -1,9 +1,9 @@
 import React, { useRef, useCallback, useEffect } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { Logger } from '@mx51/spi-client-js';
-import PairingConfig from '../PairingConfig/PairingConfig';
-import Flow from '../Flow/Flow';
-import Status from '../Status/Status';
+import PairingConfig from '../PairingConfig';
+import Flow from '../Flow';
+import Status from '../Status';
 import { pairing as pairingService } from '../../services';
 
 type Props = {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { SpiStatus } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import SurchargeModal from '../SurchargeModal/SurchargeModal';
+import SurchargeModal from '../SurchargeModal';
 import './Order.scss';
 
 function Order(props: {

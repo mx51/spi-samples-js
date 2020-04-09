@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Input from '../Input/Input';
+import { Input } from '../Input';
 
 function RefundPay(props: { handleRefundPay: Function }) {
   const { handleRefundPay } = props;

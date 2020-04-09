@@ -4,11 +4,11 @@ import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@mx51/s
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import './Checkout.scss';
 import Tick from '../Tick';
-import OrderPay from '../OrderPay/OrderPay';
-import RefundPay from '../RefundPay/RefundPay';
-import CashOutPay from '../CashOutPay/CashOutPay';
+import OrderPay from '../OrderPay';
+import RefundPay from '../RefundPay';
+import CashOutPay from '../CashOutPay';
 import PosUtils from '../../services/_common/pos';
-import SigApproval from '../SigApproval/SigApproval';
+import SigApproval from '../SigApproval';
 import {
   purchase as purchaseService,
   moto as motoService,

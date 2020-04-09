@@ -1,9 +1,9 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { Logger, TransactionOptions } from '@mx51/spi-client-js';
-import SettingConfig from '../SettingConfig/SettingConfig';
-import Actions from '../Actions/Actions';
-import Flow from '../Flow/Flow';
+import SettingConfig from '../SettingConfig';
+import Actions from '../Actions';
+import Flow from '../Flow';
 import {
   settlement as settlementService,
   settlementEnquiry as settlementEnquiryService,

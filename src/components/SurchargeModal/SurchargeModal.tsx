@@ -1,6 +1,15 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import Input from '../Input/Input';
+import { Input } from '../Input';
+
+function handleKeyPress(event: any) {
+  if (event.key < '0' || event.key > '9') {
+    alert('invalid input');
+    event.preventDefault();
+    return false;
+  }
+  return true;
+}
 
 function SurchargeModal(props: {
   show: boolean;
@@ -15,15 +24,6 @@ function SurchargeModal(props: {
     handleApplySurcharge(surcharge / 100);
     setSurcharge(0);
   }
-  function handleKeyPress(event: any) {
-    if (event.key < '0' || event.key > '9') {
-      alert('invalid input');
-      event.preventDefault();
-      return false;
-    }
-    return false;
-  }
-
   return (
     <Modal show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
@@ -55,4 +55,4 @@ function SurchargeModal(props: {
   );
 }
 
-export default SurchargeModal;
+export { SurchargeModal as default, handleKeyPress };

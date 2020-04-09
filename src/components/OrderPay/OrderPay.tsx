@@ -1,7 +1,7 @@
 import React, { useState, SyntheticEvent } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import Input from '../Input/Input';
-import Checkbox from '../Checkbox/Checkbox';
+import { Input } from '../Input';
+import Checkbox from '../Checkbox';
 
 enum PaymentType {
   Moto,

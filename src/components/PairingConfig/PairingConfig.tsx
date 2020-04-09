@@ -1,8 +1,8 @@
 import React, { useState, SyntheticEvent, useCallback, useEffect } from 'react';
 import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
-import Input from '../Input/Input';
-import Checkbox from '../Checkbox/Checkbox';
+import { Input } from '../Input';
+import Checkbox from '../Checkbox';
 
 type Props = {
   spi: any;
@@ -28,7 +28,7 @@ function PairingConfig({ spi, status }: Props) {
       setAutoAddress(true);
       setTestMode(true);
     }
-  });
+  }, []);
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
     const deviceAddressStatus = event.detail;
@@ -44,6 +44,7 @@ function PairingConfig({ spi, status }: Props) {
         setErrorMsg(`The serial number is invalid!`);
         break;
       default:
+        // eslint-disable-next-line no-console
         console.log('The serial number is invalid!.......');
         break;
     }
