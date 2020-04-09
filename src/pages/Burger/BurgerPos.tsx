@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 import { SpiStatus } from '@mx51/spi-client-js';
 import { ReactComponent as Logo } from '../../images/mx51.svg';
-import Products from '../../components/Products/Products';
+import Products from '../../components/Products';
 import Pairing from '../../components/Pairing';
 import Setting from '../../components/Setting';
 import SpiService from './spiService';
