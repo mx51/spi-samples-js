@@ -161,6 +161,7 @@ function Products({
           }
         })
       );
+      console.log(allProducts);
       products.unshift({ ...clickedProduct, quantity: 1 }); // push item on top of array using `unshift`
     }
 
