@@ -12,6 +12,37 @@ import {
 } from '../../services';
 import PosUtils from '../../services/_common/pos';
 
+function handleActionCallback(
+  event: any,
+  setModel: Function,
+  flowEl: any,
+  receiptEl: any,
+  actionType: string,
+  spi: any
+) {
+  const flowMsg = new Logger(flowEl.current);
+  const receipt = new Logger(receiptEl.current);
+
+  if (event.detail.Finished) {
+    if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
+      setModel('Please enter currect date');
+    }
+    if (event.detail.Response.Data.error_reason === 'OPERATION_IN_PROGRESS') {
+      setModel('Please check your terminal is paired');
+    }
+    let eventType = null;
+    if (actionType === 'SETTLEMENT_ENQUIRY') {
+      eventType = settlementEnquiryService;
+    } else {
+      eventType = settlementService;
+    }
+    PosUtils.processCompletedEvent(flowMsg, receipt, eventType, event.detail);
+    spi.AckFlowEndedAndBackToIdle();
+  } else {
+    transactionFlowService.handleTransaction(flowMsg, event.detail);
+  }
+}
+
 function Setting(props: {
   spi: any;
   status: string;
@@ -24,34 +55,13 @@ function Setting(props: {
   const flowEl = useRef();
   const receiptEl = useRef<HTMLPreElement>(null);
 
-  const [posSetting, setPosSetting] = useState();
   const [actionType, setActionType] = useState<string>('');
   const [model, setModel] = useState('');
 
-  const handleAction = useCallback((event: any) => {
-    setPosSetting({ ...event.detail });
-    const flowMsg = new Logger(flowEl.current);
-    const receipt = new Logger(receiptEl.current);
-
-    if (event.detail.Finished) {
-      if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
-        setModel('Please enter currect date');
-      }
-      if (event.detail.Response.Data.error_reason === 'OPERATION_IN_PROGRESS') {
-        setModel('Please check your terminal is paired');
-      }
-      let eventType = null;
-      if (actionType === 'SETTLEMENT_ENQUIRY') {
-        eventType = settlementEnquiryService;
-      } else {
-        eventType = settlementService;
-      }
-      PosUtils.processCompletedEvent(flowMsg, receipt, eventType, event.detail);
-      spi.AckFlowEndedAndBackToIdle();
-    } else {
-      transactionFlowService.handleTransaction(flowMsg, event.detail);
-    }
-  }, []);
+  const handleAction = useCallback(
+    (event: any) => handleActionCallback(event, setModel, flowEl, receiptEl, actionType, spi),
+    []
+  );
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handleAction);
     return function cleanup() {
@@ -131,7 +141,8 @@ function Setting(props: {
         </Col>
         <Col lg={3} className="sub-column d-flex flex-column">
           <div className="flex-fill ">
-            <h2 className="sub-header">receipt</h2>
+            <h2 className="sub-header">Receipt</h2>
+            <pre className="receipt-alignment" ref={receiptEl} />
           </div>
         </Col>
       </Row>

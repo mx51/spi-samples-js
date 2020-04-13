@@ -8,6 +8,16 @@ import Setting from '../../components/Setting';
 import SpiService from './spiService';
 import './BurgerPos.scss';
 
+function handlePaymentInProgressCallback(event: any, setInProgressPayment: Function) {
+  if (event.detail.Finished !== true) {
+    window.localStorage.setItem('payment_progress', true.toString());
+    setInProgressPayment(true);
+  } else {
+    window.localStorage.setItem('payment_progress', false.toString());
+    setInProgressPayment(false);
+  }
+}
+
 const spiService = new SpiService();
 spiService.start();
 
@@ -49,13 +59,7 @@ function BurgerPos() {
   });
 
   const handlePaymentInProgress = useCallback((event: any) => {
-    if (event.detail.Finished !== true) {
-      window.localStorage.setItem('payment_progress', true.toString());
-      setInProgressPayment(true);
-    } else {
-      window.localStorage.setItem('payment_progress', false.toString());
-      setInProgressPayment(false);
-    }
+    handlePaymentInProgressCallback(event, setInProgressPayment);
   }, []);
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);

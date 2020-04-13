@@ -189,10 +189,6 @@ function Products({
 
     updateShortlistedProducts(products);
   }
-
-  function handleApplySurcharge(surcharge: number) {
-    setSurchargeAmount(surcharge);
-  }
   function handleLastTransaction() {
     if (status !== SpiStatus.PairedConnected) {
       onErrorMsg('Please pair your POS to the terminal or check your network connection');
@@ -272,7 +268,7 @@ function Products({
             onRefund={handleRefund}
             onLastTransaction={handleLastTransaction}
             onCheckout={handleCheckout}
-            handleApplySurcharge={handleApplySurcharge}
+            handleApplySurcharge={setSurchargeAmount}
             surchargeAmount={surchargeAmount}
             status={status}
             errorMsg={errorMsg}

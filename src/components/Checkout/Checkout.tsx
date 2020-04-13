@@ -17,6 +17,45 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
+function handlePurchaseStatusCallback(
+  setStateChange: Function,
+  event: any,
+  flowEl: any,
+  receiptEl: any,
+  setShowSigApproval: Function,
+  setShowUnknownModal: Function,
+  spi: any,
+  transactionAction: String
+) {
+  setStateChange({ ...event.detail });
+
+  const flowMsg = new Logger(flowEl.current);
+  const receipt = new Logger(receiptEl.current);
+
+  if (event.detail.AwaitingSignatureCheck) {
+    setShowSigApproval(true);
+  }
+  if (event.detail.Finished && event.detail.Success === SuccessState.Unknown) {
+    setShowUnknownModal(true);
+  }
+
+  if (event.detail.Finished) {
+    if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
+      transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+      spi.AckFlowEndedAndBackToIdle();
+    } else {
+      PosUtils.processCompletedEvent(
+        flowMsg,
+        receipt,
+        transactionAction === 'purchase' ? purchaseService : refundService,
+        event.detail
+      );
+    }
+  } else {
+    transactionFlowService.handleTransaction(flowMsg, event.detail);
+  }
+}
+
 function displayReceipt(txState: any) {
   const { Response, SignatureRequiredMessage, Type } = txState;
 
@@ -64,7 +103,6 @@ function Checkout(props: {
     openPricing,
     setOpenPricing,
   } = props;
-  const [totalPaid, setTotalPaid] = useState<number>(0);
   const [promptCashout, setPromptCashout] = useState(false);
   const [showSigApproval, setShowSigApproval] = useState(false);
   const [finalTotal, setFinalTotal] = useState(0);
@@ -81,33 +119,16 @@ function Checkout(props: {
   } as any);
 
   const handlePurchaseStatusChange = useCallback((event: any) => {
-    setStateChange({ ...event.detail });
-
-    const flowMsg = new Logger(flowEl.current);
-    const receipt = new Logger(receiptEl.current);
-
-    if (event.detail.AwaitingSignatureCheck) {
-      setShowSigApproval(true);
-    }
-    if (event.detail.Finished && event.detail.Success === SuccessState.Unknown) {
-      setShowUnknownModal(true);
-    }
-
-    if (event.detail.Finished) {
-      if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
-        transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
-        spi.AckFlowEndedAndBackToIdle();
-      } else {
-        PosUtils.processCompletedEvent(
-          flowMsg,
-          receipt,
-          transactionAction === 'purchase' ? purchaseService : refundService,
-          event.detail
-        );
-      }
-    } else {
-      transactionFlowService.handleTransaction(flowMsg, event.detail);
-    }
+    handlePurchaseStatusCallback(
+      setStateChange,
+      event,
+      flowEl,
+      receiptEl,
+      setShowSigApproval,
+      setShowUnknownModal,
+      spi,
+      transactionAction
+    );
   }, []);
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
@@ -211,7 +232,6 @@ function Checkout(props: {
   function handleBack() {
     if (stateChange.Finished) {
       onNoThanks();
-      setTotalPaid(0);
       setSurchargeAmount(0);
     }
     setStateChange({ Finished: false, Success: SuccessState.Unknown });

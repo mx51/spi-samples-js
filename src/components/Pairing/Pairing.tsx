@@ -6,6 +6,20 @@ import Flow from '../Flow';
 import Status from '../Status';
 import { pairing as pairingService } from '../../services';
 
+function handlePairingCallback(event: any, flowEl: any, spi: any, setPairingState: Function) {
+  const flowMsg = new Logger(flowEl.current);
+  const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
+  setTimeout(() => {
+    if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
+  }, 1);
+  setPairingState({
+    AwaitingCheckFromPos,
+    ConfirmationCode,
+    Finished,
+    Message,
+  });
+}
+
 type Props = {
   confirmationCode: string;
   isAwaitingConfirmation: boolean;
@@ -28,17 +42,7 @@ function Pairing({
   const flowEl = useRef(null);
 
   const handlePairingStatusChange = useCallback((event: any) => {
-    const flowMsg = new Logger(flowEl.current);
-    const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
-    setTimeout(() => {
-      if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
-    }, 1);
-    setPairingState({
-      AwaitingCheckFromPos,
-      ConfirmationCode,
-      Finished,
-      Message,
-    });
+    handlePairingCallback(event, spi, flowEl, setPairingState);
   }, []);
   useEffect(() => {
     document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
