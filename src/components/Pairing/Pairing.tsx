@@ -43,13 +43,13 @@ function Pairing({
 
   const handlePairingStatusChange = useCallback((event: any) => {
     handlePairingCallback(event, spi, flowEl, setPairingState);
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
     return function cleanup() {
       document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
     };
-  }, []);
+  }, []); // eslint-disable-line
 
   return (
     <div>

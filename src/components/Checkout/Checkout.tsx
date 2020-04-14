@@ -129,7 +129,7 @@ function Checkout(props: {
       spi,
       transactionAction
     );
-  }, []);
+  }, []); // eslint-disable-line
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
     return function cleanup() {
@@ -142,7 +142,7 @@ function Checkout(props: {
       const flowMsg = new Logger(flowEl.current);
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
-  }, [transactionAction]);
+  }, [transactionAction]); // eslint-disable-line
 
   const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = parseInt(totalBillAmount, 10) + surchargeAmount / 100;
