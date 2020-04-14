@@ -15,7 +15,7 @@
     "prettier/prettier": ["error"],
     "react/jsx-filename-extension": 0,
     "react/prop-types": 0,
-    "import/no-extraneous-dependencies": ["error", {"devDependencies": ["**/*.test.*", "**/setupTests.js"]}]
+    "import/no-extraneous-dependencies": ["error", { "devDependencies": ["**/*.test.*", "**/setupTests.js"] }]
   },
   "settings": {
     "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
@@ -23,4 +23,3 @@
     "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] }
   }
 }
-
