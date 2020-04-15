@@ -67,6 +67,164 @@ function displayReceipt(txState: any) {
   return undefined;
 }
 
+function motoPay(
+  spi: any,
+  totalAmount: number,
+  surchargeAmount: number,
+  amount: number,
+  suppressMerchantPassword: boolean,
+  setTransactionStatus: Function,
+  setFinalCashout: Function,
+  setFinalTipAmount: Function,
+  setFinalSurcharge: Function,
+  setPurchaseAmount: Function,
+  setFinalTotal: Function
+) {
+  motoService.initiateMotoPurchase(
+    { Info: () => {} },
+    spi,
+    totalAmount * 100,
+    surchargeAmount,
+    suppressMerchantPassword
+  );
+  setTransactionStatus(true);
+  setFinalTipAmount(0);
+  setFinalSurcharge(surchargeAmount / 100);
+  setFinalCashout(0);
+  setPurchaseAmount(amount);
+  setFinalTotal(totalAmount);
+}
+
+function creditCardPay(
+  tipAmount: number,
+  cashoutAmount: number,
+  manualAmount: number,
+  openPricing: boolean,
+  flowEl: any,
+  spi: any,
+  amount: number,
+  surchargeAmount: number,
+  promptCashout: boolean,
+  setTransactionStatus: Function,
+  setFinalCashout: Function,
+  setFinalTipAmount: Function,
+  setFinalSurcharge: Function,
+  setPurchaseAmount: Function,
+  setFinalTotal: Function
+) {
+  if (openPricing === true && manualAmount > 0) {
+    const flowMsg = new Logger(flowEl.current);
+    purchaseService.initiatePurchase(
+      flowMsg,
+      spi._options,
+      spi,
+      manualAmount,
+      tipAmount,
+      cashoutAmount,
+      surchargeAmount,
+      promptCashout
+    );
+    const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + manualAmount / 100;
+    setTransactionStatus(true);
+    setFinalTotal(total);
+    setFinalTipAmount(tipAmount / 100);
+    setFinalSurcharge(surchargeAmount / 100);
+    setFinalCashout(cashoutAmount / 100);
+    setPurchaseAmount(manualAmount / 100);
+  } else {
+    const flowMsg = new Logger(flowEl.current);
+    purchaseService.initiatePurchase(
+      flowMsg,
+      spi._options,
+      spi,
+      amount * 100,
+      tipAmount,
+      cashoutAmount,
+      surchargeAmount,
+      promptCashout
+    );
+    setTransactionStatus(true);
+    const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + amount;
+    setFinalTotal(total);
+    setFinalTipAmount(tipAmount / 100);
+    setFinalSurcharge(surchargeAmount / 100);
+    setFinalCashout(cashoutAmount / 100);
+    setPurchaseAmount(amount);
+  }
+}
+function refundPay(
+  refundAmount: number,
+  flowEl: any,
+  spi: any,
+  suppressMerchantPassword: boolean,
+  setTransactionStatus: Function,
+  setFinalCashout: Function,
+  setFinalTipAmount: Function,
+  setFinalSurcharge: Function,
+  setPurchaseAmount: Function,
+  setFinalTotal: Function
+) {
+  const flowMsg = new Logger(flowEl.current);
+  refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
+  setTransactionStatus(true);
+  setFinalTotal(refundAmount);
+  setPurchaseAmount(0);
+  setFinalTipAmount(0);
+  setFinalSurcharge(0);
+  setFinalCashout(0);
+}
+
+function cashoutPay(
+  cashoutAmount: number,
+  flowEl: any,
+  spi: any,
+  surchargeAmount: number,
+  setTransactionStatus: Function,
+  setFinalCashout: Function,
+  setFinalTipAmount: Function,
+  setFinalSurcharge: Function,
+  setPurchaseAmount: Function,
+  setFinalTotal: Function
+) {
+  const flowMsg = new Logger(flowEl.current);
+
+  cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
+  setTransactionStatus(true);
+  setFinalCashout(cashoutAmount);
+  setFinalSurcharge(surchargeAmount);
+  setFinalTotal(cashoutAmount + surchargeAmount / 100);
+  setPurchaseAmount(0);
+  setFinalTipAmount(0);
+}
+
+function backAction(
+  stateChange: any,
+  onNoThanks: Function,
+  setSurchargeAmount: Function,
+  setStateChange: Function,
+  setTransactionStatus: Function,
+  flowEl: React.RefObject<HTMLDivElement>,
+  receiptEl: React.RefObject<HTMLPreElement>,
+  onClose: Function
+) {
+  if (stateChange.Finished) {
+    onNoThanks();
+    setSurchargeAmount(0);
+  }
+  setStateChange({ Finished: false, Success: SuccessState.Unknown });
+  setTransactionStatus(false);
+  if (flowEl.current !== null) {
+    // eslint-disable-next-line no-param-reassign
+    flowEl.current.innerHTML = '';
+  }
+  if (receiptEl.current !== null) {
+    // eslint-disable-next-line no-param-reassign
+    receiptEl.current.innerHTML = '';
+  }
+
+  onClose();
+}
+
 function Checkout(props: {
   visible: Boolean;
   list: any;
@@ -149,101 +307,82 @@ function Checkout(props: {
   const amount = parseInt(totalBillAmount, 10);
 
   function handleMotoPay() {
-    motoService.initiateMotoPurchase(
-      { Info: () => {} },
+    motoPay(
       spi,
-      totalAmount * 100,
+      totalAmount,
       surchargeAmount,
-      suppressMerchantPassword
+      amount,
+      suppressMerchantPassword,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
     );
-    setTransactionStatus(true);
-    setFinalTipAmount(0);
-    setFinalSurcharge(surchargeAmount / 100);
-    setFinalCashout(0);
-    setPurchaseAmount(amount);
-    setFinalTotal(totalAmount);
   }
 
   function handleCreditCardPay(tipAmount: number, cashoutAmount: number, manualAmount: number) {
-    if (openPricing === true && manualAmount > 0) {
-      const flowMsg = new Logger(flowEl.current);
-      purchaseService.initiatePurchase(
-        flowMsg,
-        spi._options,
-        spi,
-        manualAmount,
-        tipAmount,
-        cashoutAmount,
-        surchargeAmount,
-        promptCashout
-      );
-      const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + manualAmount / 100;
-      setTransactionStatus(true);
-      setFinalTotal(total);
-      setFinalTipAmount(tipAmount / 100);
-      setFinalSurcharge(surchargeAmount / 100);
-      setFinalCashout(cashoutAmount / 100);
-      setPurchaseAmount(manualAmount / 100);
-    } else {
-      const flowMsg = new Logger(flowEl.current);
-      purchaseService.initiatePurchase(
-        flowMsg,
-        spi._options,
-        spi,
-        amount * 100,
-        tipAmount,
-        cashoutAmount,
-        surchargeAmount,
-        promptCashout
-      );
-      setTransactionStatus(true);
-      const total = (tipAmount + cashoutAmount + surchargeAmount) / 100 + amount;
-      setFinalTotal(total);
-      setFinalTipAmount(tipAmount / 100);
-      setFinalSurcharge(surchargeAmount / 100);
-      setFinalCashout(cashoutAmount / 100);
-      setPurchaseAmount(amount);
-    }
+    creditCardPay(
+      tipAmount,
+      cashoutAmount,
+      manualAmount,
+      openPricing,
+      flowEl,
+      spi,
+      amount,
+      surchargeAmount,
+      promptCashout,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+    );
   }
 
   function handleRefundPay(refundAmount: number) {
-    const flowMsg = new Logger(flowEl.current);
-    refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
-    setTransactionStatus(true);
-    setFinalTotal(refundAmount);
-    setPurchaseAmount(0);
-    setFinalTipAmount(0);
-    setFinalSurcharge(0);
-    setFinalCashout(0);
+    refundPay(
+      refundAmount,
+      flowEl,
+      spi,
+      suppressMerchantPassword,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+    );
   }
 
   function handleCashoutPay(cashoutAmount: number) {
-    const flowMsg = new Logger(flowEl.current);
-
-    cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
-    setTransactionStatus(true);
-    setFinalCashout(cashoutAmount);
-    setFinalSurcharge(surchargeAmount);
-    setFinalTotal(cashoutAmount + surchargeAmount / 100);
-    setPurchaseAmount(0);
-    setFinalTipAmount(0);
+    cashoutPay(
+      cashoutAmount,
+      flowEl,
+      spi,
+      surchargeAmount,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+    );
   }
 
   function handleBack() {
-    if (stateChange.Finished) {
-      onNoThanks();
-      setSurchargeAmount(0);
-    }
-    setStateChange({ Finished: false, Success: SuccessState.Unknown });
-    setTransactionStatus(false);
-    if (flowEl.current !== null) {
-      flowEl.current.innerHTML = '';
-    }
-    if (receiptEl.current !== null) {
-      receiptEl.current.innerHTML = '';
-    }
-
-    onClose();
+    backAction(
+      stateChange,
+      onNoThanks,
+      setSurchargeAmount,
+      setStateChange,
+      setTransactionStatus,
+      flowEl,
+      receiptEl,
+      onClose
+    );
   }
 
   function showRelatedPay() {
