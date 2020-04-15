@@ -4,6 +4,52 @@ import { Modal, Button } from 'react-bootstrap';
 import { Input } from '../Input';
 import Checkbox from '../Checkbox';
 
+function handleAutoAddressStateChangeCallback(event: any, setEftpos: Function, setErrorMsg: Function) {
+  const deviceAddressStatus = event.detail;
+  switch (deviceAddressStatus.DeviceAddressResponseCode) {
+    case DeviceAddressResponseCode.SUCCESS:
+      setEftpos(deviceAddressStatus.Address);
+      window.localStorage.setItem('eftpos_address', deviceAddressStatus.Address);
+      setErrorMsg(`Device Address has been updated to ${deviceAddressStatus.Address}`);
+      break;
+    case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
+      setEftpos('');
+      window.localStorage.setItem('eftpos_address', '');
+      setErrorMsg(`The serial number is invalid!`);
+      break;
+    default:
+      // eslint-disable-next-line no-console
+      console.log('The serial number is invalid!.......');
+      break;
+  }
+}
+function pairingSaveSetting(
+  e: React.SyntheticEvent,
+  spi: any,
+  posId: string,
+  testMode: boolean,
+  serial: string,
+  apiKey: string,
+  secureWebSocket: boolean,
+  autoAddress: boolean,
+  eftpos: string
+) {
+  e.preventDefault();
+  spi.SetPosId(posId);
+  spi.SetTestMode(testMode);
+  spi.SetSerialNumber(serial);
+  spi.SetDeviceApiKey(apiKey);
+  spi.SetSecureWebSockets(secureWebSocket);
+  spi.SetAutoAddressResolution(autoAddress);
+  spi.SetEftposAddress(eftpos);
+  window.localStorage.setItem('eftpos_address', eftpos);
+  window.localStorage.setItem('posID', posId);
+  window.localStorage.setItem('serial', serial);
+  window.localStorage.setItem('test_mode', testMode.toString());
+  window.localStorage.setItem('auto_address', autoAddress.toString());
+  window.localStorage.setItem('use_secure_web_sockets', secureWebSocket.toString());
+}
+
 type Props = {
   spi: any;
   status: string;
@@ -31,23 +77,7 @@ function PairingConfig({ spi, status }: Props) {
   }, []);
 
   const handleAutoAddressStateChange = useCallback((event: any) => {
-    const deviceAddressStatus = event.detail;
-    switch (deviceAddressStatus.DeviceAddressResponseCode) {
-      case DeviceAddressResponseCode.SUCCESS:
-        setEftpos(deviceAddressStatus.Address);
-        window.localStorage.setItem('eftpos_address', deviceAddressStatus.Address);
-        setErrorMsg(`Device Address has been updated to ${deviceAddressStatus.Address}`);
-        break;
-      case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
-        setEftpos('');
-        window.localStorage.setItem('eftpos_address', '');
-        setErrorMsg(`The serial number is invalid!`);
-        break;
-      default:
-        // eslint-disable-next-line no-console
-        console.log('The serial number is invalid!.......');
-        break;
-    }
+    handleAutoAddressStateChangeCallback(event, setEftpos, setErrorMsg);
   }, []);
   useEffect(() => {
     document.addEventListener('DeviceAddressChanged', handleAutoAddressStateChange);
@@ -57,20 +87,7 @@ function PairingConfig({ spi, status }: Props) {
   });
 
   function handlePairingSaveSetting(e: React.SyntheticEvent) {
-    e.preventDefault();
-    spi.SetPosId(posId);
-    spi.SetTestMode(testMode);
-    spi.SetSerialNumber(serial);
-    spi.SetDeviceApiKey(apiKey);
-    spi.SetSecureWebSockets(secureWebSocket);
-    spi.SetAutoAddressResolution(autoAddress);
-    spi.SetEftposAddress(eftpos);
-    window.localStorage.setItem('eftpos_address', eftpos);
-    window.localStorage.setItem('posID', posId);
-    window.localStorage.setItem('serial', serial);
-    window.localStorage.setItem('test_mode', testMode.toString());
-    window.localStorage.setItem('auto_address', autoAddress.toString());
-    window.localStorage.setItem('use_secure_web_sockets', secureWebSocket.toString());
+    pairingSaveSetting(e, spi, posId, testMode, serial, apiKey, secureWebSocket, autoAddress, eftpos);
   }
   const isDisabled = status !== SpiStatus.Unpaired;
 
