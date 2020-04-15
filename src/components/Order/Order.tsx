@@ -4,6 +4,25 @@ import { Col, Row, Modal, Button } from 'react-bootstrap';
 import SurchargeModal from '../SurchargeModal';
 import './Order.scss';
 
+function removeProductQuantityAction(
+  id: any,
+  list: any,
+  handleApplySurcharge: Function,
+  onChangeProductQuantity: Function
+) {
+  if (list.length === 1 && list[0].quantity === 1) {
+    handleApplySurcharge(0);
+  }
+  onChangeProductQuantity(id, -1);
+}
+
+function CheckoutAction(status: String, onErrorMsg: Function, onCheckout: Function) {
+  if (status !== SpiStatus.PairedConnected) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    onCheckout();
+  }
+}
 function Order(props: {
   list: any;
   onCheckout: Function;
@@ -35,19 +54,12 @@ function Order(props: {
   const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
   const totalAmount = subTotalAmount + surchargeAmount / 100;
 
-  function removeProductQuntity(id: any) {
-    if (list.length === 1 && list[0].quantity === 1) {
-      handleApplySurcharge(0);
-    }
-    onChangeProductQuantity(id, -1);
+  function removeProductQuantity(id: any) {
+    removeProductQuantityAction(id, list, handleApplySurcharge, onChangeProductQuantity);
   }
 
   function handleCheckout() {
-    if (status !== SpiStatus.PairedConnected) {
-      onErrorMsg('Please pair your POS to the terminal or check your network connection');
-    } else {
-      onCheckout();
-    }
+    CheckoutAction(status, onErrorMsg, onCheckout);
   }
 
   return (
@@ -101,7 +113,11 @@ function Order(props: {
                   <Row>
                     <Col sm={5}>
                       <div className="quantity-buttons">
-                        <button id={`btnItemDec${item.id}`} type="button" onClick={() => removeProductQuntity(item.id)}>
+                        <button
+                          id={`btnItemDec${item.id}`}
+                          type="button"
+                          onClick={() => removeProductQuantity(item.id)}
+                        >
                           -
                         </button>
                         <div id={`itemQuantity${item.id}`} className="quantity-label">
