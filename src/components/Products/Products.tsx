@@ -7,6 +7,110 @@ import './Products.scss';
 import ProductList from '../ProductList';
 import { transactionFlow as transactionFlowService } from '../../services';
 
+function productClick(shortlistedProducts: any, allProducts: any, id: string, updateShortlistedProducts: Function) {
+  const products = [...shortlistedProducts];
+  // find the clicked product id in existing shortlisted products list
+  let shortlistedId = -1;
+  shortlistedProducts.forEach((p: any, index: any) => {
+    if (p.id === id) {
+      shortlistedId = index;
+    }
+  });
+
+  // if clicked product found in shortlisted product list then increment the quantity
+  if (shortlistedId > -1) {
+    products[shortlistedId].quantity += 1;
+  } else {
+    // else find the clicked product details in allProducts array and insert it at top
+    // of short listed product list.
+    let clickedProduct: any;
+    allProducts.forEach((c: any) =>
+      c.list.forEach((p: any) => {
+        if (p.id === id) {
+          clickedProduct = p;
+        }
+      })
+    );
+    products.unshift({ ...clickedProduct, quantity: 1 }); // push item on top of array using `unshift`
+  }
+
+  updateShortlistedProducts(products);
+}
+
+function changeProductQuantity(
+  shortlistedProducts: any,
+  updateShortlistedProducts: Function,
+  id: any,
+  quantity: number
+) {
+  const products = [...shortlistedProducts];
+
+  // find the clicked product id in existing shortlisted products list
+  let shortlistedId = -1;
+  shortlistedProducts.forEach((p: any, index: any) => {
+    if (p.id === id) {
+      shortlistedId = index;
+    }
+  });
+
+  // if clicked product found in shortlisted product list then decrement the quantity
+  if (shortlistedId > -1) {
+    products[shortlistedId].quantity += quantity;
+    // if the quantity reaches 0, then remove the product from shortlisted product
+    if (products[shortlistedId].quantity === 0) {
+      products.splice(shortlistedId, 1);
+    }
+  }
+
+  updateShortlistedProducts(products);
+}
+
+function lastTransaction(status: any, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
+  if (status !== SpiStatus.PairedConnected) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    setCheckout(true);
+    setTransactionAction('lastTransaction');
+  }
+}
+
+function checkoutAction(shortlistedProducts: any, setTransactionAction: Function, setCheckout: Function) {
+  if (shortlistedProducts.length === 0) {
+    setTransactionAction('');
+  } else {
+    setTransactionAction('purchase');
+  }
+  setCheckout(true);
+}
+function refundAction(setCheckout: Function, setTransactionAction: Function) {
+  setCheckout(true);
+  setTransactionAction('refund');
+}
+
+function noThanksAction(
+  setCheckout: Function,
+  setTransactionAction: Function,
+  spi: any,
+  updateShortlistedProducts: Function,
+  setTransactionStatus: Function
+) {
+  transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
+  setCheckout(false);
+  setTransactionAction('');
+  updateShortlistedProducts([]);
+  setTransactionStatus(false);
+}
+
+function checkoutClosed(setCheckout: Function, setTransactionAction: Function) {
+  setCheckout(false);
+  setTransactionAction('');
+}
+
+function overrideTransaction(spi: any, setShowUnknownModal: Function) {
+  spi.AckFlowEndedAndBackToIdle();
+  setShowUnknownModal(false);
+}
+
 type Props = {
   spi: any;
   status: string;
@@ -132,94 +236,35 @@ function Products({
 
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
+
   function handleOverrideTransaction() {
-    spi.AckFlowEndedAndBackToIdle();
-    setShowUnknownModal(false);
+    overrideTransaction(spi, setShowUnknownModal);
   }
 
-  const handleProductClick = (id: string) => {
-    const products = [...shortlistedProducts];
-    // find the clicked product id in existing shortlisted products list
-    let shortlistedId = -1;
-    shortlistedProducts.forEach((p, index) => {
-      if (p.id === id) {
-        shortlistedId = index;
-      }
-    });
-
-    // if clicked product found in shortlisted product list then increment the quantity
-    if (shortlistedId > -1) {
-      products[shortlistedId].quantity += 1;
-    } else {
-      // else find the clicked product details in allProducts array and insert it at top
-      // of short listed product list.
-      let clickedProduct: any;
-      allProducts.forEach((c) =>
-        c.list.forEach((p) => {
-          if (p.id === id) {
-            clickedProduct = p;
-          }
-        })
-      );
-      products.unshift({ ...clickedProduct, quantity: 1 }); // push item on top of array using `unshift`
-    }
-
-    updateShortlistedProducts(products);
-  };
+  function handleProductClick(id: string) {
+    productClick(shortlistedProducts, allProducts, id, updateShortlistedProducts);
+  }
 
   function handleChangeProductQuantity(id: any, quantity: number) {
-    const products = [...shortlistedProducts];
-
-    // find the clicked product id in existing shortlisted products list
-    let shortlistedId = -1;
-    shortlistedProducts.forEach((p, index) => {
-      if (p.id === id) {
-        shortlistedId = index;
-      }
-    });
-
-    // if clicked product found in shortlisted product list then decrement the quantity
-    if (shortlistedId > -1) {
-      products[shortlistedId].quantity += quantity;
-      // if the quantity reaches 0, then remove the product from shortlisted product
-      if (products[shortlistedId].quantity === 0) {
-        products.splice(shortlistedId, 1);
-      }
-    }
-
-    updateShortlistedProducts(products);
+    changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity);
   }
+
   function handleLastTransaction() {
-    if (status !== SpiStatus.PairedConnected) {
-      onErrorMsg('Please pair your POS to the terminal or check your network connection');
-    } else {
-      setCheckout(true);
-      setTransactionAction('lastTransaction');
-    }
+    lastTransaction(status, onErrorMsg, setCheckout, setTransactionAction);
   }
+
   function handleCheckout() {
-    if (shortlistedProducts.length === 0) {
-      setTransactionAction('');
-    } else {
-      setTransactionAction('purchase');
-    }
-    setCheckout(true);
+    checkoutAction(shortlistedProducts, setTransactionAction, setCheckout);
   }
   function handleRefund() {
-    setCheckout(true);
-    setTransactionAction('refund');
+    refundAction(setCheckout, setTransactionAction);
   }
   function handleNoThanks() {
-    transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
-    setCheckout(false);
-    setTransactionAction('');
-    updateShortlistedProducts([]);
-    setTransactionStatus(false);
+    noThanksAction(setCheckout, setTransactionAction, spi, updateShortlistedProducts, setTransactionStatus);
   }
 
   function handleCheckoutClosed() {
-    setCheckout(false);
-    setTransactionAction('');
+    checkoutClosed(setCheckout, setTransactionAction);
   }
   return (
     <>
