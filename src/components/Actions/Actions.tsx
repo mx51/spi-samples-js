@@ -4,7 +4,14 @@ import { Modal, Button } from 'react-bootstrap';
 
 import { settlement as settlementService, settlementEnquiry as settlementEnquiryService } from '../../services';
 
-function settlementEnquiry(status: string, onErrorMsg: Function, setActionType: Function, receiptEl: any, flowEl: any) {
+function settlementEnquiry(
+  status: string,
+  onErrorMsg: Function,
+  setActionType: Function,
+  receiptEl: any,
+  flowEl: any,
+  spi: any
+) {
   if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
@@ -63,7 +70,7 @@ function Actions(props: {
   const { spi, setActionType, flowEl, getTerminalStatus, receiptEl, status, errorMsg, onErrorMsg } = props;
 
   function handleSettlementEnquiry() {
-    settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl);
+    settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl, spi);
   }
 
   function handleSettlement() {
