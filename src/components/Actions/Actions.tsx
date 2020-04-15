@@ -4,6 +4,52 @@ import { Modal, Button } from 'react-bootstrap';
 
 import { settlement as settlementService, settlementEnquiry as settlementEnquiryService } from '../../services';
 
+function settlementEnquiry(status: string, onErrorMsg: Function, setActionType: Function, receiptEl: any, flowEl: any) {
+  if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    const flowMsg = new Logger(flowEl.current);
+    setActionType('SETTLEMENT_ENQUIRY');
+    if (receiptEl.current !== null) {
+      // eslint-disable-next-line no-param-reassign
+      receiptEl.current.innerHTML = '';
+    }
+    settlementEnquiryService.initiateSettlementEnquiry(flowMsg, spi);
+  }
+}
+
+function settlement(
+  status: string,
+  onErrorMsg: Function,
+  setActionType: Function,
+  receiptEl: any,
+  flowEl: any,
+  spi: any
+) {
+  if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    const flowMsg = new Logger(flowEl.current);
+    setActionType('SETTLEMENT');
+    if (receiptEl.current !== null) {
+      // eslint-disable-next-line no-param-reassign
+      receiptEl.current.innerHTML = '';
+    }
+    settlementService.initiateSettlement(flowMsg, spi);
+  }
+}
+
+function terminalStatus(status: string, onErrorMsg: Function, receiptEl: any, spi: any, getTerminalStatus: Function) {
+  if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    if (receiptEl.current !== null) {
+      // eslint-disable-next-line no-param-reassign
+      receiptEl.current.innerHTML = '';
+    }
+    getTerminalStatus(spi);
+  }
+}
 function Actions(props: {
   spi: any;
   setActionType: Function;
@@ -17,40 +63,15 @@ function Actions(props: {
   const { spi, setActionType, flowEl, getTerminalStatus, receiptEl, status, errorMsg, onErrorMsg } = props;
 
   function handleSettlementEnquiry() {
-    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
-      onErrorMsg('Please pair your POS to the terminal or check your network connection');
-    } else {
-      const flowMsg = new Logger(flowEl.current);
-      setActionType('SETTLEMENT_ENQUIRY');
-      if (receiptEl.current !== null) {
-        receiptEl.current.innerHTML = '';
-      }
-      settlementEnquiryService.initiateSettlementEnquiry(flowMsg, spi);
-    }
+    settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl);
   }
 
   function handleSettlement() {
-    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
-      onErrorMsg('Please pair your POS to the terminal or check your network connection');
-    } else {
-      const flowMsg = new Logger(flowEl.current);
-      setActionType('SETTLEMENT');
-      if (receiptEl.current !== null) {
-        receiptEl.current.innerHTML = '';
-      }
-      settlementService.initiateSettlement(flowMsg, spi);
-    }
+    settlement(status, onErrorMsg, setActionType, receiptEl, flowEl, spi);
   }
 
   function handleTerminalStatus() {
-    if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
-      onErrorMsg('Please pair your POS to the terminal or check your network connection');
-    } else {
-      if (receiptEl.current !== null) {
-        receiptEl.current.innerHTML = '';
-      }
-      getTerminalStatus(spi);
-    }
+    terminalStatus(status, onErrorMsg, receiptEl, spi, getTerminalStatus);
   }
 
   return (
