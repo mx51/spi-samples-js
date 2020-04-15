@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { Input } from '../Input';
 
+function handleKeyPress(event: any) {
+  if (event.key < '0' || event.key > '9') {
+    event.preventDefault();
+    return false;
+  }
+  return true;
+}
+
 function RefundPay(props: { handleRefundPay: Function }) {
   const { handleRefundPay } = props;
   const [refundAmount, setRefundAmount] = useState(0);
-  function handleKeyPress(event: any) {
-    if (event.key < '0' || event.key > '9') {
-      event.preventDefault();
-      return false;
-    }
-    return true;
-  }
 
   return (
     <>
