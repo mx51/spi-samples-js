@@ -11,6 +11,11 @@ function handleKeyPress(event: any) {
   return true;
 }
 
+function applySurchargeAction(handleApplySurcharge: Function, setSurcharge: Function, surcharge: number) {
+  handleApplySurcharge(surcharge / 100);
+  setSurcharge(0);
+}
+
 function SurchargeModal(props: {
   show: boolean;
   handleClose: Function;
@@ -21,8 +26,7 @@ function SurchargeModal(props: {
   const { show, handleClose, handleApplySurcharge, surcharge, setSurcharge } = props;
 
   function applySurcharge() {
-    handleApplySurcharge(surcharge / 100);
-    setSurcharge(0);
+    applySurchargeAction(handleApplySurcharge, setSurcharge, surcharge);
   }
   return (
     <Modal show={show} onHide={() => handleClose()}>
