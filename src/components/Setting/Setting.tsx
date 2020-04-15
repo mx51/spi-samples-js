@@ -43,6 +43,50 @@ function handleActionCallback(
   }
 }
 
+function terminalStatus(spi: any, flowEl: any) {
+  spi.GetTerminalStatus();
+  const flowMsg = new Logger(flowEl.current);
+  // eslint-disable-next-line no-param-reassign
+  spi.TerminalStatusResponse = (message: Message) =>
+    terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
+}
+function saveSetting(
+  eftposReceipt: boolean,
+  sigFlow: boolean,
+  printMerchantCopy: boolean,
+  receiptHeader: string,
+  receiptFooter: string,
+  spi: any,
+  suppressMerchantPassword: boolean
+) {
+  // eslint-disable-next-line no-param-reassign
+  spi.Config.PromptForCustomerCopyOnEftpos = eftposReceipt;
+  // eslint-disable-next-line no-param-reassign
+  spi.Config.SignatureFlowOnEftpos = sigFlow;
+  terminalStatusService.setIsMerchantReceiptPrinted(
+    { Info: () => {}, Clear: () => {} },
+    spi,
+    printMerchantCopy,
+    () => {}
+  );
+  terminalStatusService.setCustomReceiptStrings(
+    { Info: () => {}, Clear: () => {} },
+    new TransactionOptions(),
+    spi,
+    () => {},
+    receiptHeader,
+    receiptFooter,
+    receiptHeader,
+    receiptFooter
+  );
+  window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
+  window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
+  window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
+  window.localStorage.setItem('suppress_merchant_password_input', suppressMerchantPassword.toString());
+  window.localStorage.setItem('receipt_header_input', receiptHeader);
+  window.localStorage.setItem('receipt_footer_input', receiptFooter);
+}
+
 function Setting(props: {
   spi: any;
   status: string;
@@ -71,11 +115,7 @@ function Setting(props: {
 
   // eslint-disable-next-line no-shadow
   function getTerminalStatus(spi: any) {
-    spi.GetTerminalStatus();
-    const flowMsg = new Logger(flowEl.current);
-    // eslint-disable-next-line no-param-reassign
-    spi.TerminalStatusResponse = (message: Message) =>
-      terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
+    terminalStatus(spi, flowEl);
   }
   function handleSaveSetting(
     eftposReceipt: boolean,
@@ -84,30 +124,7 @@ function Setting(props: {
     receiptHeader: string,
     receiptFooter: string
   ) {
-    spi.Config.PromptForCustomerCopyOnEftpos = eftposReceipt;
-    spi.Config.SignatureFlowOnEftpos = sigFlow;
-    terminalStatusService.setIsMerchantReceiptPrinted(
-      { Info: () => {}, Clear: () => {} },
-      spi,
-      printMerchantCopy,
-      () => {}
-    );
-    terminalStatusService.setCustomReceiptStrings(
-      { Info: () => {}, Clear: () => {} },
-      new TransactionOptions(),
-      spi,
-      () => {},
-      receiptHeader,
-      receiptFooter,
-      receiptHeader,
-      receiptFooter
-    );
-    window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
-    window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
-    window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
-    window.localStorage.setItem('suppress_merchant_password_input', suppressMerchantPassword.toString());
-    window.localStorage.setItem('receipt_header_input', receiptHeader);
-    window.localStorage.setItem('receipt_footer_input', receiptFooter);
+    saveSetting(eftposReceipt, sigFlow, printMerchantCopy, receiptHeader, receiptFooter, spi, suppressMerchantPassword);
   }
 
   return (
