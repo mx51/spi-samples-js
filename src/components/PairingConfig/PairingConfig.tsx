@@ -119,10 +119,6 @@ function PairingConfig({ spi, status }: Props) {
             defaultValue={posId}
             onChange={(e: any) => {
               setPosId(e.target.value);
-
-              /* if (e && e.currentTarget) {
-                setPosId(e.currentTarget.value);
-              } */
             }}
           />
           <Input
@@ -132,9 +128,6 @@ function PairingConfig({ spi, status }: Props) {
             label="API key"
             onChange={(e: any) => {
               setApiKey(e.target.value);
-              // if (e && e.currentTarget) {
-              //   setApiKey(e.currentTarget.value);
-              // }
             }}
             defaultValue="RamenPosDeviceIpApiKey"
           />
@@ -148,10 +141,6 @@ function PairingConfig({ spi, status }: Props) {
             disabled={isDisabled}
             onChange={(e: any) => {
               setSerial(e.target.value);
-              // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              //   if (e && e.currentTarget) {
-              //     setSerial(e.currentTarget.value);
-              //   }
             }}
           />
           <Input
@@ -164,10 +153,6 @@ function PairingConfig({ spi, status }: Props) {
             defaultValue={eftpos}
             onChange={(e: any) => {
               setEftpos(e.target.value);
-              // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              //   if (e && e.currentTarget) {
-              //     setEftpos(e.currentTarget.value);
-              //   }
             }}
           />
           <div>
@@ -179,10 +164,6 @@ function PairingConfig({ spi, status }: Props) {
               disabled={window.location.protocol !== 'http:' || isDisabled}
               onChange={(e: any) => {
                 setTestMode(e.target.checked);
-                // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                //   if (e && e.currentTarget) {
-                //     setTestMode(e.currentTarget.checked);
-                //   }
               }}
             />
             <Checkbox
@@ -194,11 +175,6 @@ function PairingConfig({ spi, status }: Props) {
               onChange={(e: any) => {
                 setSecureWebSocket(e.target.checked);
                 setAutoAddress(e.target.checked);
-                // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-                //   if (e && e.currentTarget) {
-                //     setSecureWebSocket(e.currentTarget.checked);
-                //     setAutoAddress(e.currentTarget.checked);
-                //   }
               }}
             />
             <Checkbox
@@ -207,10 +183,6 @@ function PairingConfig({ spi, status }: Props) {
               label="Auto Address"
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={autoAddress}
-              // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-              //   if (e && e.currentTarget && !secureWebSocket) {
-              //     setAutoAddress(e.currentTarget.checked);
-              //   }
               onChange={(e: any) => {
                 setAutoAddress(e.target.checked);
               }}

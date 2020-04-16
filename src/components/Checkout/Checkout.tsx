@@ -1,4 +1,3 @@
-/* eslint no-else-return: "error" */
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
@@ -61,6 +60,7 @@ function displayReceipt(txState: any) {
 
   if (Response && Type !== 'GetLastTransaction') {
     return new PurchaseResponse(Response).GetCustomerReceipt().trim();
+    // eslint-disable-next-line no-else-return
   } else if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
     return SignatureRequiredMessage.GetMerchantReceipt().trim();
   }
@@ -388,6 +388,7 @@ function Checkout(props: {
   function showRelatedPay() {
     if (transactionAction === 'refund') {
       return <RefundPay handleRefundPay={handleRefundPay} />;
+      // eslint-disable-next-line no-else-return
     } else if (transactionAction === '' && list.length === 0) {
       return <CashOutPay handleCashoutPay={handleCashoutPay} />;
     }

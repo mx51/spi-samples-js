@@ -26,10 +26,6 @@ function SettingConfig(props: {
           checked={eftposReceipt}
           onChange={(e: any) => {
             setEftposReceipt(e.target.checked);
-            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            //   if (e && e.currentTarget) {
-            //     setEftposReceipt(e.currentTarget.checked);
-            //   }
           }}
         />
         <Checkbox
@@ -39,10 +35,6 @@ function SettingConfig(props: {
           checked={sigFlow}
           onChange={(e: any) => {
             setSigFlow(e.target.checked);
-            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            //   if (e && e.currentTarget) {
-            //     setSigFlow(e.currentTarget.checked);
-            //   }
           }}
         />
         <Checkbox
@@ -52,10 +44,6 @@ function SettingConfig(props: {
           checked={printMerchantCopy}
           onChange={(e: any) => {
             setPrintMerchantCopy(e.target.checked);
-            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            //   if (e && e.currentTarget) {
-            //     setPrintMerchantCopy(e.currentTarget.checked);
-            //   }
           }}
         />
         <Checkbox
@@ -65,10 +53,6 @@ function SettingConfig(props: {
           checked={suppressMerchantPassword}
           onChange={(e: any) => {
             setSuppressMerchantPassword(e.target.checked);
-            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            // if (e && e.currentTarget) {
-            // setSuppressMerchantPassword(e.currentTarget.checked);
-            //   }
           }}
         />
         <Textarea
@@ -78,10 +62,6 @@ function SettingConfig(props: {
           value={receiptHeader}
           onChange={(e: any) => {
             setReceiptHeader(e.target.value);
-            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            //   if (e && e.currentTarget) {
-            //     setReceiptHeader(e.currentTarget.value);
-            //   }
           }}
         />
         <Textarea
@@ -91,10 +71,6 @@ function SettingConfig(props: {
           value={receiptFooter}
           onChange={(e: any) => {
             setReceiptFooter(e.target.value);
-            // onChange={(e: SyntheticEvent<HTMLInputElement>) => {
-            //   if (e && e.currentTarget) {
-            //     setReceiptFooter(e.currentTarget.value);
-            //   }
           }}
         />
         <button
