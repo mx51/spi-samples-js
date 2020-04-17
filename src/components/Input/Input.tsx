@@ -9,7 +9,7 @@ function Input(props: {
   type?: string;
   disabled?: boolean;
   min?: string;
-  onKeyPress?: any;
+  onKeyPress?: Function;
   pattern?: string;
   minLength?: number;
   maxLength?: number;
@@ -46,7 +46,9 @@ function Input(props: {
         type={type || 'text'}
         disabled={disabled}
         min={min}
-        onKeyPress={onKeyPress}
+        onKeyPress={(e) => {
+          if (onKeyPress) onKeyPress(e);
+        }}
         pattern={pattern}
         maxLength={maxLength}
         minLength={minLength}

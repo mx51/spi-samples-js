@@ -55,7 +55,7 @@ function handlePurchaseStatusCallback(
   }
 }
 
-function displayReceipt(txState: any) {
+function displayReceipt(txState: TransactionFlowState) {
   const { Response, SignatureRequiredMessage, Type } = txState;
 
   if (Response && Type !== 'GetLastTransaction') {
