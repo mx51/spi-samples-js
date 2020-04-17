@@ -18,7 +18,7 @@ function RefundPay(props: { handleRefundPay: Function }) {
       <h2 className="sub-header mb-0">Refund</h2>
       <div className="mr-4 ml-4 mt-4">
         <Input
-          id="Refund-Amount"
+          id="inpRefundAmount"
           name="Refund"
           label="Refund Amount"
           type="number"
@@ -28,6 +28,7 @@ function RefundPay(props: { handleRefundPay: Function }) {
         <p className="ml-2">Cents</p>
       </div>
       <button
+        id="refundButton"
         className="primary-button checkout-button mb-0"
         type="button"
         onClick={() => handleRefundPay(refundAmount)}

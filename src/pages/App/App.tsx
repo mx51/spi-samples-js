@@ -13,7 +13,6 @@ const App = () => (
           <Link to="/burger">Burger POS</Link>
         </li>
         <li>
-          {/* <Link to="/ramen">Ramen POS</Link> */}
           <Link to="/ramen">Ramen POS</Link>
         </li>
         <li>

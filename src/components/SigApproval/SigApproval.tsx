@@ -1,9 +1,8 @@
 import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
-import { transactionFlow as transactionFlowService } from '../../services';
 
-function SigApproval(props: { show: boolean; handleClose: Function; spi: Spi; setShowSigApproval: Function }) {
-  const { show, handleClose, spi, setShowSigApproval } = props;
+function SigApproval(props: { show: boolean; handleClose: Function; handleApproveSig: Function }) {
+  const { show, handleClose, handleApproveSig } = props;
   return (
     <Modal show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
@@ -16,8 +15,7 @@ function SigApproval(props: { show: boolean; handleClose: Function; spi: Spi; se
           variant="primary"
           className="btn-custom"
           onClick={() => {
-            transactionFlowService.acceptSignature(spi);
-            setShowSigApproval(false);
+            handleApproveSig(true);
           }}
           block
         >
@@ -28,8 +26,7 @@ function SigApproval(props: { show: boolean; handleClose: Function; spi: Spi; se
           variant="primary"
           className="btn-custom"
           onClick={() => {
-            transactionFlowService.declineSignature(spi);
-            setShowSigApproval(false);
+            handleApproveSig(false);
           }}
           block
         >

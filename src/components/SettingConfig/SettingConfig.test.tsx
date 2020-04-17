@@ -33,12 +33,5 @@ describe('SettingConfig', () => {
     expect(handleSaveSetting.mock.calls[0][2]).toBe(false);
     expect(handleSaveSetting.mock.calls[0][3]).toBe('This is header');
     expect(handleSaveSetting.mock.calls[0][4]).toBe('This is footer');
-
-    // expect(spi.setApiKey.mock.calls[0][0]).toBe('RamenPosDeviceIpApiKey');
-    // expect(spi.setSerial.mock.calls[0][0]).toBe('123-123-123');
-    // // expect(spi.setEftpos.mock.calls[0][0]).toBe('123.12.12.12');
-    // expect(spi.setTestMode.mock.calls[0][0]).toBe(false);
-    // expect(spi.setSecureWebSocket.mock.calls[0][0]).toBe(false);
-    // expect(spi.setAutoAddress.mock.calls[0][0]).toBe(false);
   });
 });

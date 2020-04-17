@@ -16,6 +16,15 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
+function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Function) {
+  if (isApproved) {
+    transactionFlowService.acceptSignature(spi);
+  } else {
+    transactionFlowService.declineSignature(spi);
+  }
+  setShowSigApproval(false);
+}
+
 function handlePurchaseStatusCallback(
   setStateChange: Function,
   event: TxFlowStateChangedEvent,
@@ -469,8 +478,7 @@ function Checkout(props: {
         handleClose={() => {
           setShowSigApproval(false);
         }}
-        setShowSigApproval={setShowSigApproval}
-        spi={spi}
+        handleApproveSig={(isApproved: boolean) => handleApproveSig(isApproved, spi, setShowSigApproval)}
       />
       <Modal show={showUnknownModal} onHide={() => setShowUnknownModal(false)}>
         <Modal.Header closeButton>

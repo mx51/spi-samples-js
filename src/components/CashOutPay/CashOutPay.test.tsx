@@ -20,7 +20,7 @@ describe('CashOutPay', () => {
       .at(0)
       .simulate('change', { target: { value: -100 } });
 
-    component.find('button').simulate('click');
+    component.find('button#cashoutButton').simulate('click');
     expect(handleCashoutPay.mock.calls[0][0]).toBe(-1);
   });
 });

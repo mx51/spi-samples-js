@@ -1,25 +1,24 @@
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import SigApproval from './SigApproval';
 
 describe('SigApproval', () => {
-  let setShowSigApproval = jest.fn();
-  let signatureApprove = jest.fn();
+  let handleApproveSig = jest.fn();
   let component: any;
 
   beforeEach(() => {
-    const show = false;
+    const show = true;
     const handleClose = jest.fn();
-    const spi = jest.fn();
-    signatureApprove = jest.fn();
-    setShowSigApproval = jest.fn();
-    component = mount(
-      <SigApproval show={show} handleClose={handleClose} setShowSigApproval={setShowSigApproval} spi={spi} />
-    );
+    handleApproveSig = jest.fn();
+    component = mount(<SigApproval show={show} handleClose={handleClose} handleApproveSig={handleApproveSig} />);
   });
 
-  xit('should call setShowSigApproval with default values', () => {
+  it('should call handleApproveSig with true when approved', () => {
     component.find('button#btnSigApproval').simulate('click');
-    expect(signatureApprove.mock.calls[0][0]).toBe(1);
+    expect(handleApproveSig.mock.calls[0][0]).toBe(true);
+  });
+  it('should call handleApproveSig with false when declined', () => {
+    component.find('button#btnSigDecline').simulate('click');
+    expect(handleApproveSig.mock.calls[0][0]).toBe(false);
   });
 });
