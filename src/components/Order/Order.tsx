@@ -108,7 +108,7 @@ function Order(props: {
         </Modal.Body>
       </Modal>
       <div className="orderListScroll">
-        <ul className="nobull">
+        <ul className="nobull removeStyle">
           {list.map((item: Product) => (
             <li className="space" key={`order-list-${item.id}`}>
               <Row>

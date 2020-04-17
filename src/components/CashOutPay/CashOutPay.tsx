@@ -10,7 +10,7 @@ function CashOutPay(props: { handleCashoutPay: Function }) {
       <h2 className="sub-header mb-0">Cashout</h2>
       <div className="mr-4 ml-4 mt-4">
         <Input
-          id="Cashout-Amount"
+          id="inpCashoutAmount"
           name="Cashout"
           label="Cashout Amount"
           type="number"
@@ -20,6 +20,7 @@ function CashOutPay(props: { handleCashoutPay: Function }) {
         <p className="ml-2">Cents</p>
       </div>
       <button
+        id="cashoutButton"
         className="primary-button checkout-button mb-0"
         type="button"
         onClick={() => handleCashoutPay(cashoutAmount)}

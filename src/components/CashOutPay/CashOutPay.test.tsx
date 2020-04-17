@@ -7,7 +7,7 @@ describe('CashOutPay', () => {
     const handleCashoutPay = jest.fn();
     const component = shallow(<CashOutPay handleCashoutPay={handleCashoutPay} />);
 
-    component.find('button').simulate('click');
+    component.find('button#cashoutButton').simulate('click');
     expect(handleCashoutPay.mock.calls[0][0]).toBe(0);
   });
 
@@ -16,7 +16,7 @@ describe('CashOutPay', () => {
     const component = mount(<CashOutPay handleCashoutPay={handleCashoutPay} />);
 
     component
-      .find('input')
+      .find('input#inpCashoutAmount')
       .at(0)
       .simulate('change', { target: { value: -100 } });
 
