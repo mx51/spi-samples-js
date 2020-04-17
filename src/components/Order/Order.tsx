@@ -5,8 +5,8 @@ import SurchargeModal from '../SurchargeModal';
 import './Order.scss';
 
 function removeProductQuantityAction(
-  id: any,
-  list: any,
+  id: string,
+  list: Array<Product>,
   handleApplySurcharge: Function,
   onChangeProductQuantity: Function
 ) {
@@ -24,7 +24,7 @@ function CheckoutAction(status: String, onErrorMsg: Function, onCheckout: Functi
   }
 }
 function Order(props: {
-  list: any;
+  list: Array<Product>;
   onCheckout: Function;
   onRefund: Function;
   onLastTransaction: Function;
@@ -51,10 +51,13 @@ function Order(props: {
   const [showSurcharge, setShowSurcharge] = useState(false);
   const [surcharge, setSurcharge] = useState<number>(0);
 
-  const subTotalAmount: number = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
+  const subTotalAmount: number = list.reduce(
+    (total: number, product: Product) => total + parseFloat(product.price) * product.quantity,
+    0
+  );
   const totalAmount = subTotalAmount + surchargeAmount / 100;
 
-  function removeProductQuantity(id: any) {
+  function removeProductQuantity(id: string) {
     removeProductQuantityAction(id, list, handleApplySurcharge, onChangeProductQuantity);
   }
 
@@ -106,7 +109,7 @@ function Order(props: {
       </Modal>
       <div className="orderListScroll">
         <ul className="nobull">
-          {list.map((item: any) => (
+          {list.map((item: Product) => (
             <li className="space" key={`order-list-${item.id}`}>
               <Row>
                 <Col sm={12}>
@@ -136,7 +139,7 @@ function Order(props: {
                       {item.name}
                     </Col>
                     <Col sm={2} className="quantity text-right">
-                      ${item.price * item.quantity}
+                      ${parseFloat(item.price) * item.quantity}
                     </Col>
                   </Row>
                 </Col>

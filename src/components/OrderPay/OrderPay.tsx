@@ -35,7 +35,7 @@ function OrderPay(props: {
     const [cashoutAmount, setCashoutAmount] = useState(0);
     const [manualAmount, setManualAmount] = useState<number>(0);
 
-    function handleKeyPress(event: any) {
+    function handleKeyPress(event: KeyboardEvent) {
       if (event.key < '0' || event.key > '9') {
         alert('invalid input');
         event.preventDefault();
@@ -55,7 +55,7 @@ function OrderPay(props: {
             min="0"
             type="number"
             onKeyPress={handleKeyPress}
-            onChange={(e: any) => setTipAmount(parseInt(e.target.value, 10))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setTipAmount(parseInt(e.target.value, 10))}
           />
           <p className="ml-2">Cents</p>
           <Input
@@ -66,7 +66,7 @@ function OrderPay(props: {
             min="0"
             onKeyPress={handleKeyPress}
             type="number"
-            onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCashoutAmount(parseInt(e.target.value, 10))}
           />
           <p className="ml-2">Cents</p>
           <Checkbox
@@ -75,7 +75,7 @@ function OrderPay(props: {
             disabled={tipAmount > 0 || transactionStatus}
             checked={promptCashout}
             label="Prompt for Cashout"
-            onChange={(e: any) => setPromptCashout(e.currentTarget.checked)}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPromptCashout(e.currentTarget.checked)}
           />
           <hr />
           <hr />
@@ -87,7 +87,7 @@ function OrderPay(props: {
             min="0"
             defaultValue={manualAmount === 0 ? '' : manualAmount.toString()}
             type="number"
-            onChange={(e: any) => setManualAmount(parseInt(e.target.value, 10))}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setManualAmount(parseInt(e.target.value, 10))}
           />
           <p className="ml-2">Cents</p>
           <Checkbox

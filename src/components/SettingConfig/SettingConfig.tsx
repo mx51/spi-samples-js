@@ -24,7 +24,7 @@ function SettingConfig(props: {
           id="check-receipt-eftpos"
           label="Receipt from EFTPOS"
           checked={eftposReceipt}
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setEftposReceipt(e.target.checked);
           }}
         />
@@ -33,7 +33,7 @@ function SettingConfig(props: {
           id="check-sig-eftpos"
           label="Sig from EFTPOS"
           checked={sigFlow}
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSigFlow(e.target.checked);
           }}
         />
@@ -42,7 +42,7 @@ function SettingConfig(props: {
           id="print-merchant-copy"
           label="Print Merchant Copy"
           checked={printMerchantCopy}
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setPrintMerchantCopy(e.target.checked);
           }}
         />
@@ -51,7 +51,7 @@ function SettingConfig(props: {
           id="suppress-merchant-password"
           label="Suppress Merchant Password"
           checked={suppressMerchantPassword}
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setSuppressMerchantPassword(e.target.checked);
           }}
         />
@@ -60,7 +60,7 @@ function SettingConfig(props: {
           name="Receipt-header"
           label="Receipt header"
           value={receiptHeader}
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setReceiptHeader(e.target.value);
           }}
         />
@@ -69,7 +69,7 @@ function SettingConfig(props: {
           name="Receipt-footer"
           label="Receipt footer"
           value={receiptFooter}
-          onChange={(e: any) => {
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
             setReceiptFooter(e.target.value);
           }}
         />

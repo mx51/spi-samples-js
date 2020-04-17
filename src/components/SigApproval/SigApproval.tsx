@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { transactionFlow as transactionFlowService } from '../../services';
 
-function SigApproval(props: { show: any; handleClose: Function; spi: any; setShowSigApproval: Function }) {
+function SigApproval(props: { show: boolean; handleClose: Function; spi: Spi; setShowSigApproval: Function }) {
   const { show, handleClose, spi, setShowSigApproval } = props;
   return (
     <Modal show={show} onHide={() => handleClose()}>

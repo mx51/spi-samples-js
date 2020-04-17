@@ -18,12 +18,12 @@ import {
 
 function handlePurchaseStatusCallback(
   setStateChange: Function,
-  event: any,
-  flowEl: any,
-  receiptEl: any,
+  event: TxFlowStateChangedEvent,
+  flowEl: React.RefObject<HTMLDivElement>,
+  receiptEl: React.RefObject<HTMLPreElement>,
   setShowSigApproval: Function,
   setShowUnknownModal: Function,
-  spi: any,
+  spi: Spi,
   transactionAction: String
 ) {
   setStateChange({ ...event.detail });
@@ -60,15 +60,15 @@ function displayReceipt(txState: any) {
 
   if (Response && Type !== 'GetLastTransaction') {
     return new PurchaseResponse(Response).GetCustomerReceipt().trim();
-    // eslint-disable-next-line no-else-return
-  } else if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
+  }
+  if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
     return SignatureRequiredMessage.GetMerchantReceipt().trim();
   }
   return undefined;
 }
 
 function motoPay(
-  spi: any,
+  spi: Spi,
   totalAmount: number,
   surchargeAmount: number,
   amount: number,
@@ -100,8 +100,8 @@ function creditCardPay(
   cashoutAmount: number,
   manualAmount: number,
   openPricing: boolean,
-  flowEl: any,
-  spi: any,
+  flowEl: React.RefObject<HTMLDivElement>,
+  spi: Spi,
   amount: number,
   surchargeAmount: number,
   promptCashout: boolean,
@@ -154,8 +154,8 @@ function creditCardPay(
 }
 function refundPay(
   refundAmount: number,
-  flowEl: any,
-  spi: any,
+  flowEl: React.RefObject<HTMLDivElement>,
+  spi: Spi,
   suppressMerchantPassword: boolean,
   setTransactionStatus: Function,
   setFinalCashout: Function,
@@ -176,8 +176,8 @@ function refundPay(
 
 function cashoutPay(
   cashoutAmount: number,
-  flowEl: any,
-  spi: any,
+  flowEl: React.RefObject<HTMLDivElement>,
+  spi: Spi,
   surchargeAmount: number,
   setTransactionStatus: Function,
   setFinalCashout: Function,
@@ -198,7 +198,7 @@ function cashoutPay(
 }
 
 function backAction(
-  stateChange: any,
+  stateChange: StateChange,
   onNoThanks: Function,
   setSurchargeAmount: Function,
   setStateChange: Function,
@@ -214,12 +214,12 @@ function backAction(
   setStateChange({ Finished: false, Success: SuccessState.Unknown });
   setTransactionStatus(false);
   if (flowEl.current !== null) {
-    // eslint-disable-next-line no-param-reassign
-    flowEl.current.innerHTML = '';
+    const flowMsg = new Logger(flowEl.current);
+    flowMsg.Clear();
   }
   if (receiptEl.current !== null) {
-    // eslint-disable-next-line no-param-reassign
-    receiptEl.current.innerHTML = '';
+    const receiptMsg = new Logger(receiptEl.current);
+    receiptMsg.Clear();
   }
 
   onClose();
@@ -227,13 +227,13 @@ function backAction(
 
 function Checkout(props: {
   visible: Boolean;
-  list: any;
+  list: Array<Product>;
   onClose: Function;
   onNoThanks: Function;
-  spi: any;
+  spi: Spi;
   surchargeAmount: number;
   setSurchargeAmount: Function;
-  setTransactionStatus: any;
+  setTransactionStatus: Function;
   transactionStatus: boolean;
   transactionAction: string;
   showUnknownModal: boolean;
@@ -274,9 +274,9 @@ function Checkout(props: {
   const [stateChange, setStateChange] = useState({
     Finished: false,
     Success: SuccessState.Unknown,
-  } as any);
+  } as StateChange);
 
-  const handlePurchaseStatusChange = useCallback((event: any) => {
+  const handlePurchaseStatusChange = useCallback((event: TxFlowStateChangedEvent) => {
     handlePurchaseStatusCallback(
       setStateChange,
       event,
@@ -302,9 +302,12 @@ function Checkout(props: {
     }
   }, [transactionAction]); // eslint-disable-line
 
-  const totalBillAmount = list.reduce((total: any, product: any) => total + product.price * product.quantity, 0);
-  const totalAmount = parseInt(totalBillAmount, 10) + surchargeAmount / 100;
-  const amount = parseInt(totalBillAmount, 10);
+  const totalBillAmount: number = list.reduce(
+    (total: number, product: Product) => total + parseFloat(product.price) * product.quantity,
+    0
+  );
+  const totalAmount = totalBillAmount + surchargeAmount / 100;
+  const amount = totalBillAmount;
 
   function handleMotoPay() {
     motoPay(

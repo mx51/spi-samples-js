@@ -13,12 +13,12 @@ import {
 import PosUtils from '../../services/_common/pos';
 
 function handleActionCallback(
-  event: any,
+  event: TxFlowStateChangedEvent,
   setModel: Function,
-  flowEl: any,
-  receiptEl: any,
+  flowEl: React.RefObject<HTMLDivElement>,
+  receiptEl: React.RefObject<HTMLPreElement>,
   actionType: string,
-  spi: any
+  spi: Spi
 ) {
   const flowMsg = new Logger(flowEl.current);
   const receipt = new Logger(receiptEl.current);
@@ -43,7 +43,7 @@ function handleActionCallback(
   }
 }
 
-function terminalStatus(spi: any, flowEl: any) {
+function terminalStatus(spi: Spi, flowEl: React.RefObject<HTMLDivElement>) {
   spi.GetTerminalStatus();
   const flowMsg = new Logger(flowEl.current);
   // eslint-disable-next-line no-param-reassign
@@ -56,7 +56,7 @@ function saveSetting(
   printMerchantCopy: boolean,
   receiptHeader: string,
   receiptFooter: string,
-  spi: any,
+  spi: Spi,
   suppressMerchantPassword: boolean
 ) {
   // eslint-disable-next-line no-param-reassign
@@ -88,7 +88,7 @@ function saveSetting(
 }
 
 function Setting(props: {
-  spi: any;
+  spi: Spi;
   status: string;
   errorMsg: string;
   onErrorMsg: Function;
@@ -96,14 +96,14 @@ function Setting(props: {
   setSuppressMerchantPassword: Function;
 }) {
   const { spi, status, errorMsg, onErrorMsg, suppressMerchantPassword, setSuppressMerchantPassword } = props;
-  const flowEl = useRef();
+  const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
   const [actionType, setActionType] = useState<string>('');
   const [model, setModel] = useState('');
 
   const handleAction = useCallback(
-    (event: any) => handleActionCallback(event, setModel, flowEl, receiptEl, actionType, spi),
+    (event: TxFlowStateChangedEvent) => handleActionCallback(event, setModel, flowEl, receiptEl, actionType, spi),
     [] // eslint-disable-line
   );
   useEffect(() => {
@@ -114,7 +114,7 @@ function Setting(props: {
   });
 
   // eslint-disable-next-line no-shadow
-  function getTerminalStatus(spi: any) {
+  function getTerminalStatus(spi: Spi) {
     terminalStatus(spi, flowEl);
   }
   function handleSaveSetting(

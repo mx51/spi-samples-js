@@ -13,9 +13,9 @@ function Input(props: {
   pattern?: string;
   minLength?: number;
   maxLength?: number;
-  placeholder?: any;
-  title?: any;
-  defaultValue?: any;
+  placeholder?: string;
+  title?: string;
+  defaultValue?: string;
   required?: Boolean;
 }) {
   const {

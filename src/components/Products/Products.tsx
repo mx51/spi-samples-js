@@ -7,11 +7,16 @@ import './Products.scss';
 import ProductList from '../ProductList';
 import { transactionFlow as transactionFlowService } from '../../services';
 
-function productClick(shortlistedProducts: any, allProducts: any, id: string, updateShortlistedProducts: Function) {
+function productClick(
+  shortlistedProducts: Array<Product>,
+  allProducts: AllProducts,
+  id: string,
+  updateShortlistedProducts: Function
+) {
   const products = [...shortlistedProducts];
   // find the clicked product id in existing shortlisted products list
   let shortlistedId = -1;
-  shortlistedProducts.forEach((p: any, index: any) => {
+  shortlistedProducts.forEach((p: Product, index: number) => {
     if (p.id === id) {
       shortlistedId = index;
     }
@@ -23,31 +28,31 @@ function productClick(shortlistedProducts: any, allProducts: any, id: string, up
   } else {
     // else find the clicked product details in allProducts array and insert it at top
     // of short listed product list.
-    let clickedProduct: any;
-    allProducts.forEach((c: any) =>
-      c.list.forEach((p: any) => {
+    let clickedProduct: Product;
+    allProducts.forEach((c: CategoryProducts) =>
+      c.list.forEach((p: Product) => {
         if (p.id === id) {
           clickedProduct = p;
+          products.unshift({ ...clickedProduct, quantity: 1 }); // push item on top of array using `unshift`
         }
       })
     );
-    products.unshift({ ...clickedProduct, quantity: 1 }); // push item on top of array using `unshift`
   }
 
   updateShortlistedProducts(products);
 }
 
 function changeProductQuantity(
-  shortlistedProducts: any,
+  shortlistedProducts: Array<Product>,
   updateShortlistedProducts: Function,
-  id: any,
+  id: string,
   quantity: number
 ) {
   const products = [...shortlistedProducts];
 
   // find the clicked product id in existing shortlisted products list
   let shortlistedId = -1;
-  shortlistedProducts.forEach((p: any, index: any) => {
+  shortlistedProducts.forEach((p: Product, index: number) => {
     if (p.id === id) {
       shortlistedId = index;
     }
@@ -65,7 +70,7 @@ function changeProductQuantity(
   updateShortlistedProducts(products);
 }
 
-function lastTransaction(status: any, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
+function lastTransaction(status: string, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
   if (status !== SpiStatus.PairedConnected) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
@@ -74,7 +79,7 @@ function lastTransaction(status: any, onErrorMsg: Function, setCheckout: Functio
   }
 }
 
-function checkoutAction(shortlistedProducts: any, setTransactionAction: Function, setCheckout: Function) {
+function checkoutAction(shortlistedProducts: Array<Product>, setTransactionAction: Function, setCheckout: Function) {
   if (shortlistedProducts.length === 0) {
     setTransactionAction('');
   } else {
@@ -90,7 +95,7 @@ function refundAction(setCheckout: Function, setTransactionAction: Function) {
 function noThanksAction(
   setCheckout: Function,
   setTransactionAction: Function,
-  spi: any,
+  spi: Spi,
   updateShortlistedProducts: Function,
   setTransactionStatus: Function
 ) {
@@ -106,13 +111,13 @@ function checkoutClosed(setCheckout: Function, setTransactionAction: Function) {
   setTransactionAction('');
 }
 
-function overrideTransaction(spi: any, setShowUnknownModal: Function) {
+function overrideTransaction(spi: Spi, setShowUnknownModal: Function) {
   spi.AckFlowEndedAndBackToIdle();
   setShowUnknownModal(false);
 }
 
 type Props = {
-  spi: any;
+  spi: Spi;
   status: string;
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
@@ -134,7 +139,7 @@ function Products({
   openPricing,
   setOpenPricing,
 }: Props) {
-  const allProducts = [
+  const allProducts: AllProducts = [
     {
       categoryName: 'Burger',
       list: [
@@ -143,36 +148,42 @@ function Products({
           name: 'Chicken burger',
           image: '/images/chicken.jpg',
           price: '12',
+          quantity: 0,
         },
         {
           id: '102',
           name: 'Bacon burger',
           image: '/images/bacon and cheese.jpg',
           price: '12',
+          quantity: 0,
         },
         {
           id: '103',
           name: 'Vegan burger',
           image: '/images/vegan.jpg',
           price: '12',
+          quantity: 0,
         },
         {
           id: '104',
           name: 'Beef burger',
           image: '/images/beef.jpg',
           price: '12',
+          quantity: 0,
         },
         {
           id: '105',
           name: 'Veggie burger',
           image: '/images/veggie.jpg',
           price: '12',
+          quantity: 0,
         },
         {
           id: '106',
           name: 'Lamb burger',
           image: '/images/lamb.jpg',
           price: '12',
+          quantity: 0,
         },
       ],
     },
@@ -184,24 +195,28 @@ function Products({
           name: 'Veggie Salad',
           image: '/images/caesar.jpg',
           price: '7',
+          quantity: 0,
         },
         {
           id: '202',
           name: 'Caeser Salad',
           image: '/images/salad.jpg',
           price: '7',
+          quantity: 0,
         },
         {
           id: '203',
           name: 'Small Fries',
           image: '/images/small fries.jpg',
           price: '7',
+          quantity: 0,
         },
         {
           id: '204',
           name: 'Large Fries',
           image: '/images/largefries.jpg',
           price: '7',
+          quantity: 0,
         },
       ],
     },
@@ -213,24 +228,27 @@ function Products({
           name: 'Coke',
           image: '/images/pepsi.jpg',
           price: '4',
+          quantity: 0,
         },
         {
           id: '302',
           name: 'Kombucha',
           image: '/images/kombuch.jpg',
           price: '4',
+          quantity: 0,
         },
         {
           id: '303',
           name: 'Orange Juice',
           image: '/images/orange juice.jpg',
           price: '4',
+          quantity: 0,
         },
       ],
     },
   ];
 
-  const [shortlistedProducts, updateShortlistedProducts] = useState<any[]>([]);
+  const [shortlistedProducts, updateShortlistedProducts] = useState<Array<Product>>([]);
   const [checkout, setCheckout] = useState(false);
   const [transactionAction, setTransactionAction] = useState('');
 
@@ -245,7 +263,7 @@ function Products({
     productClick(shortlistedProducts, allProducts, id, updateShortlistedProducts);
   }
 
-  function handleChangeProductQuantity(id: any, quantity: number) {
+  function handleChangeProductQuantity(id: string, quantity: number) {
     changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity);
   }
 

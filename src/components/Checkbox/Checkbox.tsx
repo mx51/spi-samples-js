@@ -6,7 +6,7 @@ function Checkbox(props: {
   label: string;
   onChange: Function;
   type: string;
-  checked: any;
+  checked: boolean;
   disabled?: boolean;
 }) {
   const { id, label, onChange, type, checked, disabled } = props;

@@ -15,7 +15,7 @@ function CashOutPay(props: { handleCashoutPay: Function }) {
           label="Cashout Amount"
           type="number"
           min="0"
-          onChange={(e: any) => setCashoutAmount(parseInt(e.target.value, 10) / 100)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCashoutAmount(parseInt(e.target.value, 10) / 100)}
         />
         <p className="ml-2">Cents</p>
       </div>

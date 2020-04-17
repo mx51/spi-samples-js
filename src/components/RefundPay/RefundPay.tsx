@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Input } from '../Input';
 
-function handleKeyPress(event: any) {
+function handleKeyPress(event: KeyboardEvent) {
   if (event.key < '0' || event.key > '9') {
     event.preventDefault();
     return false;
@@ -23,7 +23,7 @@ function RefundPay(props: { handleRefundPay: Function }) {
           label="Refund Amount"
           type="number"
           onKeyPress={handleKeyPress}
-          onChange={(e: any) => setRefundAmount(parseInt(e.target.value, 10) / 100)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRefundAmount(parseInt(e.target.value, 10) / 100)}
         />
         <p className="ml-2">Cents</p>
       </div>

@@ -6,7 +6,12 @@ import Flow from '../Flow';
 import Status from '../Status';
 import { pairing as pairingService } from '../../services';
 
-function handlePairingCallback(event: any, flowEl: any, spi: any, setPairingState: Function) {
+function handlePairingCallback(
+  event: TxFlowStateChangedEvent,
+  flowEl: React.RefObject<HTMLDivElement>,
+  spi: Spi,
+  setPairingState: Function
+) {
   const flowMsg = new Logger(flowEl.current);
   const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
   setTimeout(() => {
@@ -25,7 +30,7 @@ type Props = {
   isAwaitingConfirmation: boolean;
   isFinishedPairing: boolean;
   message: String;
-  spi: any;
+  spi: Spi;
   status: string;
   setPairingState: Function;
 };
@@ -41,7 +46,7 @@ function Pairing({
 }: Props) {
   const flowEl = useRef(null);
 
-  const handlePairingStatusChange = useCallback((event: any) => {
+  const handlePairingStatusChange = useCallback((event: TxFlowStateChangedEvent) => {
     handlePairingCallback(event, spi, flowEl, setPairingState);
   }, []); // eslint-disable-line
   useEffect(() => {

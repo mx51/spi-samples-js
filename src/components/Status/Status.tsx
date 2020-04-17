@@ -3,7 +3,7 @@ import { SpiStatus } from '@mx51/spi-client-js';
 import { Alert } from 'react-bootstrap';
 import { pairing as pairingService } from '../../services';
 
-function Status(props: { isFinishedPairing: Boolean; spi: any; status: string; Message: String }) {
+function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; Message: String }) {
   const { isFinishedPairing, spi, status, Message } = props;
 
   let message = 'Unpaired';

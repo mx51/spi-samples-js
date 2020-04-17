@@ -2,7 +2,7 @@ import React from 'react';
 import { Modal, Button } from 'react-bootstrap';
 import { Input } from '../Input';
 
-function handleKeyPress(event: any) {
+function handleKeyPress(event: KeyboardEvent) {
   if (event.key < '0' || event.key > '9') {
     alert('invalid input');
     event.preventDefault();
@@ -42,7 +42,7 @@ function SurchargeModal(props: {
           min="0"
           onKeyPress={handleKeyPress}
           defaultValue={surcharge === 0 ? '' : surcharge.toString()}
-          onChange={(e: any) => setSurcharge(Number.parseInt(e.target.value, 10))}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSurcharge(Number.parseInt(e.target.value, 10))}
         />
         <p className="ml-2">Cents</p>
         <Button

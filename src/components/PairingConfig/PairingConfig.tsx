@@ -4,7 +4,11 @@ import { Modal, Button } from 'react-bootstrap';
 import { Input } from '../Input';
 import Checkbox from '../Checkbox';
 
-function handleAutoAddressStateChangeCallback(event: any, setEftpos: Function, setErrorMsg: Function) {
+function handleAutoAddressStateChangeCallback(
+  event: DeviceAddressChangedEvent,
+  setEftpos: Function,
+  setErrorMsg: Function
+) {
   const deviceAddressStatus = event.detail;
   switch (deviceAddressStatus.DeviceAddressResponseCode) {
     case DeviceAddressResponseCode.SUCCESS:
@@ -25,7 +29,7 @@ function handleAutoAddressStateChangeCallback(event: any, setEftpos: Function, s
 }
 function pairingSaveSetting(
   e: React.SyntheticEvent,
-  spi: any,
+  spi: Spi,
   posId: string,
   testMode: boolean,
   serial: string,
@@ -51,7 +55,7 @@ function pairingSaveSetting(
 }
 
 type Props = {
-  spi: any;
+  spi: Spi;
   status: string;
 };
 
@@ -76,7 +80,7 @@ function PairingConfig({ spi, status }: Props) {
     }
   }, []);
 
-  const handleAutoAddressStateChange = useCallback((event: any) => {
+  const handleAutoAddressStateChange = useCallback((event: DeviceAddressChangedEvent) => {
     handleAutoAddressStateChangeCallback(event, setEftpos, setErrorMsg);
   }, []);
   useEffect(() => {
@@ -117,7 +121,7 @@ function PairingConfig({ spi, status }: Props) {
             title="No special character Only alphanumeric"
             disabled={isDisabled}
             defaultValue={posId}
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setPosId(e.target.value);
             }}
           />
@@ -126,7 +130,7 @@ function PairingConfig({ spi, status }: Props) {
             name="API key"
             disabled={isDisabled}
             label="API key"
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setApiKey(e.target.value);
             }}
             defaultValue="RamenPosDeviceIpApiKey"
@@ -139,7 +143,7 @@ function PairingConfig({ spi, status }: Props) {
             placeholder="000-000-000"
             required={autoAddress === true}
             disabled={isDisabled}
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSerial(e.target.value);
             }}
           />
@@ -151,7 +155,7 @@ function PairingConfig({ spi, status }: Props) {
             disabled={autoAddress || isDisabled}
             required
             defaultValue={eftpos}
-            onChange={(e: any) => {
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setEftpos(e.target.value);
             }}
           />
@@ -162,7 +166,7 @@ function PairingConfig({ spi, status }: Props) {
               label="Test Mode"
               checked={testMode}
               disabled={window.location.protocol !== 'http:' || isDisabled}
-              onChange={(e: any) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setTestMode(e.target.checked);
               }}
             />
@@ -172,7 +176,7 @@ function PairingConfig({ spi, status }: Props) {
               label="Secure WebSockets"
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={secureWebSocket}
-              onChange={(e: any) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setSecureWebSocket(e.target.checked);
                 setAutoAddress(e.target.checked);
               }}
@@ -183,7 +187,7 @@ function PairingConfig({ spi, status }: Props) {
               label="Auto Address"
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={autoAddress}
-              onChange={(e: any) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setAutoAddress(e.target.checked);
               }}
             />
