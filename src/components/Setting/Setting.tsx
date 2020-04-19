@@ -104,7 +104,7 @@ function Setting(props: {
 
   const handleAction = useCallback(
     (event: TxFlowStateChangedEvent) => handleActionCallback(event, setModel, flowEl, receiptEl, actionType, spi),
-    [] // eslint-disable-line
+    []
   );
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handleAction);

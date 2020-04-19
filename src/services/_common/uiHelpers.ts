@@ -30,7 +30,6 @@ function getSpiVersion(): string | null | undefined {
   return versionMetaEl ? versionMetaEl.getAttribute('content') : undefined;
 }
 
-// eslint-disable-next-line
 export {
   getSpiVersion,
   getElementValue,

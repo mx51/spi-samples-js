@@ -296,7 +296,7 @@ function Checkout(props: {
       spi,
       transactionAction
     );
-  }, []); // eslint-disable-line
+  }, []);
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
     return function cleanup() {
@@ -309,7 +309,7 @@ function Checkout(props: {
       const flowMsg = new Logger(flowEl.current);
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
-  }, [transactionAction]); // eslint-disable-line
+  }, [transactionAction]);
 
   const totalBillAmount: number = list.reduce(
     (total: number, product: Product) => total + parseFloat(product.price) * product.quantity,
@@ -339,40 +339,40 @@ function Checkout(props: {
             refundPay(
               refundAmount,
               flowEl,
-      spi,
-      suppressMerchantPassword,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
+              spi,
+              suppressMerchantPassword,
+              setTransactionStatus,
+              setFinalCashout,
+              setFinalTipAmount,
+              setFinalSurcharge,
+              setPurchaseAmount,
+              setFinalTotal
             )
           }
         />
-    );
-  }
+      );
+    }
 
     if (transactionAction === '' && list.length === 0) {
       return (
         <CashOutPay
           handleCashoutPay={(cashoutAmount: number) =>
             cashoutPay(
-      cashoutAmount,
-      flowEl,
-      spi,
-      surchargeAmount,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
+              cashoutAmount,
+              flowEl,
+              spi,
+              surchargeAmount,
+              setTransactionStatus,
+              setFinalCashout,
+              setFinalTipAmount,
+              setFinalSurcharge,
+              setPurchaseAmount,
+              setFinalTotal
             )
           }
         />
-    );
-  }
+      );
+    }
     return (
       <OrderPay
         handleCreditCardPay={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
@@ -381,34 +381,34 @@ function Checkout(props: {
             cashoutAmount,
             manualAmount,
             openPricing,
-      flowEl,
-      spi,
+            flowEl,
+            spi,
             amount,
             surchargeAmount,
             promptCashout,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
+            setTransactionStatus,
+            setFinalCashout,
+            setFinalTipAmount,
+            setFinalSurcharge,
+            setPurchaseAmount,
+            setFinalTotal
           )
-  }
+        }
         handleMotoPay={() =>
           motoPay(
-      spi,
+            spi,
             totalAmount,
-      surchargeAmount,
+            surchargeAmount,
             amount,
             suppressMerchantPassword,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
+            setTransactionStatus,
+            setFinalCashout,
+            setFinalTipAmount,
+            setFinalSurcharge,
+            setPurchaseAmount,
+            setFinalTotal
           )
-    }
+        }
         totalAmount={totalAmount}
         promptCashout={promptCashout}
         setPromptCashout={setPromptCashout}

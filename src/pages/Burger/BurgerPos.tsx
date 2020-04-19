@@ -47,7 +47,7 @@ function BurgerPos() {
       window.localStorage.setItem('payment_progress', false.toString());
       setInProgressPayment(false);
     }
-  }, []); // eslint-disable-line
+  }, []);
   const handleStatusChange = useCallback((event: any) => {
     setStatusState(event.detail);
   }, []);
