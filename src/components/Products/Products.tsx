@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { SpiStatus } from '@mx51/spi-client-js';
+import { SpiStatus, TransactionType } from '@mx51/spi-client-js';
 import Checkout from '../Checkout';
 import Order from '../Order';
 import './Products.scss';
@@ -76,7 +76,7 @@ function lastTransaction(status: string, onErrorMsg: Function, setCheckout: Func
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     setCheckout(true);
-    setTransactionAction('lastTransaction');
+    setTransactionAction(TransactionType.GetLastTransaction);
   }
 }
 
@@ -84,13 +84,14 @@ function checkoutAction(shortlistedProducts: Array<Product>, setTransactionActio
   if (shortlistedProducts.length === 0) {
     setTransactionAction('');
   } else {
-    setTransactionAction('purchase');
+    setTransactionAction(TransactionType.Purchase);
   }
   setCheckout(true);
 }
+
 function refundAction(setCheckout: Function, setTransactionAction: Function) {
   setCheckout(true);
-  setTransactionAction('refund');
+  setTransactionAction(TransactionType.Refund);
 }
 
 function noThanksAction(

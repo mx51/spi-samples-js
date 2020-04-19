@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { Logger, TransactionOptions } from '@mx51/spi-client-js';
+import { Logger, TransactionOptions, TransactionType } from '@mx51/spi-client-js';
 import SettingConfig from '../SettingConfig';
 import Actions from '../Actions';
 import Flow from '../Flow';
@@ -31,7 +31,7 @@ function handleActionCallback(
       setModel('Please check your terminal is paired');
     }
     let eventType = null;
-    if (actionType === 'SETTLEMENT_ENQUIRY') {
+    if (actionType === TransactionType.SettlementEnquiry) {
       eventType = settlementEnquiryService;
     } else {
       eventType = settlementService;

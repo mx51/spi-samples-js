@@ -55,7 +55,7 @@ function handlePurchaseStatusCallback(
       PosUtils.processCompletedEvent(
         flowMsg,
         receipt,
-        transactionAction === 'purchase' ? purchaseService : refundService,
+        transactionAction === TransactionType.Purchase ? purchaseService : refundService,
         event.detail
       );
     }
@@ -67,7 +67,7 @@ function handlePurchaseStatusCallback(
 function displayReceipt(txState: TransactionFlowState) {
   const { Response, SignatureRequiredMessage, Type } = txState;
 
-  if (Response && Type !== 'GetLastTransaction') {
+  if (Response && Type !== TransactionType.GetLastTransaction) {
     return new PurchaseResponse(Response).GetCustomerReceipt().trim();
   }
   if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
@@ -305,7 +305,7 @@ function Checkout(props: {
   });
 
   useEffect(() => {
-    if (transactionAction === 'lastTransaction') {
+    if (transactionAction === TransactionType.GetLastTransaction) {
       const flowMsg = new Logger(flowEl.current);
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
@@ -428,7 +428,7 @@ function Checkout(props: {
             <h6>Tip amount: ${finalTipAmount}</h6>
             <h6>Cashout: ${finalCashout}</h6>
             <h6>Surcharge: ${finalSurcharge}</h6>
-            {transactionAction === 'refund' ? (
+            {transactionAction === TransactionType.Refund ? (
               <p>Total Refund amount: ${finalTotal}</p>
             ) : (
               <p>Total amount: ${finalTotal}</p>
@@ -448,7 +448,9 @@ function Checkout(props: {
         {stateChange.Finished && SuccessState.Failed === stateChange.Success && (
           <div className="transaction-successful">
             <p>
-              {stateChange.Response && stateChange.Response.GetErrorDetail && transactionAction === 'refund'
+              {stateChange.Response &&
+              stateChange.Response.GetErrorDetail &&
+              transactionAction === TransactionType.Refund
                 ? stateChange.Response.GetErrorDetail()
                 : new PurchaseResponse(stateChange.Response).GetResponseText()}
             </p>
@@ -532,20 +534,20 @@ function Checkout(props: {
           >
             ▼
           </button>
-          <Row style={transactionAction !== 'lastTransaction' ? {} : { flexDirection: 'row-reverse' }}>
-            {transactionAction !== 'lastTransaction' && (
+          <Row style={transactionAction !== TransactionType.GetLastTransaction ? {} : { flexDirection: 'row-reverse' }}>
+            {transactionAction !== TransactionType.GetLastTransaction && (
               <Col sm={4} className="sub-column">
                 {showRelatedPay()}
               </Col>
             )}
-            <Col sm={transactionAction !== 'lastTransaction' ? 5 : 9} className="sub-column">
+            <Col sm={transactionAction !== TransactionType.GetLastTransaction ? 5 : 9} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
               <div className="flow-alignment" ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
             </Col>
             <Col sm={3} className="sub-column">
               <h2 className="sub-header mb-0">
-                {transactionAction !== 'lastTransaction' ? 'Receipt' : 'Last Transaction'}
+                {transactionAction !== TransactionType.GetLastTransaction ? 'Receipt' : 'Last Transaction'}
               </h2>
               <pre className="receipt-alignment" ref={receiptEl}>
                 {displayReceipt(stateChange)}

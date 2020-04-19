@@ -1,5 +1,5 @@
 import React from 'react';
-import { Logger, SpiStatus } from '@mx51/spi-client-js';
+import { Logger, SpiStatus, TransactionType } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 
 import { settlement as settlementService, settlementEnquiry as settlementEnquiryService } from '../../services';
@@ -16,7 +16,7 @@ function settlementEnquiry(
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     const flowMsg = new Logger(flowEl.current);
-    setActionType('SETTLEMENT_ENQUIRY');
+    setActionType(TransactionType.SettlementEnquiry);
     if (receiptEl.current !== null) {
       // eslint-disable-next-line no-param-reassign
       receiptEl.current.innerHTML = '';
@@ -37,7 +37,7 @@ function settlement(
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     const flowMsg = new Logger(flowEl.current);
-    setActionType('SETTLEMENT');
+    setActionType(TransactionType.Settle);
     if (receiptEl.current !== null) {
       // eslint-disable-next-line no-param-reassign
       receiptEl.current.innerHTML = '';
