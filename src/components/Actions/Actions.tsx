@@ -18,8 +18,8 @@ function settlementEnquiry(
     const flowMsg = new Logger(flowEl.current);
     setActionType(TransactionType.SettlementEnquiry);
     if (receiptEl.current !== null) {
-      // eslint-disable-next-line no-param-reassign
-      receiptEl.current.innerHTML = '';
+      const receiptMsg = new Logger(receiptEl.current);
+      receiptMsg.Clear();
     }
     settlementEnquiryService.initiateSettlementEnquiry(flowMsg, spi);
   }
@@ -39,8 +39,8 @@ function settlement(
     const flowMsg = new Logger(flowEl.current);
     setActionType(TransactionType.Settle);
     if (receiptEl.current !== null) {
-      // eslint-disable-next-line no-param-reassign
-      receiptEl.current.innerHTML = '';
+      const receiptMsg = new Logger(receiptEl.current);
+      receiptMsg.Clear();
     }
     settlementService.initiateSettlement(flowMsg, spi);
   }
@@ -51,8 +51,8 @@ function terminalStatus(status: string, onErrorMsg: Function, receiptEl: any, sp
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     if (receiptEl.current !== null) {
-      // eslint-disable-next-line no-param-reassign
-      receiptEl.current.innerHTML = '';
+      const receiptMsg = new Logger(receiptEl.current);
+      receiptMsg.Clear();
     }
     getTerminalStatus(spi);
   }
