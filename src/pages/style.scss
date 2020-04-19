@@ -168,10 +168,6 @@ button {
     font-size: 12px;
 }
 
-button:disabled {
-    // display: none;
-}
-
 button.no-hide:disabled {
     display: block;
 }
