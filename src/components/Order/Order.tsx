@@ -16,7 +16,7 @@ function removeProductQuantityAction(
   onChangeProductQuantity(id, -1);
 }
 
-function CheckoutAction(status: String, onErrorMsg: Function, onCheckout: Function) {
+function checkoutAction(status: String, onErrorMsg: Function, onCheckout: Function) {
   if (status !== SpiStatus.PairedConnected) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
@@ -56,14 +56,6 @@ function Order(props: {
     0
   );
   const totalAmount = subTotalAmount + surchargeAmount / 100;
-
-  function removeProductQuantity(id: string) {
-    removeProductQuantityAction(id, list, handleApplySurcharge, onChangeProductQuantity);
-  }
-
-  function handleCheckout() {
-    CheckoutAction(status, onErrorMsg, onCheckout);
-  }
 
   return (
     <div className="min-vh-100 sticky-top">
@@ -119,7 +111,9 @@ function Order(props: {
                         <button
                           id={`btnItemDec${item.id}`}
                           type="button"
-                          onClick={() => removeProductQuantity(item.id)}
+                          onClick={() =>
+                            removeProductQuantityAction(item.id, list, handleApplySurcharge, onChangeProductQuantity)
+                          }
                         >
                           -
                         </button>
@@ -177,9 +171,7 @@ function Order(props: {
       <button
         type="button"
         className="primary-button checkout-button mb-0"
-        onClick={() => {
-          handleCheckout();
-        }}
+        onClick={() => checkoutAction(status, onErrorMsg, onCheckout)}
       >
         Checkout
       </button>

@@ -14,9 +14,7 @@ function SigApproval(props: { show: boolean; handleClose: Function; handleApprov
           id="btnSigApproval"
           variant="primary"
           className="btn-custom"
-          onClick={() => {
-            handleApproveSig(true);
-          }}
+          onClick={() => handleApproveSig(true)}
           block
         >
           Approve
@@ -25,9 +23,7 @@ function SigApproval(props: { show: boolean; handleClose: Function; handleApprov
           id="btnSigDecline"
           variant="primary"
           className="btn-custom"
-          onClick={() => {
-            handleApproveSig(false);
-          }}
+          onClick={() => handleApproveSig(false)}
           block
         >
           Decline

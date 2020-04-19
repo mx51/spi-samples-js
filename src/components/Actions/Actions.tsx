@@ -69,18 +69,6 @@ function Actions(props: {
 }) {
   const { spi, setActionType, flowEl, getTerminalStatus, receiptEl, status, errorMsg, onErrorMsg } = props;
 
-  function handleSettlementEnquiry() {
-    settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl, spi);
-  }
-
-  function handleSettlement() {
-    settlement(status, onErrorMsg, setActionType, receiptEl, flowEl, spi);
-  }
-
-  function handleTerminalStatus() {
-    terminalStatus(status, onErrorMsg, receiptEl, spi, getTerminalStatus);
-  }
-
   return (
     <div>
       <h2 className="sub-header">Actions</h2>
@@ -95,13 +83,25 @@ function Actions(props: {
           </Button>
         </Modal.Body>
       </Modal>
-      <button type="button" className="primary-button" onClick={() => handleSettlement()}>
+      <button
+        type="button"
+        className="primary-button"
+        onClick={() => settlement(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
+      >
         Settlement
       </button>
-      <button type="button" className="primary-button" onClick={() => handleSettlementEnquiry()}>
+      <button
+        type="button"
+        className="primary-button"
+        onClick={() => settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
+      >
         Settlement Enquiry
       </button>
-      <button type="button" className="primary-button" onClick={() => handleTerminalStatus()}>
+      <button
+        type="button"
+        className="primary-button"
+        onClick={() => terminalStatus(status, onErrorMsg, receiptEl, spi, getTerminalStatus)}
+      >
         Terminal Status
       </button>
     </div>

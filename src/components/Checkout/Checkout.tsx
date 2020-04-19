@@ -318,72 +318,6 @@ function Checkout(props: {
   const totalAmount = totalBillAmount + surchargeAmount / 100;
   const amount = totalBillAmount;
 
-  function handleMotoPay() {
-    motoPay(
-      spi,
-      totalAmount,
-      surchargeAmount,
-      amount,
-      suppressMerchantPassword,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
-    );
-  }
-
-  function handleCreditCardPay(tipAmount: number, cashoutAmount: number, manualAmount: number) {
-    creditCardPay(
-      tipAmount,
-      cashoutAmount,
-      manualAmount,
-      openPricing,
-      flowEl,
-      spi,
-      amount,
-      surchargeAmount,
-      promptCashout,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
-    );
-  }
-
-  function handleRefundPay(refundAmount: number) {
-    refundPay(
-      refundAmount,
-      flowEl,
-      spi,
-      suppressMerchantPassword,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
-    );
-  }
-
-  function handleCashoutPay(cashoutAmount: number) {
-    cashoutPay(
-      cashoutAmount,
-      flowEl,
-      spi,
-      surchargeAmount,
-      setTransactionStatus,
-      setFinalCashout,
-      setFinalTipAmount,
-      setFinalSurcharge,
-      setPurchaseAmount,
-      setFinalTotal
-    );
-  }
-
   function handleBack() {
     backAction(
       stateChange,
@@ -398,16 +332,83 @@ function Checkout(props: {
   }
 
   function showRelatedPay() {
-    if (transactionAction === 'refund') {
-      return <RefundPay handleRefundPay={handleRefundPay} />;
-      // eslint-disable-next-line no-else-return
-    } else if (transactionAction === '' && list.length === 0) {
-      return <CashOutPay handleCashoutPay={handleCashoutPay} />;
-    }
+    if (transactionAction === TransactionType.Refund) {
+      return (
+        <RefundPay
+          handleRefundPay={(refundAmount: number) =>
+            refundPay(
+              refundAmount,
+              flowEl,
+      spi,
+      suppressMerchantPassword,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+            )
+          }
+        />
+    );
+  }
+
+    if (transactionAction === '' && list.length === 0) {
+      return (
+        <CashOutPay
+          handleCashoutPay={(cashoutAmount: number) =>
+            cashoutPay(
+      cashoutAmount,
+      flowEl,
+      spi,
+      surchargeAmount,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+            )
+          }
+        />
+    );
+  }
     return (
       <OrderPay
-        handleCreditCardPay={handleCreditCardPay}
-        handleMotoPay={handleMotoPay}
+        handleCreditCardPay={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
+          creditCardPay(
+            tipAmount,
+            cashoutAmount,
+            manualAmount,
+            openPricing,
+      flowEl,
+      spi,
+            amount,
+            surchargeAmount,
+            promptCashout,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+          )
+  }
+        handleMotoPay={() =>
+          motoPay(
+      spi,
+            totalAmount,
+      surchargeAmount,
+            amount,
+            suppressMerchantPassword,
+      setTransactionStatus,
+      setFinalCashout,
+      setFinalTipAmount,
+      setFinalSurcharge,
+      setPurchaseAmount,
+      setFinalTotal
+          )
+    }
         totalAmount={totalAmount}
         promptCashout={promptCashout}
         setPromptCashout={setPromptCashout}

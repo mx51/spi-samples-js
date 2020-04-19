@@ -113,20 +113,6 @@ function Setting(props: {
     };
   });
 
-  // eslint-disable-next-line no-shadow
-  function getTerminalStatus(spi: Spi) {
-    terminalStatus(spi, flowEl);
-  }
-  function handleSaveSetting(
-    eftposReceipt: boolean,
-    sigFlow: boolean,
-    printMerchantCopy: boolean,
-    receiptHeader: string,
-    receiptFooter: string
-  ) {
-    saveSetting(eftposReceipt, sigFlow, printMerchantCopy, receiptHeader, receiptFooter, spi, suppressMerchantPassword);
-  }
-
   return (
     <div>
       <Row>
@@ -135,7 +121,23 @@ function Setting(props: {
             <SettingConfig
               suppressMerchantPassword={suppressMerchantPassword}
               setSuppressMerchantPassword={setSuppressMerchantPassword}
-              handleSaveSetting={handleSaveSetting}
+              handleSaveSetting={(
+                eftposReceipt: boolean,
+                sigFlow: boolean,
+                printMerchantCopy: boolean,
+                receiptHeader: string,
+                receiptFooter: string
+              ) =>
+                saveSetting(
+                  eftposReceipt,
+                  sigFlow,
+                  printMerchantCopy,
+                  receiptHeader,
+                  receiptFooter,
+                  spi,
+                  suppressMerchantPassword
+                )
+              }
             />
           </div>
           <div className="flex-fill">
@@ -144,7 +146,7 @@ function Setting(props: {
               setActionType={setActionType}
               flowEl={flowEl}
               receiptEl={receiptEl}
-              getTerminalStatus={getTerminalStatus}
+              getTerminalStatus={() => terminalStatus(spi, flowEl)}
               status={status}
               errorMsg={errorMsg}
               onErrorMsg={onErrorMsg}

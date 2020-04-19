@@ -44,6 +44,7 @@ function OrderPay(props: {
       setPromptCashout(false);
       return true;
     }
+
     return (
       <>
         <div className="ml-4 mr-4">

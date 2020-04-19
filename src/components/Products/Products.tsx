@@ -143,39 +143,9 @@ function Products({
   const [shortlistedProducts, updateShortlistedProducts] = useState<Array<Product>>([]);
   const [checkout, setCheckout] = useState(false);
   const [transactionAction, setTransactionAction] = useState('');
-
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
 
-  function handleOverrideTransaction() {
-    overrideTransaction(spi, setShowUnknownModal);
-  }
-
-  function handleProductClick(id: string) {
-    productClick(shortlistedProducts, allProducts, id, updateShortlistedProducts);
-  }
-
-  function handleChangeProductQuantity(id: string, quantity: number) {
-    changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity);
-  }
-
-  function handleLastTransaction() {
-    lastTransaction(status, onErrorMsg, setCheckout, setTransactionAction);
-  }
-
-  function handleCheckout() {
-    checkoutAction(shortlistedProducts, setTransactionAction, setCheckout);
-  }
-  function handleRefund() {
-    refundAction(setCheckout, setTransactionAction);
-  }
-  function handleNoThanks() {
-    noThanksAction(setCheckout, setTransactionAction, spi, updateShortlistedProducts, setTransactionStatus);
-  }
-
-  function handleCheckoutClosed() {
-    checkoutClosed(setCheckout, setTransactionAction);
-  }
   return (
     <>
       <Row>
@@ -188,41 +158,43 @@ function Products({
             <Button
               variant="primary"
               className="btn-custom unknownStatusButton"
-              onClick={() => {
-                handleOverrideTransaction();
-              }}
+              onClick={() => overrideTransaction(spi, setShowUnknownModal)}
             >
               Paid
             </Button>
             <Button
               variant="primary"
               className="btn-custom"
-              onClick={() => {
-                handleOverrideTransaction();
-              }}
+              onClick={() => overrideTransaction(spi, setShowUnknownModal)}
             >
               Fail
             </Button>
           </Modal.Body>
         </Modal>
         <Col lg={8}>
-          {status === SpiStatus.PairedConnected ? (
-            ''
-          ) : (
+          {status !== SpiStatus.PairedConnected && (
             <div className="pairing_banner">Please check your device Pairing setting!!</div>
           )}
 
           {allProducts.map((cat) => (
-            <ProductList key={cat.categoryName} category={cat} onProductClick={handleProductClick} />
+            <ProductList
+              key={cat.categoryName}
+              category={cat}
+              onProductClick={(id: string) =>
+                productClick(shortlistedProducts, allProducts, id, updateShortlistedProducts)
+              }
+            />
           ))}
         </Col>
         <Col lg={4} className="order-sidebar">
           <Order
             list={shortlistedProducts}
-            onChangeProductQuantity={handleChangeProductQuantity}
-            onRefund={handleRefund}
-            onLastTransaction={handleLastTransaction}
-            onCheckout={handleCheckout}
+            onChangeProductQuantity={(id: string, quantity: number) =>
+              changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity)
+            }
+            onRefund={() => refundAction(setCheckout, setTransactionAction)}
+            onLastTransaction={() => lastTransaction(status, onErrorMsg, setCheckout, setTransactionAction)}
+            onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction, setCheckout)}
             handleApplySurcharge={setSurchargeAmount}
             surchargeAmount={surchargeAmount}
             status={status}
@@ -233,8 +205,10 @@ function Products({
             <Checkout
               visible={checkout}
               list={shortlistedProducts}
-              onClose={handleCheckoutClosed}
-              onNoThanks={handleNoThanks}
+              onClose={() => checkoutClosed(setCheckout, setTransactionAction)}
+              onNoThanks={() =>
+                noThanksAction(setCheckout, setTransactionAction, spi, updateShortlistedProducts, setTransactionStatus)
+              }
               spi={spi}
               surchargeAmount={surchargeAmount}
               setSurchargeAmount={setSurchargeAmount}
@@ -243,7 +217,7 @@ function Products({
               transactionAction={transactionAction}
               showUnknownModal={showUnknownModal}
               setShowUnknownModal={setShowUnknownModal}
-              handleOverrideTransaction={handleOverrideTransaction}
+              handleOverrideTransaction={() => overrideTransaction(spi, setShowUnknownModal)}
               suppressMerchantPassword={suppressMerchantPassword}
               openPricing={openPricing}
               setOpenPricing={setOpenPricing}

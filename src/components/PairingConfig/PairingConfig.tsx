@@ -90,9 +90,6 @@ function PairingConfig({ spi, status }: Props) {
     };
   });
 
-  function handlePairingSaveSetting(e: React.SyntheticEvent) {
-    pairingSaveSetting(e, spi, posId, testMode, serial, apiKey, secureWebSocket, autoAddress, eftpos);
-  }
   const isDisabled = status !== SpiStatus.Unpaired;
 
   return (
@@ -110,7 +107,12 @@ function PairingConfig({ spi, status }: Props) {
             </Button>
           </Modal.Body>
         </Modal>
-        <form id="formPairingConfig" onSubmit={(e: React.SyntheticEvent) => handlePairingSaveSetting(e)}>
+        <form
+          id="formPairingConfig"
+          onSubmit={(e: React.SyntheticEvent) =>
+            pairingSaveSetting(e, spi, posId, testMode, serial, apiKey, secureWebSocket, autoAddress, eftpos)
+          }
+        >
           <Input
             id="inpPostId"
             name="POS ID"

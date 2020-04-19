@@ -25,9 +25,6 @@ function SurchargeModal(props: {
 }) {
   const { show, handleClose, handleApplySurcharge, surcharge, setSurcharge } = props;
 
-  function applySurcharge() {
-    applySurchargeAction(handleApplySurcharge, setSurcharge, surcharge);
-  }
   return (
     <Modal show={show} onHide={() => handleClose()}>
       <Modal.Header closeButton>
@@ -49,7 +46,7 @@ function SurchargeModal(props: {
           id="btnApplySurcharge"
           variant="primary"
           className="btn-custom primary-button"
-          onClick={() => applySurcharge()}
+          onClick={() => applySurchargeAction(handleApplySurcharge, setSurcharge, surcharge)}
           block
         >
           Apply
