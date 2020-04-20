@@ -12,7 +12,7 @@ This project is sample code that implements the SPI protocol. It is not complete
 
 # Install / Run
 1. Install dependencies: `npm install`
-2. Run in development: `npm run dev`
+2. Run in development: `npm start`
 3. Build for production: `npm run build`
 
 # Disclaimer

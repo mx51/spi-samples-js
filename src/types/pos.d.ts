@@ -1,0 +1,1 @@
+type UIFeature = { label: Function };

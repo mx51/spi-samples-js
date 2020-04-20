@@ -1,0 +1,30 @@
+@import '../../components/_ColorPalette.scss';
+
+
+ div.menu-sidebar {
+  background-color: $tertiary;
+  min-height:100vh;
+  padding-right: 0;
+}
+
+.sidebar-links a.nav-link, .sidebar-links a.nav-link.active {
+  border-radius: 0;
+  color: $secoundry;
+  text-align: right;
+  letter-spacing: .2rem;
+  padding: 22px;
+}
+
+.sidebar-links a.nav-link.active {
+  background-color: $background;
+  font-weight: bold;
+}
+
+h1.logo {
+  background-color: transparent;
+  background-color: $tertiary;
+}
+
+.window-fix {
+  width: calc(100% + 15px);
+}
