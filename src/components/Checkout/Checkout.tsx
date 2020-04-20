@@ -200,7 +200,7 @@ function cashoutPay(
   cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
   setTransactionStatus(true);
   setFinalCashout(cashoutAmount);
-  setFinalSurcharge(surchargeAmount);
+  setFinalSurcharge(surchargeAmount / 100);
   setFinalTotal(cashoutAmount + surchargeAmount / 100);
   setPurchaseAmount(0);
   setFinalTipAmount(0);

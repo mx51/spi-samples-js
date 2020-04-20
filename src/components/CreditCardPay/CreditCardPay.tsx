@@ -73,6 +73,7 @@ function CreditCard(props: {
           label="Order Amount"
           disabled={openPricing === false || transactionStatus}
           min="0"
+          onKeyPress={(e: KeyboardEvent) => handleKeyPress(e, setPromptCashout)}
           defaultValue={manualAmount === 0 ? '' : manualAmount.toString()}
           type="number"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setManualAmount(parseInt(e.target.value, 10))}
