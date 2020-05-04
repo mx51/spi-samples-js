@@ -84,7 +84,7 @@ const allProducts: AllProducts = [
     list: [
       {
         id: '301',
-        name: 'Coke',
+        name: 'Pepsi',
         image: '/images/pepsi.jpg',
         price: '4',
         quantity: 0,
