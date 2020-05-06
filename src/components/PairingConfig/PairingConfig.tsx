@@ -76,7 +76,7 @@ function PairingConfig({ spi, status }: Props) {
     if (window.location.protocol === 'https:') {
       setSecureWebSocket(true);
       setAutoAddress(true);
-      // setTestMode(true);
+      setTestMode(true);
     }
   }, []);
 
