@@ -76,7 +76,7 @@ function PairingConfig({ spi, status }: Props) {
     if (window.location.protocol === 'https:') {
       setSecureWebSocket(true);
       setAutoAddress(true);
-      setTestMode(true);
+      // setTestMode(true);
     }
   }, []);
 
@@ -167,7 +167,7 @@ function PairingConfig({ spi, status }: Props) {
               id="ckbTestMode"
               label="Test Mode"
               checked={testMode}
-              disabled={window.location.protocol !== 'http:' || isDisabled}
+              // disabled={window.location.protocol !== 'http:' || isDisabled}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setTestMode(e.target.checked);
               }}
