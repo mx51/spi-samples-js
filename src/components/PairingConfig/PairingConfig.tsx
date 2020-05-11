@@ -167,7 +167,6 @@ function PairingConfig({ spi, status }: Props) {
               id="ckbTestMode"
               label="Test Mode"
               checked={testMode}
-              disabled={window.location.protocol !== 'http:' || isDisabled}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setTestMode(e.target.checked);
               }}
