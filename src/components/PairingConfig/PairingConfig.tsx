@@ -166,6 +166,7 @@ function PairingConfig({ spi, status }: Props) {
               type="checkbox"
               id="ckbTestMode"
               label="Test Mode"
+              disabled={isDisabled}
               checked={testMode}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setTestMode(e.target.checked);

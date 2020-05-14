@@ -49,7 +49,7 @@ class Spi {
       this._spi = new SpiClient(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
       this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
       this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
-      this._spi.SetPosInfo('assembly', this._version);
+      this._spi.SetPosInfo('mx51', this._version);
       this._spi.SetAcquirerCode(this._acquirerCode);
       this._spi.SetDeviceApiKey(this._apiKey);
       this._options = new TransactionOptions();
