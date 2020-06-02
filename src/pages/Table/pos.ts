@@ -462,11 +462,11 @@ class TablePos extends Pos {
     ];
 
     // Hide action inputs
-    actionInputGroups.forEach(inputGroup => {
+    actionInputGroups.forEach((inputGroup) => {
       inputGroup.classList.add('hidden');
     });
 
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       const buttonElement = document.getElementById(button.id) as HTMLButtonElement;
 
       buttonElement.disabled = !button.enabled;
@@ -475,7 +475,7 @@ class TablePos extends Pos {
       if (button.inputs && button.inputs.length) {
         buttonElement.onclick = () => {
           // Show relevant inputs for this action
-          button.inputs.forEach(input => {
+          button.inputs.forEach((input) => {
             const inputElement = document.getElementById(input) as HTMLInputElement;
             const inputGroupElement = document.querySelector(`#action-inputs [data-id="${input}"]`);
 
@@ -488,7 +488,7 @@ class TablePos extends Pos {
             (button as any).onSubmit();
             this._isActionFlow = false;
 
-            actionInputGroups.forEach(inputGroup => {
+            actionInputGroups.forEach((inputGroup) => {
               inputGroup.classList.add('hidden');
             });
 
@@ -510,7 +510,7 @@ class TablePos extends Pos {
     cancelActionButton.onclick = () => {
       this._isActionFlow = false;
 
-      actionInputGroups.forEach(inputGroup => {
+      actionInputGroups.forEach((inputGroup) => {
         inputGroup.classList.add('hidden');
       });
 
@@ -565,7 +565,7 @@ class TablePos extends Pos {
     this.assemblyBillDataStore = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '{}');
     const savedBillData = JSON.parse(localStorage.getItem('billsStore') || '{}');
 
-    Object.keys(savedBillData).forEach(bill => {
+    Object.keys(savedBillData).forEach((bill) => {
       this.billsStore[bill] = Object.assign(new Bill(), savedBillData[bill]);
     });
   }
@@ -683,7 +683,7 @@ class TablePos extends Pos {
     let isOpenTables = false;
 
     if (Object.keys(this.tableToBillMapping).length > 0) {
-      Object.keys(this.tableToBillMapping).forEach(tableId => {
+      Object.keys(this.tableToBillMapping).forEach((tableId) => {
         const item = this.tableToBillMapping[tableId];
 
         if (this.billsStore[item].OperatorId === operatorId && this.billsStore[item].OutstandingAmount > 0) {
@@ -816,7 +816,7 @@ class TablePos extends Pos {
   printTables() {
     if (Object.keys(this.tableToBillMapping).length > 0) {
       this._flowMsg.Info('# Open Tables: ');
-      Object.keys(this.tableToBillMapping).forEach(table => {
+      Object.keys(this.tableToBillMapping).forEach((table) => {
         this._flowMsg.Info(`# Table #${table}, Bill #${this.tableToBillMapping[table]}`);
       });
     } else {
@@ -826,7 +826,7 @@ class TablePos extends Pos {
     if (Object.keys(this.billsStore).length > 0) {
       this._flowMsg.Info('# My Bills Store: ');
 
-      Object.keys(this.billsStore).forEach(bill => {
+      Object.keys(this.billsStore).forEach((bill) => {
         this._flowMsg.Info(`# ${this.billsStore[bill].toString()}`);
       });
     }
