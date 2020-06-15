@@ -9,6 +9,10 @@ function handleAutoAddressStateChangeCallback(
   setEftpos: Function,
   setErrorMsg: Function
 ) {
+  console.log('handleAutoAddressStateChangeCallback', event);
+  console.log('handleAutoAddressStateChangeCallback1', setEftpos);
+  console.log('handleAutoAddressStateChangeCallback2', setErrorMsg);
+
   const deviceAddressStatus = event.detail;
   switch (deviceAddressStatus.DeviceAddressResponseCode) {
     case DeviceAddressResponseCode.SUCCESS:
@@ -40,12 +44,12 @@ function pairingSaveSetting(
 ) {
   e.preventDefault();
   spi.SetPosId(posId);
-  spi.SetTestMode(testMode);
-  spi.SetSerialNumber(serial);
+  // spi.SetSerialNumber(serial);
   spi.SetDeviceApiKey(apiKey);
-  spi.SetSecureWebSockets(secureWebSocket);
-  spi.SetAutoAddressResolution(autoAddress);
   spi.SetEftposAddress(eftpos);
+  spi.SetSecureWebSockets(secureWebSocket);
+  spi.SetTestMode(testMode);
+  // spi.SetAutoAddressResolution(autoAddress);
   window.localStorage.setItem('eftpos_address', eftpos);
   window.localStorage.setItem('posID', posId);
   window.localStorage.setItem('serial', serial);
@@ -154,7 +158,7 @@ function PairingConfig({ spi, status }: Props) {
             name="EFTPOS"
             label="EFTPOS"
             placeholder="00.000.0.000"
-            disabled={autoAddress || isDisabled}
+            // disabled={autoAddress || isDisabled}
             required
             defaultValue={eftpos}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -180,10 +184,10 @@ function PairingConfig({ spi, status }: Props) {
               checked={secureWebSocket}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setSecureWebSocket(e.target.checked);
-                setAutoAddress(e.target.checked);
+                // setAutoAddress(e.target.checked);
               }}
             />
-            <Checkbox
+            {/* <Checkbox
               type="checkbox"
               id="ckbAutoAddress"
               label="Auto Address"
@@ -192,7 +196,7 @@ function PairingConfig({ spi, status }: Props) {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setAutoAddress(e.target.checked);
               }}
-            />
+            /> */}
             <button id="btnSaveSetting" type="submit" className="primary-button" disabled={isDisabled}>
               Save Setting
             </button>

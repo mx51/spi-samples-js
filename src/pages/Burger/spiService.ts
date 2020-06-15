@@ -92,8 +92,9 @@ class Spi {
 
   setAutoAddressResolutionState() {
     this._spi.SetTestMode(this._testMode);
+    console.log('Setting  SetSecureWebSockets to ', this._useSecureWebSockets);
     this._spi.SetSecureWebSockets(this._useSecureWebSockets);
-    this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
+    // this._spi.SetAutoAddressResolution(this._autoResolveEftposAddress);
   }
 
   printStatusAndActions() {
