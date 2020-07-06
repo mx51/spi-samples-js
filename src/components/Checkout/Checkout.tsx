@@ -25,7 +25,7 @@ function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Fun
   setShowSigApproval(false);
 }
 
-function handleTransactionMessageUpdateCallback(m: any, flowLogger: Logger) {
+function handleTransactionMessageUpdateCallback(m: Message, flowLogger: Logger) {
   const txnUpdateMessage = new TransactionUpdate(m.detail);
   flowLogger.Info(`${txnUpdateMessage.GetDisplayMessageText()}`);
 }

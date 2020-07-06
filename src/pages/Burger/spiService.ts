@@ -86,8 +86,7 @@ class Spi {
     window.localStorage.setItem('secrets', JSON.stringify(e.detail));
   }
 
-  // eslint-disable-next-line class-methods-use-this
-  onSpiTransactionUpdate(m: Message) {
+  static onSpiTransactionUpdate(m: Message) {
     document.dispatchEvent(new CustomEvent('TxnUpdateMessage', { detail: m }));
   }
 
