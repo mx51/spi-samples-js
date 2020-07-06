@@ -70,6 +70,7 @@ class Spi {
     this._spi.PrintingResponse = this.onSpiResponse.bind(this);
     this._spi.TerminalStatusResponse = this.onSpiResponse.bind(this);
     this._spi.BatteryLevelChanged = this.onSpiResponse.bind(this);
+    this._spi.TransactionUpdateMessage = this.onSpiTransactionUpdate.bind(this);
     this.setAutoAddressResolutionState();
     this._spi.Start();
     this.printStatusAndActions();
@@ -83,6 +84,10 @@ class Spi {
 
   static onSecretsChange(e: any) {
     window.localStorage.setItem('secrets', JSON.stringify(e.detail));
+  }
+
+  static onSpiTransactionUpdate(m: Message) {
+    document.dispatchEvent(new CustomEvent('TxnUpdateMessage', { detail: m }));
   }
 
   onSpiResponse() {

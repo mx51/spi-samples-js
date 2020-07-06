@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@mx51/spi-client-js';
+import { SuccessState, PurchaseResponse, Logger, TransactionType, TransactionUpdate } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import './Checkout.scss';
 import Tick from '../Tick';
@@ -23,6 +23,11 @@ function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Fun
     transactionFlowService.declineSignature(spi);
   }
   setShowSigApproval(false);
+}
+
+function handleTransactionMessageUpdateCallback(m: Message, flowLogger: Logger) {
+  const txnUpdateMessage = new TransactionUpdate(m.detail);
+  flowLogger.Info(`${txnUpdateMessage.GetDisplayMessageText()}`);
 }
 
 function handlePurchaseStatusCallback(
@@ -277,6 +282,7 @@ function Checkout(props: {
   const [finalCashout, setFinalCashout] = useState(0);
   const [finalTipAmount, setFinalTipAmount] = useState(0);
   const [purchaseAmount, setPurchaseAmount] = useState(0);
+  const flowTransactionEl = useRef<HTMLDivElement>(null);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -297,6 +303,12 @@ function Checkout(props: {
       transactionAction
     );
   }, []);
+
+  const handleTransactionUpdate = useCallback((event) => {
+    const flowMsg = new Logger(flowTransactionEl.current);
+    handleTransactionMessageUpdateCallback(event, flowMsg);
+  }, []);
+
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
     return function cleanup() {
@@ -310,6 +322,13 @@ function Checkout(props: {
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
   }, [transactionAction]);
+
+  useEffect(() => {
+    document.addEventListener('TxnUpdateMessage', handleTransactionUpdate);
+    return function cleanup() {
+      document.removeEventListener('TxnUpdateMessage', handleTransactionUpdate);
+    };
+  });
 
   const totalBillAmount: number = list.reduce(
     (total: number, product: Product) => total + parseFloat(product.price) * product.quantity,
@@ -433,7 +452,7 @@ function Checkout(props: {
             ) : (
               <p>Total amount: ${finalTotal}</p>
             )}
-            <p>Processing Transaction</p>
+            <div ref={flowTransactionEl} />
             <button
               type="button"
               className="primary-button"
