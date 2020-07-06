@@ -70,7 +70,7 @@ class Spi {
     this._spi.PrintingResponse = this.onSpiResponse.bind(this);
     this._spi.TerminalStatusResponse = this.onSpiResponse.bind(this);
     this._spi.BatteryLevelChanged = this.onSpiResponse.bind(this);
-    this._spi.TransactionUpdateMessage = this.onSpiTransactionUpdate.bind(this);
+    this._spi.TransactionUpdateMessage = Spi.onSpiTransactionUpdate.bind(this);
     this.setAutoAddressResolutionState();
     this._spi.Start();
     this.printStatusAndActions();
