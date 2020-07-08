@@ -7,7 +7,6 @@ import BurgerPos from './pages/Burger';
 import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
 // import TablePos from './pages/Table';
-
 import './index.scss';
 
 const Routes = () => (

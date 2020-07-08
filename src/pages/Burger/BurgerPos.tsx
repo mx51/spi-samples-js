@@ -89,9 +89,11 @@ function BurgerPos() {
                 <Nav.Item>
                   <Nav.Link eventKey="setting">Setting</Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="reversals">Reversals</Nav.Link>
-                </Nav.Item>
+                {window.location.search.includes('qamode=true') && (
+                  <Nav.Item>
+                    <Nav.Link eventKey="reversals">Reversals</Nav.Link>
+                  </Nav.Item>
+                )}
               </Nav>
             </div>
           </Col>

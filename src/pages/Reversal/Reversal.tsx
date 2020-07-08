@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Reversal.scss';
 import { Input } from '../../components/Input';
-import SpiService from '../Burger/spiService';
 
 type Props = {
   spi: Spi;
 };
 
 function Reversal({ spi }: Props) {
+  const [posRefId, setPosRefId] = useState('');
+
   return (
     <div>
       <h2 className="sub-header">Reversal</h2>
@@ -17,15 +18,13 @@ function Reversal({ spi }: Props) {
           name="POS Ref ID"
           label="POS Ref ID"
           placeholder="POS Ref ID"
-          pattern="\w+"
           required
-          // defaultValue={posId}
+          defaultValue={posRefId}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            setPosRefId(e.target.value);
+          }}
         />
-        <button
-          type="button"
-          className="primary-button"
-          onClick={() => spi.InitiateReversal('purchase-2020-07-07T00:51:45.912Z')}
-        >
+        <button type="button" className="primary-button" onClick={() => spi.InitiateReversal(posRefId)}>
           Reversal
         </button>
       </div>
