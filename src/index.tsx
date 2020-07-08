@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './pages/App';
 import BurgerPos from './pages/Burger';
-// import MotelPos from './pages/Motel';
+//import MotelPos from './pages/Motel';
 import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
-// import TablePos from './pages/Table';
+//import TablePos from './pages/Table';
 
 import './index.scss';
 
@@ -20,8 +20,8 @@ const Routes = () => (
         <BurgerPos />
       </Route>
       <Route path="/motel">
-        <MotelPos />
-        {/* <Default /> */}
+        {/* <MotelPos /> */}
+        <Default />
       </Route>
       <Route path="/ramen">
         {/* <RamenPos /> */}
