@@ -3,10 +3,10 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './pages/App';
 import BurgerPos from './pages/Burger';
-import MotelPos from './pages/Motel';
+// import MotelPos from './pages/Motel';
 import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
-import TablePos from './pages/Table';
+// import TablePos from './pages/Table';
 
 import './index.scss';
 
@@ -27,10 +27,10 @@ const Routes = () => (
         {/* <RamenPos /> */}
         <Default />
       </Route>
-      <Route path="/table">
-        <TablePos />
-        {/* <Default /> */}
-      </Route>
+      <Route path='/table' component={() => { 
+          window.location.href = 'http://spi-samples-tablepos.herokuapp.com/TablePos/TablePos.html'; 
+          return null;
+      }}/>   
     </Switch>
   </BrowserRouter>
 );
