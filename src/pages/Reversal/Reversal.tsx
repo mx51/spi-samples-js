@@ -16,8 +16,8 @@ function Reversal({ spi }: Props) {
         <Input
           id="inpPostId"
           name="pos_ref_id"
-          label="POS Ref ID"
-          placeholder="POS Ref ID"
+          label="pos_ref_id"
+          placeholder="pos_ref_id"
           required
           defaultValue={posRefId}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
