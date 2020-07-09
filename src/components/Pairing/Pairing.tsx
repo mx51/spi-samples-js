@@ -14,7 +14,10 @@ function handlePairingCallback(
 ) {
   const flowMsg = new Logger(flowEl.current);
   const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
+  console.log('priting flowMSG.element ...window11111', flowMsg, flowMsg.element, flowEl.current);
+
   setTimeout(() => {
+    console.log('priting flowMSG.element ...window', flowMsg.element, flowEl.current);
     if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
   }, 1);
   setPairingState({
@@ -44,12 +47,25 @@ function Pairing({
   message,
   setPairingState,
 }: Props) {
-  const flowEl = useRef(null);
+  const flowEl = useRef<HTMLDivElement>(null);
 
   const handlePairingStatusChange = useCallback((event: TxFlowStateChangedEvent) => {
-    handlePairingCallback(event, spi, flowEl, setPairingState);
+    // handlePairingCallback(event, spi, flowEl, setPairingState);
+    const flowMsg = new Logger(flowEl.current);
+    const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
+
+    setTimeout(() => {
+      if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
+    }, 1);
+    setPairingState({
+      AwaitingCheckFromPos,
+      ConfirmationCode,
+      Finished,
+      Message,
+    });
   }, []);
   useEffect(() => {
+    console.log('flowEl.....', flowEl.current);
     document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
     return function cleanup() {
       document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
@@ -70,7 +86,7 @@ function Pairing({
         <Col lg={8} className="sub-column d-flex flex-column">
           <div className="flex-fill text-break">
             <Flow ref={flowEl} />
-            <Modal show={isAwaitingConfirmation} onHide={() => pairingService.pairingCancel(spi)}>
+            {/* <Modal show={isAwaitingConfirmation} onHide={() => pairingService.pairingCancel(spi)}>
               <Modal.Header closeButton>
                 <Modal.Title>Confirm Pairing Code</Modal.Title>
               </Modal.Header>
@@ -100,7 +116,7 @@ function Pairing({
                   </Button>
                 </div>
               </Modal.Body>
-            </Modal>
+            </Modal> */}
           </div>
         </Col>
       </Row>
