@@ -192,11 +192,9 @@ class MotelPos extends Pos {
         }
         break;
       case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
-        // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
+        // we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
         inputsEnabled.push('eftpos_address', 'rcpt_from_eftpos', 'save_settings', 'sig_flow_from_eftpos');
-      // .. but otherwise we give the same options as PairedConnected
-      // goto case SpiStatus.PairedConnected;
-
+      // but otherwise we give the same options as PairedConnected     // goto case SpiStatus.PairedConnected
       // caution: intentionally falls through
       case SpiStatus.PairedConnected:
         switch (this._spi.CurrentFlow) {
@@ -255,7 +253,7 @@ class MotelPos extends Pos {
       (inputs[i] as HTMLInputElement).disabled = true;
     }
 
-    inputsEnabled.forEach(input => {
+    inputsEnabled.forEach((input) => {
       const inputEl = document.getElementById(input);
       if (!inputEl) throw new Error(`Input element not found to enable: ${input}`);
       (inputEl as HTMLInputElement).disabled = false;
