@@ -11,11 +11,11 @@ function Reversal({ spi }: Props) {
 
   return (
     <div>
-      <h2 className="sub-header">Reversal</h2>
+      <h2 className="sub-header">Reversals</h2>
       <div className="alignment">
         <Input
           id="inpPostId"
-          name="POS Ref ID"
+          name="pos_ref_id"
           label="POS Ref ID"
           placeholder="POS Ref ID"
           required

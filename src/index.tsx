@@ -7,6 +7,7 @@ import BurgerPos from './pages/Burger';
 import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
 // import TablePos from './pages/Table';
+
 import './index.scss';
 
 const Routes = () => (
@@ -26,10 +27,13 @@ const Routes = () => (
         {/* <RamenPos /> */}
         <Default />
       </Route>
-      <Route path="/table">
-        {/* <TablePos /> */}
-        <Default />
-      </Route>
+      <Route
+        path="/table"
+        component={() => {
+          window.location.href = 'http://spi-samples-tablepos.herokuapp.com/TablePos/TablePos.html';
+          return null;
+        }}
+      />
     </Switch>
   </BrowserRouter>
 );
