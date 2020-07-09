@@ -7,6 +7,7 @@ import Pairing from '../../components/Pairing';
 import Setting from '../../components/Setting';
 import SpiService from './spiService';
 import './BurgerPos.scss';
+import Reversal from '../Reversal';
 
 function handlePaymentInProgressCallback(event: any, setInProgressPayment: Function) {
   if (event.detail.Finished !== true) {
@@ -88,6 +89,11 @@ function BurgerPos() {
                 <Nav.Item>
                   <Nav.Link eventKey="setting">Setting</Nav.Link>
                 </Nav.Item>
+                {window.location.search.includes('qamode=true') && (
+                  <Nav.Item>
+                    <Nav.Link eventKey="reversals">Reversals</Nav.Link>
+                  </Nav.Item>
+                )}
               </Nav>
             </div>
           </Col>
@@ -126,6 +132,9 @@ function BurgerPos() {
                   suppressMerchantPassword={suppressMerchantPassword}
                   setSuppressMerchantPassword={setSuppressMerchantPassword}
                 />
+              </Tab.Pane>
+              <Tab.Pane eventKey="reversals">
+                <Reversal spi={spiService._spi} />
               </Tab.Pane>
             </Tab.Content>
           </Col>
