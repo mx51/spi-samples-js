@@ -6,25 +6,6 @@ import Flow from '../Flow';
 import Status from '../Status';
 import { pairing as pairingService } from '../../services';
 
-function handlePairingCallback(
-  event: TxFlowStateChangedEvent,
-  flowEl: React.RefObject<HTMLDivElement>,
-  spi: Spi,
-  setPairingState: Function
-) {
-  const flowMsg = new Logger(flowEl.current);
-  const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
-  setTimeout(() => {
-    if (flowMsg.element) pairingService.printPairingStatus(flowMsg, spi);
-  }, 1);
-  setPairingState({
-    AwaitingCheckFromPos,
-    ConfirmationCode,
-    Finished,
-    Message,
-  });
-}
-
 type Props = {
   confirmationCode: string;
   isAwaitingConfirmation: boolean;
@@ -44,10 +25,26 @@ function Pairing({
   message,
   setPairingState,
 }: Props) {
-  const flowEl = useRef(null);
+  const flowEl = useRef<HTMLDivElement>(null);
 
-  const handlePairingStatusChange = useCallback((event: TxFlowStateChangedEvent) => {
-    handlePairingCallback(event, spi, flowEl, setPairingState);
+  const handlePairingStatusChange = useCallback((event: PairingFlowState) => {
+    const flowMsg = new Logger(flowEl.current);
+    const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
+    setTimeout(() => {
+      if (flowMsg.element) {
+        if (event.detail.Message !== 'Pairing Successful!') {
+          pairingService.handlePairingUpdate(flowMsg, spi.CurrentPairingFlowState);
+        } else {
+          pairingService.printPairingStatus(flowMsg, spi);
+        }
+      }
+    }, 1);
+    setPairingState({
+      AwaitingCheckFromPos,
+      ConfirmationCode,
+      Finished,
+      Message,
+    });
   }, []);
   useEffect(() => {
     document.addEventListener('PairingFlowStateChanged', handlePairingStatusChange);
@@ -70,37 +67,6 @@ function Pairing({
         <Col lg={8} className="sub-column d-flex flex-column">
           <div className="flex-fill text-break">
             <Flow ref={flowEl} />
-            <Modal show={isAwaitingConfirmation} onHide={() => pairingService.pairingCancel(spi)}>
-              <Modal.Header closeButton>
-                <Modal.Title>Confirm Pairing Code</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>
-                <p>Please confirm the following code is shown on the EFTPOS terminal:</p>
-                <h4 className="text-center">{confirmationCode}</h4>
-                <div>
-                  <Button
-                    variant="primary"
-                    className="btn-custom"
-                    onClick={() => {
-                      pairingService.pairingConfirmCode(spi);
-                    }}
-                    block
-                  >
-                    OK
-                  </Button>
-                  <Button
-                    variant="primary"
-                    className="btn-custom"
-                    onClick={() => {
-                      pairingService.pairingCancel(spi);
-                    }}
-                    block
-                  >
-                    Cancel
-                  </Button>
-                </div>
-              </Modal.Body>
-            </Modal>
           </div>
         </Col>
       </Row>
