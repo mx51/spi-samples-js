@@ -23,7 +23,7 @@ class Spi {
     this._eftposAddress = window.localStorage.getItem('eftpos_address') || '192.168.1.1';
     this._spiSecrets = null;
     this._options = null;
-    this._version = '2.6.3';
+    this._version = '2.8';
     this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
     this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
     this._apiKey = null;
