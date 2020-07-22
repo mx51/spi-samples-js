@@ -16,6 +16,7 @@ class Spi {
   _testMode: Boolean;
   _useSecureWebSockets: Boolean;
   _log: any;
+  _printMerchantCopy: Boolean;
 
   constructor() {
     this._spi = null;
@@ -26,6 +27,7 @@ class Spi {
     this._version = '2.8';
     this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
     this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
+    this._printMerchantCopy = window.localStorage.getItem('print_merchant_copy_input') === 'true';
     this._apiKey = null;
     this._serialNumber = window.localStorage.getItem('serial') || '';
     this._acquirerCode = 'wbc';
@@ -49,6 +51,7 @@ class Spi {
       this._spi = new SpiClient(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
       this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
       this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
+      this._spi.Config.PrintMerchantCopy = this._printMerchantCopy;
       this._spi.SetPosInfo('mx51', this._version);
       this._spi.SetAcquirerCode(this._acquirerCode);
       this._spi.SetDeviceApiKey(this._apiKey);
