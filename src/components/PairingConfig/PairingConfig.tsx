@@ -120,7 +120,7 @@ function PairingConfig({ spi, status }: Props) {
             placeholder="POS ID"
             pattern="\w+"
             required
-            title="No special character Only alphanumeric"
+            title="POS Id must be alphanumeric. Special characters and spaces not allowed"
             disabled={isDisabled}
             defaultValue={posId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
