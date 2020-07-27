@@ -225,7 +225,31 @@ function backAction(
     onNoThanks();
     setSurchargeAmount(0);
   }
-  setStateChange({ Finished: false, Success: SuccessState.Unknown });
+  setStateChange({ Finished: true, Success: SuccessState.Unknown });
+  setTransactionStatus(false);
+  if (flowEl.current !== null) {
+    const flowMsg = new Logger(flowEl.current);
+    flowMsg.Clear();
+  }
+  if (receiptEl.current !== null) {
+    const receiptMsg = new Logger(receiptEl.current);
+    receiptMsg.Clear();
+  }
+
+  onClose();
+}
+
+function actionRetry(
+  stateChange: StateChange,
+  onNoThanks: Function,
+  setSurchargeAmount: Function,
+  setStateChange: Function,
+  setTransactionStatus: Function,
+  flowEl: React.RefObject<HTMLDivElement>,
+  receiptEl: React.RefObject<HTMLPreElement>,
+  onClose: Function
+) {
+  setStateChange({ Finished: true });
   setTransactionStatus(false);
   if (flowEl.current !== null) {
     const flowMsg = new Logger(flowEl.current);
@@ -348,6 +372,21 @@ function Checkout(props: {
       receiptEl,
       onClose
     );
+  }
+  function handleRetry() {
+    setTransactionStatus(false);
+    // setStateChange({ ...stateChange, Success: SuccessState.Finished });
+    actionRetry(
+      stateChange,
+      onNoThanks,
+      setSurchargeAmount,
+      setStateChange,
+      setTransactionStatus,
+      flowEl,
+      receiptEl,
+      onClose
+    );
+    transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
   }
 
   function showRelatedPay() {
@@ -473,8 +512,11 @@ function Checkout(props: {
                 ? stateChange.Response.GetErrorDetail()
                 : new PurchaseResponse(stateChange.Response).GetResponseText()}
             </p>
+            <button type="button" className="primary-button" onClick={() => handleRetry()}>
+              Retry
+            </button>
             <button type="button" className="primary-button" onClick={() => handleBack()}>
-              Back
+              Cancel
             </button>
           </div>
         )}
