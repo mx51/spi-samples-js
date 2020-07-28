@@ -1,5 +1,5 @@
-import React, { useRef, useCallback, useEffect } from 'react';
-import { Col, Row, Modal, Button } from 'react-bootstrap';
+import React, { useRef, useCallback, useEffect, useState } from 'react';
+import { Col, Row } from 'react-bootstrap';
 import { Logger } from '@mx51/spi-client-js';
 import PairingConfig from '../PairingConfig';
 import Flow from '../Flow';
@@ -53,15 +53,23 @@ function Pairing({
     };
   }, []);
 
+  const [pairButton, setPairButton] = useState(false);
+
   return (
     <div>
       <Row>
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
-            <PairingConfig spi={spi} status={status} />
+            <PairingConfig spi={spi} status={status} setPairButton={setPairButton} />
           </div>
           <div className="flex-fill">
-            <Status status={status} isFinishedPairing={isFinishedPairing} spi={spi} Message={message} />
+            <Status
+              status={status}
+              isFinishedPairing={isFinishedPairing}
+              spi={spi}
+              Message={message}
+              pairButton={pairButton}
+            />
           </div>
         </Col>
         <Col lg={8} className="sub-column d-flex flex-column">
