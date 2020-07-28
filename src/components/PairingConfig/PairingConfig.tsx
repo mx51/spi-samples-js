@@ -73,7 +73,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
 
   const [errorMsg, setErrorMsg] = useState('');
   // Enable and disable Pair button
-  if (localStorage.getItem('posID') && localStorage.getItem('serial') && localStorage.getItem('eftpos_address')) {
+  if (localStorage.getItem('posID') || (localStorage.getItem('serial') && localStorage.getItem('eftpos_address'))) {
     setPairButton(true);
   }
 
