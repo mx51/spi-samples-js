@@ -57,9 +57,10 @@ function pairingSaveSetting(
 type Props = {
   spi: Spi;
   status: string;
+  setPairButton: Function;
 };
 
-function PairingConfig({ spi, status }: Props) {
+function PairingConfig({ spi, status, setPairButton }: Props) {
   const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
   const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
   const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos_address') || '');
@@ -71,6 +72,10 @@ function PairingConfig({ spi, status }: Props) {
   );
 
   const [errorMsg, setErrorMsg] = useState('');
+  // Enable and disable Pair button
+  if (localStorage.getItem('posID') || (localStorage.getItem('serial') && localStorage.getItem('eftpos_address'))) {
+    setPairButton(true);
+  }
 
   useEffect(() => {
     if (window.location.protocol === 'https:') {
@@ -120,7 +125,7 @@ function PairingConfig({ spi, status }: Props) {
             placeholder="POS ID"
             pattern="\w+"
             required
-            title="No special character Only alphanumeric"
+            title="POS Id must be alphanumeric. Special characters and spaces not allowed"
             disabled={isDisabled}
             defaultValue={posId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
