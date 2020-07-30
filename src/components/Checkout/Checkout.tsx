@@ -219,37 +219,14 @@ function backAction(
   setTransactionStatus: Function,
   flowEl: React.RefObject<HTMLDivElement>,
   receiptEl: React.RefObject<HTMLPreElement>,
-  onClose: Function
+  onClose: Function,
+  clearProducts: boolean
 ) {
-  if (stateChange.Finished) {
+  if (stateChange.Finished && clearProducts) {
     onNoThanks();
     setSurchargeAmount(0);
   }
   setStateChange({ Finished: true, Success: SuccessState.Unknown });
-  setTransactionStatus(false);
-  if (flowEl.current !== null) {
-    const flowMsg = new Logger(flowEl.current);
-    flowMsg.Clear();
-  }
-  if (receiptEl.current !== null) {
-    const receiptMsg = new Logger(receiptEl.current);
-    receiptMsg.Clear();
-  }
-
-  onClose();
-}
-
-function actionRetry(
-  stateChange: StateChange,
-  onNoThanks: Function,
-  setSurchargeAmount: Function,
-  setStateChange: Function,
-  setTransactionStatus: Function,
-  flowEl: React.RefObject<HTMLDivElement>,
-  receiptEl: React.RefObject<HTMLPreElement>,
-  onClose: Function
-) {
-  setStateChange({ Finished: true });
   setTransactionStatus(false);
   if (flowEl.current !== null) {
     const flowMsg = new Logger(flowEl.current);
@@ -361,6 +338,20 @@ function Checkout(props: {
   const totalAmount = totalBillAmount + surchargeAmount / 100;
   const amount = totalBillAmount;
 
+  function handleBackAndClearProduts() {
+    backAction(
+      stateChange,
+      onNoThanks,
+      setSurchargeAmount,
+      setStateChange,
+      setTransactionStatus,
+      flowEl,
+      receiptEl,
+      onClose,
+      false
+    );
+  }
+
   function handleBack() {
     backAction(
       stateChange,
@@ -370,23 +361,14 @@ function Checkout(props: {
       setTransactionStatus,
       flowEl,
       receiptEl,
-      onClose
+      onClose,
+      true
     );
   }
   function handleRetry() {
     setTransactionStatus(false);
-    // setStateChange({ ...stateChange, Success: SuccessState.Finished });
-    actionRetry(
-      stateChange,
-      onNoThanks,
-      setSurchargeAmount,
-      setStateChange,
-      setTransactionStatus,
-      flowEl,
-      receiptEl,
-      onClose
-    );
     transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
+    showRelatedPay();
   }
 
   function showRelatedPay() {
@@ -578,7 +560,7 @@ function Checkout(props: {
           type="button"
           disabled={transactionStatus}
           className="primary-button checkout-button mb-0"
-          onClick={() => handleBack()}
+          onClick={() => handleBackAndClearProduts()}
         >
           Back
         </button>
@@ -590,7 +572,7 @@ function Checkout(props: {
             disabled={transactionStatus}
             className="checkout-flyout-toggle"
             onClick={() => {
-              handleBack();
+              handleBackAndClearProduts();
             }}
           >
             ▼
