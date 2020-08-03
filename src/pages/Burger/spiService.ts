@@ -1,4 +1,4 @@
-import { Spi as SpiClient, SpiFlow, TransactionOptions } from '@mx51/spi-client-js';
+import { Spi as SpiClient, SpiFlow, TerminalConfigurationResponse, TransactionOptions } from '@mx51/spi-client-js';
 
 class Spi {
   _spi: any;
@@ -28,7 +28,7 @@ class Spi {
     this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
     this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
     this._printMerchantCopy = window.localStorage.getItem('print_merchant_copy_input') === 'true';
-    this._apiKey = null;
+    this._apiKey = window.localStorage.getItem('api_key') || '';
     this._serialNumber = window.localStorage.getItem('serial') || '';
     this._acquirerCode = 'wbc';
     this._autoResolveEftposAddress = window.localStorage.getItem('auto_address') === 'true';
@@ -71,6 +71,7 @@ class Spi {
     document.addEventListener('SecretsChanged', Spi.onSecretsChange);
     document.addEventListener('TxFlowStateChanged', this.onSpiStateChange);
     this._spi.PrintingResponse = this.onSpiResponse.bind(this);
+    this._spi.TerminalConfigurationResponse = Spi.onTerminalConfigurationChange;
     this._spi.TerminalStatusResponse = this.onSpiResponse.bind(this);
     this._spi.BatteryLevelChanged = this.onSpiResponse.bind(this);
     this._spi.TransactionUpdateMessage = Spi.onSpiTransactionUpdate.bind(this);
@@ -87,6 +88,11 @@ class Spi {
 
   static onSecretsChange(e: any) {
     window.localStorage.setItem('secrets', JSON.stringify(e.detail));
+  }
+
+  static onTerminalConfigurationChange(m: Message) {
+    const terminalConfigurationResponse = new TerminalConfigurationResponse(m);
+    window.localStorage.setItem('serial', terminalConfigurationResponse.GetSerialNumber());
   }
 
   static onSpiTransactionUpdate(m: Message) {

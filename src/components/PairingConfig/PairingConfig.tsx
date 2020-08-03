@@ -1,5 +1,5 @@
 import React, { useState, SyntheticEvent, useCallback, useEffect } from 'react';
-import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
+import { DeviceAddressResponseCode, SpiFlow, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 import { Input } from '../Input';
 import Checkbox from '../Checkbox';
@@ -20,6 +20,8 @@ function handleAutoAddressStateChangeCallback(
       setEftpos('');
       window.localStorage.setItem('eftpos_address', '');
       setErrorMsg(`The serial number is invalid!`);
+      break;
+    case DeviceAddressResponseCode.SERIAL_NUMBER_NOT_CHANGED:
       break;
     default:
       // eslint-disable-next-line no-console
@@ -46,6 +48,7 @@ function pairingSaveSetting(
   spi.SetSecureWebSockets(secureWebSocket);
   spi.SetAutoAddressResolution(autoAddress);
   spi.SetEftposAddress(eftpos);
+  window.localStorage.setItem('api_key', apiKey);
   window.localStorage.setItem('eftpos_address', eftpos);
   window.localStorage.setItem('posID', posId);
   window.localStorage.setItem('serial', serial);
@@ -70,12 +73,11 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
   const [secureWebSocket, setSecureWebSocket] = useState(
     window.localStorage.getItem('use_secure_web_sockets') === 'true'
   );
+  const [isFormSaved, setIsFormSaved] = useState(true);
 
   const [errorMsg, setErrorMsg] = useState('');
-  // Enable and disable Pair button
-  if (localStorage.getItem('posID') || (localStorage.getItem('serial') && localStorage.getItem('eftpos_address'))) {
-    setPairButton(true);
-  }
+  // The form must not have unsaved data, posId is required always and either eftposAddress or serial number is required
+  setPairButton(isFormSaved && posId && ((!secureWebSocket && eftpos) || (secureWebSocket && serial)));
 
   useEffect(() => {
     if (window.location.protocol === 'https:') {
@@ -95,7 +97,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
     };
   });
 
-  const isDisabled = status !== SpiStatus.Unpaired;
+  const isDisabled = spi.CurrentFlow === SpiFlow.Pairing;
 
   return (
     <div>
@@ -114,9 +116,10 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
         </Modal>
         <form
           id="formPairingConfig"
-          onSubmit={(e: React.SyntheticEvent) =>
-            pairingSaveSetting(e, spi, posId, testMode, serial, apiKey, secureWebSocket, autoAddress, eftpos)
-          }
+          onSubmit={(e: React.SyntheticEvent) => {
+            pairingSaveSetting(e, spi, posId, testMode, serial, apiKey, secureWebSocket, autoAddress, eftpos);
+            setIsFormSaved(true);
+          }}
         >
           <Input
             id="inpPostId"
@@ -126,9 +129,10 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             pattern="\w+"
             required
             title="POS Id must be alphanumeric. Special characters and spaces not allowed"
-            disabled={isDisabled}
+            disabled={isDisabled || status !== SpiStatus.Unpaired}
             defaultValue={posId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setIsFormSaved(false);
               setPosId(e.target.value);
             }}
           />
@@ -138,6 +142,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             disabled={isDisabled}
             label="API key"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setIsFormSaved(false);
               setApiKey(e.target.value);
             }}
             defaultValue="RamenPosDeviceIpApiKey"
@@ -148,9 +153,10 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             label="Serial"
             defaultValue={serial}
             placeholder="000-000-000"
-            required={autoAddress === true}
+            required={secureWebSocket}
             disabled={isDisabled}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setIsFormSaved(false);
               setSerial(e.target.value);
             }}
           />
@@ -158,11 +164,12 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             id="inpEFTPOS"
             name="EFTPOS"
             label="EFTPOS"
-            placeholder="00.000.0.000"
-            disabled={autoAddress || isDisabled}
-            required
+            placeholder="000.000.000.000"
+            disabled={secureWebSocket || isDisabled}
+            required={!secureWebSocket}
             defaultValue={eftpos}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setIsFormSaved(false);
               setEftpos(e.target.value);
             }}
           />
@@ -174,7 +181,10 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               disabled={isDisabled}
               checked={testMode}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setTestMode(e.target.checked);
+                const { checked } = e.target;
+                setIsFormSaved(false);
+                setTestMode(checked);
+                if (checked) setAutoAddress(checked);
               }}
             />
             <Checkbox
@@ -184,8 +194,10 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={secureWebSocket}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setSecureWebSocket(e.target.checked);
-                setAutoAddress(e.target.checked);
+                const { checked } = e.target;
+                setIsFormSaved(false);
+                setSecureWebSocket(checked);
+                if (checked) setAutoAddress(checked);
               }}
             />
             <Checkbox
@@ -195,10 +207,11 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               disabled={window.location.protocol !== 'http:' || isDisabled}
               checked={autoAddress}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setIsFormSaved(false);
                 setAutoAddress(e.target.checked);
               }}
             />
-            <button id="btnSaveSetting" type="submit" className="primary-button" disabled={isDisabled}>
+            <button id="btnSaveSetting" type="submit" className="primary-button" disabled={isFormSaved || isDisabled}>
               Save Setting
             </button>
           </div>
