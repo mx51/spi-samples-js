@@ -7,6 +7,7 @@ import BurgerPos from './pages/Burger';
 import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
 // import TablePos from './pages/Table';
+import SupportTools from './pages/SupportTools';
 
 import './index.scss';
 
@@ -30,6 +31,9 @@ const Routes = () => (
       <Route path="/table">
         {/* <TablePos /> */}
         <Default />
+      </Route>
+      <Route path="/support-tools">
+        <SupportTools />
       </Route>
     </Switch>
   </BrowserRouter>
