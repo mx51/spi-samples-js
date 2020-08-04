@@ -6,7 +6,7 @@ import AutoAddressCheck from './AutoAddressCheck/AutoAddressCheck';
 function SupportTools() {
   return (
     <div>
-      <Tab.Container id="pos-tabs" defaultActiveKey="sample" unmountOnExit>
+      <Tab.Container id="pos-tabs" defaultActiveKey="autoAddress" unmountOnExit>
         <Row className="window-fix">
           <Col sm={2} className="menu-sidebar min-vh-100">
             <div className="sticky-top">
@@ -15,14 +15,14 @@ function SupportTools() {
               </h1>
               <Nav variant="pills" className="flex-column sidebar-links">
                 <Nav.Item>
-                  <Nav.Link eventKey="sample">Auto Address check</Nav.Link>
+                  <Nav.Link eventKey="autoAddress">Auto Address check</Nav.Link>
                 </Nav.Item>
               </Nav>
             </div>
           </Col>
           <Col sm={10}>
             <Tab.Content>
-              <Tab.Pane eventKey="sample">
+              <Tab.Pane eventKey="autoAddress">
                 <AutoAddressCheck />
               </Tab.Pane>
             </Tab.Content>

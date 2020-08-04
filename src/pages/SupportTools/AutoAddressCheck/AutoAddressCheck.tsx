@@ -4,6 +4,90 @@ import SpiService from '../../Burger/spiService';
 import { Input } from '../../../components/Input';
 import Checkbox from '../../../components/Checkbox';
 
+async function fetchFqdn(
+  sn: string,
+  tm: boolean,
+  setFqdn: any,
+  setTimeStampFqdn: any,
+  setResult: any,
+  setErrorResponse: any,
+  setGoogleDns: any,
+  setWebSocketConnectionFqdn: any
+) {
+  const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.wbc.mspenv.io/v1/${sn}/fqdn`, {
+    headers: {
+      'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
+    },
+  });
+  let fqdn2;
+  if (response.ok) {
+    const data = await response.json();
+    fqdn2 = data.fqdn;
+    setFqdn(data.fqdn);
+    setTimeStampFqdn(data.last_updated);
+    setResult('success');
+    webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
+  } else {
+    const data = await response.json();
+    setErrorResponse(data);
+    setResult('error');
+  }
+
+  if (response.ok) {
+    const response1 = await fetch(`https://dns.google/resolve?name=${fqdn2}`);
+    if (response1.ok) {
+      const data = await response1.json();
+      if (response1.ok && data.Answer) {
+        setGoogleDns(data);
+        console.log(data);
+      } else {
+        setGoogleDns('Error in Google Api');
+      }
+    }
+  }
+}
+
+async function fetchIp(
+  sn: string,
+  tm: boolean,
+  setIp: any,
+  setTimeStampIp: any,
+  setResult: any,
+  setErrorResponse: any
+) {
+  const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.wbc.mspenv.io/v1/${sn}/ip`, {
+    headers: {
+      'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
+    },
+  });
+
+  if (response.ok) {
+    const data = await response.json();
+    setIp(data.ip);
+    setTimeStampIp(data.last_updated);
+    setResult('success');
+    // Todo
+    // webSocketIp(data.ip);
+  } else {
+    const data = await response.json();
+    setErrorResponse(data);
+    setResult('error');
+  }
+}
+
+function webSocketFqdn(webFqdn: any, sn: string, tm: boolean, setWebSocketConnectionFqdn: any) {
+  const socket = new WebSocket(`wss://${webFqdn}`, 'spi.2.8.0');
+
+  socket.onopen = (e: any) => {
+    socket.send('success');
+    setWebSocketConnectionFqdn('Successfully connected to webSocket');
+  };
+
+  socket.onerror = (error: any) => {
+    setWebSocketConnectionFqdn('Error in connecting to webSocket');
+  };
+}
+
 function AutoAddressCheck() {
   const [serialNumber, setSerialNumber] = useState('');
   const [fqdn, setFqdn] = useState('');
@@ -21,6 +105,7 @@ function AutoAddressCheck() {
     Answer: [{ name: '', data: '' }],
   });
   const [webSocketConnectionFqdn, setWebSocketConnectionFqdn] = useState('');
+  // Todo
   // const [webSocketConnectionIp, setWebSocketConnectionIp] = useState('');
 
   useEffect(() => {
@@ -38,69 +123,10 @@ function AutoAddressCheck() {
     }
   }, []);
   function fetchResponse(sn: string, tm: boolean) {
-    fetchFqdn(sn, tm);
-    fetchIp(sn, tm);
+    fetchFqdn(sn, tm, setFqdn, setTimeStampFqdn, setResult, setErrorResponse, setGoogleDns, setWebSocketConnectionFqdn);
+    fetchIp(sn, tm, setIp, setTimeStampIp, setResult, setErrorResponse);
   }
-  async function fetchFqdn(sn: string, tm: boolean) {
-    const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.wbc.mspenv.io/v1/${sn}/fqdn`, {
-      headers: {
-        'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
-      },
-    });
-    let fqdn2;
-    if (response.ok) {
-      const data = await response.json();
-      fqdn2 = data.fqdn;
-      setFqdn(data.fqdn);
-      setTimeStampFqdn(data.last_updated);
-      setResult('success');
-      webSocketFqdn(data.fqdn, sn, tm);
-    } else {
-      const data = await response.json();
-      setErrorResponse(data);
-      setResult('error');
-    }
-
-    if (response.ok) {
-      const response1 = await fetch(`https://dns.google/resolve?name=${fqdn2}`);
-      if (response1.ok) {
-        const data = await response1.json();
-        setGoogleDns(data);
-      }
-    }
-  }
-  async function fetchIp(sn: string, tm: boolean) {
-    const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.wbc.mspenv.io/v1/${sn}/ip`, {
-      headers: {
-        'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
-      },
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      setIp(data.ip);
-      setTimeStampIp(data.last_updated);
-      setResult('success');
-      // webSocketIp(data.ip);
-    } else {
-      const data = await response.json();
-      setErrorResponse(data);
-      setResult('error');
-    }
-  }
-  function webSocketFqdn(webFqdn: any, sn: string, tm: boolean) {
-    const socket = new WebSocket(`wss://${webFqdn}`, 'spi.2.8.0');
-
-    socket.onopen = (e: any) => {
-      socket.send('success');
-      setWebSocketConnectionFqdn('Successfully connected to webSocket');
-    };
-
-    socket.onerror = (error: any) => {
-      setWebSocketConnectionFqdn('Error in connecting to webSocket');
-    };
-  }
-
+  // Todo
   // function webSocketIp(webIp: any) {
   //   const socket = new WebSocket(`ws://${webIp}`, `spi.${new SpiService()._version}`);
   //   socket.onopen = (e: any) => {
@@ -188,11 +214,11 @@ function AutoAddressCheck() {
                   <tbody>
                     <tr>
                       <th>FQDN</th>
-                      <td>{googleDns.Answer[0].name}</td>
+                      <td>{googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}</td>
                     </tr>
                     <tr>
                       <th>IP</th>
-                      <td>{googleDns.Answer[0].data}</td>
+                      <td>{googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}</td>
                     </tr>
                   </tbody>
                 </Table>
