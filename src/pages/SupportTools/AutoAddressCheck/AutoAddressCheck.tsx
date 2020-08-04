@@ -19,10 +19,10 @@ async function fetchFqdn(
       'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
     },
   });
-  let fqdn2;
+  let fqdn;
   if (response.ok) {
     const data = await response.json();
-    fqdn2 = data.fqdn;
+    fqdn = data.fqdn;
     setFqdn(data.fqdn);
     setTimeStampFqdn(data.last_updated);
     setResult('success');
@@ -34,10 +34,10 @@ async function fetchFqdn(
   }
 
   if (response.ok) {
-    const response1 = await fetch(`https://dns.google/resolve?name=${fqdn2}`);
-    if (response1.ok) {
-      const data = await response1.json();
-      if (response1.ok && data.Answer) {
+    const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
+    if (dnsResponse.ok) {
+      const data = await dnsResponse.json();
+      if (dnsResponse.ok && data.Answer) {
         setGoogleDns(data);
         console.log(data);
       } else {
