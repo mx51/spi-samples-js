@@ -145,7 +145,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               setIsFormSaved(false);
               setApiKey(e.target.value);
             }}
-            defaultValue="RamenPosDeviceIpApiKey"
+            defaultValue="BurgerPosDeviceAPIKey"
           />
           <Input
             id="inpSerial"
