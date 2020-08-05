@@ -126,9 +126,9 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             name="POS ID"
             label="POS ID"
             placeholder="POS ID"
-            pattern="\w+"
+            pattern="^[a-zA-Z0-9]{1,16}$"
             required
-            title="POS Id must be alphanumeric. Special characters and spaces not allowed"
+            title="POS Id must be alphanumeric and less than 16 characters. Special characters and spaces not allowed"
             disabled={isDisabled || status !== SpiStatus.Unpaired}
             defaultValue={posId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
