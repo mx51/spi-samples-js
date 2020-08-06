@@ -57,12 +57,15 @@ function handlePurchaseStatusCallback(
       transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
       spi.AckFlowEndedAndBackToIdle();
     } else {
-      PosUtils.processCompletedEvent(
-        flowMsg,
-        receipt,
-        transactionAction === TransactionType.Purchase ? purchaseService : refundService,
-        event.detail
-      );
+      let service;
+      if (transactionAction === TransactionType.Purchase) {
+        service = purchaseService;
+      } else if (transactionAction === TransactionType.Refund) {
+        service = refundService;
+      } else {
+        service = cashoutService;
+      }
+      PosUtils.processCompletedEvent(flowMsg, receipt, service, event.detail);
     }
   } else {
     transactionFlowService.handleTransaction(flowMsg, event.detail);
