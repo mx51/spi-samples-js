@@ -1,14 +1,8 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-<<<<<<< HEAD
 import { Logger } from '@mx51/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import PosUtils from '../../services/_common/pos';
 import { reversal as reversalService } from '../../services';
-=======
-import { Logger, ReversalResponse } from '@mx51/spi-client-js';
-
-import { Col, Row } from 'react-bootstrap';
->>>>>>> 25f1498d84aa2cf9bd44b9af3f5db855a4ea515f
 import './Reversal.scss';
 import { Input } from '../../components/Input';
 import Flow from '../../components/Flow';
