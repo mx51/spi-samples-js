@@ -5,7 +5,6 @@ import PosUtils from '../../services/_common/pos';
 import { reversal as reversalService } from '../../services';
 import './Reversal.scss';
 import { Input } from '../../components/Input';
-import Flow from '../../components/Flow';
 
 type Props = {
   spi: Spi;
