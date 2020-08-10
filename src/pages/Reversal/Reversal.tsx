@@ -1,10 +1,10 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react';
-import { Logger, ReversalResponse } from '@mx51/spi-client-js';
-
+import { Logger } from '@mx51/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
+import PosUtils from '../../services/_common/pos';
+import { reversal as reversalService } from '../../services';
 import './Reversal.scss';
 import { Input } from '../../components/Input';
-import Flow from '../../components/Flow';
 
 type Props = {
   spi: Spi;
@@ -16,16 +16,8 @@ function Reversal({ spi }: Props) {
   const flowEl = useRef<HTMLDivElement>(null);
 
   function handleReversalTransaction(m: Message, flowLogger: Logger) {
-    if (m.detail.Response != null) {
-      if (m.detail.Response.Data.success) {
-        flowLogger.Info(`# PosRefId: ${m.detail.Response.Data.pos_ref_id}`);
-        flowLogger.Info(`# Success: ${m.detail.Response.Data.success}`);
-      } else {
-        flowLogger.Info(`# PosRefId: ${m.detail.Response.Data.pos_ref_id}`);
-        flowLogger.Info(`# Success: ${m.detail.Response.Data.success}`);
-        flowLogger.Info(`# Error Detail: ${m.detail.Response.Data.error_detail}`);
-        flowLogger.Info(`# Error Reason: ${m.detail.Response.Data.error_reason}`);
-      }
+    if (m.detail.Finished) {
+      PosUtils.processCompletedEvent(flowLogger, () => {}, reversalService, m.detail);
       spi.AckFlowEndedAndBackToIdle();
     }
   }
