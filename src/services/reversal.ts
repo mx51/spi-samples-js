@@ -1,8 +1,7 @@
 import { ReversalResponse } from '@mx51/spi-client-js';
 
 // Initiate a transaction
-function initiateReversal(flowMsg: Logger, spi: Spi) {
-  const posRefId = `cashout-${new Date().toISOString()}`;
+function initiateReversal(flowMsg: Logger, spi: Spi, posRefId: string) {
   const res = spi.InitiateReversal(posRefId);
 
   flowMsg.Info(

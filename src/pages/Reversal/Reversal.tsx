@@ -50,7 +50,11 @@ function Reversal({ spi }: Props) {
                 setPosRefId(e.target.value);
               }}
             />
-            <button type="button" className="primary-button" onClick={() => spi.InitiateReversal(posRefId)}>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => reversalService.initiateReversal(new Logger(flowEl.current), spi, posRefId)}
+            >
               Reversal
             </button>
           </div>
