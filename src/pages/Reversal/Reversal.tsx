@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, useEffect } from 'react';
 import { Logger } from '@mx51/spi-client-js';
 import { Col, Row } from 'react-bootstrap';
 import PosUtils from '../../services/_common/pos';
-import { reversal as reversalService } from '../../services';
+import { reversal as reversalService, transactionFlow as transactionFlowService } from '../../services';
 import './Reversal.scss';
 import { Input } from '../../components/Input';
 
@@ -19,6 +19,8 @@ function Reversal({ spi }: Props) {
     if (m.detail.Finished) {
       PosUtils.processCompletedEvent(flowLogger, () => {}, reversalService, m.detail);
       spi.AckFlowEndedAndBackToIdle();
+    } else {
+      transactionFlowService.handleTransaction(flowLogger, m.detail);
     }
   }
   const handleReversal = useCallback((event) => {
@@ -50,8 +52,11 @@ function Reversal({ spi }: Props) {
                 setPosRefId(e.target.value);
               }}
             />
-
-            <button type="button" className="primary-button" onClick={() => spi.InitiateReversal(posRefId)}>
+            <button
+              type="button"
+              className="primary-button"
+              onClick={() => reversalService.initiateReversal(new Logger(flowEl.current), spi, posRefId)}
+            >
               Reversal
             </button>
           </div>

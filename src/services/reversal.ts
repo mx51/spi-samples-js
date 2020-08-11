@@ -35,7 +35,6 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
 
 function handleUnknownState(flowMsg: Logger) {
   flowMsg.Info(`# WE'RE NOT QUITE SURE WHETHER THE REVERSAL WENT THROUGH OR NOT :/`);
-  // flowMsg.Info(`# CHECK THE LAST TRANSACTION ON THE EFTPOS ITSELF FROM THE APPROPRIATE MENU ITEM.`);
   flowMsg.Info(`# YOU CAN THE TAKE THE APPROPRIATE ACTION.`);
 }
 
