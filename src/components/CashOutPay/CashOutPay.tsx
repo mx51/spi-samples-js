@@ -20,6 +20,7 @@ function CashOutPay(props: { handleCashoutPay: Function }) {
               id="inpCashoutAmount"
               name="Cashout"
               pattern="^[1-9][0-9]*$"
+              required
               label="Cashout Amount"
               title="Amount should be positive and more than 0"
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
