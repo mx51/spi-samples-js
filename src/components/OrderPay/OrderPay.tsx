@@ -66,6 +66,7 @@ function OrderPay(props: {
       <Row className="order-header-buttons no-gutters">
         <Col sm={6}>
           <button
+            className="btn btn-outline-primary rounded-0 btn-block btn-lg mb-2"
             id="moto"
             type="button"
             disabled={transactionStatus}
@@ -75,7 +76,12 @@ function OrderPay(props: {
           </button>
         </Col>
         <Col sm={6}>
-          <button type="button" disabled={transactionStatus} onClick={() => setPaymentType(PaymentType.CreditCardType)}>
+          <button
+            className="btn btn-outline-primary rounded-0 btn-block btn-lg mb-2"
+            type="button"
+            disabled={transactionStatus}
+            onClick={() => setPaymentType(PaymentType.CreditCardType)}
+          >
             Credit card
           </button>
         </Col>

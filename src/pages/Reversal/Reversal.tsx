@@ -54,7 +54,7 @@ function Reversal({ spi }: Props) {
             />
             <button
               type="button"
-              className="primary-button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
               onClick={() => reversalService.initiateReversal(new Logger(flowEl.current), spi, posRefId)}
             >
               Reversal

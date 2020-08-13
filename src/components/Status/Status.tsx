@@ -37,7 +37,7 @@ function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; M
               <button
                 id="btnPair"
                 type="button"
-                className="primary-button"
+                className="btn btn-primary rounded-0 btn-block btn-lg"
                 disabled={!pairButton}
                 onClick={() => pairingService.pair(spi)}
               >
@@ -47,7 +47,7 @@ function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; M
               <button
                 id="btnUnpair"
                 type="button"
-                className="primary-button"
+                className="btn btn-primary rounded-0 btn-block btn-lg"
                 onClick={() => pairingService.unpair(spi)}
               >
                 Unpair
@@ -60,7 +60,7 @@ function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; M
             <button
               id="btnCancelPairing"
               type="button"
-              className="primary-button"
+              className="btn btn-primary rounded-0 btn-block btn-lg"
               onClick={() => pairingService.pairingCancel(spi)}
             >
               Cancel Pairing

@@ -73,17 +73,32 @@ function Order(props: {
       <h2 className="sub-header mb-0">Order</h2>
       <Row className="order-header-buttons no-gutters">
         <Col sm={4}>
-          <button id="lastTransactionButton" type="button" onClick={() => onLastTransaction()}>
+          <button
+            className="btn btn-outline-primary rounded-0"
+            id="lastTransactionButton"
+            type="button"
+            onClick={() => onLastTransaction()}
+          >
             Last Transaction
           </button>
         </Col>
         <Col sm={4}>
-          <button id="surchargeButton" type="button" onClick={() => setShowSurcharge(true)}>
+          <button
+            className="btn btn-outline-primary rounded-0"
+            id="surchargeButton"
+            type="button"
+            onClick={() => setShowSurcharge(true)}
+          >
             Add Surcharge
           </button>
         </Col>
         <Col sm={4}>
-          <button id="refundButton" type="button" onClick={() => onRefund()}>
+          <button
+            className="btn btn-outline-primary rounded-0"
+            id="refundButton"
+            type="button"
+            onClick={() => onRefund()}
+          >
             Refund
           </button>
         </Col>
@@ -109,6 +124,7 @@ function Order(props: {
                     <Col sm={5}>
                       <div className="quantity-buttons">
                         <button
+                          className="btn btn-secondary rounded-0 btn-block"
                           id={`btnItemDec${item.id}`}
                           type="button"
                           onClick={() =>
@@ -121,6 +137,7 @@ function Order(props: {
                           {item.quantity}
                         </div>
                         <button
+                          className="btn btn-secondary rounded-0 btn-block"
                           id={`btnItemInc${item.id}`}
                           type="button"
                           onClick={() => onChangeProductQuantity(item.id, 1)}

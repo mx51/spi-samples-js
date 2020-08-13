@@ -83,27 +83,29 @@ function Actions(props: {
           </Button>
         </Modal.Body>
       </Modal>
-      <button
-        type="button"
-        className="primary-button"
-        onClick={() => settlement(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
-      >
-        Settlement
-      </button>
-      <button
-        type="button"
-        className="primary-button"
-        onClick={() => settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
-      >
-        Settlement Enquiry
-      </button>
-      <button
-        type="button"
-        className="primary-button"
-        onClick={() => terminalStatus(status, onErrorMsg, receiptEl, spi, getTerminalStatus)}
-      >
-        Terminal Status
-      </button>
+      <div className="ml-2 mr-2">
+        <button
+          type="button"
+          className="btn btn-primary rounded-0 btn-block btn-lg"
+          onClick={() => settlement(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
+        >
+          Settlement
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary rounded-0 btn-block btn-lg"
+          onClick={() => settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
+        >
+          Settlement Enquiry
+        </button>
+        <button
+          type="button"
+          className="btn btn-primary rounded-0 btn-block btn-lg"
+          onClick={() => terminalStatus(status, onErrorMsg, receiptEl, spi, getTerminalStatus)}
+        >
+          Terminal Status
+        </button>
+      </div>
     </div>
   );
 }

@@ -75,7 +75,7 @@ function SettingConfig(props: {
         />
         <button
           type="button"
-          className="primary-button"
+          className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
           id="btnApply"
           onClick={() => {
             handleSaveSetting(eftposReceipt, sigFlow, printMerchantCopy, receiptHeader, receiptFooter);

@@ -479,7 +479,7 @@ function Checkout(props: {
             <div ref={flowTransactionEl} />
             <button
               type="button"
-              className="primary-button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
               onClick={() => {
                 transactionFlowService.cancelTransaction(spi);
               }}
@@ -497,10 +497,18 @@ function Checkout(props: {
                 ? stateChange.Response.GetErrorDetail()
                 : new PurchaseResponse(stateChange.Response).GetResponseText()}
             </p>
-            <button type="button" className="primary-button" onClick={() => handleRetry()}>
+            <button
+              type="button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
+              onClick={() => handleRetry()}
+            >
               Retry
             </button>
-            <button type="button" className="primary-button" onClick={() => handleBack()}>
+            <button
+              type="button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
+              onClick={() => handleBack()}
+            >
               Cancel
             </button>
           </div>
