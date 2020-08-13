@@ -71,6 +71,15 @@ function changeProductQuantity(
   updateShortlistedProducts(products);
 }
 
+function getTransaction(status: string, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
+  if (status !== SpiStatus.PairedConnected) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    setCheckout(true);
+    setTransactionAction(TransactionType.GetTransaction);
+  }
+}
+
 function lastTransaction(status: string, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
   if (status !== SpiStatus.PairedConnected) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
@@ -143,6 +152,7 @@ function Products({
 }: Props) {
   const [shortlistedProducts, updateShortlistedProducts] = useState<Array<Product>>([]);
   const [checkout, setCheckout] = useState(false);
+  const [posRefId, setPosRefId] = useState('');
   const [transactionAction, setTransactionAction] = useState('');
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
@@ -193,10 +203,13 @@ function Products({
             onChangeProductQuantity={(id: string, quantity: number) =>
               changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity)
             }
+            onGetTransaction={() => getTransaction(status, onErrorMsg, setCheckout, setTransactionAction)}
             onRefund={() => refundAction(setCheckout, setTransactionAction)}
             onLastTransaction={() => lastTransaction(status, onErrorMsg, setCheckout, setTransactionAction)}
             onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction, setCheckout)}
             handleApplySurcharge={setSurchargeAmount}
+            posRefId={posRefId}
+            setPosRefId={setPosRefId}
             surchargeAmount={surchargeAmount}
             status={status}
             errorMsg={errorMsg}
@@ -210,6 +223,7 @@ function Products({
               onNoThanks={() =>
                 noThanksAction(setCheckout, setTransactionAction, spi, updateShortlistedProducts, setTransactionStatus)
               }
+              posRefId={posRefId}
               spi={spi}
               surchargeAmount={surchargeAmount}
               setSurchargeAmount={setSurchargeAmount}

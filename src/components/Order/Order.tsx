@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { SpiStatus } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
+import GetTransactionModal from '../GetTransactionModal';
 import SurchargeModal from '../SurchargeModal';
 import './Order.scss';
 
@@ -26,10 +27,13 @@ function checkoutAction(status: String, onErrorMsg: Function, onCheckout: Functi
 function Order(props: {
   list: Array<Product>;
   onCheckout: Function;
+  onGetTransaction: Function;
   onRefund: Function;
   onLastTransaction: Function;
   onChangeProductQuantity: Function;
   handleApplySurcharge: Function;
+  posRefId: string;
+  setPosRefId: Function;
   surchargeAmount: number;
   status: string;
   errorMsg: string;
@@ -38,15 +42,20 @@ function Order(props: {
   const {
     list,
     onCheckout,
+    onGetTransaction,
     onRefund,
     onLastTransaction,
     onChangeProductQuantity,
     handleApplySurcharge,
+    posRefId,
+    setPosRefId,
     surchargeAmount,
     status,
     errorMsg,
     onErrorMsg,
   } = props;
+
+  const [showGetTransactionModal, setShowGetTransactionModal] = useState(false);
 
   const [showSurcharge, setShowSurcharge] = useState(false);
   const [surcharge, setSurcharge] = useState<number>(0);
@@ -59,6 +68,17 @@ function Order(props: {
 
   return (
     <div className="min-vh-100 sticky-top">
+      <GetTransactionModal
+        posRefId={posRefId}
+        setPosRefId={setPosRefId}
+        show={showGetTransactionModal}
+        handleClose={() => setShowGetTransactionModal(false)}
+        handleGetTransaction={() => {
+          onGetTransaction(posRefId);
+          setShowGetTransactionModal(false);
+        }}
+      />
+
       <SurchargeModal
         show={showSurcharge}
         surcharge={surcharge}
@@ -72,14 +92,26 @@ function Order(props: {
 
       <h2 className="sub-header mb-0">Order</h2>
       <Row className="order-header-buttons no-gutters">
+        {new URLSearchParams(window.location.search).get('qamode') === 'true' && (
+          <Col sm={12}>
+            <button
+              className="btn btn-outline-primary rounded-0"
+              id="lastTransactionButton"
+              type="button"
+              onClick={() => onLastTransaction()}
+            >
+              Last Transaction
+            </button>
+          </Col>
+        )}
         <Col sm={4}>
           <button
             className="btn btn-outline-primary rounded-0"
-            id="lastTransactionButton"
+            id="getTransactionButton"
             type="button"
-            onClick={() => onLastTransaction()}
+            onClick={() => setShowGetTransactionModal(true)}
           >
-            Last Transaction
+            Get Transaction
           </button>
         </Col>
         <Col sm={4}>

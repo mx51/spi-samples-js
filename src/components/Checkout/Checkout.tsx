@@ -16,6 +16,9 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
+const isTransactionInquiry = (transactionType: String) =>
+  [TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(transactionType);
+
 function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Function) {
   if (isApproved) {
     transactionFlowService.acceptSignature(spi);
@@ -53,8 +56,12 @@ function handlePurchaseStatusCallback(
   }
 
   if (event.detail.Finished) {
-    if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
-      transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+    if (isTransactionInquiry(transactionAction)) {
+      if (transactionAction === TransactionType.GetLastTransaction) {
+        transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+      } else if (transactionAction === TransactionType.GetTransaction) {
+        transactionFlowService.handleGetTransaction(flowMsg, receipt, spi.CurrentTxFlowState);
+      }
       spi.AckFlowEndedAndBackToIdle();
     } else {
       let service;
@@ -248,6 +255,7 @@ function Checkout(props: {
   list: Array<Product>;
   onClose: Function;
   onNoThanks: Function;
+  posRefId: string;
   spi: Spi;
   surchargeAmount: number;
   setSurchargeAmount: Function;
@@ -267,6 +275,7 @@ function Checkout(props: {
     onNoThanks,
     spi,
     list,
+    posRefId,
     surchargeAmount,
     setSurchargeAmount,
     setTransactionStatus,
@@ -321,11 +330,18 @@ function Checkout(props: {
   });
 
   useEffect(() => {
+    if (transactionAction === TransactionType.GetTransaction) {
+      const flowMsg = new Logger(flowEl.current);
+      transactionFlowService.initiateGetTransaction(flowMsg, spi, posRefId);
+    }
+  }, [posRefId, spi, transactionAction]);
+
+  useEffect(() => {
     if (transactionAction === TransactionType.GetLastTransaction) {
       const flowMsg = new Logger(flowEl.current);
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
-  }, [transactionAction]);
+  }, [spi, transactionAction]);
 
   useEffect(() => {
     document.addEventListener('TxnUpdateMessage', handleTransactionUpdate);
@@ -588,13 +604,13 @@ function Checkout(props: {
           >
             ▼
           </button>
-          <Row style={transactionAction !== TransactionType.GetLastTransaction ? {} : { flexDirection: 'row-reverse' }}>
-            {transactionAction !== TransactionType.GetLastTransaction && (
+          <Row style={!isTransactionInquiry(transactionAction) ? {} : { flexDirection: 'row-reverse' }}>
+            {!isTransactionInquiry(transactionAction) && (
               <Col sm={4} className="sub-column">
                 {showRelatedPay()}
               </Col>
             )}
-            <Col sm={transactionAction !== TransactionType.GetLastTransaction ? 5 : 9} className="sub-column">
+            <Col sm={!isTransactionInquiry(transactionAction) ? 5 : 9} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
               <div className="flow-alignment" ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}
