@@ -211,7 +211,12 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
                 setAutoAddress(e.target.checked);
               }}
             />
-            <button id="btnSaveSetting" type="submit" className="primary-button" disabled={isFormSaved || isDisabled}>
+            <button
+              id="btnSaveSetting"
+              type="submit"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
+              disabled={isFormSaved || isDisabled}
+            >
               Save Setting
             </button>
           </div>
