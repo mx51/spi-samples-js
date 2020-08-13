@@ -51,7 +51,7 @@ function Pairing({
     return function cleanup() {
       document.removeEventListener('PairingFlowStateChanged', handlePairingStatusChange);
     };
-  }, []);
+  }, [handlePairingStatusChange]);
 
   const [pairButton, setPairButton] = useState(false);
 
@@ -60,7 +60,12 @@ function Pairing({
       <Row>
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
-            <PairingConfig spi={spi} status={status} setPairButton={setPairButton} />
+            <PairingConfig
+              isFinishedPairing={isFinishedPairing}
+              spi={spi}
+              status={status}
+              setPairButton={setPairButton}
+            />
           </div>
           <div className="flex-fill">
             <Status
