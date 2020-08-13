@@ -40,6 +40,7 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
   const cashoutResponse = new CashoutOnlyResponse(txStateResponse);
 
   flowMsg.Info(`# CASH-OUT SUCCESSFUL - HAND THEM THE CASH!`);
+  flowMsg.Info(`# POS Reference: ${cashoutResponse.GetResponseValue('pos_ref_id')}`);
   flowMsg.Info(`# Response: ${cashoutResponse.GetResponseText()}`);
   flowMsg.Info(`# RRN: ${cashoutResponse.GetRRN()}`);
   flowMsg.Info(`# Scheme: ${cashoutResponse.SchemeName}`);

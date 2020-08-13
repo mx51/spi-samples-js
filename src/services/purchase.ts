@@ -78,6 +78,7 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
   const purchaseResponse = new PurchaseResponse(txStateResponse);
 
   flowMsg.Info(`# WOOHOO - WE GOT PAID!`);
+  flowMsg.Info(`# POS Reference: ${purchaseResponse.GetResponseValue('pos_ref_id')}`);
   flowMsg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
   flowMsg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
   flowMsg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
