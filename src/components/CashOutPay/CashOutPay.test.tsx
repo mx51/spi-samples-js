@@ -3,11 +3,13 @@ import React from 'react';
 import CashOutPay from './CashOutPay';
 
 describe('CashOutPay', () => {
+  const event = { preventDefault: () => {} };
+
   it('should return 0 when cash out button clicked without entering value', () => {
     const handleCashoutPay = jest.fn();
     const component = shallow(<CashOutPay handleCashoutPay={handleCashoutPay} />);
 
-    component.find('button#cashoutButton').simulate('click');
+    component.find('form').simulate('submit', event);
     expect(handleCashoutPay.mock.calls[0][0]).toBe(0);
   });
 
@@ -20,7 +22,7 @@ describe('CashOutPay', () => {
       .at(0)
       .simulate('change', { target: { value: -100 } });
 
-    component.find('button#cashoutButton').simulate('click');
+    component.find('form').simulate('submit', event);
     expect(handleCashoutPay.mock.calls[0][0]).toBe(-1);
   });
 });

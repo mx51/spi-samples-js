@@ -73,6 +73,31 @@ function initiateRecovery(flowMsg: Logger, spi: Spi, posRefId: string) {
   );
 }
 
+function initiateGetTransaction(flowMsg: Logger, spi: Spi, posRefId: String) {
+  const res = spi.InitiateGetTx(posRefId);
+
+  flowMsg.Info(
+    res.Initiated
+      ? '# GT Initiated. Will be updated once complete.'
+      : `# Could not initiate GT: ${res.Message}. Please Retry.`
+  );
+}
+
+function handleGetTransaction(flowMsg: Logger, receipt: Logger, txState: TransactionFlowState) {
+  if (txState.Response !== null) {
+    const purchaseResponse = new PurchaseResponse(txState.Response);
+    flowMsg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
+    flowMsg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
+    flowMsg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
+    flowMsg.Info(`# Error: ${txState.Response.GetError()}`);
+    flowMsg.Info(`# Customer Receipt:`);
+    receipt.Info(purchaseResponse.GetCustomerReceipt().trim());
+  } else {
+    // We did not even get a response, like in the case of a time-out.
+    flowMsg.Info('# Could Not Retrieve Transaction.');
+  }
+}
+
 function initiateGetLastTransaction(flowMsg: Logger, spi: Spi) {
   const res = spi.InitiateGetLastTx();
 
@@ -124,8 +149,10 @@ export default {
   acknowledgeCompletion,
   cancelTransaction,
   declineSignature,
+  handleGetTransaction,
   handleGetLastTransaction,
   handleTransaction,
+  initiateGetTransaction,
   initiateGetLastTransaction,
   initiateRecovery,
   printReceipt,

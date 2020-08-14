@@ -1,18 +1,22 @@
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import Order from './Order';
 
 describe('Order', () => {
+  const setPosRefId = jest.fn();
+  const posRefId = '';
   let component: any;
   let onRefund = jest.fn();
+  let onGetTransaction = jest.fn();
   let onLastTransaction = jest.fn();
   let handleApplySurcharge = jest.fn();
   let onChangeProductQuantity = jest.fn();
 
   beforeEach(() => {
-    const list = [{ id: 101, name: 'Burger', quantity: 1, price: 14 }];
+    const list = [{ id: '101', name: 'Burger', quantity: 1, price: '14', image: '' }];
     const onCheckout = jest.fn();
     onRefund = jest.fn();
+    onGetTransaction = jest.fn();
     onLastTransaction = jest.fn();
     onChangeProductQuantity = jest.fn();
     handleApplySurcharge = jest.fn();
@@ -23,9 +27,12 @@ describe('Order', () => {
         list={list}
         onChangeProductQuantity={onChangeProductQuantity}
         onRefund={onRefund}
+        onGetTransaction={onGetTransaction}
         onLastTransaction={onLastTransaction}
         onCheckout={onCheckout}
         handleApplySurcharge={handleApplySurcharge}
+        posRefId={posRefId}
+        setPosRefId={setPosRefId}
         surchargeAmount={surchargeAmount}
         status="Unpaired"
         errorMsg=""
@@ -54,9 +61,9 @@ describe('Order', () => {
     expect(handleApplySurcharge.mock.calls[0][0]).toBe(100);
   });
 
-  it('should call onLastTransaction with default values', () => {
-    component.find('button#lastTransactionButton').simulate('click');
-    expect(onLastTransaction.mock.calls.length).toBe(1);
+  it('should open a modal on click of the getTransaction button', () => {
+    component.find('button#getTransactionButton').simulate('click');
+    expect(component.find('.modal').exists()).toBeTruthy();
   });
 
   it('should show default quantity of items', () => {
@@ -67,7 +74,7 @@ describe('Order', () => {
   it('should change quantity when incremented', () => {
     component.find('button#btnItemInc101').simulate('click');
 
-    expect(onChangeProductQuantity.mock.calls[0][0]).toBe(101);
+    expect(onChangeProductQuantity.mock.calls[0][0]).toBe('101');
     expect(onChangeProductQuantity.mock.calls[0][1]).toBe(1);
   });
 
@@ -75,14 +82,14 @@ describe('Order', () => {
     component.find('button#btnItemDec101').simulate('click');
 
     expect(handleApplySurcharge.mock.calls[0][0]).toBe(0);
-    expect(onChangeProductQuantity.mock.calls[0][0]).toBe(101);
+    expect(onChangeProductQuantity.mock.calls[0][0]).toBe('101');
     expect(onChangeProductQuantity.mock.calls[0][1]).toBe(-1);
   });
 
   it('should change quantity and not reset surcharge when num of items are more than 1', () => {
     const list = [
-      { id: 101, name: 'Burger', quantity: 1, price: 14 },
-      { id: 201, name: 'Pizza', quantity: 1, price: 15 },
+      { id: '101', name: 'Burger', quantity: 1, price: '14', image: '' },
+      { id: '201', name: 'Pizza', quantity: 1, price: '15', image: '' },
     ];
     const onCheckout = jest.fn();
     onRefund = jest.fn();
@@ -96,9 +103,12 @@ describe('Order', () => {
         list={list}
         onChangeProductQuantity={onChangeProductQuantity}
         onRefund={onRefund}
+        onGetTransaction={onGetTransaction}
         onLastTransaction={onLastTransaction}
         onCheckout={onCheckout}
         handleApplySurcharge={handleApplySurcharge}
+        posRefId={posRefId}
+        setPosRefId={setPosRefId}
         surchargeAmount={surchargeAmount}
         status="Unpaired"
         errorMsg=""
@@ -109,12 +119,12 @@ describe('Order', () => {
     component.find('button#btnItemDec101').simulate('click');
 
     expect(handleApplySurcharge.mock.calls.length).toBe(0);
-    expect(onChangeProductQuantity.mock.calls[0][0]).toBe(101);
+    expect(onChangeProductQuantity.mock.calls[0][0]).toBe('101');
     expect(onChangeProductQuantity.mock.calls[0][1]).toBe(-1);
   });
 
   it('should change quantity and not reset surcharge when item more than 1 qty decremented', () => {
-    const list = [{ id: 101, name: 'Burger', quantity: 2, price: 14 }];
+    const list = [{ id: '101', name: 'Burger', quantity: 2, price: '14', image: '' }];
     const onCheckout = jest.fn();
     onRefund = jest.fn();
     onLastTransaction = jest.fn();
@@ -127,9 +137,12 @@ describe('Order', () => {
         list={list}
         onChangeProductQuantity={onChangeProductQuantity}
         onRefund={onRefund}
+        onGetTransaction={onGetTransaction}
         onLastTransaction={onLastTransaction}
         onCheckout={onCheckout}
         handleApplySurcharge={handleApplySurcharge}
+        posRefId={posRefId}
+        setPosRefId={setPosRefId}
         surchargeAmount={surchargeAmount}
         status="Unpaired"
         errorMsg=""
@@ -140,7 +153,7 @@ describe('Order', () => {
     component.find('button#btnItemDec101').simulate('click');
 
     expect(handleApplySurcharge.mock.calls.length).toBe(0);
-    expect(onChangeProductQuantity.mock.calls[0][0]).toBe(101);
+    expect(onChangeProductQuantity.mock.calls[0][0]).toBe('101');
     expect(onChangeProductQuantity.mock.calls[0][1]).toBe(-1);
   });
 });

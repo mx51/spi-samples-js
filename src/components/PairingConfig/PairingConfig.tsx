@@ -1,5 +1,5 @@
 import React, { useState, SyntheticEvent, useCallback, useEffect } from 'react';
-import { DeviceAddressResponseCode, SpiFlow, SpiStatus } from '@mx51/spi-client-js';
+import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 import { Input } from '../Input';
 import Checkbox from '../Checkbox';
@@ -41,12 +41,12 @@ function pairingSaveSetting(
   eftpos: string
 ) {
   e.preventDefault();
-  spi.SetPosId(posId);
+  spi.SetAutoAddressResolution(autoAddress);
   spi.SetTestMode(testMode);
+  spi.SetSecureWebSockets(secureWebSocket);
+  spi.SetPosId(posId);
   spi.SetSerialNumber(serial);
   spi.SetDeviceApiKey(apiKey);
-  spi.SetSecureWebSockets(secureWebSocket);
-  spi.SetAutoAddressResolution(autoAddress);
   spi.SetEftposAddress(eftpos);
   window.localStorage.setItem('api_key', apiKey);
   window.localStorage.setItem('eftpos_address', eftpos);
@@ -58,12 +58,13 @@ function pairingSaveSetting(
 }
 
 type Props = {
+  isFinishedPairing: boolean;
   spi: Spi;
   status: string;
   setPairButton: Function;
 };
 
-function PairingConfig({ spi, status, setPairButton }: Props) {
+function PairingConfig({ isFinishedPairing, spi, status, setPairButton }: Props) {
   const [posId, setPosId] = useState(window.localStorage.getItem('posID') || '');
   const [serial, setSerial] = useState(window.localStorage.getItem('serial') || '');
   const [eftpos, setEftpos] = useState(window.localStorage.getItem('eftpos_address') || '');
@@ -76,8 +77,11 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
   const [isFormSaved, setIsFormSaved] = useState(true);
 
   const [errorMsg, setErrorMsg] = useState('');
-  // The form must not have unsaved data, posId is required always and either eftposAddress or serial number is required
-  setPairButton(isFormSaved && posId && ((!secureWebSocket && eftpos) || (secureWebSocket && serial)));
+
+  useEffect(() => {
+    // The form must not have unsaved data, posId is required always and either eftposAddress or serial number is required
+    setPairButton(isFormSaved && posId && ((!secureWebSocket && eftpos) || (secureWebSocket && serial)));
+  });
 
   useEffect(() => {
     if (window.location.protocol === 'https:') {
@@ -96,8 +100,6 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
       document.removeEventListener('DeviceAddressChanged', handleAutoAddressStateChange);
     };
   });
-
-  const isDisabled = spi.CurrentFlow === SpiFlow.Pairing;
 
   return (
     <div>
@@ -129,7 +131,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             pattern="^[a-zA-Z0-9]{1,16}$"
             required
             title="POS Id must be alphanumeric and less than 16 characters. Special characters and spaces not allowed"
-            disabled={isDisabled || status !== SpiStatus.Unpaired}
+            disabled={!isFinishedPairing || status !== SpiStatus.Unpaired}
             defaultValue={posId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setIsFormSaved(false);
@@ -139,7 +141,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
           <Input
             id="inpAPIkey"
             name="API key"
-            disabled={isDisabled}
+            disabled={!isFinishedPairing}
             label="API key"
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setIsFormSaved(false);
@@ -154,7 +156,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             defaultValue={serial}
             placeholder="000-000-000"
             required={secureWebSocket}
-            disabled={isDisabled}
+            disabled={!isFinishedPairing}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setIsFormSaved(false);
               setSerial(e.target.value);
@@ -165,7 +167,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
             name="EFTPOS"
             label="EFTPOS"
             placeholder="000.000.000.000"
-            disabled={secureWebSocket || isDisabled}
+            disabled={secureWebSocket || !isFinishedPairing}
             required={!secureWebSocket}
             defaultValue={eftpos}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -178,7 +180,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               type="checkbox"
               id="ckbTestMode"
               label="Test Mode"
-              disabled={isDisabled}
+              disabled={!isFinishedPairing}
               checked={testMode}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const { checked } = e.target;
@@ -191,7 +193,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               type="checkbox"
               id="ckbSecureWebSockets"
               label="Secure WebSockets"
-              disabled={window.location.protocol !== 'http:' || isDisabled}
+              disabled={window.location.protocol !== 'http:' || !isFinishedPairing}
               checked={secureWebSocket}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const { checked } = e.target;
@@ -204,7 +206,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               type="checkbox"
               id="ckbAutoAddress"
               label="Auto Address"
-              disabled={window.location.protocol !== 'http:' || isDisabled}
+              disabled={window.location.protocol !== 'http:' || !isFinishedPairing}
               checked={autoAddress}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setIsFormSaved(false);
@@ -215,7 +217,7 @@ function PairingConfig({ spi, status, setPairButton }: Props) {
               id="btnSaveSetting"
               type="submit"
               className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
-              disabled={isFormSaved || isDisabled}
+              disabled={isFormSaved || !isFinishedPairing}
             >
               Save Setting
             </button>
