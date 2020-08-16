@@ -4,6 +4,7 @@
 import React, { Component } from 'react';
 import { Logger } from '@mx51/spi-client-js';
 import TablePos from './pos';
+import '../legacyStyles.scss';
 
 class Page extends Component {
   componentDidMount() {
@@ -27,7 +28,7 @@ class Page extends Component {
 
   render() {
     return (
-      <div className="status-unpaired flow-idle">
+      <div className="legacy-pos status-unpaired flow-idle">
         <table id="layout">
           <tr>
             <td className="col settings" rowSpan={2}>

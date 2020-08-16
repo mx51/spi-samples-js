@@ -68,6 +68,11 @@ div.sub-column {
   color: $primary;
 }
 
+button {
+  padding: 0.5em;
+  width: 150px;
+}
+
 button.primary-button {
   background-color: $primary;
   border-color: $primary;
