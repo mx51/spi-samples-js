@@ -19,9 +19,10 @@ function handlePaymentInProgressCallback(event: any, setInProgressPayment: Funct
 }
 
 const spiService = new SpiService();
-spiService.start();
 
 function BurgerPos() {
+  if (!spiService._spi) spiService.start();
+
   const [errorMsg, setErrorMsg] = useState('');
   const [showUnknownModal, setShowUnknownModal] = useState(false);
   const [inProgressPayment, setInProgressPayment] = useState(
@@ -47,14 +48,17 @@ function BurgerPos() {
       window.localStorage.setItem('payment_progress', false.toString());
       setInProgressPayment(false);
     }
+
+    return () => window.location.reload();
   }, []);
+
   const handleStatusChange = useCallback((event: any) => {
     setStatusState(event.detail);
   }, []);
   useEffect(() => {
     document.addEventListener('StatusChanged', handleStatusChange);
     return function cleanup() {
-      document.addEventListener('StatusChanged', handleStatusChange);
+      document.removeEventListener('StatusChanged', handleStatusChange);
     };
   });
 
@@ -65,7 +69,7 @@ function BurgerPos() {
     document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
 
     return function cleanup() {
-      document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
+      document.removeEventListener('TxFlowStateChanged', handlePaymentInProgress);
     };
   });
 

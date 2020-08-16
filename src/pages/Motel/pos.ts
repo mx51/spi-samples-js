@@ -79,8 +79,12 @@ class MotelPos extends Pos {
 
     this._spi.PrintingResponse = (message: Message) =>
       terminalStatus.handlePrintingResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TerminalConfigurationResponse = (message: Message) =>
+      terminalStatus.handleTerminalConfigurationResponse(this._flowMsg, message);
     this._spi.TerminalStatusResponse = (message: Message) =>
       terminalStatus.handleTerminalStatusResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TransactionUpdateMessage = (message: Message) =>
+      terminalStatus.handleTransactionUpdateMessage(this._flowMsg, message);
     this._spi.BatteryLevelChanged = (message: Message) =>
       terminalStatus.handleBatteryLevelChanged(
         this._flowMsg,
@@ -175,9 +179,6 @@ class MotelPos extends Pos {
           case SpiFlow.Pairing: {
             // Unpaired, PairingFlow
             const pairingState = this._spi.CurrentPairingFlowState;
-            if (pairingState.AwaitingCheckFromPos) {
-              inputsEnabled.push('pair_confirm');
-            }
             if (!pairingState.Finished) {
               inputsEnabled.push('pair_cancel');
             } else {
@@ -288,7 +289,6 @@ class MotelPos extends Pos {
     });
 
     this.addUiOperation('#pair', 'click', () => pairing.pair(this._spi));
-    this.addUiOperation('#pair_confirm', 'click', () => pairing.pairingConfirmCode(this._spi));
     this.addUiOperation('#pair_cancel', 'click', () => pairing.pairingCancel(this._spi));
     this.addUiOperation('#unpair', 'click', () => pairing.unpair(this._spi));
 
