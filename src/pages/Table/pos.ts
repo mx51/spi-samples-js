@@ -8,6 +8,7 @@ import {
   Spi,
   SpiFlow,
   SpiStatus,
+  TransactionOptions,
   TransactionType,
 } from '@mx51/spi-client-js';
 import Bill from '../../services/_common/bill';
@@ -15,7 +16,7 @@ import { pairing, purchase, refund, settlement, terminalStatus, transactionFlow 
 import Pos from '../../services/_common/pos';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import '../style.scss';
+import '../legacyStyles.scss';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE latest verion of the SPI Client Library
@@ -115,8 +116,12 @@ class TablePos extends Pos {
 
     this._spi.PrintingResponse = (message: Message) =>
       terminalStatus.handlePrintingResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TerminalConfigurationResponse = (message: Message) =>
+      terminalStatus.handleTerminalConfigurationResponse(this._flowMsg, message);
     this._spi.TerminalStatusResponse = (message: Message) =>
       terminalStatus.handleTerminalStatusResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TransactionUpdateMessage = (message: Message) =>
+      terminalStatus.handleTransactionUpdateMessage(this._flowMsg, message);
     this._spi.BatteryLevelChanged = (message: Message) =>
       terminalStatus.handleBatteryLevelChanged(
         this._flowMsg,
@@ -128,10 +133,10 @@ class TablePos extends Pos {
 
     this._pat = this._spi.EnablePayAtTable();
     this.EnablePayAtTableConfigs();
-    this._pat.GetBillStatus = this.getBillDetails;
-    this._pat.BillPaymentReceived = this.billPaymentReceived;
-    this._pat.BillPaymentFlowEnded = this.billPaymentFlowEnded;
-    this._pat.GetOpenTables = this.getOpenTables;
+    this._pat.GetBillStatus = this.getBillDetails.bind(this);
+    this._pat.BillPaymentReceived = this.billPaymentReceived.bind(this);
+    this._pat.BillPaymentFlowEnded = this.billPaymentFlowEnded.bind(this);
+    this._pat.GetOpenTables = this.getOpenTables.bind(this);
 
     this._spi.Start();
 
@@ -326,12 +331,6 @@ class TablePos extends Pos {
         inputs: [],
       },
       {
-        id: 'pair_confirm',
-        enabled: isPairingFlow && this._spi.CurrentPairingFlowState.AwaitingCheckFromEftpos,
-        onClick: () => pairing.pairingConfirmCode(this._spi),
-        inputs: [],
-      },
-      {
         id: 'pair_cancel',
         enabled: isPairingFlow,
         onClick: () => pairing.pairingCancel(this._spi),
@@ -349,7 +348,7 @@ class TablePos extends Pos {
         onSubmit: () =>
           purchase.initiatePurchase(
             this._flowMsg,
-            {},
+            new TransactionOptions(),
             this._spi,
             Pos.getElementNumberValue('#amount'),
             Pos.getElementNumberValue('#tip_amount'),
@@ -502,7 +501,7 @@ class TablePos extends Pos {
           currentActionHeading.innerText = buttonElement.innerText;
         };
       } else {
-        (buttonElement as any).onclick = button.onClick;
+        (buttonElement as any).onclick = button.onClick?.bind(this);
         actionSubmitButton.classList.add('hidden');
       }
     });

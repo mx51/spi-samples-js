@@ -2,11 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import './App.css';
+import './App.scss';
 
 const App = () => (
   <div className="app">
-    <h1 className="bpos-heading">Choose your SPI {getSpiVersion()} POS Sample</h1>
+    <h1 className="pos-heading">Choose your SPI {getSpiVersion()} POS Sample</h1>
     <nav className="homePageLink">
       <ol>
         <li>

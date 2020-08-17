@@ -23,7 +23,7 @@ import {
 import Pos from '../../services/_common/pos';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import '../style.scss';
+import '../legacyStyles.scss';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE latest verion of the SPI Client Library
@@ -409,7 +409,7 @@ class RamenPos extends Pos {
       (inputs[i] as HTMLInputElement).disabled = true;
     }
 
-    inputsEnabled.forEach(input => {
+    inputsEnabled.forEach((input) => {
       (document.getElementById(input) as HTMLInputElement).disabled = false;
     });
 
