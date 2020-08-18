@@ -1,7 +1,7 @@
 import React from 'react';
 
-function Moto(props: { handleMotoPay: Function; transactionStatus: boolean }) {
-  const { handleMotoPay, transactionStatus } = props;
+function Moto(props: { transactionStatus: boolean; payActionType: Function }) {
+  const { transactionStatus, payActionType } = props;
   return (
     <>
       <div className="ml-4 mr-4">
@@ -18,7 +18,9 @@ function Moto(props: { handleMotoPay: Function; transactionStatus: boolean }) {
         className="primary-button checkout-button mb-0"
         type="button"
         disabled={transactionStatus}
-        onClick={() => handleMotoPay()}
+        onClick={() => {
+          payActionType();
+        }}
       >
         MOTO
       </button>
