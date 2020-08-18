@@ -13,21 +13,14 @@ function handleKeyPress(event: KeyboardEvent, setPromptCashout: Function) {
 }
 
 function CreditCard(props: {
-  handleCreditCardPay: Function;
   promptCashout: boolean;
   setPromptCashout: Function;
   openPricing: boolean;
   setOpenPricing: Function;
   transactionStatus: boolean;
+  payActionType: Function;
 }) {
-  const {
-    handleCreditCardPay,
-    promptCashout,
-    setPromptCashout,
-    openPricing,
-    setOpenPricing,
-    transactionStatus,
-  } = props;
+  const { payActionType, promptCashout, setPromptCashout, openPricing, setOpenPricing, transactionStatus } = props;
   const [tipAmount, setTipAmount] = useState(0);
   const [cashoutAmount, setCashoutAmount] = useState(0);
   const [manualAmount, setManualAmount] = useState<number>(0);
@@ -96,7 +89,7 @@ function CreditCard(props: {
         type="button"
         disabled={transactionStatus}
         onClick={() => {
-          handleCreditCardPay(tipAmount, cashoutAmount, manualAmount);
+          payActionType(tipAmount, cashoutAmount, manualAmount);
           window.localStorage.setItem('open_pricing', openPricing.toString());
         }}
       >

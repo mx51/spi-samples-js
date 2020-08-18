@@ -8,7 +8,7 @@ function initiateMotoPurchase(
   surchargeAmount: number,
   isMerchantPasswordSuppressed: boolean
 ) {
-  const posRefId = `cashout-${new Date().toISOString()}`;
+  const posRefId = `moto-${new Date().toISOString()}`;
   const res = spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount, isMerchantPasswordSuppressed);
 
   flowMsg.Info(
