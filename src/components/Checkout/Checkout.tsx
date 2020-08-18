@@ -268,6 +268,8 @@ function Checkout(props: {
   suppressMerchantPassword: boolean;
   openPricing: boolean;
   setOpenPricing: Function;
+  status: string;
+  onErrorMsg: Function;
 }) {
   const {
     onClose,
@@ -287,6 +289,8 @@ function Checkout(props: {
     suppressMerchantPassword,
     openPricing,
     setOpenPricing,
+    status,
+    onErrorMsg,
   } = props;
   const [promptCashout, setPromptCashout] = useState(false);
   const [showSigApproval, setShowSigApproval] = useState(false);
@@ -474,6 +478,8 @@ function Checkout(props: {
         openPricing={openPricing}
         setOpenPricing={setOpenPricing}
         transactionStatus={transactionStatus}
+        onErrorMsg={onErrorMsg}
+        status={status}
       />
     );
   }

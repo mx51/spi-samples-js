@@ -236,6 +236,8 @@ function Products({
               suppressMerchantPassword={suppressMerchantPassword}
               openPricing={openPricing}
               setOpenPricing={setOpenPricing}
+              onErrorMsg={onErrorMsg}
+              status={status}
             />
           )}
         </Col>
