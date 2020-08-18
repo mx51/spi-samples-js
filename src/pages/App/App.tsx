@@ -6,7 +6,14 @@ import './App.scss';
 
 const App = () => (
   <div className="app">
-    <h1 className="pos-heading">Choose your SPI {getSpiVersion()} POS Sample</h1>
+    <h1 className="bpos-heading">Choose your SPI {getSpiVersion()} POS Sample</h1>
+    <div className="supportalignment">
+      <Link to="/support-tools">
+        <span role="img" aria-label="settings">
+          🛠️
+        </span>
+      </Link>
+    </div>
     <nav className="homePageLink">
       <ol>
         <li>

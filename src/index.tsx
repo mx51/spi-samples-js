@@ -7,6 +7,7 @@ import MotelPos from './pages/Motel';
 import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
 import TablePos from './pages/Table';
+import SupportTools from './pages/SupportTools';
 
 import './index.scss';
 
@@ -28,6 +29,9 @@ const Routes = () => (
       </Route>
       <Route path="/table">
         <TablePos />
+      </Route>
+      <Route path="/support-tools">
+        <SupportTools />
       </Route>
     </Switch>
   </BrowserRouter>
