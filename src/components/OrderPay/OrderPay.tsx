@@ -1,11 +1,34 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { SpiStatus } from '@mx51/spi-client-js';
 import CreditCard from '../CreditCardPay';
 import Moto from '../MotoPay';
 
 enum PaymentType {
   MotoType,
   CreditCardType,
+}
+
+function payAction(
+  status: String,
+  onErrorMsg: Function,
+  showPaymentType: Function,
+  paymentType: PaymentType,
+  handleMotoPay: Function,
+  handleCreditCardPay: Function,
+  tipAmount: number,
+  cashoutAmount: number,
+  manualAmount: number
+) {
+  if (status !== SpiStatus.PairedConnected) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else if (paymentType === PaymentType.MotoType) {
+    showPaymentType();
+    handleMotoPay();
+  } else {
+    showPaymentType();
+    handleCreditCardPay(tipAmount, cashoutAmount, manualAmount);
+  }
 }
 
 function OrderPay(props: {
@@ -17,6 +40,8 @@ function OrderPay(props: {
   openPricing: boolean;
   setOpenPricing: Function;
   transactionStatus: boolean;
+  status: string;
+  onErrorMsg: Function;
 }) {
   const {
     handleMotoPay,
@@ -27,22 +52,53 @@ function OrderPay(props: {
     openPricing,
     setOpenPricing,
     transactionStatus,
+    status,
+    onErrorMsg,
   } = props;
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCardType);
 
   function showPaymentType() {
     switch (paymentType) {
       case PaymentType.MotoType:
-        return <Moto handleMotoPay={handleMotoPay} transactionStatus={transactionStatus} />;
+        return (
+          <Moto
+            transactionStatus={transactionStatus}
+            payActionType={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
+              payAction(
+                status,
+                onErrorMsg,
+                showPaymentType,
+                paymentType,
+                handleMotoPay,
+                handleCreditCardPay,
+                tipAmount,
+                cashoutAmount,
+                manualAmount
+              )
+            }
+          />
+        );
       case PaymentType.CreditCardType:
         return (
           <CreditCard
             setPromptCashout={setPromptCashout}
             promptCashout={promptCashout}
             transactionStatus={transactionStatus}
-            handleCreditCardPay={handleCreditCardPay}
             openPricing={openPricing}
             setOpenPricing={setOpenPricing}
+            payActionType={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
+              payAction(
+                status,
+                onErrorMsg,
+                showPaymentType,
+                paymentType,
+                handleMotoPay,
+                handleCreditCardPay,
+                tipAmount,
+                cashoutAmount,
+                manualAmount
+              )
+            }
           />
         );
       default:
@@ -51,13 +107,26 @@ function OrderPay(props: {
             setPromptCashout={setPromptCashout}
             promptCashout={promptCashout}
             transactionStatus={transactionStatus}
-            handleCreditCardPay={handleCreditCardPay}
             openPricing={openPricing}
             setOpenPricing={setOpenPricing}
+            payActionType={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
+              payAction(
+                status,
+                onErrorMsg,
+                showPaymentType,
+                paymentType,
+                handleMotoPay,
+                handleCreditCardPay,
+                tipAmount,
+                cashoutAmount,
+                manualAmount
+              )
+            }
           />
         );
     }
   }
+
   return (
     <>
       <h2 id="totalAmount" className="sub-header mb-0">
@@ -66,6 +135,7 @@ function OrderPay(props: {
       <Row className="order-header-buttons no-gutters">
         <Col sm={6}>
           <button
+            className="btn btn-outline-primary rounded-0 btn-block btn-lg mb-2"
             id="moto"
             type="button"
             disabled={transactionStatus}
@@ -75,7 +145,14 @@ function OrderPay(props: {
           </button>
         </Col>
         <Col sm={6}>
-          <button type="button" disabled={transactionStatus} onClick={() => setPaymentType(PaymentType.CreditCardType)}>
+          <button
+            className="btn btn-outline-primary rounded-0 btn-block btn-lg mb-2"
+            type="button"
+            disabled={transactionStatus}
+            onClick={() => {
+              setPaymentType(PaymentType.CreditCardType);
+            }}
+          >
             Credit card
           </button>
         </Col>

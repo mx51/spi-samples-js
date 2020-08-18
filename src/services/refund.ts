@@ -53,6 +53,7 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
   const refundResponse = new RefundResponse(txStateResponse);
 
   flowMsg.Info(`# REFUND GIVEN - OH WELL!`);
+  flowMsg.Info(`# POS Reference: ${refundResponse.GetResponseValue('pos_ref_id')}`);
   flowMsg.Info(`# Response: ${refundResponse.GetResponseText()}`);
   flowMsg.Info(`# RRN: ${refundResponse.GetRRN()}`);
   flowMsg.Info(`# Scheme: ${refundResponse.SchemeName}`);

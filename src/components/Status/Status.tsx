@@ -3,8 +3,8 @@ import { SpiStatus } from '@mx51/spi-client-js';
 import { Alert } from 'react-bootstrap';
 import { pairing as pairingService } from '../../services';
 
-function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; Message: String }) {
-  const { isFinishedPairing, spi, status, Message } = props;
+function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; Message: String; pairButton: Boolean }) {
+  const { isFinishedPairing, spi, status, Message, pairButton } = props;
 
   let message = 'Unpaired';
   let alert: 'danger' | 'success' | 'warning' = 'danger';
@@ -34,14 +34,20 @@ function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; M
         {isFinishedPairing && (
           <>
             {status === SpiStatus.Unpaired ? (
-              <button id="btnPair" type="button" className="primary-button" onClick={() => pairingService.pair(spi)}>
+              <button
+                id="btnPair"
+                type="button"
+                className="btn btn-primary rounded-0 btn-block btn-lg"
+                disabled={!pairButton}
+                onClick={() => pairingService.pair(spi)}
+              >
                 Pair
               </button>
             ) : (
               <button
                 id="btnUnpair"
                 type="button"
-                className="primary-button"
+                className="btn btn-primary rounded-0 btn-block btn-lg"
                 onClick={() => pairingService.unpair(spi)}
               >
                 Unpair
@@ -54,7 +60,7 @@ function Status(props: { isFinishedPairing: Boolean; spi: Spi; status: string; M
             <button
               id="btnCancelPairing"
               type="button"
-              className="primary-button"
+              className="btn btn-primary rounded-0 btn-block btn-lg"
               onClick={() => pairingService.pairingCancel(spi)}
             >
               Cancel Pairing

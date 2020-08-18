@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import './App.css';
+import './App.scss';
 
 const App = () => (
   <div className="app">

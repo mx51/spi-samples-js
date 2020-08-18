@@ -9,7 +9,7 @@
 
 .sidebar-links a.nav-link, .sidebar-links a.nav-link.active {
   border-radius: 0;
-  color: $secoundry;
+  color: $secondary;
   text-align: right;
   letter-spacing: .2rem;
   padding: 22px;
@@ -23,6 +23,8 @@
 h1.logo {
   background-color: transparent;
   background-color: $tertiary;
+  padding: .3em;
+  text-align: center;
 }
 
 .window-fix {

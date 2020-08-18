@@ -8,7 +8,7 @@ function initiateMotoPurchase(
   surchargeAmount: number,
   isMerchantPasswordSuppressed: boolean
 ) {
-  const posRefId = `cashout-${new Date().toISOString()}`;
+  const posRefId = `moto-${new Date().toISOString()}`;
   const res = spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount, isMerchantPasswordSuppressed);
 
   flowMsg.Info(
@@ -43,6 +43,7 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
   const purchaseResponse = motoResponse.PurchaseResponse;
 
   flowMsg.Info(`# WOOHOO - WE GOT MOTO-PAID!`);
+  flowMsg.Info(`# POS Reference: ${motoResponse.GetResponseValue('pos_ref_id')}`);
   flowMsg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
   flowMsg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
   flowMsg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { SuccessState, PurchaseResponse, Logger, TransactionType } from '@mx51/spi-client-js';
+import { SuccessState, PurchaseResponse, Logger, TransactionType, TransactionUpdate } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import './Checkout.scss';
 import Tick from '../Tick';
@@ -16,6 +16,9 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
+const isTransactionInquiry = (transactionType: String) =>
+  [TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(transactionType);
+
 function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Function) {
   if (isApproved) {
     transactionFlowService.acceptSignature(spi);
@@ -23,6 +26,11 @@ function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Fun
     transactionFlowService.declineSignature(spi);
   }
   setShowSigApproval(false);
+}
+
+function handleTransactionMessageUpdateCallback(m: Message, flowLogger: Logger) {
+  const txnUpdateMessage = new TransactionUpdate(m.detail);
+  flowLogger.Info(`${txnUpdateMessage.GetDisplayMessageText()}`);
 }
 
 function handlePurchaseStatusCallback(
@@ -48,16 +56,23 @@ function handlePurchaseStatusCallback(
   }
 
   if (event.detail.Finished) {
-    if (spi.CurrentTxFlowState.Type === TransactionType.GetLastTransaction) {
-      transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+    if (isTransactionInquiry(transactionAction)) {
+      if (transactionAction === TransactionType.GetLastTransaction) {
+        transactionFlowService.handleGetLastTransaction(flowMsg, receipt, spi, spi.CurrentTxFlowState);
+      } else if (transactionAction === TransactionType.GetTransaction) {
+        transactionFlowService.handleGetTransaction(flowMsg, receipt, spi.CurrentTxFlowState);
+      }
       spi.AckFlowEndedAndBackToIdle();
     } else {
-      PosUtils.processCompletedEvent(
-        flowMsg,
-        receipt,
-        transactionAction === TransactionType.Purchase ? purchaseService : refundService,
-        event.detail
-      );
+      let service;
+      if (transactionAction === TransactionType.Purchase) {
+        service = purchaseService;
+      } else if (transactionAction === TransactionType.Refund) {
+        service = refundService;
+      } else {
+        service = cashoutService;
+      }
+      PosUtils.processCompletedEvent(flowMsg, receipt, service, event.detail);
     }
   } else {
     transactionFlowService.handleTransaction(flowMsg, event.detail);
@@ -214,13 +229,14 @@ function backAction(
   setTransactionStatus: Function,
   flowEl: React.RefObject<HTMLDivElement>,
   receiptEl: React.RefObject<HTMLPreElement>,
-  onClose: Function
+  onClose: Function,
+  clearProducts: boolean
 ) {
-  if (stateChange.Finished) {
+  if (stateChange.Finished && clearProducts) {
     onNoThanks();
     setSurchargeAmount(0);
   }
-  setStateChange({ Finished: false, Success: SuccessState.Unknown });
+  setStateChange({ Finished: true, Success: SuccessState.Unknown });
   setTransactionStatus(false);
   if (flowEl.current !== null) {
     const flowMsg = new Logger(flowEl.current);
@@ -239,6 +255,7 @@ function Checkout(props: {
   list: Array<Product>;
   onClose: Function;
   onNoThanks: Function;
+  posRefId: string;
   spi: Spi;
   surchargeAmount: number;
   setSurchargeAmount: Function;
@@ -251,6 +268,8 @@ function Checkout(props: {
   suppressMerchantPassword: boolean;
   openPricing: boolean;
   setOpenPricing: Function;
+  status: string;
+  onErrorMsg: Function;
 }) {
   const {
     onClose,
@@ -258,6 +277,7 @@ function Checkout(props: {
     onNoThanks,
     spi,
     list,
+    posRefId,
     surchargeAmount,
     setSurchargeAmount,
     setTransactionStatus,
@@ -269,6 +289,8 @@ function Checkout(props: {
     suppressMerchantPassword,
     openPricing,
     setOpenPricing,
+    status,
+    onErrorMsg,
   } = props;
   const [promptCashout, setPromptCashout] = useState(false);
   const [showSigApproval, setShowSigApproval] = useState(false);
@@ -277,6 +299,7 @@ function Checkout(props: {
   const [finalCashout, setFinalCashout] = useState(0);
   const [finalTipAmount, setFinalTipAmount] = useState(0);
   const [purchaseAmount, setPurchaseAmount] = useState(0);
+  const flowTransactionEl = useRef<HTMLDivElement>(null);
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -297,6 +320,12 @@ function Checkout(props: {
       transactionAction
     );
   }, []);
+
+  const handleTransactionUpdate = useCallback((event) => {
+    const flowMsg = new Logger(flowTransactionEl.current);
+    handleTransactionMessageUpdateCallback(event, flowMsg);
+  }, []);
+
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handlePurchaseStatusChange);
     return function cleanup() {
@@ -305,11 +334,25 @@ function Checkout(props: {
   });
 
   useEffect(() => {
+    if (transactionAction === TransactionType.GetTransaction) {
+      const flowMsg = new Logger(flowEl.current);
+      transactionFlowService.initiateGetTransaction(flowMsg, spi, posRefId);
+    }
+  }, [posRefId, spi, transactionAction]);
+
+  useEffect(() => {
     if (transactionAction === TransactionType.GetLastTransaction) {
       const flowMsg = new Logger(flowEl.current);
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
-  }, [transactionAction]);
+  }, [spi, transactionAction]);
+
+  useEffect(() => {
+    document.addEventListener('TxnUpdateMessage', handleTransactionUpdate);
+    return function cleanup() {
+      document.removeEventListener('TxnUpdateMessage', handleTransactionUpdate);
+    };
+  });
 
   const totalBillAmount: number = list.reduce(
     (total: number, product: Product) => total + parseFloat(product.price) * product.quantity,
@@ -317,6 +360,20 @@ function Checkout(props: {
   );
   const totalAmount = totalBillAmount + surchargeAmount / 100;
   const amount = totalBillAmount;
+
+  function handleBackAndClearProduts() {
+    backAction(
+      stateChange,
+      onNoThanks,
+      setSurchargeAmount,
+      setStateChange,
+      setTransactionStatus,
+      flowEl,
+      receiptEl,
+      onClose,
+      false
+    );
+  }
 
   function handleBack() {
     backAction(
@@ -327,8 +384,14 @@ function Checkout(props: {
       setTransactionStatus,
       flowEl,
       receiptEl,
-      onClose
+      onClose,
+      true
     );
+  }
+  function handleRetry() {
+    setTransactionStatus(false);
+    transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
+    showRelatedPay();
   }
 
   function showRelatedPay() {
@@ -415,6 +478,8 @@ function Checkout(props: {
         openPricing={openPricing}
         setOpenPricing={setOpenPricing}
         transactionStatus={transactionStatus}
+        onErrorMsg={onErrorMsg}
+        status={status}
       />
     );
   }
@@ -433,10 +498,10 @@ function Checkout(props: {
             ) : (
               <p>Total amount: ${finalTotal}</p>
             )}
-            <p>Processing Transaction</p>
+            <div ref={flowTransactionEl} />
             <button
               type="button"
-              className="primary-button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
               onClick={() => {
                 transactionFlowService.cancelTransaction(spi);
               }}
@@ -454,8 +519,19 @@ function Checkout(props: {
                 ? stateChange.Response.GetErrorDetail()
                 : new PurchaseResponse(stateChange.Response).GetResponseText()}
             </p>
-            <button type="button" className="primary-button" onClick={() => handleBack()}>
-              Back
+            <button
+              type="button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
+              onClick={() => handleRetry()}
+            >
+              Retry
+            </button>
+            <button
+              type="button"
+              className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
+              onClick={() => handleBack()}
+            >
+              Cancel
             </button>
           </div>
         )}
@@ -517,7 +593,7 @@ function Checkout(props: {
           type="button"
           disabled={transactionStatus}
           className="primary-button checkout-button mb-0"
-          onClick={() => handleBack()}
+          onClick={() => handleBackAndClearProduts()}
         >
           Back
         </button>
@@ -529,18 +605,18 @@ function Checkout(props: {
             disabled={transactionStatus}
             className="checkout-flyout-toggle"
             onClick={() => {
-              handleBack();
+              handleBackAndClearProduts();
             }}
           >
             ▼
           </button>
-          <Row style={transactionAction !== TransactionType.GetLastTransaction ? {} : { flexDirection: 'row-reverse' }}>
-            {transactionAction !== TransactionType.GetLastTransaction && (
+          <Row style={!isTransactionInquiry(transactionAction) ? {} : { flexDirection: 'row-reverse' }}>
+            {!isTransactionInquiry(transactionAction) && (
               <Col sm={4} className="sub-column">
                 {showRelatedPay()}
               </Col>
             )}
-            <Col sm={transactionAction !== TransactionType.GetLastTransaction ? 5 : 9} className="sub-column">
+            <Col sm={!isTransactionInquiry(transactionAction) ? 5 : 9} className="sub-column">
               <h2 className="sub-header mb-0">Flow</h2>
               <div className="flow-alignment" ref={flowEl} />
               {!transactionStatus ? '' : transactionSuccessful()}

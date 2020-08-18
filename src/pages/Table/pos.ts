@@ -8,6 +8,7 @@ import {
   Spi,
   SpiFlow,
   SpiStatus,
+  TransactionOptions,
   TransactionType,
 } from '@mx51/spi-client-js';
 import Bill from '../../services/_common/bill';
@@ -15,7 +16,7 @@ import { pairing, purchase, refund, settlement, terminalStatus, transactionFlow 
 import Pos from '../../services/_common/pos';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import '../style.scss';
+import '../legacyStyles.scss';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE latest verion of the SPI Client Library
@@ -115,8 +116,12 @@ class TablePos extends Pos {
 
     this._spi.PrintingResponse = (message: Message) =>
       terminalStatus.handlePrintingResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TerminalConfigurationResponse = (message: Message) =>
+      terminalStatus.handleTerminalConfigurationResponse(this._flowMsg, message);
     this._spi.TerminalStatusResponse = (message: Message) =>
       terminalStatus.handleTerminalStatusResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TransactionUpdateMessage = (message: Message) =>
+      terminalStatus.handleTransactionUpdateMessage(this._flowMsg, message);
     this._spi.BatteryLevelChanged = (message: Message) =>
       terminalStatus.handleBatteryLevelChanged(
         this._flowMsg,
@@ -128,10 +133,10 @@ class TablePos extends Pos {
 
     this._pat = this._spi.EnablePayAtTable();
     this.EnablePayAtTableConfigs();
-    this._pat.GetBillStatus = this.getBillDetails;
-    this._pat.BillPaymentReceived = this.billPaymentReceived;
-    this._pat.BillPaymentFlowEnded = this.billPaymentFlowEnded;
-    this._pat.GetOpenTables = this.getOpenTables;
+    this._pat.GetBillStatus = this.getBillDetails.bind(this);
+    this._pat.BillPaymentReceived = this.billPaymentReceived.bind(this);
+    this._pat.BillPaymentFlowEnded = this.billPaymentFlowEnded.bind(this);
+    this._pat.GetOpenTables = this.getOpenTables.bind(this);
 
     this._spi.Start();
 
@@ -326,12 +331,6 @@ class TablePos extends Pos {
         inputs: [],
       },
       {
-        id: 'pair_confirm',
-        enabled: isPairingFlow && this._spi.CurrentPairingFlowState.AwaitingCheckFromEftpos,
-        onClick: () => pairing.pairingConfirmCode(this._spi),
-        inputs: [],
-      },
-      {
         id: 'pair_cancel',
         enabled: isPairingFlow,
         onClick: () => pairing.pairingCancel(this._spi),
@@ -349,7 +348,7 @@ class TablePos extends Pos {
         onSubmit: () =>
           purchase.initiatePurchase(
             this._flowMsg,
-            {},
+            new TransactionOptions(),
             this._spi,
             Pos.getElementNumberValue('#amount'),
             Pos.getElementNumberValue('#tip_amount'),
@@ -462,11 +461,11 @@ class TablePos extends Pos {
     ];
 
     // Hide action inputs
-    actionInputGroups.forEach(inputGroup => {
+    actionInputGroups.forEach((inputGroup) => {
       inputGroup.classList.add('hidden');
     });
 
-    buttons.forEach(button => {
+    buttons.forEach((button) => {
       const buttonElement = document.getElementById(button.id) as HTMLButtonElement;
 
       buttonElement.disabled = !button.enabled;
@@ -475,7 +474,7 @@ class TablePos extends Pos {
       if (button.inputs && button.inputs.length) {
         buttonElement.onclick = () => {
           // Show relevant inputs for this action
-          button.inputs.forEach(input => {
+          button.inputs.forEach((input) => {
             const inputElement = document.getElementById(input) as HTMLInputElement;
             const inputGroupElement = document.querySelector(`#action-inputs [data-id="${input}"]`);
 
@@ -488,7 +487,7 @@ class TablePos extends Pos {
             (button as any).onSubmit();
             this._isActionFlow = false;
 
-            actionInputGroups.forEach(inputGroup => {
+            actionInputGroups.forEach((inputGroup) => {
               inputGroup.classList.add('hidden');
             });
 
@@ -502,7 +501,7 @@ class TablePos extends Pos {
           currentActionHeading.innerText = buttonElement.innerText;
         };
       } else {
-        (buttonElement as any).onclick = button.onClick;
+        (buttonElement as any).onclick = button.onClick?.bind(this);
         actionSubmitButton.classList.add('hidden');
       }
     });
@@ -510,7 +509,7 @@ class TablePos extends Pos {
     cancelActionButton.onclick = () => {
       this._isActionFlow = false;
 
-      actionInputGroups.forEach(inputGroup => {
+      actionInputGroups.forEach((inputGroup) => {
         inputGroup.classList.add('hidden');
       });
 
@@ -565,7 +564,7 @@ class TablePos extends Pos {
     this.assemblyBillDataStore = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '{}');
     const savedBillData = JSON.parse(localStorage.getItem('billsStore') || '{}');
 
-    Object.keys(savedBillData).forEach(bill => {
+    Object.keys(savedBillData).forEach((bill) => {
       this.billsStore[bill] = Object.assign(new Bill(), savedBillData[bill]);
     });
   }
@@ -683,7 +682,7 @@ class TablePos extends Pos {
     let isOpenTables = false;
 
     if (Object.keys(this.tableToBillMapping).length > 0) {
-      Object.keys(this.tableToBillMapping).forEach(tableId => {
+      Object.keys(this.tableToBillMapping).forEach((tableId) => {
         const item = this.tableToBillMapping[tableId];
 
         if (this.billsStore[item].OperatorId === operatorId && this.billsStore[item].OutstandingAmount > 0) {
@@ -816,7 +815,7 @@ class TablePos extends Pos {
   printTables() {
     if (Object.keys(this.tableToBillMapping).length > 0) {
       this._flowMsg.Info('# Open Tables: ');
-      Object.keys(this.tableToBillMapping).forEach(table => {
+      Object.keys(this.tableToBillMapping).forEach((table) => {
         this._flowMsg.Info(`# Table #${table}, Bill #${this.tableToBillMapping[table]}`);
       });
     } else {
@@ -826,7 +825,7 @@ class TablePos extends Pos {
     if (Object.keys(this.billsStore).length > 0) {
       this._flowMsg.Info('# My Bills Store: ');
 
-      Object.keys(this.billsStore).forEach(bill => {
+      Object.keys(this.billsStore).forEach((bill) => {
         this._flowMsg.Info(`# ${this.billsStore[bill].toString()}`);
       });
     }

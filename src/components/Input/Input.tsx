@@ -17,6 +17,7 @@ function Input(props: {
   title?: string;
   defaultValue?: string;
   required?: Boolean;
+  value?: string;
 }) {
   const {
     id,
@@ -34,6 +35,7 @@ function Input(props: {
     title,
     defaultValue,
     required,
+    value,
   } = props;
 
   return (
@@ -59,6 +61,7 @@ function Input(props: {
         onChange={(e) => {
           if (onChange) onChange(e);
         }}
+        value={value}
       />
     </fieldset>
   );

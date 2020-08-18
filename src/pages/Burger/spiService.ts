@@ -1,4 +1,4 @@
-import { Spi as SpiClient, SpiFlow, TransactionOptions } from '@mx51/spi-client-js';
+import { Spi as SpiClient, SpiFlow, TerminalConfigurationResponse, TransactionOptions } from '@mx51/spi-client-js';
 
 class Spi {
   _spi: any;
@@ -16,6 +16,7 @@ class Spi {
   _testMode: Boolean;
   _useSecureWebSockets: Boolean;
   _log: any;
+  _printMerchantCopy: Boolean;
 
   constructor() {
     this._spi = null;
@@ -26,7 +27,8 @@ class Spi {
     this._version = '2.8.0';
     this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
     this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
-    this._apiKey = null;
+    this._printMerchantCopy = window.localStorage.getItem('print_merchant_copy_input') === 'true';
+    this._apiKey = window.localStorage.getItem('api_key') || '';
     this._serialNumber = window.localStorage.getItem('serial') || '';
     this._acquirerCode = 'wbc';
     this._autoResolveEftposAddress = window.localStorage.getItem('auto_address') === 'true';
@@ -49,6 +51,7 @@ class Spi {
       this._spi = new SpiClient(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
       this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
       this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
+      this._spi.Config.PrintMerchantCopy = this._printMerchantCopy;
       this._spi.SetPosInfo('mx51', this._version);
       this._spi.SetAcquirerCode(this._acquirerCode);
       this._spi.SetDeviceApiKey(this._apiKey);
@@ -68,8 +71,10 @@ class Spi {
     document.addEventListener('SecretsChanged', Spi.onSecretsChange);
     document.addEventListener('TxFlowStateChanged', this.onSpiStateChange);
     this._spi.PrintingResponse = this.onSpiResponse.bind(this);
+    this._spi.TerminalConfigurationResponse = Spi.onTerminalConfigurationChange;
     this._spi.TerminalStatusResponse = this.onSpiResponse.bind(this);
     this._spi.BatteryLevelChanged = this.onSpiResponse.bind(this);
+    this._spi.TransactionUpdateMessage = Spi.onSpiTransactionUpdate.bind(this);
     this.setAutoAddressResolutionState();
     this._spi.Start();
     this.printStatusAndActions();
@@ -83,6 +88,15 @@ class Spi {
 
   static onSecretsChange(e: any) {
     window.localStorage.setItem('secrets', JSON.stringify(e.detail));
+  }
+
+  static onTerminalConfigurationChange(m: Message) {
+    const terminalConfigurationResponse = new TerminalConfigurationResponse(m);
+    window.localStorage.setItem('serial', terminalConfigurationResponse.GetSerialNumber());
+  }
+
+  static onSpiTransactionUpdate(m: Message) {
+    document.dispatchEvent(new CustomEvent('TxnUpdateMessage', { detail: m }));
   }
 
   onSpiResponse() {

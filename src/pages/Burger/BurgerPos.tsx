@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
-import { SpiStatus } from '@mx51/spi-client-js';
 import { ReactComponent as Logo } from '../../images/mx51.svg';
 import Products from '../../components/Products';
 import Pairing from '../../components/Pairing';
 import Setting from '../../components/Setting';
 import SpiService from './spiService';
 import './BurgerPos.scss';
+import Reversal from '../Reversal';
 
 function handlePaymentInProgressCallback(event: any, setInProgressPayment: Function) {
   if (event.detail.Finished !== true) {
@@ -19,9 +19,10 @@ function handlePaymentInProgressCallback(event: any, setInProgressPayment: Funct
 }
 
 const spiService = new SpiService();
-spiService.start();
 
 function BurgerPos() {
+  if (!spiService._spi) spiService.start();
+
   const [errorMsg, setErrorMsg] = useState('');
   const [showUnknownModal, setShowUnknownModal] = useState(false);
   const [inProgressPayment, setInProgressPayment] = useState(
@@ -38,7 +39,7 @@ function BurgerPos() {
     Finished: true,
     Message: '',
   });
-  const [statusState, setStatusState] = useState(SpiStatus.Unpaired);
+  const [statusState, setStatusState] = useState(spiService._spi.CurrentStatus);
 
   useEffect(() => {
     if (spiService.start && inProgressPayment === true) {
@@ -47,14 +48,17 @@ function BurgerPos() {
       window.localStorage.setItem('payment_progress', false.toString());
       setInProgressPayment(false);
     }
+
+    return () => window.location.reload();
   }, []);
+
   const handleStatusChange = useCallback((event: any) => {
     setStatusState(event.detail);
   }, []);
   useEffect(() => {
     document.addEventListener('StatusChanged', handleStatusChange);
     return function cleanup() {
-      document.addEventListener('StatusChanged', handleStatusChange);
+      document.removeEventListener('StatusChanged', handleStatusChange);
     };
   });
 
@@ -65,7 +69,7 @@ function BurgerPos() {
     document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
 
     return function cleanup() {
-      document.addEventListener('TxFlowStateChanged', handlePaymentInProgress);
+      document.removeEventListener('TxFlowStateChanged', handlePaymentInProgress);
     };
   });
 
@@ -88,6 +92,11 @@ function BurgerPos() {
                 <Nav.Item>
                   <Nav.Link eventKey="setting">Setting</Nav.Link>
                 </Nav.Item>
+                {window.location.search.includes('qamode=true') && (
+                  <Nav.Item>
+                    <Nav.Link eventKey="reversals">Reversals</Nav.Link>
+                  </Nav.Item>
+                )}
               </Nav>
             </div>
           </Col>
@@ -126,6 +135,9 @@ function BurgerPos() {
                   suppressMerchantPassword={suppressMerchantPassword}
                   setSuppressMerchantPassword={setSuppressMerchantPassword}
                 />
+              </Tab.Pane>
+              <Tab.Pane eventKey="reversals">
+                <Reversal spi={spiService._spi} />
               </Tab.Pane>
             </Tab.Content>
           </Col>

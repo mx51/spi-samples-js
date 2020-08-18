@@ -9,6 +9,7 @@ import settlement from './settlement';
 import settlementEnquiry from './settlementEnquiry';
 import terminalStatus from './terminalStatus';
 import transactionFlow from './transactionFlow';
+import reversal from './reversal';
 
 export {
   accountVerify,
@@ -22,4 +23,5 @@ export {
   settlementEnquiry,
   terminalStatus,
   transactionFlow,
+  reversal,
 };

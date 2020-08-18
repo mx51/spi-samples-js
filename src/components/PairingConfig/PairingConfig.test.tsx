@@ -1,4 +1,4 @@
-import { shallow, mount } from 'enzyme';
+import { mount } from 'enzyme';
 import React from 'react';
 import PairingConfig from './PairingConfig';
 
@@ -23,7 +23,7 @@ describe('PairingConfig', () => {
       SetAutoAddressResolution: jest.fn(),
       SetEftposAddress: jest.fn(),
     };
-    component = mount(<PairingConfig spi={spi} status="" />);
+    component = mount(<PairingConfig setPairButton={() => {}} spi={spi} status="" />);
   });
 
   it('should call formParingConfig and save default values', () => {

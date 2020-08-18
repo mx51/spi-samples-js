@@ -27,7 +27,7 @@ class Page extends Component {
 
   render() {
     return (
-      <div className="status-unpaired flow-idle">
+      <div className="legacy-pos status-unpaired flow-idle">
         <table id="layout">
           <tr>
             <td className="col settings" rowSpan={2}>

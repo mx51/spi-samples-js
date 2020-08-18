@@ -3,7 +3,7 @@ import { accountVerify, pairing, preAuth, terminalStatus, transactionFlow } from
 import Pos from '../../services/_common/pos';
 import { getSpiVersion } from '../../services/_common/uiHelpers';
 
-import '../style.scss';
+import '../legacyStyles.scss';
 
 // <summary>
 // NOTE: THIS PROJECT USES THE latest verion of the SPI Client Library
@@ -79,8 +79,12 @@ class MotelPos extends Pos {
 
     this._spi.PrintingResponse = (message: Message) =>
       terminalStatus.handlePrintingResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TerminalConfigurationResponse = (message: Message) =>
+      terminalStatus.handleTerminalConfigurationResponse(this._flowMsg, message);
     this._spi.TerminalStatusResponse = (message: Message) =>
       terminalStatus.handleTerminalStatusResponse(this._flowMsg, this._spi, message, this.PrintStatusAndActions);
+    this._spi.TransactionUpdateMessage = (message: Message) =>
+      terminalStatus.handleTransactionUpdateMessage(this._flowMsg, message);
     this._spi.BatteryLevelChanged = (message: Message) =>
       terminalStatus.handleBatteryLevelChanged(
         this._flowMsg,
@@ -175,9 +179,6 @@ class MotelPos extends Pos {
           case SpiFlow.Pairing: {
             // Unpaired, PairingFlow
             const pairingState = this._spi.CurrentPairingFlowState;
-            if (pairingState.AwaitingCheckFromPos) {
-              inputsEnabled.push('pair_confirm');
-            }
             if (!pairingState.Finished) {
               inputsEnabled.push('pair_cancel');
             } else {
@@ -192,11 +193,9 @@ class MotelPos extends Pos {
         }
         break;
       case SpiStatus.PairedConnecting: // This is still considered as a Paired kind of state, but...
-        // .. we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
+        // we give user the option of changing IP address, just in case the EFTPOS got a new one in the meanwhile
         inputsEnabled.push('eftpos_address', 'rcpt_from_eftpos', 'save_settings', 'sig_flow_from_eftpos');
-      // .. but otherwise we give the same options as PairedConnected
-      // goto case SpiStatus.PairedConnected;
-
+      // but otherwise we give the same options as PairedConnected     // goto case SpiStatus.PairedConnected
       // caution: intentionally falls through
       case SpiStatus.PairedConnected:
         switch (this._spi.CurrentFlow) {
@@ -255,7 +254,7 @@ class MotelPos extends Pos {
       (inputs[i] as HTMLInputElement).disabled = true;
     }
 
-    inputsEnabled.forEach(input => {
+    inputsEnabled.forEach((input) => {
       const inputEl = document.getElementById(input);
       if (!inputEl) throw new Error(`Input element not found to enable: ${input}`);
       (inputEl as HTMLInputElement).disabled = false;
@@ -290,7 +289,6 @@ class MotelPos extends Pos {
     });
 
     this.addUiOperation('#pair', 'click', () => pairing.pair(this._spi));
-    this.addUiOperation('#pair_confirm', 'click', () => pairing.pairingConfirmCode(this._spi));
     this.addUiOperation('#pair_cancel', 'click', () => pairing.pairingCancel(this._spi));
     this.addUiOperation('#unpair', 'click', () => pairing.unpair(this._spi));
 

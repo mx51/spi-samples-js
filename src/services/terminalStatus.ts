@@ -1,8 +1,10 @@
 import {
   Spi,
   PrintingResponse,
+  TerminalConfigurationResponse,
   TerminalStatusResponse,
   TerminalBattery,
+  TransactionUpdate,
   SuccessState,
   SpiFlow,
 } from '@mx51/spi-client-js';
@@ -54,6 +56,21 @@ function handlePrintingResponse(flowMsg: Logger, spi: Spi, message: Message, pri
   printStatusAndActions();
 }
 
+function handleTerminalConfigurationResponse(flowMsg: Logger, message: Message) {
+  const terminalConfigResponse = new TerminalConfigurationResponse(message);
+  if (terminalConfigResponse.isSuccess()) {
+    flowMsg.Info('# Terminal Configuration Response #');
+    flowMsg.Info(`# Comms Method: ${terminalConfigResponse.GetCommsSelected()}`);
+    flowMsg.Info(`# MerchantId: ${terminalConfigResponse.GetMerchantId()}`);
+    flowMsg.Info(`# PA Version: ${terminalConfigResponse.GetPAVersion()}`);
+    flowMsg.Info(`# Payment Interface Version: ${terminalConfigResponse.GetPaymentInterfaceVersion()}`);
+    flowMsg.Info(`# Plugin Version: ${terminalConfigResponse.GetPluginVersion()}`);
+    flowMsg.Info(`# Serial Number: ${terminalConfigResponse.GetSerialNumber()}`);
+    flowMsg.Info(`# TerminalId: ${terminalConfigResponse.GetTerminalId()}`);
+    flowMsg.Info(`# Terminal Model: ${terminalConfigResponse.GetTerminalModel()}`);
+  }
+}
+
 function handleTerminalStatusResponse(flowMsg: Logger, spi: Spi, message: Message, printStatusAndActions: Function) {
   flowMsg.Clear();
   const terminalStatusResponse = new TerminalStatusResponse(message);
@@ -63,6 +80,11 @@ function handleTerminalStatusResponse(flowMsg: Logger, spi: Spi, message: Messag
   flowMsg.Info(`# Charging: ${terminalStatusResponse.IsCharging()}`);
   spi.AckFlowEndedAndBackToIdle();
   printStatusAndActions();
+}
+
+function handleTransactionUpdateMessage(flowMsg: Logger, message: Message) {
+  const txnUpdateMessage = new TransactionUpdate(message);
+  flowMsg.Info(`${txnUpdateMessage.GetDisplayMessageText()}`);
 }
 
 function handleBatteryLevelChanged(
@@ -156,7 +178,9 @@ export default {
   getTerminalStatus,
   handleBatteryLevelChanged,
   handlePrintingResponse,
+  handleTerminalConfigurationResponse,
   handleTerminalStatusResponse,
+  handleTransactionUpdateMessage,
   isUnknownStatus,
   onPairingFlowStateChanged,
   onSecretsChanged,
