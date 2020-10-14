@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { BrowserRouter, Switch, Route } from 'react-router-dom';
 import App from './pages/App';
 import BurgerPos from './pages/Burger';
@@ -8,6 +9,7 @@ import Default from './pages/Default';
 // import RamenPos from './pages/Ramen';
 import TablePos from './pages/Table';
 import SupportTools from './pages/SupportTools';
+import store from './redux/store';
 
 import './index.scss';
 
@@ -18,7 +20,9 @@ const Routes = () => (
         <App />
       </Route>
       <Route path="/burger">
-        <BurgerPos />
+        <Provider store={store}>
+          <BurgerPos />
+        </Provider>
       </Route>
       <Route path="/motel">
         <MotelPos />
