@@ -76,11 +76,13 @@ class Spi {
     this._spi.BatteryLevelChanged = this.onSpiResponse.bind(this);
     this._spi.TransactionUpdateMessage = Spi.onSpiTransactionUpdate.bind(this);
     this.setAutoAddressResolutionState();
-    this._spi.Start();
+    // this._spi.Start(); //TODO Commented to test multi-pairing
     this.printStatusAndActions();
   }
 
   onSpiStateChange(e: any) {
+    console.log('onSpiStateChange event -- ', e);
+
     if (e.detail && e.detail === 'PairedConnected') {
       this._spi.AckFlowEndedAndBackToIdle();
     }

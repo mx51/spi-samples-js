@@ -4,6 +4,8 @@ import { ReactComponent as Logo } from '../../images/mx51.svg';
 import Products from '../../components/Products';
 import Pairing from '../../components/Pairing';
 import Setting from '../../components/Setting';
+import Terminals from '../../components/Terminals';
+
 import SpiService from './spiService';
 import './BurgerPos.scss';
 import Reversal from '../Reversal';
@@ -53,6 +55,8 @@ function BurgerPos() {
   }, []);
 
   const handleStatusChange = useCallback((event: any) => {
+    console.log('handleStatusChange event', event);
+
     setStatusState(event.detail);
   }, []);
   useEffect(() => {
@@ -90,6 +94,9 @@ function BurgerPos() {
                   <Nav.Link eventKey="pairing">Pairing</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
+                  <Nav.Link eventKey="terminals">Terminals</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
                   <Nav.Link eventKey="setting">Setting</Nav.Link>
                 </Nav.Item>
                 {window.location.search.includes('qamode=true') && (
@@ -125,6 +132,9 @@ function BurgerPos() {
                   message={pairingState.Message}
                   setPairingState={setPairingState}
                 />
+              </Tab.Pane>
+              <Tab.Pane eventKey="terminals">
+                <Terminals />
               </Tab.Pane>
               <Tab.Pane eventKey="setting">
                 <Setting
