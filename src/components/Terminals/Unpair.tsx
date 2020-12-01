@@ -8,15 +8,17 @@ import Checkbox from '../Checkbox';
 import {
   pairTerminal as pairTerminalAction,
   unpairTerminal as unpairTerminalAction,
+  cancelTerminalPairing as cancelTerminalPairingAction,
 } from '../../features/terminals/terminalSlice';
 
 const mapDispatchToProps = {
   unpairTerminal: unpairTerminalAction,
   pairTerminal: pairTerminalAction,
+  cancelTerminalPairing: cancelTerminalPairingAction,
 };
 
 function Unpair(props: any) {
-  const { pairTerminal, unpairTerminal, terminal } = props;
+  const { pairTerminal, unpairTerminal, terminal, cancelTerminalPairing } = props;
   const [posId, setPosId] = useState('');
   const [eftpos, setEftpos] = useState('');
   const [serial, setSerial] = useState('');
@@ -122,7 +124,7 @@ function Unpair(props: any) {
           {!isFinishedPairing && (
             <Button
               className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
-              onClick={() => unpairTerminal(terminal.id)}
+              onClick={() => cancelTerminalPairing(terminal.id)}
             >
               Cancel Pairing
             </Button>

@@ -35,10 +35,10 @@ export default function watchTerminalEvents() {
     });
     eventBus.addEventListener(events.spiPairingFlowStateChanged, (e) => {
       console.log('addEventListener spiPairingFlowStateChanged', events.spiPairingFlowStateChanged, e);
-      const { id: instanceId, payload } = e.detail;
+      const { detail } = e;
       const event = {
-        id: instanceId,
-        payload,
+        id: detail.id,
+        payload: { ...detail.payload },
       };
 
       console.log('calling spiPairingFlowStateChanged', event);

@@ -49,6 +49,17 @@ class SPI {
     });
   }
 
+  spiCancelPairingTerminal(id: any) {
+    console.log('spiCancelPairingTerminal', id);
+
+    const ret = this.getInstance(id).spi.PairingCancel();
+    console.log({ ret });
+
+    return SPI.createEventPayload(id, {
+      ...this.getCurrentPairingFlow(id),
+    });
+  }
+
   spiRemoveTerminal(id: string) {
     const { _posId: posId, _transactionMonitoringThread: transactionMonitoringThread } = this.getInstance(id).spi;
     // There is a setTimeout that need to be stopped so the library can be garbage collected

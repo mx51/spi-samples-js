@@ -87,6 +87,7 @@ export const addTerminal = () => terminalsSlice.actions.addTerminal(SPI.spiAddTe
 export const pairTerminal = (id, config) => terminalsSlice.actions.addTerminal(SPI.spiPairTerminal(id, config));
 export const unpairTerminal = (id) => terminalsSlice.actions.updatePairingFlow(SPI.spiUnpairTerminal(id));
 export const removeTerminal = (id) => terminalsSlice.actions.removeTerminal(SPI.spiRemoveTerminal(id));
+export const cancelTerminalPairing = (id) => terminalsSlice.actions.updatePairingFlow(SPI.spiCancelPairingTerminal(id));
 
 export const {
   updatePairingStatus,
