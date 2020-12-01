@@ -1,24 +1,15 @@
-import React, { useRef, useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { Col, Row, Button } from 'react-bootstrap';
-import { Logger } from '@mx51/spi-client-js';
-import { connect } from 'react-redux';
-
+import { useDispatch } from 'react-redux';
 import Unpair from './Unpair';
 import Inprogress from './Inprogress';
 import { updateActiveTerminal } from '../../features/terminals/terminalSlice';
-
-import PairingConfig from '../PairingConfig';
 import Flow from '../Flow';
-import Status from '../Status';
-import { pairing as pairingService } from '../../services';
-
-const mapDispatchToProps = {
-  handleaBackToTerminals: () => updateActiveTerminal({}),
-};
 
 function TerminalDetails(props: any) {
-  const { handleaBackToTerminals, terminal } = props;
-  console.log('TerminalDetails', terminal);
+  const dispatch = useDispatch();
+  const handleaBackToTerminals = () => dispatch(updateActiveTerminal({}));
+  const { terminal } = props;
 
   return (
     <div>
@@ -46,4 +37,4 @@ function TerminalDetails(props: any) {
   );
 }
 
-export default connect(null, mapDispatchToProps)(TerminalDetails);
+export default TerminalDetails;

@@ -74,10 +74,9 @@ const terminalsSlice = createSlice({
     },
     updateActiveTerminal(state, action) {
       console.log('updateActiveTerminal', action);
-      const { id: instanceId } = action.payload;
+      const instanceId = action.payload;
       const data = state;
       data.activeTerminalId = instanceId;
-      // if (instanceId) data[instanceId] = {};
       return data;
     },
   },

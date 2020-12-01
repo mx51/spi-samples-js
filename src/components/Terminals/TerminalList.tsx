@@ -1,10 +1,6 @@
 import React from 'react';
 import { Card, Button, Table, Badge } from 'react-bootstrap';
-import { createSelector } from '@reduxjs/toolkit';
-import { connect } from 'react-redux';
-import Unpair from './Unpair';
-import Inprogress from './Inprogress';
-import ConfirmCode from './ConfirmCode';
+import { useSelector, useDispatch } from 'react-redux';
 
 import {
   addTerminal as addTerminalAction,
@@ -12,30 +8,15 @@ import {
   removeTerminal as removeTerminalAction,
   updateActiveTerminal as updateActiveTerminalAction,
 } from '../../features/terminals/terminalSlice';
+import { selectActiveTerminals } from '../../features/terminals/terminalSelectors';
 
-const selectTerminals = (state: any) => state.terminals;
-
-const selectActiveTerminals = createSelector(selectTerminals, (terminals) =>
-  Object.entries(terminals)
-    .filter((e) => e[0] !== 'activeTerminalId')
-    .map((e) => e[1])
-);
-
-const mapStateToProps = (state: any) => ({
-  terminals: selectActiveTerminals(state),
-});
-
-const mapDispatchToProps = {
-  addTerminal: addTerminalAction,
-  unpairTerminal: unpairTerminalAction,
-  removeTerminal: removeTerminalAction,
-  handleViewTerminal: (id: any) => updateActiveTerminalAction({ id }),
-};
-
-function TerminalList(props: any) {
-  const { terminals, addTerminal, unpairTerminal, removeTerminal, handleViewTerminal } = props;
-
-  console.log('props is ', terminals);
+function TerminalList() {
+  const terminals = useSelector(selectActiveTerminals);
+  const dispatch = useDispatch();
+  const addTerminal = () => dispatch(addTerminalAction());
+  const unpairTerminal = (id: string) => dispatch(unpairTerminalAction(id));
+  const removeTerminal = (id: string) => dispatch(removeTerminalAction(id));
+  const handleViewTerminal = (id: string) => dispatch(updateActiveTerminalAction(id));
 
   return (
     <div className="mt-3">
@@ -104,4 +85,4 @@ function TerminalList(props: any) {
   );
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(TerminalList);
+export default TerminalList;
