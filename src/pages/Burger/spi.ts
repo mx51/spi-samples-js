@@ -25,7 +25,7 @@ class SPI {
     this.posIdInstanceMap = {};
   }
 
-  spiceAddTerminal(config: any) {
+  spiAddTerminal(config: any) {
     const instance = this.createLibraryInstance(config);
     const terminalConfig = { ...config };
     this.log.info({ message: 'created new instance', id: instance.id });
@@ -41,18 +41,69 @@ class SPI {
     });
   }
 
+  spiUnpairTerminal(id: any) {
+    this.getInstance(id).spi.Unpair();
+
+    return SPI.createEventPayload(id, {
+      ...this.getCurrentPairingFlow(id),
+    });
+  }
+
+  spiRemoveTerminal(id: string) {
+    const { _posId: posId, _transactionMonitoringThread: transactionMonitoringThread } = this.getInstance(id).spi;
+    // There is a setTimeout that need to be stopped so the library can be garbage collected
+    clearInterval(transactionMonitoringThread);
+
+    delete this.posIdInstanceMap[posId];
+    delete this.libraryInstances[id];
+    this.log.info({ message: 'instance removed', id });
+    console.log('spiRemoveTerminal', SPI.createEventPayload(id, {}));
+
+    return SPI.createEventPayload(id, {});
+  }
+
+  spiPairTerminal(id: string, config: any) {
+    const { spi } = this.getInstance(id);
+
+    spi.SetPosId(config.posId);
+    // Auto-address needs to be disabled to change an eftpos address
+    spi.SetAutoAddressResolution(false);
+    spi.SetEftposAddress(config.eftpos);
+    // spi.SetAutoAddressResolution(config.auto);
+
+    if (spi.HasSerialNumberChanged(config.serialNumber)) {
+      spi.SetSerialNumber(config.serialNumber);
+    }
+
+    spi.Pair();
+    const terminalConfig = { ...config };
+
+    SPI.broadcastEvent(id, {
+      type: 'StatusChanged',
+      detail: SpiStatus.PairedConnecting,
+    });
+
+    return SPI.createEventPayload(id, {
+      terminalConfig,
+    });
+  }
+
+  getInstance(instanceId: string) {
+    return this.libraryInstances[instanceId];
+  }
+
   createLibraryInstance(config: any, instanceId = uuid()): EventTarget {
     const name = 'mx51';
     const version = '2.8.0';
     console.log('createLibraryInstance', config);
 
     const terminalConfig = {
-      PosId: config.posId,
+      PosId: '',
       SerialNumber: '',
-      EftposAddress: config.eftpos,
+      EftposAddress: '',
       Secrets: null,
       TestMode: true,
-      AutoAddressResolution: config.autoAddress,
+      AutoAddressResolution: '',
     };
 
     const instance = new EventTarget();
@@ -86,7 +137,7 @@ class SPI {
       // this.getTerminalStatus(instanceId);
       // this.getTerminalConfig(instanceId);
 
-      // SPI.broadcastEvent(instanceId, e);
+      SPI.broadcastEvent(instanceId, e);
       console.log({ instanceId, e });
     });
 
@@ -98,8 +149,14 @@ class SPI {
     });
 
     instance.addEventListener(events.spiStatusChanged, (e: any) => {
+      console.log('event called', e);
+
       // this.getTerminalStatus(instanceId);
       // this.getTerminalConfig(instanceId);
+      if (e.detail && e.detail === 'PairedConnected') {
+        instance.spi.AckFlowEndedAndBackToIdle();
+      }
+
       SPI.broadcastEvent(instanceId, e);
       console.log('addEventListener', events.spiStatusChanged, e);
 
@@ -135,7 +192,7 @@ class SPI {
     };
 
     instance.spi.Start();
-    window.setTimeout(() => instance.spi.Pair(), 3000);
+    // window.setTimeout(() => instance.spi.Pair(), 1000);
     return instance;
   }
 
@@ -152,6 +209,10 @@ class SPI {
   static broadcastEvent(instanceId: string, event: any) {
     const { detail: payload, type } = event;
     eventBus.dispatchEvent(new CustomEvent(type, { detail: SPI.createEventPayload(instanceId, payload) }));
+  }
+
+  getCurrentPairingFlow(instanceId: string) {
+    return this.getInstance(instanceId).spi.CurrentPairingFlowState;
   }
 }
 

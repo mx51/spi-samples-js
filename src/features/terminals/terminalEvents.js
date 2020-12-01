@@ -1,4 +1,4 @@
-import { updateTerminalSerialNumber, updatePairingStatus } from './terminalSlice';
+import { updateTerminalSerialNumber, updatePairingStatus, updatePairingFlow } from './terminalSlice';
 import eventBus from '../../pages/Burger/eventBus';
 import events from '../../constants/events';
 
@@ -32,6 +32,20 @@ export default function watchTerminalEvents() {
       dispatch(updatePairingStatus(event));
 
       // terminalsSlice.actions.updateTerminalSerialNumber(event);
+    });
+    eventBus.addEventListener(events.spiPairingFlowStateChanged, (e) => {
+      console.log('addEventListener spiPairingFlowStateChanged', events.spiPairingFlowStateChanged, e);
+      const { id: instanceId, payload } = e.detail;
+      const event = {
+        id: instanceId,
+        payload,
+      };
+
+      console.log('calling spiPairingFlowStateChanged', event);
+
+      dispatch(updatePairingFlow(event));
+
+      // ter
     });
   };
 }
