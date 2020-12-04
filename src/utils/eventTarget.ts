@@ -9,6 +9,7 @@ class EventTarget {
   mappers: any;
   mapper: any;
   spi: Spi;
+  currentTxFlowStateOverride: null;
 
   constructor() {
     this.listeners = {};

@@ -1,14 +1,4 @@
-import {
-  BillStatusResponse,
-  Secrets as SPISecrets,
-  Spi as SPIClient,
-  SpiFlow,
-  SpiStatus,
-  SuccessState,
-  TransactionFlowState,
-  TransactionOptions,
-  TransactionType,
-} from '@mx51/spi-client-js';
+import { Secrets as SPISecrets, Spi as SPIClient, SpiStatus } from '@mx51/spi-client-js';
 import { v4 as uuid } from 'uuid';
 import events from '../../constants/events';
 import eventBus from './eventBus';
@@ -29,7 +19,6 @@ class SPI {
     const instance = this.createLibraryInstance(config);
     const terminalConfig = { ...config };
     this.log.info({ message: 'created new instance', id: instance.id });
-    console.log('spiceAddTerminal', config);
 
     const { CurrentFlow, CurrentPairingFlowState, CurrentStatus, CurrentTxFlowState } = instance.spi;
     return SPI.createEventPayload(instance.id, {
@@ -50,10 +39,7 @@ class SPI {
   }
 
   spiCancelPairingTerminal(id: any) {
-    console.log('spiCancelPairingTerminal', id);
-
-    const ret = this.getInstance(id).spi.PairingCancel();
-    console.log({ ret });
+    this.getInstance(id).spi.PairingCancel();
 
     return SPI.createEventPayload(id, {
       ...this.getCurrentPairingFlow(id),
@@ -68,7 +54,6 @@ class SPI {
     delete this.posIdInstanceMap[posId];
     delete this.libraryInstances[id];
     this.log.info({ message: 'instance removed', id });
-    console.log('spiRemoveTerminal', SPI.createEventPayload(id, {}));
 
     return SPI.createEventPayload(id, {});
   }
@@ -106,7 +91,6 @@ class SPI {
   createLibraryInstance(config: any, instanceId = uuid()): EventTarget {
     const name = 'mx51';
     const version = '2.8.0';
-    console.log('createLibraryInstance', config);
 
     const terminalConfig = {
       PosId: '',
@@ -136,10 +120,45 @@ class SPI {
     instance.spi.SetAutoAddressResolution(terminalConfig.AutoAddressResolution);
     instance.spi.PrintingResponse = () => true;
 
-    instance.addEventListener(events.spiPairingFlowStateChanged, (e: any) => {
+    instance.spi.PrintingResponse = () => true;
+
+    // this is used in tx flow state overrride mechanism to emulate SPI tx flow change
+    // wihtout mutating spi client's tx flow object.
+    instance.currentTxFlowStateOverride = null; // we start with no override
+    // we patch TxFlowStateChanged events with our overrride so that every
+    // consumer is seeing our override when required without changing every
+    // single consumer to check with spice.spi
+
+    instance.setEventMapper(events.spiTxFlowStateChanged, (e: any) => {
+      console.log('instance.setEventMapper(events.spiTxFlowStateChanged', e);
+
       const { detail } = e;
 
-      console.log('addEventListener callback', events.spiPairingFlowStateChanged, e, JSON.stringify(e));
+      // if this is not an override but "EFTPOS" event, we reset our override:
+      if (!detail.override) instance.currentTxFlowStateOverride = null;
+
+      const updatedEvent = {
+        type: events.spiTxFlowStateChanged,
+        detail: this.getCurrentTxFlow(instanceId),
+      };
+
+      // Auto acknowledge Settlements and SettlementEnquires when there is no UI
+      // const isHeadlessMode = this.globalConfig.data.HeadlessTransactions;
+      // if (isHeadlessMode) {
+      //   instance.spi.AckFlowEndedAndBackToIdle();
+      // }
+      console.log(`SPI broadcastEvent ${events.spiTxFlowStateChanged}`, updatedEvent);
+
+      SPI.broadcastEvent(instance.id, updatedEvent);
+      return updatedEvent;
+    });
+
+    instance.addEventListener(events.spiTxFlowStateChanged, (e: any) => {
+      console.log('addEventListener events.spiTxFlowStateChanged', e);
+    });
+
+    instance.addEventListener(events.spiPairingFlowStateChanged, (e: any) => {
+      const { detail } = e;
 
       if (detail?.ConfirmationCode && !detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos) {
         instance.spi.PairingConfirmCode();
@@ -160,8 +179,6 @@ class SPI {
     });
 
     instance.addEventListener(events.spiStatusChanged, (e: any) => {
-      console.log('event called', e);
-
       // this.getTerminalStatus(instanceId);
       // this.getTerminalConfig(instanceId);
       if (e.detail && e.detail === 'PairedConnected') {
@@ -169,9 +186,17 @@ class SPI {
       }
 
       SPI.broadcastEvent(instanceId, e);
-      console.log('addEventListener', events.spiStatusChanged, e);
 
-      const { detail: CurrentStatus } = e;
+      // const { detail: CurrentStatus } = e;
+      // return CurrentStatus === SpiStatus.PairedConnected && this.retriveConfig(instanceId);
+    });
+
+    instance.addEventListener(events.spiTxUpdateMessage, (e: any) => {
+      // this.getTerminalStatus(instanceId);
+      // this.getTerminalConfig(instanceId);
+      // SPI.broadcastEvent(instanceId, e);
+
+      SPI.broadcastEvent(instance.id, e);
       // return CurrentStatus === SpiStatus.PairedConnected && this.retriveConfig(instanceId);
     });
 
@@ -179,15 +204,28 @@ class SPI {
       // this.getTerminalStatus(instanceId);
       // this.getTerminalConfig(instanceId);
       // SPI.broadcastEvent(instanceId, e);
-      console.log('addEventListener', events.spiTerminalConfigChanged, e);
 
       SPI.broadcastEvent(instance.id, e);
       // return CurrentStatus === SpiStatus.PairedConnected && this.retriveConfig(instanceId);
     });
 
-    instance.spi.TerminalConfigurationResponse = (e: any) => {
-      console.log('TerminalConfigurationResponse', e);
+    instance.spi.TransactionUpdateMessage = (message: any) => {
+      // SPI.broadcastEvent(instance.id, {
+      //   type: events.spiTxUpdateMessage,
+      //   ...message,
+      // });
+      console.log('TransactionUpdateMessage', message);
 
+      instance.dispatchEvent(
+        new CustomEvent(events.spiTxUpdateMessage, {
+          detail: message,
+        })
+      );
+
+      this.log.info({ message: 'transaction update', data: message, id: instance.id });
+    };
+
+    instance.spi.TerminalConfigurationResponse = (e: any) => {
       instance.dispatchEvent(
         new CustomEvent(events.spiTerminalConfigChanged, {
           detail: e.Data,
@@ -224,6 +262,11 @@ class SPI {
 
   getCurrentPairingFlow(instanceId: string) {
     return this.getInstance(instanceId).spi.CurrentPairingFlowState;
+  }
+
+  getCurrentTxFlow(instanceId: string) {
+    const instance = this.getInstance(instanceId);
+    return instance.currentTxFlowStateOverride || instance.spi.CurrentTxFlowState;
   }
 }
 

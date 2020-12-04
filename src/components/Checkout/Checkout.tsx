@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { SuccessState, PurchaseResponse, Logger, TransactionType, TransactionUpdate } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import './Checkout.scss';
 import Tick from '../Tick';
 import OrderPay from '../OrderPay';
@@ -15,6 +16,7 @@ import {
   refund as refundService,
   cashout as cashoutService,
 } from '../../services';
+import { selectCurrentPairedTerminals } from '../../features/terminals/terminalSelectors';
 
 const isTransactionInquiry = (transactionType: String) =>
   [TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(transactionType);
@@ -292,8 +294,11 @@ function Checkout(props: {
     status,
     onErrorMsg,
   } = props;
+
+  const terminal = useSelector(selectCurrentPairedTerminals) as any;
+  const awaitingSigCheck = terminal && terminal.txFlow ? terminal.txFlow.AwaitingSignatureCheck : false;
   const [promptCashout, setPromptCashout] = useState(false);
-  const [showSigApproval, setShowSigApproval] = useState(false);
+  const [showSigApproval, setShowSigApproval] = useState(awaitingSigCheck);
   const [finalTotal, setFinalTotal] = useState(0);
   const [finalSurcharge, setFinalSurcharge] = useState(0);
   const [finalCashout, setFinalCashout] = useState(0);
@@ -303,9 +308,16 @@ function Checkout(props: {
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
+  const txFlowFinished = terminal && terminal.txFlow ? terminal.txFlow.Finished : false;
+  const txFlowSuccess = terminal && terminal.txFlow ? terminal.txFlow.Success : SuccessState.Unknown;
+  const txFlowResponse = terminal && terminal.txFlow ? terminal.txFlow.Response : null;
+  const txUpdateMessage = terminal && terminal.txFlow ? terminal.txMessage : null;
+  console.log('terminal.txFlow', JSON.parse(JSON.stringify(terminal && terminal.txFlow ? terminal.txFlow : {})));
+  console.log('terminal.txUpdateMessage', txUpdateMessage);
+
   const [stateChange, setStateChange] = useState({
-    Finished: false,
-    Success: SuccessState.Unknown,
+    Finished: txFlowFinished,
+    Success: txFlowSuccess,
   } as StateChange);
 
   const handlePurchaseStatusChange = useCallback((event: TxFlowStateChangedEvent) => {
@@ -487,7 +499,7 @@ function Checkout(props: {
   function transactionSuccessful() {
     return (
       <div>
-        {!stateChange.Finished && (
+        {!txFlowFinished && (
           <div className="transaction-successful">
             <h6>Purchase: ${purchaseAmount}</h6>
             <h6>Tip amount: ${finalTipAmount}</h6>
@@ -498,6 +510,7 @@ function Checkout(props: {
             ) : (
               <p>Total amount: ${finalTotal}</p>
             )}
+            {txUpdateMessage && <div>{txUpdateMessage.display_message_text}</div>}
             <div ref={flowTransactionEl} />
             <button
               type="button"
@@ -510,14 +523,12 @@ function Checkout(props: {
             </button>
           </div>
         )}
-        {stateChange.Finished && SuccessState.Failed === stateChange.Success && (
+        {txFlowFinished && SuccessState.Failed === txFlowSuccess && (
           <div className="transaction-successful">
             <p>
-              {stateChange.Response &&
-              stateChange.Response.GetErrorDetail &&
-              transactionAction === TransactionType.Refund
-                ? stateChange.Response.GetErrorDetail()
-                : new PurchaseResponse(stateChange.Response).GetResponseText()}
+              {txFlowResponse && txFlowResponse.GetErrorDetail && transactionAction === TransactionType.Refund
+                ? txFlowResponse.GetErrorDetail()
+                : new PurchaseResponse(txFlowResponse).GetResponseText()}
             </p>
             <button
               type="button"
@@ -535,7 +546,7 @@ function Checkout(props: {
             </button>
           </div>
         )}
-        {stateChange.Finished && SuccessState.Success === stateChange.Success && (
+        {txFlowFinished && SuccessState.Success === txFlowSuccess && (
           <div className="transaction-successful">
             <Tick className="color-purple" />
             <div className="transaction-successful-button">

@@ -51,6 +51,7 @@ const eventTypes = {
   spiTerminalConfigChanged: 'TerminalConfigChanged',
   spiTerminalStatusChanged: 'TerminalStatusChanged',
   spiTxFlowStateChanged: 'TxFlowStateChanged',
+  spiTxUpdateMessage: 'TransactionUpdateMessage',
 };
 
 export { eventTypes as default };

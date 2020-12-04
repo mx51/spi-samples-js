@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
-import { SpiStatus } from '@mx51/spi-client-js';
+import { useSelector } from 'react-redux';
 import CreditCard from '../CreditCardPay';
 import Moto from '../MotoPay';
+import { selectIsPairedTerminalStatus } from '../../features/terminals/terminalSelectors';
 
 enum PaymentType {
   MotoType,
@@ -10,7 +11,7 @@ enum PaymentType {
 }
 
 function payAction(
-  status: String,
+  isTerminalPaired: boolean,
   onErrorMsg: Function,
   showPaymentType: Function,
   paymentType: PaymentType,
@@ -20,7 +21,7 @@ function payAction(
   cashoutAmount: number,
   manualAmount: number
 ) {
-  if (status !== SpiStatus.PairedConnected) {
+  if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else if (paymentType === PaymentType.MotoType) {
     showPaymentType();
@@ -57,6 +58,8 @@ function OrderPay(props: {
   } = props;
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCardType);
 
+  const isTerminalPaired = useSelector(selectIsPairedTerminalStatus);
+
   function showPaymentType() {
     switch (paymentType) {
       case PaymentType.MotoType:
@@ -65,7 +68,7 @@ function OrderPay(props: {
             transactionStatus={transactionStatus}
             payActionType={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
               payAction(
-                status,
+                isTerminalPaired,
                 onErrorMsg,
                 showPaymentType,
                 paymentType,
@@ -88,7 +91,7 @@ function OrderPay(props: {
             setOpenPricing={setOpenPricing}
             payActionType={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
               payAction(
-                status,
+                isTerminalPaired,
                 onErrorMsg,
                 showPaymentType,
                 paymentType,
@@ -111,7 +114,7 @@ function OrderPay(props: {
             setOpenPricing={setOpenPricing}
             payActionType={(tipAmount: number, cashoutAmount: number, manualAmount: number) =>
               payAction(
-                status,
+                isTerminalPaired,
                 onErrorMsg,
                 showPaymentType,
                 paymentType,

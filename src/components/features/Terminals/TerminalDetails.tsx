@@ -3,8 +3,8 @@ import { Col, Row, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import Unpair from './Unpair';
 import Inprogress from './Inprogress';
-import { updateActiveTerminal } from '../../features/terminals/terminalSlice';
-import Flow from '../Flow';
+import { updateActiveTerminal } from '../../../features/terminals/terminalSlice';
+import Flow from '../../Flow';
 
 function TerminalDetails(props: any) {
   const dispatch = useDispatch();

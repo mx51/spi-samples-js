@@ -7,8 +7,8 @@ import {
   unpairTerminal as unpairTerminalAction,
   removeTerminal as removeTerminalAction,
   updateActiveTerminal as updateActiveTerminalAction,
-} from '../../features/terminals/terminalSlice';
-import { selectActiveTerminals } from '../../features/terminals/terminalSelectors';
+} from '../../../features/terminals/terminalSlice';
+import { selectActiveTerminals } from '../../../features/terminals/terminalSelectors';
 
 function TerminalList() {
   const terminals = useSelector(selectActiveTerminals);

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
+import { useSelector } from 'react-redux';
 import { SpiStatus, TransactionType } from '@mx51/spi-client-js';
 import Checkout from '../Checkout';
 import Order from '../Order';
@@ -7,6 +8,8 @@ import './Products.scss';
 import ProductList from '../ProductList';
 import allProducts from './ProductData';
 import { transactionFlow as transactionFlowService } from '../../services';
+import { selectIsPairedTerminalStatus, selectCurrentPairedTerminals } from '../../features/terminals/terminalSelectors';
+import SPI from '../../pages/Burger/spi';
 
 function productClick(
   shortlistedProducts: Array<Product>,
@@ -71,8 +74,13 @@ function changeProductQuantity(
   updateShortlistedProducts(products);
 }
 
-function getTransaction(status: string, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
-  if (status !== SpiStatus.PairedConnected) {
+function getTransaction(
+  isTerminalPaired: boolean,
+  onErrorMsg: Function,
+  setCheckout: Function,
+  setTransactionAction: Function
+) {
+  if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     setCheckout(true);
@@ -80,8 +88,13 @@ function getTransaction(status: string, onErrorMsg: Function, setCheckout: Funct
   }
 }
 
-function lastTransaction(status: string, onErrorMsg: Function, setCheckout: Function, setTransactionAction: Function) {
-  if (status !== SpiStatus.PairedConnected) {
+function lastTransaction(
+  isTerminalPaired: boolean,
+  onErrorMsg: Function,
+  setCheckout: Function,
+  setTransactionAction: Function
+) {
+  if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     setCheckout(true);
@@ -128,7 +141,6 @@ function overrideTransaction(spi: Spi, setShowUnknownModal: Function) {
 }
 
 type Props = {
-  spi: Spi;
   status: string;
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
@@ -140,7 +152,6 @@ type Props = {
 };
 
 function Products({
-  spi,
   status,
   showUnknownModal,
   setShowUnknownModal,
@@ -156,6 +167,12 @@ function Products({
   const [transactionAction, setTransactionAction] = useState('');
   const [surchargeAmount, setSurchargeAmount] = useState(0);
   const [transactionStatus, setTransactionStatus] = useState<boolean>(false);
+
+  const isTerminalPaired = useSelector(selectIsPairedTerminalStatus);
+
+  const terminal = useSelector(selectCurrentPairedTerminals) as any;
+
+  const { spi } = terminal && terminal.id ? SPI.getInstance(terminal.id) : { spi: {} };
 
   return (
     <>
@@ -183,9 +200,7 @@ function Products({
           </Modal.Body>
         </Modal>
         <Col lg={8}>
-          {status !== SpiStatus.PairedConnected && (
-            <div className="pairing_banner">Please check your device Pairing setting!!</div>
-          )}
+          {!isTerminalPaired && <div className="pairing_banner">Please check your device Pairing setting!!</div>}
 
           {allProducts.map((cat) => (
             <ProductList
@@ -203,9 +218,9 @@ function Products({
             onChangeProductQuantity={(id: string, quantity: number) =>
               changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity)
             }
-            onGetTransaction={() => getTransaction(status, onErrorMsg, setCheckout, setTransactionAction)}
+            onGetTransaction={() => getTransaction(isTerminalPaired, onErrorMsg, setCheckout, setTransactionAction)}
             onRefund={() => refundAction(setCheckout, setTransactionAction)}
-            onLastTransaction={() => lastTransaction(status, onErrorMsg, setCheckout, setTransactionAction)}
+            onLastTransaction={() => lastTransaction(isTerminalPaired, onErrorMsg, setCheckout, setTransactionAction)}
             onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction, setCheckout)}
             handleApplySurcharge={setSurchargeAmount}
             posRefId={posRefId}

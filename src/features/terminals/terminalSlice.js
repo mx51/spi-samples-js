@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SpiStatus } from '@mx51/spi-client-js';
+import { SpiStatus, TransactionType } from '@mx51/spi-client-js';
 import SPI from '../../pages/Burger/spi';
 
 const terminalsSlice = createSlice({
@@ -7,7 +7,6 @@ const terminalsSlice = createSlice({
   initialState: {},
   reducers: {
     addTerminal(state, action) {
-      console.log('addTerminal action called', state, action);
       const { id, payload } = action.payload;
 
       return {
@@ -25,8 +24,6 @@ const terminalsSlice = createSlice({
       };
     },
     updateTerminalConfig(state, action) {
-      console.log('updateTerminalConfig', action, state);
-
       const { payload } = action;
       const { id: instanceId } = payload;
 
@@ -38,8 +35,6 @@ const terminalsSlice = createSlice({
       };
     },
     updateTerminalSerialNumber(state, action) {
-      console.log('updateTerminalSerialNumber', action, state);
-
       const { payload } = action;
       const { id: instanceId, serialNumber } = payload;
       const data = state[instanceId];
@@ -51,7 +46,6 @@ const terminalsSlice = createSlice({
       return state;
     },
     updatePairingStatus(state, action) {
-      console.log('updatePairingStatus', action, state);
       const { payload } = action;
       const { id: instanceId, status } = payload;
       const data = state[instanceId];
@@ -59,25 +53,44 @@ const terminalsSlice = createSlice({
       return state;
     },
     updatePairingFlow(state, action) {
-      console.log('updatePairingFlow', action);
       const { id, payload } = action.payload;
       const data = state[id];
       data.pairingFlow = { ...payload };
       return state;
     },
     removeTerminal(state, action) {
-      console.log('removeTerminal', state, action);
       const { id } = action.payload;
       const { [id]: terminal, ...data } = state;
-      console.log('new state', data);
       return data;
     },
     updateActiveTerminal(state, action) {
-      console.log('updateActiveTerminal', action);
       const instanceId = action.payload;
       const data = state;
       data.activeTerminalId = instanceId;
       return data;
+    },
+    updateTxFlow(state, action) {
+      const { id, payload } = action.payload;
+
+      const txFlow = payload || {};
+      const { Type } = payload;
+      const isSettlement = [TransactionType.Settle, TransactionType.SettlementEnquiry].includes(Type);
+
+      return {
+        ...state,
+        [id]: {
+          ...state[id],
+          txFlow,
+          lastSettlement: isSettlement ? txFlow : state[id].lastSettlement,
+        },
+      };
+    },
+    updateTxMessage(state, action) {
+      console.log('reducer updateTxMessage', state, action);
+      const { id, payload } = action.payload;
+      const data = state[id];
+      data.txMessage = payload.payload.Data;
+      return state;
     },
   },
 });
@@ -93,6 +106,8 @@ export const {
   updateTerminalSerialNumber,
   updateActiveTerminal,
   updatePairingFlow,
+  updateTxFlow,
+  updateTxMessage,
 } = terminalsSlice.actions;
 
 export default terminalsSlice.reducer;

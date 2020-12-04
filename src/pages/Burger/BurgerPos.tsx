@@ -4,7 +4,8 @@ import { ReactComponent as Logo } from '../../images/mx51.svg';
 import Products from '../../components/Products';
 import Pairing from '../../components/Pairing';
 import Setting from '../../components/Setting';
-import Terminals from '../../components/Terminals';
+import Terminals from '../../components/features/Terminals';
+import Products2 from '../../components/features/Products/Products';
 
 import SpiService from './spiService';
 import './BurgerPos.scss';
@@ -91,6 +92,9 @@ function BurgerPos() {
                   <Nav.Link eventKey="sample">Sample POS</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
+                  <Nav.Link eventKey="sample2">Sample 2</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
                   <Nav.Link eventKey="pairing">Pairing</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
@@ -111,7 +115,6 @@ function BurgerPos() {
             <Tab.Content>
               <Tab.Pane eventKey="sample">
                 <Products
-                  spi={spiService._spi}
                   status={statusState}
                   showUnknownModal={showUnknownModal}
                   setShowUnknownModal={setShowUnknownModal}
@@ -121,6 +124,9 @@ function BurgerPos() {
                   openPricing={openPricing}
                   setOpenPricing={setOpenPricing}
                 />
+              </Tab.Pane>
+              <Tab.Pane eventKey="sample2">
+                <Products2 />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing

@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { SpiStatus } from '@mx51/spi-client-js';
+import { useSelector } from 'react-redux';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import GetTransactionModal from '../GetTransactionModal';
 import SurchargeModal from '../SurchargeModal';
 import './Order.scss';
+import { selectIsPairedTerminalStatus } from '../../features/terminals/terminalSelectors';
 
 function removeProductQuantityAction(
   id: string,
@@ -17,8 +18,8 @@ function removeProductQuantityAction(
   onChangeProductQuantity(id, -1);
 }
 
-function checkoutAction(status: String, onErrorMsg: Function, onCheckout: Function) {
-  if (status !== SpiStatus.PairedConnected) {
+function checkoutAction(isTerminalPaired: boolean, onErrorMsg: Function, onCheckout: Function) {
+  if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
     onCheckout();
@@ -65,6 +66,8 @@ function Order(props: {
     0
   );
   const totalAmount = subTotalAmount + surchargeAmount / 100;
+
+  const isTerminalPaired = useSelector(selectIsPairedTerminalStatus);
 
   return (
     <div className="min-vh-100 sticky-top">
@@ -220,7 +223,7 @@ function Order(props: {
       <button
         type="button"
         className="primary-button checkout-button mb-0"
-        onClick={() => checkoutAction(status, onErrorMsg, onCheckout)}
+        onClick={() => checkoutAction(isTerminalPaired, onErrorMsg, onCheckout)}
       >
         Checkout
       </button>
