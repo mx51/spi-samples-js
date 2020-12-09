@@ -4,7 +4,7 @@ import { Col, Row, Modal, Button } from 'react-bootstrap';
 import GetTransactionModal from '../GetTransactionModal';
 import SurchargeModal from '../SurchargeModal';
 import './Order.scss';
-import { selectIsPairedTerminalStatus } from '../../features/terminals/terminalSelectors';
+import { selectIsPairedTerminalStatus, selectCurrentPairedTerminal } from '../../features/terminals/terminalSelectors';
 
 function removeProductQuantityAction(
   id: string,
@@ -18,7 +18,10 @@ function removeProductQuantityAction(
   onChangeProductQuantity(id, -1);
 }
 
-function checkoutAction(isTerminalPaired: boolean, onErrorMsg: Function, onCheckout: Function) {
+function checkoutAction(isTerminalPaired: boolean, currentTerminal: any, onErrorMsg: Function, onCheckout: Function) {
+  // if (currentTerminal === undefined) {
+  //   onErrorMsg('No selected terminal for transaction');
+  // }
   if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
@@ -68,6 +71,7 @@ function Order(props: {
   const totalAmount = subTotalAmount + surchargeAmount / 100;
 
   const isTerminalPaired = useSelector(selectIsPairedTerminalStatus);
+  const currentTerminal = useSelector(selectCurrentPairedTerminal);
 
   return (
     <div className="min-vh-100 sticky-top">
@@ -223,7 +227,7 @@ function Order(props: {
       <button
         type="button"
         className="primary-button checkout-button mb-0"
-        onClick={() => checkoutAction(isTerminalPaired, onErrorMsg, onCheckout)}
+        onClick={() => checkoutAction(isTerminalPaired, currentTerminal, onErrorMsg, onCheckout)}
       >
         Checkout
       </button>

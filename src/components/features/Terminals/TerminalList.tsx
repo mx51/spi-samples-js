@@ -1,3 +1,4 @@
+import { SpiStatus } from '@mx51/spi-client-js';
 import React from 'react';
 import { Card, Button, Table, Badge } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
@@ -17,6 +18,17 @@ function TerminalList() {
   const unpairTerminal = (id: string) => dispatch(unpairTerminalAction(id));
   const removeTerminal = (id: string) => dispatch(removeTerminalAction(id));
   const handleViewTerminal = (id: string) => dispatch(updateActiveTerminalAction(id));
+  const terminalStatusVariant = {
+    [SpiStatus.Unpaired]: 'danger',
+    [SpiStatus.PairedConnected]: 'success',
+    [SpiStatus.PairedConnecting]: 'warning',
+  };
+
+  const terminalStatus = {
+    [SpiStatus.Unpaired]: 'Unpaired',
+    [SpiStatus.PairedConnected]: 'Connected',
+    [SpiStatus.PairedConnecting]: 'Connecting...',
+  };
 
   return (
     <div className="mt-3">
@@ -44,8 +56,8 @@ function TerminalList() {
                 <tr key={t.id}>
                   <td>{t.terminalConfig.posId}</td>
                   <td>
-                    <Badge pill variant="primary">
-                      {t.status}
+                    <Badge pill variant={terminalStatusVariant[t.status]} className="p-2">
+                      {terminalStatus[t.status]}
                     </Badge>
                   </td>
                   <td>{t.terminalStatus}</td>

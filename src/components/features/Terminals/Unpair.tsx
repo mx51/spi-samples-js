@@ -19,12 +19,26 @@ const mapDispatchToProps = {
 
 function Unpair(props: any) {
   const { pairTerminal, unpairTerminal, terminal, cancelTerminalPairing } = props;
-  const [posId, setPosId] = useState('');
-  const [eftpos, setEftpos] = useState('');
-  const [serialNumber, setSerialNumber] = useState('');
-  const [autoAddress, setAutoAddress] = useState(false);
-  const [testMode, setTestMode] = useState(true);
-  const [secureWebSocket, setSecureWebSocket] = useState(false);
+  const defaultConfig = {
+    posId: '',
+    eftpos: '',
+    serialNumber: '',
+    autoAddress: false,
+    testMode: true,
+    secureWebSocket: false,
+  };
+
+  const config = {
+    ...defaultConfig,
+    ...terminal.terminalConfig,
+  };
+
+  const [posId, setPosId] = useState(config.posId);
+  const [eftpos, setEftpos] = useState(config.eftpos);
+  const [serialNumber, setSerialNumber] = useState(config.serialNumber);
+  const [autoAddress, setAutoAddress] = useState(config.autoAddress);
+  const [testMode, setTestMode] = useState(config.testMode);
+  const [secureWebSocket, setSecureWebSocket] = useState(config.secureWebSocket);
 
   const isFinishedPairing = terminal && terminal.pairingFlow && terminal.pairingFlow.Finished;
   const disableInput = !isFinishedPairing || terminal.status !== SpiStatus.Unpaired;
@@ -47,7 +61,7 @@ function Unpair(props: any) {
             label="POS ID"
             placeholder="POS ID"
             pattern="^[a-zA-Z0-9]{1,16}$"
-            defaultValue={terminal && terminal.terminalConfig ? terminal.terminalConfig.posId : ''}
+            defaultValue={posId}
             required
             disabled={disableInput}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +76,7 @@ function Unpair(props: any) {
             label="Serial"
             placeholder="000-000-000"
             disabled={disableInput}
-            defaultValue={terminal && terminal.terminalConfig ? terminal.terminalConfig.serialNumber : ''}
+            defaultValue={serialNumber}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSerialNumber(e.target.value);
             }}
@@ -73,7 +87,7 @@ function Unpair(props: any) {
             label="EFTPOS"
             placeholder="000.000.000.000"
             disabled={disableInput}
-            defaultValue={terminal && terminal.terminalConfig ? terminal.terminalConfig.eftpos : ''}
+            defaultValue={eftpos}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setEftpos(e.target.value);
             }}

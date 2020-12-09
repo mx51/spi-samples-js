@@ -92,9 +92,6 @@ function BurgerPos() {
                   <Nav.Link eventKey="sample">Sample POS</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="sample2">Sample 2</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
                   <Nav.Link eventKey="pairing">Pairing</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
@@ -124,9 +121,6 @@ function BurgerPos() {
                   openPricing={openPricing}
                   setOpenPricing={setOpenPricing}
                 />
-              </Tab.Pane>
-              <Tab.Pane eventKey="sample2">
-                <Products2 />
               </Tab.Pane>
               <Tab.Pane eventKey="pairing">
                 <Pairing

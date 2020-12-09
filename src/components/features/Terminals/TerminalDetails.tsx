@@ -13,8 +13,7 @@ function TerminalDetails(props: any) {
 
   return (
     <div>
-      <br />
-      <Button variant="link" block onClick={handleaBackToTerminals} className="text-left pt-0">
+      <Button variant="link" block onClick={handleaBackToTerminals} className="text-left pt-0 mt-2">
         &#60; Back to Terminals
       </Button>
 
@@ -29,7 +28,7 @@ function TerminalDetails(props: any) {
         </Col>
         <Col lg={8} className="sub-column d-flex flex-column">
           <div className="flex-fill text-break">
-            <Flow />
+            <Flow terminal={terminal} />
           </div>
         </Col>
       </Row>

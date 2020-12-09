@@ -312,8 +312,6 @@ function Checkout(props: {
   const txFlowSuccess = terminal && terminal.txFlow ? terminal.txFlow.Success : SuccessState.Unknown;
   const txFlowResponse = terminal && terminal.txFlow ? terminal.txFlow.Response : null;
   const txUpdateMessage = terminal && terminal.txFlow ? terminal.txMessage : null;
-  console.log('terminal.txFlow', JSON.parse(JSON.stringify(terminal && terminal.txFlow ? terminal.txFlow : {})));
-  console.log('terminal.txUpdateMessage', txUpdateMessage);
 
   const [stateChange, setStateChange] = useState({
     Finished: txFlowFinished,
@@ -528,7 +526,7 @@ function Checkout(props: {
             <p>
               {txFlowResponse && txFlowResponse.GetErrorDetail && transactionAction === TransactionType.Refund
                 ? txFlowResponse.GetErrorDetail()
-                : new PurchaseResponse(txFlowResponse).GetResponseText()}
+                : txFlowResponse?.Data?.host_response_text}
             </p>
             <button
               type="button"
@@ -637,7 +635,8 @@ function Checkout(props: {
                 {transactionAction !== TransactionType.GetLastTransaction ? 'Receipt' : 'Last Transaction'}
               </h2>
               <pre className="receipt-alignment" ref={receiptEl}>
-                {displayReceipt(stateChange)}
+                {/* {displayReceipt(stateChange)} */}
+                {txFlowResponse?.Data?.customer_receipt}
               </pre>
             </Col>
           </Row>

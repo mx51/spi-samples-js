@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Col, Row, Modal, Button } from 'react-bootstrap';
+import { Col, Row, Modal, Button, Alert } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import { SpiStatus, TransactionType } from '@mx51/spi-client-js';
 import Checkout from '../Checkout';
@@ -200,7 +200,11 @@ function Products({
           </Modal.Body>
         </Modal>
         <Col lg={8}>
-          {!isTerminalPaired && <div className="pairing_banner">Please check your device Pairing setting!!</div>}
+          {!isTerminalPaired && (
+            <Alert variant="danger" className="mt-3 text-center">
+              <strong>Please check your device Pairing setting.</strong>
+            </Alert>
+          )}
 
           {allProducts.map((cat) => (
             <ProductList

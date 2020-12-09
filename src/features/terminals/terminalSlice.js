@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { SpiStatus, TransactionType } from '@mx51/spi-client-js';
+import { TransactionType, SpiStatus } from '@mx51/spi-client-js';
 import SPI from '../../pages/Burger/spi';
 
 const terminalsSlice = createSlice({
@@ -8,18 +8,19 @@ const terminalsSlice = createSlice({
   reducers: {
     addTerminal(state, action) {
       const { id, payload } = action.payload;
-
+      const data = state[id];
       return {
         ...state,
         activeTerminalId: id,
         [id]: {
           id,
-          status: SpiStatus.Unpaired,
-          terminalStatus: 'Idle',
-          terminalConfig: payload ? payload.terminalConfig : {},
           pairingFlow: {
             Finished: true,
           },
+          ...data,
+          ...payload,
+          terminalStatus: 'Idle',
+          terminalConfig: payload ? payload.terminalConfig : {},
         },
       };
     },
@@ -52,10 +53,19 @@ const terminalsSlice = createSlice({
       data.status = status;
       return state;
     },
+    updateTerminalStatus(state, action) {
+      const { id: instanceId, payload } = action.payload;
+      const data = state[instanceId];
+      data.terminalStatus = payload;
+      return state;
+    },
     updatePairingFlow(state, action) {
       const { id, payload } = action.payload;
       const data = state[id];
       data.pairingFlow = { ...payload };
+      if (payload.Finished && !payload.Successful) {
+        data.status = SpiStatus.Unpaired;
+      }
       return state;
     },
     removeTerminal(state, action) {
@@ -86,10 +96,23 @@ const terminalsSlice = createSlice({
       };
     },
     updateTxMessage(state, action) {
-      console.log('reducer updateTxMessage', state, action);
       const { id, payload } = action.payload;
       const data = state[id];
       data.txMessage = payload.payload.Data;
+      return state;
+    },
+    updateCurrentPairedTerminal(state, action) {
+      const { id } = action.payload;
+      const data = state[id];
+      data.currentPairedTerminalId = id;
+      return state;
+    },
+    clearTransaction(state, action) {
+      const { id } = action.payload;
+      const data = state[id];
+      delete data.txMessage;
+      delete data.txFlow;
+      delete data.lastSettlement;
       return state;
     },
   },
@@ -102,12 +125,15 @@ export const removeTerminal = (id) => terminalsSlice.actions.removeTerminal(SPI.
 export const cancelTerminalPairing = (id) => terminalsSlice.actions.updatePairingFlow(SPI.spiCancelPairingTerminal(id));
 
 export const {
+  updateTerminalStatus,
   updatePairingStatus,
   updateTerminalSerialNumber,
   updateActiveTerminal,
   updatePairingFlow,
   updateTxFlow,
   updateTxMessage,
+  updateCurrentPairedTerminal,
+  clearTransaction,
 } = terminalsSlice.actions;
 
 export default terminalsSlice.reducer;

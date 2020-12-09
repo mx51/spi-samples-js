@@ -23,8 +23,8 @@ class SPI {
     const { CurrentFlow, CurrentPairingFlowState, CurrentStatus, CurrentTxFlowState } = instance.spi;
     return SPI.createEventPayload(instance.id, {
       status: CurrentStatus,
+      terminalStatus: 'Idle',
       flow: CurrentFlow,
-      pairingFlow: CurrentPairingFlowState,
       txFlow: CurrentTxFlowState,
       terminalConfig,
     });
@@ -209,6 +209,12 @@ class SPI {
       // return CurrentStatus === SpiStatus.PairedConnected && this.retriveConfig(instanceId);
     });
 
+    instance.addEventListener(events.spiTerminalStatusChanged, (e: any) => {
+      console.log('a12ddEventListener spiTerminalStatusChanged', e);
+
+      SPI.broadcastEvent(instance.id, e);
+    });
+
     instance.spi.TransactionUpdateMessage = (message: any) => {
       // SPI.broadcastEvent(instance.id, {
       //   type: events.spiTxUpdateMessage,
@@ -238,6 +244,15 @@ class SPI {
       //     updatedAt: e.DateTimeStamp,
       //   },
       // });
+    };
+
+    instance.spi.TerminalStatusResponse = (e: any) => {
+      console.log('addEvent TerminalStatusResponse', e);
+      instance.dispatchEvent(
+        new CustomEvent(events.spiTerminalStatusChanged, {
+          detail: e.Data,
+        })
+      );
     };
 
     instance.spi.Start();
