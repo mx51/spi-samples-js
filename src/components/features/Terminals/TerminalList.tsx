@@ -34,8 +34,8 @@ function TerminalList() {
     <div className="mt-3">
       <Card>
         <Card.Header>
-          <Button onClick={() => addTerminal()} className="float-right button btn-primary rounded-0">
-            Pair new Terminal
+          <Button onClick={() => addTerminal()} variant="primary" className="float-right">
+            + Pair New Terminal
           </Button>
         </Card.Header>
         <Table>
@@ -64,23 +64,28 @@ function TerminalList() {
                   <td>{t.terminalConfig.eftpos}</td>
                   <td>{t.terminalConfig.serialNumber}</td>
                   <td>
-                    <Button className="btn-sm" onClick={() => handleViewTerminal(t.id)}>
+                    <Button size="sm" variant="outline-primary" block onClick={() => handleViewTerminal(t.id)}>
                       View
                     </Button>
                   </td>
                   {t.status === 'PairedConnected' ? (
                     <td>
-                      <Button className="btn-sm" onClick={() => unpairTerminal(t.id)}>
+                      <Button size="sm" variant="outline-primary" block onClick={() => unpairTerminal(t.id)}>
                         Unpair
                       </Button>
                     </td>
                   ) : (
                     <td>
-                      <Button className="btn-sm" onClick={() => removeTerminal(t.id)}>
+                      <Button size="sm" variant="outline-primary" block onClick={() => removeTerminal(t.id)}>
                         Remove
                       </Button>
                     </td>
                   )}
+                  <td>
+                    <Button size="sm" variant="outline-primary" block onClick={() => handleViewTerminal(t.id)}>
+                      Setting
+                    </Button>
+                  </td>
                 </tr>
               ))
             ) : (

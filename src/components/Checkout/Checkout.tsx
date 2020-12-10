@@ -16,7 +16,7 @@ import {
   refund as refundService,
   cashout as cashoutService,
 } from '../../services';
-import { selectCurrentPairedTerminals } from '../../features/terminals/terminalSelectors';
+import { selectPairedTerminals } from '../../features/terminals/terminalSelectors';
 
 const isTransactionInquiry = (transactionType: String) =>
   [TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(transactionType);
@@ -224,7 +224,7 @@ function cashoutPay(
 }
 
 function backAction(
-  stateChange: StateChange,
+  isFinished: boolean,
   onNoThanks: Function,
   setSurchargeAmount: Function,
   setStateChange: Function,
@@ -234,7 +234,9 @@ function backAction(
   onClose: Function,
   clearProducts: boolean
 ) {
-  if (stateChange.Finished && clearProducts) {
+  console.log('backAction', isFinished, clearProducts);
+
+  if (isFinished && clearProducts) {
     onNoThanks();
     setSurchargeAmount(0);
   }
@@ -272,6 +274,7 @@ function Checkout(props: {
   setOpenPricing: Function;
   status: string;
   onErrorMsg: Function;
+  currentTerminalId: string;
 }) {
   const {
     onClose,
@@ -293,9 +296,12 @@ function Checkout(props: {
     setOpenPricing,
     status,
     onErrorMsg,
+    currentTerminalId,
   } = props;
 
-  const terminal = useSelector(selectCurrentPairedTerminals) as any;
+  const terminals = useSelector(selectPairedTerminals) as any;
+  const terminal = terminals.filter((t: any) => t.id === currentTerminalId)[0];
+
   const awaitingSigCheck = terminal && terminal.txFlow ? terminal.txFlow.AwaitingSignatureCheck : false;
   const [promptCashout, setPromptCashout] = useState(false);
   const [showSigApproval, setShowSigApproval] = useState(awaitingSigCheck);
@@ -373,7 +379,7 @@ function Checkout(props: {
 
   function handleBackAndClearProduts() {
     backAction(
-      stateChange,
+      txFlowFinished,
       onNoThanks,
       setSurchargeAmount,
       setStateChange,
@@ -387,7 +393,7 @@ function Checkout(props: {
 
   function handleBack() {
     backAction(
-      stateChange,
+      txFlowFinished,
       onNoThanks,
       setSurchargeAmount,
       setStateChange,

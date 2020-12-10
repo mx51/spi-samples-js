@@ -101,12 +101,6 @@ const terminalsSlice = createSlice({
       data.txMessage = payload.payload.Data;
       return state;
     },
-    updateCurrentPairedTerminal(state, action) {
-      const { id } = action.payload;
-      const data = state[id];
-      data.currentPairedTerminalId = id;
-      return state;
-    },
     clearTransaction(state, action) {
       const { id } = action.payload;
       const data = state[id];
@@ -132,7 +126,6 @@ export const {
   updatePairingFlow,
   updateTxFlow,
   updateTxMessage,
-  updateCurrentPairedTerminal,
   clearTransaction,
 } = terminalsSlice.actions;
 

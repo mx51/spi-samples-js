@@ -33,7 +33,7 @@ function Flow(props: any) {
     <div>
       <h2 className="sub-header">Flow </h2>
       <pre className="ml-3 mr-3" style={{ whiteSpace: 'pre-line' }}>
-        {showPairingUpdate(terminal.pairingFlow)}
+        {showPairingUpdate(terminal && terminal.pairingFlow ? terminal.pairingFlow : {})}
       </pre>
     </div>
   );

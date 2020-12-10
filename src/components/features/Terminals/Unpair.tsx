@@ -125,25 +125,19 @@ function Unpair(props: any) {
             />
 
             {terminal && terminal.status === SpiStatus.PairedConnected && (
-              <Button
-                className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
-                onClick={() => unpairTerminal(terminal.id)}
-              >
+              <Button variant="primary" block className="mb-2" onClick={() => unpairTerminal(terminal.id)}>
                 Unpair
               </Button>
             )}
             {!isFinishedPairing && (
-              <Button
-                className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
-                onClick={() => cancelTerminalPairing(terminal.id)}
-              >
+              <Button variant="primary" block className="mb-2" onClick={() => cancelTerminalPairing(terminal.id)}>
                 Cancel Pairing
               </Button>
             )}
             {isFinishedPairing && terminal && terminal.status === SpiStatus.Unpaired && (
-              <button id="btnSaveSetting" type="submit" className="btn btn-primary rounded-0 btn-block btn-lg mb-2">
+              <Button id="btnSaveSetting" type="submit" variant="primary" block className="mb-2">
                 Pair
-              </button>
+              </Button>
             )}
           </div>
         </form>

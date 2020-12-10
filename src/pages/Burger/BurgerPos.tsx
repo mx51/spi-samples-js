@@ -5,7 +5,6 @@ import Products from '../../components/Products';
 import Pairing from '../../components/Pairing';
 import Setting from '../../components/Setting';
 import Terminals from '../../components/features/Terminals';
-import Products2 from '../../components/features/Products/Products';
 
 import SpiService from './spiService';
 import './BurgerPos.scss';
@@ -56,8 +55,6 @@ function BurgerPos() {
   }, []);
 
   const handleStatusChange = useCallback((event: any) => {
-    console.log('handleStatusChange event', event);
-
     setStatusState(event.detail);
   }, []);
   useEffect(() => {
@@ -92,9 +89,6 @@ function BurgerPos() {
                   <Nav.Link eventKey="sample">Sample POS</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
-                  <Nav.Link eventKey="pairing">Pairing</Nav.Link>
-                </Nav.Item>
-                <Nav.Item>
                   <Nav.Link eventKey="terminals">Terminals</Nav.Link>
                 </Nav.Item>
                 <Nav.Item>
@@ -120,17 +114,6 @@ function BurgerPos() {
                   onErrorMsg={setErrorMsg}
                   openPricing={openPricing}
                   setOpenPricing={setOpenPricing}
-                />
-              </Tab.Pane>
-              <Tab.Pane eventKey="pairing">
-                <Pairing
-                  confirmationCode={pairingState.ConfirmationCode}
-                  isAwaitingConfirmation={pairingState.AwaitingCheckFromPos}
-                  isFinishedPairing={pairingState.Finished}
-                  status={statusState}
-                  spi={spiService._spi}
-                  message={pairingState.Message}
-                  setPairingState={setPairingState}
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="terminals">

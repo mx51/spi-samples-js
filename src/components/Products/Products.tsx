@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Col, Row, Modal, Button, Alert } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-import { SpiStatus, TransactionType } from '@mx51/spi-client-js';
+import { useSelector, useDispatch } from 'react-redux';
+import { TransactionType } from '@mx51/spi-client-js';
 import Checkout from '../Checkout';
 import Order from '../Order';
 import './Products.scss';
 import ProductList from '../ProductList';
 import allProducts from './ProductData';
 import { transactionFlow as transactionFlowService } from '../../services';
-import { selectIsPairedTerminalStatus, selectCurrentPairedTerminals } from '../../features/terminals/terminalSelectors';
+import { selectIsPairedTerminalStatus } from '../../features/terminals/terminalSelectors';
 import SPI from '../../pages/Burger/spi';
+import TerminalSelector from '../features/Terminals/TerminalSelector';
+import { clearTransaction } from '../../features/terminals/terminalSlice';
 
 function productClick(
   shortlistedProducts: Array<Product>,
@@ -74,45 +76,35 @@ function changeProductQuantity(
   updateShortlistedProducts(products);
 }
 
-function getTransaction(
-  isTerminalPaired: boolean,
-  onErrorMsg: Function,
-  setCheckout: Function,
-  setTransactionAction: Function
-) {
+function getTransaction(isTerminalPaired: boolean, onErrorMsg: Function, setTransactionAction: Function) {
   if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    setCheckout(true);
+    // setCheckout(true);
     setTransactionAction(TransactionType.GetTransaction);
   }
 }
 
-function lastTransaction(
-  isTerminalPaired: boolean,
-  onErrorMsg: Function,
-  setCheckout: Function,
-  setTransactionAction: Function
-) {
+function lastTransaction(isTerminalPaired: boolean, onErrorMsg: Function, setTransactionAction: Function) {
   if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    setCheckout(true);
+    // setCheckout(true);
     setTransactionAction(TransactionType.GetLastTransaction);
   }
 }
 
-function checkoutAction(shortlistedProducts: Array<Product>, setTransactionAction: Function, setCheckout: Function) {
+function checkoutAction(shortlistedProducts: Array<Product>, setTransactionAction: Function) {
   if (shortlistedProducts.length === 0) {
     setTransactionAction('');
   } else {
     setTransactionAction(TransactionType.Purchase);
   }
-  setCheckout(true);
+  // setCheckout(true);
 }
 
-function refundAction(setCheckout: Function, setTransactionAction: Function) {
-  setCheckout(true);
+function refundAction(setTransactionAction: Function) {
+  // setCheckout(true);
   setTransactionAction(TransactionType.Refund);
 }
 
@@ -121,21 +113,29 @@ function noThanksAction(
   setTransactionAction: Function,
   spi: Spi,
   updateShortlistedProducts: Function,
-  setTransactionStatus: Function
+  setTransactionStatus: Function,
+  cleanTransactionAction: Function
 ) {
+  console.log('noThanksAction called');
   transactionFlowService.acknowledgeCompletion({ Info: () => {}, Clear: () => {} }, spi, () => {});
   setCheckout(false);
   setTransactionAction('');
   updateShortlistedProducts([]);
   setTransactionStatus(false);
+  cleanTransactionAction();
 }
 
-function checkoutClosed(setCheckout: Function, setTransactionAction: Function) {
+function checkoutClosed(setCheckout: Function, setTransactionAction: Function, cleanTransactionAction: Function) {
+  console.log('checkoutClosed called');
+
   setCheckout(false);
   setTransactionAction('');
+  cleanTransactionAction();
 }
 
 function overrideTransaction(spi: Spi, setShowUnknownModal: Function) {
+  console.log('overrideTransaction called');
+
   spi.AckFlowEndedAndBackToIdle();
   setShowUnknownModal(false);
 }
@@ -170,13 +170,27 @@ function Products({
 
   const isTerminalPaired = useSelector(selectIsPairedTerminalStatus);
 
-  const terminal = useSelector(selectCurrentPairedTerminals) as any;
+  const [currentTerminalId, setCurrentTerminalId] = useState('');
 
-  const { spi } = terminal && terminal.id ? SPI.getInstance(terminal.id) : { spi: {} };
+  // const { spi } = terminal && terminal.id ? SPI.getInstance(terminal.id) : { spi: {} };
+  const { spi } = currentTerminalId !== '' ? SPI.getInstance(currentTerminalId) : { spi: {} };
+
+  const dispatch = useDispatch();
+  const cleanTransactionAction = () => dispatch(clearTransaction({ id: currentTerminalId }));
 
   return (
     <>
       <Row>
+        <TerminalSelector
+          show={!checkout && transactionAction !== ''}
+          onSelect={(id) => {
+            setCurrentTerminalId(id);
+            setCheckout(true);
+          }}
+          onClose={() => {
+            setTransactionAction('');
+          }}
+        />
         <Modal show={showUnknownModal} onHide={() => setShowUnknownModal(false)}>
           <Modal.Header closeButton>
             <Modal.Title>Alert</Modal.Title>
@@ -222,10 +236,10 @@ function Products({
             onChangeProductQuantity={(id: string, quantity: number) =>
               changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity)
             }
-            onGetTransaction={() => getTransaction(isTerminalPaired, onErrorMsg, setCheckout, setTransactionAction)}
-            onRefund={() => refundAction(setCheckout, setTransactionAction)}
-            onLastTransaction={() => lastTransaction(isTerminalPaired, onErrorMsg, setCheckout, setTransactionAction)}
-            onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction, setCheckout)}
+            onGetTransaction={() => getTransaction(isTerminalPaired, onErrorMsg, setTransactionAction)}
+            onRefund={() => refundAction(setTransactionAction)}
+            onLastTransaction={() => lastTransaction(isTerminalPaired, onErrorMsg, setTransactionAction)}
+            onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction)}
             handleApplySurcharge={setSurchargeAmount}
             posRefId={posRefId}
             setPosRefId={setPosRefId}
@@ -238,9 +252,16 @@ function Products({
             <Checkout
               visible={checkout}
               list={shortlistedProducts}
-              onClose={() => checkoutClosed(setCheckout, setTransactionAction)}
+              onClose={() => checkoutClosed(setCheckout, setTransactionAction, cleanTransactionAction)}
               onNoThanks={() =>
-                noThanksAction(setCheckout, setTransactionAction, spi, updateShortlistedProducts, setTransactionStatus)
+                noThanksAction(
+                  setCheckout,
+                  setTransactionAction,
+                  spi,
+                  updateShortlistedProducts,
+                  setTransactionStatus,
+                  cleanTransactionAction
+                )
               }
               posRefId={posRefId}
               spi={spi}
@@ -257,6 +278,7 @@ function Products({
               setOpenPricing={setOpenPricing}
               onErrorMsg={onErrorMsg}
               status={status}
+              currentTerminalId={currentTerminalId}
             />
           )}
         </Col>

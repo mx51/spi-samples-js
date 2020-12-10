@@ -9,7 +9,7 @@ export const selectActiveTerminal = createSelector(selectTerminals, (terminals) 
 
 export const selectActiveTerminals = createSelector(selectTerminals, (terminals) =>
   Object.entries(terminals)
-    .filter((e) => e[0] !== 'activeTerminalId' && e[0] !== 'currentPairedTerminalId')
+    .filter((e) => e[0] !== 'activeTerminalId')
     .map((e) => e[1])
 );
 
