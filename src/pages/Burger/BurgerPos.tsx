@@ -35,12 +35,6 @@ function BurgerPos() {
   );
   const [openPricing, setOpenPricing] = useState(window.localStorage.getItem('open_pricing') === 'true');
 
-  const [pairingState, setPairingState] = useState({
-    AwaitingCheckFromPos: false,
-    ConfirmationCode: '',
-    Finished: true,
-    Message: '',
-  });
   const [statusState, setStatusState] = useState(spiService._spi.CurrentStatus);
 
   useEffect(() => {

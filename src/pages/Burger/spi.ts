@@ -88,6 +88,19 @@ class SPI {
     return this.libraryInstances[instanceId];
   }
 
+  initalizeInstances(state: any) {
+    const { terminals } = state || { terminals: [] };
+
+    Object.entries(terminals)
+      .filter((e) => e[0] !== 'activeTerminalId')
+      .map((e) => e[1])
+      .forEach((t: any) => {
+        const { id, terminalConfig } = t;
+        this.createLibraryInstance(terminalConfig, id);
+        this.spiPairTerminal(id, terminalConfig);
+      });
+  }
+
   createLibraryInstance(config: any, instanceId = uuid()): EventTarget {
     const name = 'mx51';
     const version = '2.8.0';
