@@ -24,7 +24,7 @@ function initiatePurchase(
 
   flowMsg.Info(
     res.Initiated
-      ? '# Purchase Initiated. Will be updated with Progress.'
+      ? `# Purchase Initiated. Will be updated with Progress.\n# ${spi.CurrentTxFlowState.DisplayMessage}`
       : `# Could not initiate purchase: ${res.Message}. Please Retry.`
   );
 }
