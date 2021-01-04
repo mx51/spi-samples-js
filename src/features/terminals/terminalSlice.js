@@ -11,7 +11,7 @@ const terminalsSlice = createSlice({
       const data = state[id];
       return {
         ...state,
-        activeTerminalId: id,
+        activeTerminal: { id, page: 'view' },
         [id]: {
           id,
           pairingFlow: {
@@ -19,7 +19,7 @@ const terminalsSlice = createSlice({
           },
           ...data,
           ...payload,
-          terminalStatus: 'Idle',
+          terminalStatus: { status: 'IDLE' },
           terminalConfig: payload ? payload.terminalConfig : {},
         },
       };
@@ -74,9 +74,9 @@ const terminalsSlice = createSlice({
       return data;
     },
     updateActiveTerminal(state, action) {
-      const instanceId = action.payload;
+      const { id, page } = action.payload;
       const data = state;
-      data.activeTerminalId = instanceId;
+      data.activeTerminal = { id, page };
       return data;
     },
     updateTxFlow(state, action) {
@@ -109,6 +109,13 @@ const terminalsSlice = createSlice({
       delete data.lastSettlement;
       return state;
     },
+    updateSetting(state, action) {
+      console.log('updateSetting', { state }, { action });
+      const { id, payload } = action.payload;
+      const data = state[id];
+      data.setting = { ...payload };
+      return state;
+    },
   },
 });
 
@@ -117,6 +124,7 @@ export const pairTerminal = (id, config) => terminalsSlice.actions.addTerminal(S
 export const unpairTerminal = (id) => terminalsSlice.actions.updatePairingFlow(SPI.spiUnpairTerminal(id));
 export const removeTerminal = (id) => terminalsSlice.actions.removeTerminal(SPI.spiRemoveTerminal(id));
 export const cancelTerminalPairing = (id) => terminalsSlice.actions.updatePairingFlow(SPI.spiCancelPairingTerminal(id));
+export const updateSetting = (id, config) => terminalsSlice.actions.updateSetting(SPI.spiUpdateSetting(id, config));
 
 export const {
   updateTerminalStatus,

@@ -4,12 +4,14 @@ import { SpiStatus } from '@mx51/spi-client-js';
 export const selectTerminals = (state: any) => state.terminals;
 
 export const selectActiveTerminal = createSelector(selectTerminals, (terminals) =>
-  terminals.activeTerminalId ? terminals[terminals.activeTerminalId] : null
+  terminals.activeTerminal
+    ? { terminal: terminals[terminals.activeTerminal.id], page: terminals.activeTerminal.page }
+    : null
 );
 
 export const selectActiveTerminals = createSelector(selectTerminals, (terminals) =>
   Object.entries(terminals)
-    .filter((e) => e[0] !== 'activeTerminalId')
+    .filter((e) => e[0] !== 'activeTerminal')
     .map((e) => e[1])
 );
 

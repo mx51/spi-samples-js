@@ -269,7 +269,6 @@ function Checkout(props: {
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
   handleOverrideTransaction: Function;
-  suppressMerchantPassword: boolean;
   openPricing: boolean;
   setOpenPricing: Function;
   status: string;
@@ -291,7 +290,6 @@ function Checkout(props: {
     showUnknownModal,
     setShowUnknownModal,
     handleOverrideTransaction,
-    suppressMerchantPassword,
     openPricing,
     setOpenPricing,
     status,
@@ -301,6 +299,7 @@ function Checkout(props: {
 
   const terminals = useSelector(selectPairedTerminals) as any;
   const terminal = terminals.filter((t: any) => t.id === currentTerminalId)[0];
+  const suppressMerchantPassword = terminal?.setting?.suppressMerchantPassword;
 
   const awaitingSigCheck = terminal && terminal.txFlow ? terminal.txFlow.AwaitingSignatureCheck : false;
   const [promptCashout, setPromptCashout] = useState(false);

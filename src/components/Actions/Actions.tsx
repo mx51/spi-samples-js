@@ -47,13 +47,13 @@ function settlement(
 }
 
 function terminalStatus(status: string, onErrorMsg: Function, receiptEl: any, spi: any, getTerminalStatus: Function) {
-  if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
+  if (status !== SpiStatus.PairedConnected && status !== SpiStatus.PairedConnecting) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    if (receiptEl.current !== null) {
-      const receiptMsg = new Logger(receiptEl.current);
-      receiptMsg.Clear();
-    }
+    // if (receiptEl.current !== null) {
+    //   const receiptMsg = new Logger(receiptEl.current);
+    //   receiptMsg.Clear();
+    // }
     getTerminalStatus(spi);
   }
 }
@@ -78,33 +78,36 @@ function Actions(props: {
         </Modal.Header>
         <Modal.Body>
           <p>{errorMsg}</p>
-          <Button variant="primary" className="btn-custom" onClick={() => onErrorMsg('')} block>
+          <Button variant="primary" onClick={() => onErrorMsg('')} block>
             OK
           </Button>
         </Modal.Body>
       </Modal>
       <div className="ml-2 mr-2">
-        <button
+        <Button
+          block
+          variant="primary"
           type="button"
-          className="btn btn-primary rounded-0 btn-block btn-lg"
           onClick={() => settlement(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
         >
           Settlement
-        </button>
-        <button
+        </Button>
+        <Button
+          block
+          variant="primary"
           type="button"
-          className="btn btn-primary rounded-0 btn-block btn-lg"
           onClick={() => settlementEnquiry(status, onErrorMsg, setActionType, receiptEl, flowEl, spi)}
         >
           Settlement Enquiry
-        </button>
-        <button
+        </Button>
+        <Button
+          block
+          variant="primary"
           type="button"
-          className="btn btn-primary rounded-0 btn-block btn-lg"
           onClick={() => terminalStatus(status, onErrorMsg, receiptEl, spi, getTerminalStatus)}
         >
           Terminal Status
-        </button>
+        </Button>
       </div>
     </div>
   );

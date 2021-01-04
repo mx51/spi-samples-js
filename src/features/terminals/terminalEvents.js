@@ -25,7 +25,6 @@ export default function watchTerminalEvents() {
     });
 
     eventBus.addEventListener(events.spiStatusChanged, (e) => {
-      console.log('addEventListener spiStatusChanged', e);
       const { id: instanceId, payload } = e.detail;
       const event = {
         id: instanceId,
@@ -50,7 +49,6 @@ export default function watchTerminalEvents() {
     });
 
     eventBus.addEventListener(events.spiTerminalStatusChanged, (e) => {
-      console.log('addEvent spiTerminalStatusChanged', e);
       const { detail } = e;
       const event = {
         id: detail.id,
@@ -63,7 +61,6 @@ export default function watchTerminalEvents() {
     });
 
     eventBus.addEventListener(events.spiTxFlowStateChanged, (e) => {
-      console.log('spiTxFlowStateChanged', e);
       const { detail } = e;
       const event = {
         id: detail.id,
@@ -73,7 +70,6 @@ export default function watchTerminalEvents() {
     });
 
     eventBus.addEventListener(events.spiTxUpdateMessage, (e) => {
-      console.log('spiTxUpdateMessage', e);
       const { detail } = e;
       const event = {
         id: detail.id,

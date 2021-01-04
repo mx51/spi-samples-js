@@ -1,8 +1,9 @@
-import { Secrets as SPISecrets, Spi as SPIClient, SpiStatus } from '@mx51/spi-client-js';
+import { Secrets as SPISecrets, Spi as SPIClient, SpiStatus, TransactionOptions } from '@mx51/spi-client-js';
 import { v4 as uuid } from 'uuid';
 import events from '../../constants/events';
 import eventBus from './eventBus';
 import EventTarget from '../../utils/eventTarget';
+import Pos from '../../services/_common/pos';
 
 class SPI {
   libraryInstances: any;
@@ -84,20 +85,46 @@ class SPI {
     });
   }
 
+  spiUpdateSetting(instanceId: string, config: any) {
+    const { spi } = this.getInstance(instanceId);
+
+    spi.Config.PromptForCustomerCopyOnEftpos = config.eftposReceipt;
+    spi.Config.SignatureFlowOnEftpos = config.sigFlow;
+    spi.Config.PrintMerchantCopy = config.printMerchantCopy;
+    const options = new TransactionOptions();
+    spi._options = options;
+    options.SetCustomerReceiptHeader(Pos.sanitizePrintText(config.receiptHeader));
+    options.SetCustomerReceiptFooter(Pos.sanitizePrintText(config.receiptFooter));
+    options.SetMerchantReceiptHeader(Pos.sanitizePrintText(config.receiptHeader));
+    options.SetMerchantReceiptFooter(Pos.sanitizePrintText(config.receiptFooter));
+    spi.AckFlowEndedAndBackToIdle();
+
+    // flowMsg.Info('Receipt header / footer updated.');
+    // printStatusAndActions();
+
+    return SPI.createEventPayload(instanceId, config);
+  }
+
   getInstance(instanceId: string) {
     return this.libraryInstances[instanceId];
   }
 
   initalizeInstances(state: any) {
     const { terminals } = state || { terminals: [] };
+    if (!terminals) return;
 
     Object.entries(terminals)
-      .filter((e) => e[0] !== 'activeTerminalId')
+      .filter((e) => e[0] !== 'activeTerminal')
       .map((e) => e[1])
       .forEach((t: any) => {
-        const { id, terminalConfig } = t;
-        this.createLibraryInstance(terminalConfig, id);
-        this.spiPairTerminal(id, terminalConfig);
+        const { id, terminalConfig, setting } = t;
+        if (id && terminalConfig) {
+          this.createLibraryInstance(terminalConfig, id);
+          this.spiPairTerminal(id, terminalConfig);
+        }
+        if (id && setting) {
+          this.spiUpdateSetting(id, setting);
+        }
       });
   }
 
@@ -160,7 +187,6 @@ class SPI {
       // if (isHeadlessMode) {
       //   instance.spi.AckFlowEndedAndBackToIdle();
       // }
-      console.log(`SPI broadcastEvent ${events.spiTxFlowStateChanged}`, updatedEvent);
 
       SPI.broadcastEvent(instance.id, updatedEvent);
       return updatedEvent;

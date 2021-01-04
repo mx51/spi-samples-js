@@ -17,7 +17,7 @@ function TerminalList() {
   const addTerminal = () => dispatch(addTerminalAction());
   const unpairTerminal = (id: string) => dispatch(unpairTerminalAction(id));
   const removeTerminal = (id: string) => dispatch(removeTerminalAction(id));
-  const handleViewTerminal = (id: string) => dispatch(updateActiveTerminalAction(id));
+  const handleViewTerminal = (id: string, page: string) => dispatch(updateActiveTerminalAction({ id, page }));
   const terminalStatusVariant = {
     [SpiStatus.Unpaired]: 'danger',
     [SpiStatus.PairedConnected]: 'success',
@@ -60,11 +60,11 @@ function TerminalList() {
                       {terminalStatus[t.status]}
                     </Badge>
                   </td>
-                  <td>{t.terminalStatus}</td>
+                  <td>{t.terminalStatus.status}</td>
                   <td>{t.terminalConfig.eftpos}</td>
                   <td>{t.terminalConfig.serialNumber}</td>
                   <td>
-                    <Button size="sm" variant="outline-primary" block onClick={() => handleViewTerminal(t.id)}>
+                    <Button size="sm" variant="outline-primary" block onClick={() => handleViewTerminal(t.id, 'view')}>
                       View
                     </Button>
                   </td>
@@ -82,7 +82,12 @@ function TerminalList() {
                     </td>
                   )}
                   <td>
-                    <Button size="sm" variant="outline-primary" block onClick={() => handleViewTerminal(t.id)}>
+                    <Button
+                      size="sm"
+                      variant="outline-primary"
+                      block
+                      onClick={() => handleViewTerminal(t.id, 'setting')}
+                    >
                       Setting
                     </Button>
                   </td>

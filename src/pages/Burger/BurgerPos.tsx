@@ -85,9 +85,6 @@ function BurgerPos() {
                 <Nav.Item>
                   <Nav.Link eventKey="terminals">Terminals</Nav.Link>
                 </Nav.Item>
-                <Nav.Item>
-                  <Nav.Link eventKey="setting">Setting</Nav.Link>
-                </Nav.Item>
                 {window.location.search.includes('qamode=true') && (
                   <Nav.Item>
                     <Nav.Link eventKey="reversals">Reversals</Nav.Link>
@@ -103,7 +100,6 @@ function BurgerPos() {
                   status={statusState}
                   showUnknownModal={showUnknownModal}
                   setShowUnknownModal={setShowUnknownModal}
-                  suppressMerchantPassword={suppressMerchantPassword}
                   errorMsg={errorMsg}
                   onErrorMsg={setErrorMsg}
                   openPricing={openPricing}
@@ -111,17 +107,7 @@ function BurgerPos() {
                 />
               </Tab.Pane>
               <Tab.Pane eventKey="terminals">
-                <Terminals />
-              </Tab.Pane>
-              <Tab.Pane eventKey="setting">
-                <Setting
-                  spi={spiService._spi}
-                  status={statusState}
-                  errorMsg={errorMsg}
-                  onErrorMsg={setErrorMsg}
-                  suppressMerchantPassword={suppressMerchantPassword}
-                  setSuppressMerchantPassword={setSuppressMerchantPassword}
-                />
+                <Terminals errorMsg={errorMsg} onErrorMsg={setErrorMsg} />
               </Tab.Pane>
               <Tab.Pane eventKey="reversals">
                 <Reversal spi={spiService._spi} />

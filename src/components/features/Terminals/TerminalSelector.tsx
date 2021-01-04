@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Modal, ListGroup } from 'react-bootstrap';
+import { Modal, ListGroup, Nav, Button } from 'react-bootstrap';
 import { selectPairedTerminals } from '../../../features/terminals/terminalSelectors';
 
 type Props = {
@@ -41,7 +41,10 @@ function TerminalSelector({ onSelect, onClose, show }: Props) {
       <Modal.Footer className="text-center small" style={{ display: 'block' }}>
         <p>Only showing active terminals.</p>
         <p>
-          Can&apos;t find the terminal you&apos;re looking for? <a href="#">View Terminals</a>
+          Can&apos;t find the terminal you&apos;re looking for?{' '}
+          <Button variant="link" size="sm" onClick={() => document.getElementById('pos-tabs-tab-terminals')?.click()}>
+            View Terminals
+          </Button>
         </p>
       </Modal.Footer>
     </Modal>

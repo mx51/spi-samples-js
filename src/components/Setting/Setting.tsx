@@ -1,6 +1,7 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
-import { Logger, TransactionOptions, TransactionType } from '@mx51/spi-client-js';
+import { useDispatch } from 'react-redux';
+import { Logger, TransactionType } from '@mx51/spi-client-js';
 import SettingConfig from '../SettingConfig';
 import Actions from '../Actions';
 import Flow from '../Flow';
@@ -10,6 +11,8 @@ import {
   terminalStatus as terminalStatusService,
   transactionFlow as transactionFlowService,
 } from '../../services';
+import { updateSetting as updateSettingAction } from '../../features/terminals/terminalSlice';
+
 import PosUtils from '../../services/_common/pos';
 
 function handleActionCallback(
@@ -45,57 +48,14 @@ function handleActionCallback(
 
 function terminalStatus(spi: Spi, flowEl: React.RefObject<HTMLDivElement>) {
   spi.GetTerminalStatus();
-  const flowMsg = new Logger(flowEl.current);
-  // eslint-disable-next-line no-param-reassign
-  spi.TerminalStatusResponse = (message: Message) =>
-    terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
-}
-function saveSetting(
-  eftposReceipt: boolean,
-  sigFlow: boolean,
-  printMerchantCopy: boolean,
-  receiptHeader: string,
-  receiptFooter: string,
-  spi: Spi,
-  suppressMerchantPassword: boolean
-) {
-  // eslint-disable-next-line no-param-reassign
-  spi.Config.PromptForCustomerCopyOnEftpos = eftposReceipt;
-  // eslint-disable-next-line no-param-reassign
-  spi.Config.SignatureFlowOnEftpos = sigFlow;
-  terminalStatusService.setIsMerchantReceiptPrinted(
-    { Info: () => {}, Clear: () => {} },
-    spi,
-    printMerchantCopy,
-    () => {}
-  );
-  terminalStatusService.setCustomReceiptStrings(
-    { Info: () => {}, Clear: () => {} },
-    new TransactionOptions(),
-    spi,
-    () => {},
-    receiptHeader,
-    receiptFooter,
-    receiptHeader,
-    receiptFooter
-  );
-  window.localStorage.setItem('rcpt_from_eftpos', eftposReceipt.toString());
-  window.localStorage.setItem('sig_flow_from_eftpos', sigFlow.toString());
-  window.localStorage.setItem('print_merchant_copy_input', printMerchantCopy.toString());
-  window.localStorage.setItem('suppress_merchant_password_input', suppressMerchantPassword.toString());
-  window.localStorage.setItem('receipt_header_input', receiptHeader);
-  window.localStorage.setItem('receipt_footer_input', receiptFooter);
+  // const flowMsg = new Logger(flowEl.current);
+  // // eslint-disable-next-line no-param-reassign
+  // spi.TerminalStatusResponse = (message: Message) =>
+  //   terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
 }
 
-function Setting(props: {
-  spi: Spi;
-  status: string;
-  errorMsg: string;
-  onErrorMsg: Function;
-  suppressMerchantPassword: boolean;
-  setSuppressMerchantPassword: Function;
-}) {
-  const { spi, status, errorMsg, onErrorMsg, suppressMerchantPassword, setSuppressMerchantPassword } = props;
+function Setting(props: { spi: Spi; status: string; errorMsg: string; onErrorMsg: Function; terminal: any }) {
+  const { spi, errorMsg, onErrorMsg, terminal } = props;
   const flowEl = useRef<HTMLDivElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
@@ -106,6 +66,10 @@ function Setting(props: {
     (event: TxFlowStateChangedEvent) => handleActionCallback(event, setModel, flowEl, receiptEl, actionType, spi),
     []
   );
+
+  const dispatch = useDispatch();
+  const updateSetting = (id: string, config: any) => dispatch(updateSettingAction(id, config));
+
   useEffect(() => {
     document.addEventListener('TxFlowStateChanged', handleAction);
     return function cleanup() {
@@ -119,24 +83,23 @@ function Setting(props: {
         <Col lg={4} className="sub-column">
           <div className="flex-fill d-flex flex-column">
             <SettingConfig
-              suppressMerchantPassword={suppressMerchantPassword}
-              setSuppressMerchantPassword={setSuppressMerchantPassword}
+              terminal={terminal}
               handleSaveSetting={(
                 eftposReceipt: boolean,
                 sigFlow: boolean,
                 printMerchantCopy: boolean,
                 receiptHeader: string,
-                receiptFooter: string
+                receiptFooter: string,
+                suppressMerchantPassword: boolean
               ) =>
-                saveSetting(
+                updateSetting(terminal.id, {
                   eftposReceipt,
                   sigFlow,
                   printMerchantCopy,
+                  suppressMerchantPassword,
                   receiptHeader,
                   receiptFooter,
-                  spi,
-                  suppressMerchantPassword
-                )
+                })
               }
             />
           </div>
@@ -147,7 +110,7 @@ function Setting(props: {
               flowEl={flowEl}
               receiptEl={receiptEl}
               getTerminalStatus={() => terminalStatus(spi, flowEl)}
-              status={status}
+              status={terminal.status}
               errorMsg={errorMsg}
               onErrorMsg={onErrorMsg}
             />

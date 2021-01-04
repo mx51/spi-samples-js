@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Col, Row, Modal, Button, Alert } from 'react-bootstrap';
 import { useSelector, useDispatch } from 'react-redux';
 import { TransactionType } from '@mx51/spi-client-js';
@@ -8,10 +8,10 @@ import './Products.scss';
 import ProductList from '../ProductList';
 import allProducts from './ProductData';
 import { transactionFlow as transactionFlowService } from '../../services';
-import { selectIsPairedTerminalStatus } from '../../features/terminals/terminalSelectors';
+import { selectIsPairedTerminalStatus, selectPairedTerminals } from '../../features/terminals/terminalSelectors';
 import SPI from '../../pages/Burger/spi';
 import TerminalSelector from '../features/Terminals/TerminalSelector';
-import { clearTransaction } from '../../features/terminals/terminalSlice';
+import { clearTransaction, updateActiveTerminal } from '../../features/terminals/terminalSlice';
 
 function productClick(
   shortlistedProducts: Array<Product>,
@@ -144,7 +144,6 @@ type Props = {
   status: string;
   showUnknownModal: boolean;
   setShowUnknownModal: Function;
-  suppressMerchantPassword: boolean;
   errorMsg: string;
   onErrorMsg: Function;
   openPricing: boolean;
@@ -155,7 +154,6 @@ function Products({
   status,
   showUnknownModal,
   setShowUnknownModal,
-  suppressMerchantPassword,
   errorMsg,
   onErrorMsg,
   openPricing,
@@ -177,6 +175,10 @@ function Products({
 
   const dispatch = useDispatch();
   const cleanTransactionAction = () => dispatch(clearTransaction({ id: currentTerminalId }));
+  const clearActiveTerminal = () => dispatch(updateActiveTerminal({}));
+  useEffect(() => {
+    clearActiveTerminal();
+  });
 
   return (
     <>
@@ -273,7 +275,6 @@ function Products({
               showUnknownModal={showUnknownModal}
               setShowUnknownModal={setShowUnknownModal}
               handleOverrideTransaction={() => overrideTransaction(spi, setShowUnknownModal)}
-              suppressMerchantPassword={suppressMerchantPassword}
               openPricing={openPricing}
               setOpenPricing={setOpenPricing}
               onErrorMsg={onErrorMsg}
