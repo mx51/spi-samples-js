@@ -11,11 +11,17 @@ type Props = {
 
 function TerminalSelector({ onSelect, onClose, show }: Props) {
   const terminals = useSelector(selectPairedTerminals);
+  if (show && terminals && terminals.length === 1) {
+    const terminal: any = terminals[0];
+    onSelect(terminal.id);
+    onClose();
+    return <div />;
+  }
 
   return (
     <Modal show={show} onHide={onClose}>
       <Modal.Header closeButton>
-        <Modal.Title>Select terminal</Modal.Title>
+        <Modal.Title className="p-10">Select terminal</Modal.Title>
       </Modal.Header>
       <Modal.Body className="p-0">
         {terminals.length === 0 && <div className="text-center py-4">No terminals paired</div>}

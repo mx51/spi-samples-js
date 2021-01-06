@@ -104,9 +104,18 @@ const terminalsSlice = createSlice({
     clearTransaction(state, action) {
       const { id } = action.payload;
       const data = state[id];
-      delete data.txMessage;
-      delete data.txFlow;
-      delete data.lastSettlement;
+      if (!data) {
+        return state;
+      }
+      if (data.txMessage) {
+        delete data.txMessage;
+      }
+      if (data.txFlow) {
+        delete data.txFlow;
+      }
+      if (data.lastSettlement) {
+        delete data.lastSettlement;
+      }
       return state;
     },
     updateSetting(state, action) {

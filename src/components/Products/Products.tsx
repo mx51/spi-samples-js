@@ -94,9 +94,10 @@ function lastTransaction(isTerminalPaired: boolean, onErrorMsg: Function, setTra
   }
 }
 
-function checkoutAction(shortlistedProducts: Array<Product>, setTransactionAction: Function) {
+function checkoutAction(shortlistedProducts: Array<Product>, setTransactionAction: Function, setCheckout: Function) {
   if (shortlistedProducts.length === 0) {
-    setTransactionAction('');
+    setTransactionAction(TransactionType.CashoutOnly);
+    // setCheckout(true);
   } else {
     setTransactionAction(TransactionType.Purchase);
   }
@@ -241,7 +242,7 @@ function Products({
             onGetTransaction={() => getTransaction(isTerminalPaired, onErrorMsg, setTransactionAction)}
             onRefund={() => refundAction(setTransactionAction)}
             onLastTransaction={() => lastTransaction(isTerminalPaired, onErrorMsg, setTransactionAction)}
-            onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction)}
+            onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction, setCheckout)}
             handleApplySurcharge={setSurchargeAmount}
             posRefId={posRefId}
             setPosRefId={setPosRefId}

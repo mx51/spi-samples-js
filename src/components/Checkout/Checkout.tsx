@@ -431,7 +431,7 @@ function Checkout(props: {
       );
     }
 
-    if (transactionAction === '' && list.length === 0) {
+    if (transactionAction === TransactionType.CashoutOnly && list.length === 0) {
       return (
         <CashOutPay
           handleCashoutPay={(cashoutAmount: number) =>
