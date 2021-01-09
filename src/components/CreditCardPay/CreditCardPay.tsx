@@ -42,7 +42,7 @@ function CreditCard(props: {
         <Input
           id="inpCashoutAmount"
           name="Cashout amount"
-          label="cashout Amount"
+          label="Cashout Amount"
           disabled={tipAmount > 0 || transactionStatus}
           min="0"
           onKeyPress={(e: KeyboardEvent) => handleKeyPress(e, setPromptCashout)}
