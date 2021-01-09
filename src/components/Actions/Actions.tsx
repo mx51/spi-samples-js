@@ -9,7 +9,7 @@ function settlementEnquiry(
   onErrorMsg: Function,
   setActionType: Function,
   receiptEl: React.RefObject<HTMLPreElement>,
-  flowEl: React.RefObject<HTMLDivElement>,
+  flowEl: React.RefObject<HTMLPreElement>,
   spi: Spi
 ) {
   if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
@@ -30,7 +30,7 @@ function settlement(
   onErrorMsg: Function,
   setActionType: Function,
   receiptEl: React.RefObject<HTMLPreElement>,
-  flowEl: React.RefObject<HTMLDivElement>,
+  flowEl: React.RefObject<HTMLPreElement>,
   spi: Spi
 ) {
   if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
@@ -50,17 +50,17 @@ function terminalStatus(status: string, onErrorMsg: Function, receiptEl: any, sp
   if (status !== SpiStatus.PairedConnected && status !== SpiStatus.PairedConnecting) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    // if (receiptEl.current !== null) {
-    //   const receiptMsg = new Logger(receiptEl.current);
-    //   receiptMsg.Clear();
-    // }
+    if (receiptEl.current !== null) {
+      const receiptMsg = new Logger(receiptEl.current);
+      receiptMsg.Clear();
+    }
     getTerminalStatus(spi);
   }
 }
 function Actions(props: {
   spi: Spi;
   setActionType: Function;
-  flowEl: React.RefObject<HTMLDivElement>;
+  flowEl: React.RefObject<HTMLPreElement>;
   getTerminalStatus: Function;
   receiptEl: React.RefObject<HTMLPreElement>;
   status: string;

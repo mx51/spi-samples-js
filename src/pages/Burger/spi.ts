@@ -187,7 +187,7 @@ class SPI {
       // if (isHeadlessMode) {
       //   instance.spi.AckFlowEndedAndBackToIdle();
       // }
-
+      instance.spi.AckFlowEndedAndBackToIdle();
       SPI.broadcastEvent(instance.id, updatedEvent);
       return updatedEvent;
     });

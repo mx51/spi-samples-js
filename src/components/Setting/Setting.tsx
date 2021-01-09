@@ -12,17 +12,20 @@ import {
   transactionFlow as transactionFlowService,
 } from '../../services';
 import { updateSetting as updateSettingAction } from '../../features/terminals/terminalSlice';
-
+import eventBus from '../../pages/Burger/eventBus';
+// import events from '../../constants/events';
 import PosUtils from '../../services/_common/pos';
 
 function handleActionCallback(
   event: TxFlowStateChangedEvent,
   setModel: Function,
-  flowEl: React.RefObject<HTMLDivElement>,
+  flowEl: React.RefObject<HTMLPreElement>,
   receiptEl: React.RefObject<HTMLPreElement>,
   actionType: string,
   spi: Spi
 ) {
+  console.log('Setting handleActionCallback', event, actionType);
+
   const flowMsg = new Logger(flowEl.current);
   const receipt = new Logger(receiptEl.current);
 
@@ -46,24 +49,26 @@ function handleActionCallback(
   }
 }
 
-function terminalStatus(spi: Spi, flowEl: React.RefObject<HTMLDivElement>) {
+function terminalStatus(spi: any, flowEl: React.RefObject<HTMLPreElement>) {
   spi.GetTerminalStatus();
-  // const flowMsg = new Logger(flowEl.current);
-  // // eslint-disable-next-line no-param-reassign
-  // spi.TerminalStatusResponse = (message: Message) =>
-  //   terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
+  const flowMsg = new Logger(flowEl.current);
+  flowMsg.Clear();
+  // eslint-disable-next-line no-param-reassign
+  spi.TerminalStatusResponse = (message: Message) =>
+    terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});
 }
 
 function Setting(props: { spi: Spi; status: string; errorMsg: string; onErrorMsg: Function; terminal: any }) {
   const { spi, errorMsg, onErrorMsg, terminal } = props;
-  const flowEl = useRef<HTMLDivElement>(null);
+  const flowEl = useRef<HTMLPreElement>(null);
   const receiptEl = useRef<HTMLPreElement>(null);
 
   const [actionType, setActionType] = useState<string>('');
   const [model, setModel] = useState('');
 
   const handleAction = useCallback(
-    (event: TxFlowStateChangedEvent) => handleActionCallback(event, setModel, flowEl, receiptEl, actionType, spi),
+    (event: TxFlowStateChangedEvent) =>
+      handleActionCallback({ detail: event.detail.payload }, setModel, flowEl, receiptEl, actionType, spi),
     []
   );
 
@@ -71,9 +76,9 @@ function Setting(props: { spi: Spi; status: string; errorMsg: string; onErrorMsg
   const updateSetting = (id: string, config: any) => dispatch(updateSettingAction(id, config));
 
   useEffect(() => {
-    document.addEventListener('TxFlowStateChanged', handleAction);
+    eventBus.addEventListener('TxFlowStateChanged', handleAction);
     return function cleanup() {
-      document.removeEventListener('TxFlowStateChanged', handleAction);
+      eventBus.removeEventListener('TxFlowStateChanged', handleAction);
     };
   });
 
@@ -118,7 +123,11 @@ function Setting(props: { spi: Spi; status: string; errorMsg: string; onErrorMsg
         </Col>
         <Col lg={5} className="sub-column d-flex flex-column">
           <div className="flex-fill ">
-            <Flow ref={flowEl} />
+            {/* <Flow ref={flowEl} /> */}
+            <div>
+              <h2 className="sub-header">Flow </h2>
+              <pre className="ml-3 mr-3" style={{ whiteSpace: 'pre-line' }} ref={flowEl} />
+            </div>
           </div>
         </Col>
         <Col lg={3} className="sub-column d-flex flex-column">
