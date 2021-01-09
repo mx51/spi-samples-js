@@ -80,7 +80,6 @@ function getTransaction(isTerminalPaired: boolean, onErrorMsg: Function, setTran
   if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    // setCheckout(true);
     setTransactionAction(TransactionType.GetTransaction);
   }
 }
@@ -89,24 +88,32 @@ function lastTransaction(isTerminalPaired: boolean, onErrorMsg: Function, setTra
   if (!isTerminalPaired) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    // setCheckout(true);
     setTransactionAction(TransactionType.GetLastTransaction);
   }
 }
 
-function checkoutAction(shortlistedProducts: Array<Product>, setTransactionAction: Function, setCheckout: Function) {
-  if (shortlistedProducts.length === 0) {
+function checkoutAction(
+  isTerminalPaired: boolean,
+  shortlistedProducts: Array<Product>,
+  setTransactionAction: Function,
+  setCheckout: Function,
+  onErrorMsg: Function
+) {
+  if (!isTerminalPaired) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else if (shortlistedProducts.length === 0) {
     setTransactionAction(TransactionType.CashoutOnly);
-    // setCheckout(true);
   } else {
     setTransactionAction(TransactionType.Purchase);
   }
-  // setCheckout(true);
 }
 
-function refundAction(setTransactionAction: Function) {
-  // setCheckout(true);
-  setTransactionAction(TransactionType.Refund);
+function refundAction(isTerminalPaired: boolean, setTransactionAction: Function, onErrorMsg: Function) {
+  if (!isTerminalPaired) {
+    onErrorMsg('Please pair your POS to the terminal or check your network connection');
+  } else {
+    setTransactionAction(TransactionType.Refund);
+  }
 }
 
 function noThanksAction(
@@ -240,9 +247,11 @@ function Products({
               changeProductQuantity(shortlistedProducts, updateShortlistedProducts, id, quantity)
             }
             onGetTransaction={() => getTransaction(isTerminalPaired, onErrorMsg, setTransactionAction)}
-            onRefund={() => refundAction(setTransactionAction)}
+            onRefund={() => refundAction(isTerminalPaired, setTransactionAction, onErrorMsg)}
             onLastTransaction={() => lastTransaction(isTerminalPaired, onErrorMsg, setTransactionAction)}
-            onCheckout={() => checkoutAction(shortlistedProducts, setTransactionAction, setCheckout)}
+            onCheckout={() =>
+              checkoutAction(isTerminalPaired, shortlistedProducts, setTransactionAction, setCheckout, onErrorMsg)
+            }
             handleApplySurcharge={setSurchargeAmount}
             posRefId={posRefId}
             setPosRefId={setPosRefId}

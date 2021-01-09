@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import { Logger, TransactionType } from '@mx51/spi-client-js';
 import SettingConfig from '../SettingConfig';
 import Actions from '../Actions';
-import Flow from '../Flow';
 import {
   settlement as settlementService,
   settlementEnquiry as settlementEnquiryService,
@@ -69,7 +68,7 @@ function Setting(props: { spi: Spi; status: string; errorMsg: string; onErrorMsg
   const handleAction = useCallback(
     (event: TxFlowStateChangedEvent) =>
       handleActionCallback({ detail: event.detail.payload }, setModel, flowEl, receiptEl, actionType, spi),
-    []
+    [actionType, spi]
   );
 
   const dispatch = useDispatch();
