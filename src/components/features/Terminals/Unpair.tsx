@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
-import { SpiStatus } from '@mx51/spi-client-js';
-import { Button } from 'react-bootstrap';
+import React, { useState, useCallback, useEffect } from 'react';
+import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
+import { Button, Modal } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { Input } from '../../Input';
 import Checkbox from '../../Checkbox';
+import eventBus from '../../../pages/Burger/eventBus';
+import events from '../../../constants/events';
 
 import {
   pairTerminal as pairTerminalAction,
   unpairTerminal as unpairTerminalAction,
   cancelTerminalPairing as cancelTerminalPairingAction,
+  saveTerminalConfig as saveTerminalConfigAction,
 } from '../../../features/terminals/terminalSlice';
 
 const mapDispatchToProps = {
@@ -16,6 +19,30 @@ const mapDispatchToProps = {
   pairTerminal: pairTerminalAction,
   cancelTerminalPairing: cancelTerminalPairingAction,
 };
+
+function handleAutoAddressStateChangeCallback(
+  event: DeviceAddressChangedEvent,
+  setEftpos: Function,
+  setErrorMsg: Function
+) {
+  const deviceAddressStatus = event.detail.payload;
+  switch (deviceAddressStatus.DeviceAddressResponseCode) {
+    case DeviceAddressResponseCode.SUCCESS:
+      setEftpos(deviceAddressStatus.Address);
+      setErrorMsg(`Device Address has been updated to ${deviceAddressStatus.Address}`);
+      break;
+    case DeviceAddressResponseCode.INVALID_SERIAL_NUMBER:
+      setEftpos('');
+      setErrorMsg(`The serial number is invalid!`);
+      break;
+    case DeviceAddressResponseCode.SERIAL_NUMBER_NOT_CHANGED:
+      break;
+    default:
+      // eslint-disable-next-line no-console
+      console.log('The serial number is invalid!.......');
+      break;
+  }
+}
 
 function Unpair(props: any) {
   const { pairTerminal, unpairTerminal, terminal, cancelTerminalPairing } = props;
@@ -39,18 +66,50 @@ function Unpair(props: any) {
   const [autoAddress, setAutoAddress] = useState(config.autoAddress);
   const [testMode, setTestMode] = useState(config.testMode);
   const [secureWebSocket, setSecureWebSocket] = useState(config.secureWebSocket);
+  const [apiKey, setApiKey] = useState(config.apiKey || 'BurgerPosDeviceAPIKey');
+  const [errorMsg, setErrorMsg] = useState('');
 
   const isFinishedPairing = terminal && terminal.pairingFlow && terminal.pairingFlow.Finished;
   const disableInput = !isFinishedPairing || terminal.status !== SpiStatus.Unpaired;
+
+  const handleAutoAddressStateChange = useCallback((event: DeviceAddressChangedEvent) => {
+    handleAutoAddressStateChangeCallback(event, setEftpos, setErrorMsg);
+  }, []);
+
+  useEffect(() => {
+    eventBus.addEventListener(events.spiDeviceAddressChanged, handleAutoAddressStateChange);
+    return function cleanup() {
+      eventBus.removeEventListener(events.spiDeviceAddressChanged, handleAutoAddressStateChange);
+    };
+  });
+
+  useEffect(() => {
+    if (window.location.protocol === 'https:') {
+      setSecureWebSocket(true);
+      setAutoAddress(true);
+      setTestMode(true);
+    }
+  }, []);
 
   return (
     <div>
       <h2 className="sub-header">Pairing configuration</h2>
       <div className="ml-2 mr-2">
+        <Modal show={errorMsg !== ''} onHide={() => setErrorMsg('')}>
+          <Modal.Header closeButton>
+            <Modal.Title>Alert</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <p>{errorMsg}</p>
+            <Button variant="primary" className="btn-custom" onClick={() => setErrorMsg('')} block>
+              OK
+            </Button>
+          </Modal.Body>
+        </Modal>
         <form
           id="formPairingConfig"
           onSubmit={(e: React.SyntheticEvent) => {
-            pairTerminal(terminal.id, { posId, eftpos, autoAddress, serialNumber });
+            pairTerminal(terminal.id, { posId, eftpos, autoAddress, serialNumber, testMode, secureWebSocket, apiKey });
             e.preventDefault();
             return false;
           }}
@@ -69,7 +128,16 @@ function Unpair(props: any) {
             }}
             title="POS Id must be alphanumeric and less than 16 characters. Special characters and spaces not allowed"
           />
-          <Input id="inpAPIkey" name="API key" label="API key" defaultValue="BurgerPosDeviceAPIKey" />
+          <Input
+            id="inpAPIkey"
+            name="API key"
+            label="API key"
+            defaultValue={apiKey}
+            disabled={disableInput}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setApiKey(e.target.value);
+            }}
+          />
           <Input
             id="inpSerial"
             name="serialNumber"
@@ -86,23 +154,14 @@ function Unpair(props: any) {
             name="EFTPOS"
             label="EFTPOS"
             placeholder="000.000.000.000"
-            disabled={disableInput}
-            defaultValue={eftpos}
+            disabled={disableInput || secureWebSocket || !isFinishedPairing}
+            required={!secureWebSocket}
+            value={eftpos}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setEftpos(e.target.value);
             }}
           />
           <div>
-            <Checkbox
-              type="checkbox"
-              id="ckbAutoAddress"
-              label="Auto Address"
-              checked={autoAddress}
-              disabled={disableInput}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setAutoAddress(e.target.checked);
-              }}
-            />
             <Checkbox
               type="checkbox"
               id="ckbTestMode"
@@ -115,15 +174,42 @@ function Unpair(props: any) {
             />
             <Checkbox
               type="checkbox"
+              id="ckbAutoAddress"
+              label="Auto Address"
+              checked={autoAddress}
+              disabled={window.location.protocol !== 'http:' || disableInput}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                setAutoAddress(e.target.checked);
+              }}
+            />
+            <Checkbox
+              type="checkbox"
               id="ckbSecureWebSocket"
               label="Secure Web Socket"
               checked={secureWebSocket}
-              disabled={disableInput}
+              disabled={window.location.protocol !== 'http:' || disableInput}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 setSecureWebSocket(e.target.checked);
               }}
             />
-
+            <Button
+              variant="outline-primary"
+              block
+              className="mb-2"
+              onClick={() =>
+                saveTerminalConfigAction(terminal.id, {
+                  posId,
+                  eftpos,
+                  autoAddress,
+                  serialNumber,
+                  testMode,
+                  secureWebSocket,
+                  apiKey,
+                })
+              }
+            >
+              Save Settings
+            </Button>
             {terminal && terminal.status === SpiStatus.PairedConnected && (
               <Button variant="primary" block className="mb-2" onClick={() => unpairTerminal(terminal.id)}>
                 Unpair

@@ -134,6 +134,8 @@ export const unpairTerminal = (id) => terminalsSlice.actions.updatePairingFlow(S
 export const removeTerminal = (id) => terminalsSlice.actions.removeTerminal(SPI.spiRemoveTerminal(id));
 export const cancelTerminalPairing = (id) => terminalsSlice.actions.updatePairingFlow(SPI.spiCancelPairingTerminal(id));
 export const updateSetting = (id, config) => terminalsSlice.actions.updateSetting(SPI.spiUpdateSetting(id, config));
+export const saveTerminalConfig = (id, config) =>
+  terminalsSlice.actions.addTerminal(SPI.spiSaveTerminalConfig(id, config));
 
 export const {
   updateTerminalStatus,

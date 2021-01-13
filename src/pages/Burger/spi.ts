@@ -59,18 +59,45 @@ class SPI {
     return SPI.createEventPayload(id, {});
   }
 
+  spiSaveTerminalConfig(id: string, config: any) {
+    console.log({ config });
+
+    const { spi } = this.getInstance(id);
+    spi.SetPosId(config.posId);
+    // Auto-address needs to be disabled to change an eftpos address
+    spi.SetAutoAddressResolution(config.autoAddress);
+    spi.SetTestMode(config.testMode);
+    spi.SetEftposAddress(config.eftpos);
+    spi.SetSerialNumber(config.serialNumber);
+    spi.SetDeviceApiKey(config.apiKey);
+    spi.SetSecureWebSockets(config.secureWebSocket);
+
+    const terminalConfig = { ...config };
+    console.log(
+      'returning ',
+      SPI.createEventPayload(id, {
+        terminalConfig,
+      })
+    );
+
+    return SPI.createEventPayload(id, {
+      terminalConfig,
+    });
+  }
+
   spiPairTerminal(id: string, config: any) {
     const { spi } = this.getInstance(id);
 
-    spi.SetPosId(config.posId);
-    // Auto-address needs to be disabled to change an eftpos address
-    spi.SetAutoAddressResolution(false);
-    spi.SetEftposAddress(config.eftpos);
-    // spi.SetAutoAddressResolution(config.auto);
-
-    if (spi.HasSerialNumberChanged(config.serialNumber)) {
-      spi.SetSerialNumber(config.serialNumber);
-    }
+    // spi.SetPosId(config.posId);
+    // // Auto-address needs to be disabled to change an eftpos address
+    // spi.SetAutoAddressResolution(config.autoAddress);
+    // spi.SetTestMode(config.testMode);
+    // spi.SetEftposAddress(config.eftpos);
+    // spi.SetDeviceApiKey(config.apiKey);
+    // spi.SetSecureWebSockets(config.secureWebSocket);
+    // if (spi.HasSerialNumberChanged(config.serialNumber)) {
+    //   spi.SetSerialNumber(config.serialNumber);
+    // }
 
     spi.Pair();
     const terminalConfig = { ...config };
@@ -120,6 +147,7 @@ class SPI {
         const { id, terminalConfig, setting } = t;
         if (id && terminalConfig) {
           this.createLibraryInstance(terminalConfig, id);
+          this.spiSaveTerminalConfig(id, terminalConfig);
           this.spiPairTerminal(id, terminalConfig);
         }
         if (id && setting) {
@@ -207,14 +235,15 @@ class SPI {
       // this.getTerminalConfig(instanceId);
 
       SPI.broadcastEvent(instanceId, e);
-      console.log({ instanceId, e });
     });
 
     instance.addEventListener(events.spiSecretsChanged, (detail: any) => {
-      console.log({ detail });
-
       this.log.info({ message: 'keys rolled', id: instanceId, detail });
       // this.setConfig({ Secrets: updatedSecrets }, instanceId, true);
+    });
+
+    instance.addEventListener(events.spiDeviceAddressChanged, (e: any) => {
+      SPI.broadcastEvent(instanceId, e);
     });
 
     instance.addEventListener(events.spiStatusChanged, (e: any) => {

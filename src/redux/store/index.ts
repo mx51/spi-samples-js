@@ -13,7 +13,25 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  window.localStorage.setItem('reduxPosState', JSON.stringify(store.getState()));
+  const state = store.getState();
+
+  const terminals = Object.entries(state.terminals).reduce((acc: any, val: any) => {
+    console.log(acc, val);
+    if (val[0] === 'activeTerminal') return acc;
+    acc[val[0]] = {
+      id: val[1].id,
+      terminalStatus: val[1].terminalStatus,
+      terminalConfig: val[1].terminalConfig,
+    };
+    return acc;
+  }, {});
+
+  // console.log('store save', terminals);
+  const persistState = {
+    terminals,
+  };
+
+  window.localStorage.setItem('reduxPosState', JSON.stringify(persistState));
 });
 
 export default store;
