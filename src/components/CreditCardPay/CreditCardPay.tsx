@@ -51,7 +51,6 @@ function CreditCard(props: {
         />
         <p className="ml-2">Cents</p>
         <Checkbox
-          type="checkbox"
           id="prompt_cashout"
           disabled={tipAmount > 0 || transactionStatus}
           checked={promptCashout}
@@ -73,7 +72,6 @@ function CreditCard(props: {
         />
         <p className="ml-2">Cents</p>
         <Checkbox
-          type="checkbox"
           id="open-pricing"
           label="Override Order Total"
           disabled={transactionStatus}

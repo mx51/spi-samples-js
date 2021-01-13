@@ -155,7 +155,6 @@ function AutoAddressCheck() {
           }}
         />
         <Checkbox
-          type="checkbox"
           id="ckbTestMode"
           label="Test Mode"
           checked={testMode}

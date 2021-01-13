@@ -163,7 +163,6 @@ function Unpair(props: any) {
           />
           <div>
             <Checkbox
-              type="checkbox"
               id="ckbTestMode"
               label="Test Mode"
               checked={testMode}
@@ -173,7 +172,6 @@ function Unpair(props: any) {
               }}
             />
             <Checkbox
-              type="checkbox"
               id="ckbAutoAddress"
               label="Auto Address"
               checked={autoAddress}
@@ -183,7 +181,6 @@ function Unpair(props: any) {
               }}
             />
             <Checkbox
-              type="checkbox"
               id="ckbSecureWebSocket"
               label="Secure Web Socket"
               checked={secureWebSocket}

@@ -17,7 +17,6 @@ function SettingConfig(props: { handleSaveSetting: Function; terminal: any }) {
       <h2 className="sub-header">Setting</h2>
       <div className="mr-3 ml-3">
         <Checkbox
-          type="checkbox"
           id="check-receipt-eftpos"
           label="Receipt from EFTPOS"
           checked={eftposReceipt}
@@ -26,7 +25,6 @@ function SettingConfig(props: { handleSaveSetting: Function; terminal: any }) {
           }}
         />
         <Checkbox
-          type="checkbox"
           id="check-sig-eftpos"
           label="Sig from EFTPOS"
           checked={sigFlow}
@@ -35,7 +33,6 @@ function SettingConfig(props: { handleSaveSetting: Function; terminal: any }) {
           }}
         />
         <Checkbox
-          type="checkbox"
           id="print-merchant-copy"
           label="Print Merchant Copy"
           checked={printMerchantCopy}
@@ -44,7 +41,6 @@ function SettingConfig(props: { handleSaveSetting: Function; terminal: any }) {
           }}
         />
         <Checkbox
-          type="checkbox"
           id="suppress-merchant-password"
           label="Suppress Merchant Password"
           checked={suppressMerchantPassword}

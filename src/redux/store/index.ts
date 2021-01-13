@@ -16,7 +16,6 @@ store.subscribe(() => {
   const state = store.getState();
 
   const terminals = Object.entries(state.terminals).reduce((acc: any, val: any) => {
-    console.log(acc, val);
     if (val[0] === 'activeTerminal') return acc;
     acc[val[0]] = {
       id: val[1].id,
@@ -26,7 +25,6 @@ store.subscribe(() => {
     return acc;
   }, {});
 
-  // console.log('store save', terminals);
   const persistState = {
     terminals,
   };
