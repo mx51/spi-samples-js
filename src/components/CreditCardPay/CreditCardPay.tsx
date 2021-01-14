@@ -4,7 +4,7 @@ import Checkbox from '../Checkbox';
 
 function handleKeyPress(event: KeyboardEvent, setPromptCashout: Function) {
   if (event.key < '0' || event.key > '9') {
-    alert('invalid input');
+    // alert('invalid input');
     event.preventDefault();
     return false;
   }

@@ -53,7 +53,6 @@ function OrderPay(props: {
     openPricing,
     setOpenPricing,
     transactionStatus,
-    status,
     onErrorMsg,
   } = props;
   const [paymentType, setPaymentType] = useState<PaymentType>(PaymentType.CreditCardType);

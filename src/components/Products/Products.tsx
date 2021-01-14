@@ -256,7 +256,6 @@ function Products({
             posRefId={posRefId}
             setPosRefId={setPosRefId}
             surchargeAmount={surchargeAmount}
-            status={status}
             errorMsg={errorMsg}
             onErrorMsg={onErrorMsg}
           />

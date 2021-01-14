@@ -1,7 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
 import { Button, Modal } from 'react-bootstrap';
-import { connect } from 'react-redux';
+import { connect, useDispatch } from 'react-redux';
 import { Input } from '../../Input';
 import Checkbox from '../../Checkbox';
 import eventBus from '../../../pages/Burger/eventBus';
@@ -12,6 +12,7 @@ import {
   unpairTerminal as unpairTerminalAction,
   cancelTerminalPairing as cancelTerminalPairingAction,
   saveTerminalConfig as saveTerminalConfigAction,
+  addTerminal as addTerminalAction,
 } from '../../../features/terminals/terminalSlice';
 
 const mapDispatchToProps = {
@@ -46,8 +47,23 @@ function handleAutoAddressStateChangeCallback(
 
 function Unpair(props: any) {
   const { pairTerminal, unpairTerminal, terminal, cancelTerminalPairing } = props;
+  const dispatch = useDispatch();
+  const saveTerminalSetting = () => {
+    dispatch(
+      saveTerminalConfigAction(terminal.id, {
+        posId,
+        eftpos,
+        autoAddress,
+        serialNumber,
+        testMode,
+        secureWebSocket,
+        apiKey,
+      })
+    );
+  };
+
   const defaultConfig = {
-    posId: '',
+    posId: null,
     eftpos: '',
     serialNumber: '',
     autoAddress: false,
@@ -69,7 +85,9 @@ function Unpair(props: any) {
   const [apiKey, setApiKey] = useState(config.apiKey || 'BurgerPosDeviceAPIKey');
   const [errorMsg, setErrorMsg] = useState('');
 
-  const isFinishedPairing = terminal && terminal.pairingFlow && terminal.pairingFlow.Finished;
+  const isFinishedPairing =
+    (terminal.status === SpiStatus.Unpaired && !terminal.pairingFlow) ||
+    (terminal && terminal.pairingFlow && terminal.pairingFlow.Finished);
   const disableInput = !isFinishedPairing || terminal.status !== SpiStatus.Unpaired;
 
   const handleAutoAddressStateChange = useCallback((event: DeviceAddressChangedEvent) => {
@@ -109,7 +127,7 @@ function Unpair(props: any) {
         <form
           id="formPairingConfig"
           onSubmit={(e: React.SyntheticEvent) => {
-            pairTerminal(terminal.id, { posId, eftpos, autoAddress, serialNumber, testMode, secureWebSocket, apiKey });
+            saveTerminalSetting();
             e.preventDefault();
             return false;
           }}
@@ -189,22 +207,7 @@ function Unpair(props: any) {
                 setSecureWebSocket(e.target.checked);
               }}
             />
-            <Button
-              variant="outline-primary"
-              block
-              className="mb-2"
-              onClick={() =>
-                saveTerminalConfigAction(terminal.id, {
-                  posId,
-                  eftpos,
-                  autoAddress,
-                  serialNumber,
-                  testMode,
-                  secureWebSocket,
-                  apiKey,
-                })
-              }
-            >
+            <Button variant="outline-primary" block className="mb-2" type="submit">
               Save Settings
             </Button>
             {terminal && terminal.status === SpiStatus.PairedConnected && (
@@ -218,7 +221,24 @@ function Unpair(props: any) {
               </Button>
             )}
             {isFinishedPairing && terminal && terminal.status === SpiStatus.Unpaired && (
-              <Button id="btnSaveSetting" type="submit" variant="primary" block className="mb-2">
+              <Button
+                id="btnSaveSetting"
+                type="submit"
+                variant="primary"
+                block
+                className="mb-2"
+                onClick={() =>
+                  pairTerminal(terminal.id, {
+                    posId,
+                    eftpos,
+                    autoAddress,
+                    serialNumber,
+                    testMode,
+                    secureWebSocket,
+                    apiKey,
+                  })
+                }
+              >
                 Pair
               </Button>
             )}

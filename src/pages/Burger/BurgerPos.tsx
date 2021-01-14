@@ -2,8 +2,6 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Col, Nav, Row, Tab } from 'react-bootstrap';
 import { ReactComponent as Logo } from '../../images/mx51.svg';
 import Products from '../../components/Products';
-import Pairing from '../../components/Pairing';
-import Setting from '../../components/Setting';
 import Terminals from '../../components/features/Terminals';
 
 import SpiService from './spiService';
@@ -30,9 +28,7 @@ function BurgerPos() {
   const [inProgressPayment, setInProgressPayment] = useState(
     window.localStorage.getItem('payment_progress') === 'true'
   );
-  const [suppressMerchantPassword, setSuppressMerchantPassword] = useState(
-    window.localStorage.getItem('suppress_merchant_password_input') === 'true'
-  );
+
   const [openPricing, setOpenPricing] = useState(window.localStorage.getItem('open_pricing') === 'true');
 
   const [statusState, setStatusState] = useState(spiService._spi.CurrentStatus);
@@ -46,7 +42,7 @@ function BurgerPos() {
     }
 
     return () => window.location.reload();
-  }, []);
+  }, [inProgressPayment]);
 
   const handleStatusChange = useCallback((event: any) => {
     setStatusState(event.detail);

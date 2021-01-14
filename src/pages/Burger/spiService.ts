@@ -81,8 +81,6 @@ class Spi {
   }
 
   onSpiStateChange(e: any) {
-    console.log('onSpiStateChange event -- ', e);
-
     if (e.detail && e.detail === 'PairedConnected') {
       this._spi.AckFlowEndedAndBackToIdle();
     }

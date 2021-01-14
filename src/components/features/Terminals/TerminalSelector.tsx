@@ -1,6 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
-import { Modal, ListGroup, Nav, Button } from 'react-bootstrap';
+import { Modal, ListGroup, Button } from 'react-bootstrap';
 import { selectPairedTerminals } from '../../../features/terminals/terminalSelectors';
 
 type Props = {

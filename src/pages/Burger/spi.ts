@@ -60,29 +60,27 @@ class SPI {
   }
 
   spiSaveTerminalConfig(id: string, config: any) {
-    console.log({ config });
-
     const { spi } = this.getInstance(id);
-    spi.SetPosId(config.posId);
     // Auto-address needs to be disabled to change an eftpos address
-    spi.SetAutoAddressResolution(config.autoAddress);
     spi.SetTestMode(config.testMode);
-    spi.SetEftposAddress(config.eftpos);
-    spi.SetSerialNumber(config.serialNumber);
-    spi.SetDeviceApiKey(config.apiKey);
     spi.SetSecureWebSockets(config.secureWebSocket);
+    spi.SetPosId(config.posId);
+    // spi.SetSerialNumber(config.serialNumber);
+    spi.SetAutoAddressResolution(config.autoAddress);
+    spi.SetDeviceApiKey(config.apiKey);
+    spi.SetEftposAddress(config.eftpos);
+    if (spi.HasSerialNumberChanged(config.serialNumber)) {
+      spi.SetSerialNumber(config.serialNumber);
+    }
 
     const terminalConfig = { ...config };
-    console.log(
-      'returning ',
-      SPI.createEventPayload(id, {
-        terminalConfig,
-      })
-    );
 
-    return SPI.createEventPayload(id, {
+    const event = SPI.createEventPayload(id, {
       terminalConfig,
     });
+    console.log({ event });
+
+    return event;
   }
 
   spiPairTerminal(id: string, config: any) {
@@ -144,50 +142,37 @@ class SPI {
       .filter((e) => e[0] !== 'activeTerminal')
       .map((e) => e[1])
       .forEach((t: any) => {
-        const { id, terminalConfig, setting } = t;
+        const { id, terminalConfig, setting, secret } = t;
+        console.log('init spi', id, terminalConfig, setting);
+
         if (id && terminalConfig) {
-          this.createLibraryInstance(terminalConfig, id);
+          this.createLibraryInstance(terminalConfig, id, secret);
           this.spiSaveTerminalConfig(id, terminalConfig);
+          if (id && setting) {
+            this.spiUpdateSetting(id, setting);
+          }
           this.spiPairTerminal(id, terminalConfig);
-        }
-        if (id && setting) {
-          this.spiUpdateSetting(id, setting);
         }
       });
   }
 
-  createLibraryInstance(config: any, instanceId = uuid()): EventTarget {
+  createLibraryInstance(config: any, instanceId = uuid(), secret: any = null): EventTarget {
     const name = 'mx51';
     const version = '2.8.0';
-
-    const terminalConfig = {
-      PosId: '',
-      SerialNumber: '',
-      EftposAddress: '',
-      Secrets: null,
-      TestMode: true,
-      AutoAddressResolution: '',
-    };
+    console.log('createLibraryInstance', config, secret);
 
     const instance = new EventTarget();
     instance.id = instanceId;
     this.libraryInstances[instance.id] = instance;
-    instance.spi = new SPIClient(
-      terminalConfig.PosId,
-      terminalConfig.SerialNumber,
-      terminalConfig.EftposAddress,
-      terminalConfig.Secrets
-    );
+    instance.spi = new SPIClient(config?.posId || '', config?.serialNumber || '', config?.eftpos || '', secret || null);
     instance.spi.SetEventBus(instance);
 
     instance.spi.SetPosInfo(name, version);
     instance.spi.SetAcquirerCode('wbc');
-    instance.spi.SetDeviceApiKey('RamenPosDeviceIpApiKey');
-    instance.spi.SetSecureWebSockets(false); // prefer IP over FQDN
-    instance.spi._inTestMode = terminalConfig.TestMode;
-    instance.spi.SetAutoAddressResolution(terminalConfig.AutoAddressResolution);
-    instance.spi.PrintingResponse = () => true;
-
+    instance.spi.SetDeviceApiKey(config?.apiKey || 'RamenPosDeviceIpApiKey');
+    instance.spi.SetSecureWebSockets(config?.secureWebSocket || false); // prefer IP over FQDN
+    instance.spi._inTestMode = config?.testMode || false;
+    instance.spi.SetAutoAddressResolution(config?.autoAddress || '');
     instance.spi.PrintingResponse = () => true;
 
     // this is used in tx flow state overrride mechanism to emulate SPI tx flow change
@@ -237,12 +222,17 @@ class SPI {
       SPI.broadcastEvent(instanceId, e);
     });
 
-    instance.addEventListener(events.spiSecretsChanged, (detail: any) => {
-      this.log.info({ message: 'keys rolled', id: instanceId, detail });
+    instance.addEventListener(events.spiSecretsChanged, (e: any) => {
+      this.log.info({ message: 'keys rolled', id: instanceId, e });
+      console.log('secret', { e });
+
       // this.setConfig({ Secrets: updatedSecrets }, instanceId, true);
+      SPI.broadcastEvent(instanceId, { type: 'SecretsChanged', detail: { ...e.detail } });
     });
 
     instance.addEventListener(events.spiDeviceAddressChanged, (e: any) => {
+      console.log('spiDeviceAddressChanged', e);
+
       SPI.broadcastEvent(instanceId, e);
     });
 
@@ -316,6 +306,7 @@ class SPI {
 
     instance.spi.TerminalStatusResponse = (e: any) => {
       console.log('addEvent TerminalStatusResponse', e);
+      instance.spi.AckFlowEndedAndBackToIdle();
       instance.dispatchEvent(
         new CustomEvent(events.spiTerminalStatusChanged, {
           detail: e.Data,

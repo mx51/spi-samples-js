@@ -23,8 +23,6 @@ function handleActionCallback(
   actionType: string,
   spi: Spi
 ) {
-  console.log('Setting handleActionCallback', event, actionType);
-
   const flowMsg = new Logger(flowEl.current);
   const receipt = new Logger(receiptEl.current);
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { SuccessState, PurchaseResponse, Logger, TransactionType, TransactionUpdate } from '@mx51/spi-client-js';
+import { SuccessState, Logger, TransactionType, TransactionUpdate } from '@mx51/spi-client-js';
 import { Col, Row, Modal, Button } from 'react-bootstrap';
 import { useSelector } from 'react-redux';
 import './Checkout.scss';
@@ -36,7 +36,6 @@ function handleTransactionMessageUpdateCallback(m: Message, flowLogger: Logger) 
 }
 
 function handlePurchaseStatusCallback(
-  setStateChange: Function,
   event: TxFlowStateChangedEvent,
   flowEl: React.RefObject<HTMLDivElement>,
   receiptEl: React.RefObject<HTMLPreElement>,
@@ -45,8 +44,6 @@ function handlePurchaseStatusCallback(
   spi: Spi,
   transactionAction: String
 ) {
-  setStateChange({ ...event.detail });
-
   const flowMsg = new Logger(flowEl.current);
   const receipt = new Logger(receiptEl.current);
 
@@ -79,18 +76,6 @@ function handlePurchaseStatusCallback(
   } else {
     transactionFlowService.handleTransaction(flowMsg, event.detail);
   }
-}
-
-function displayReceipt(txState: TransactionFlowState) {
-  const { Response, SignatureRequiredMessage, Type } = txState;
-
-  if (Response && Type !== TransactionType.GetLastTransaction) {
-    return new PurchaseResponse(Response).GetCustomerReceipt().trim();
-  }
-  if (!Response && SignatureRequiredMessage && SignatureRequiredMessage.GetMerchantReceipt) {
-    return SignatureRequiredMessage.GetMerchantReceipt().trim();
-  }
-  return undefined;
 }
 
 function motoPay(
@@ -227,20 +212,16 @@ function backAction(
   isFinished: boolean,
   onNoThanks: Function,
   setSurchargeAmount: Function,
-  setStateChange: Function,
   setTransactionStatus: Function,
   flowEl: React.RefObject<HTMLDivElement>,
   receiptEl: React.RefObject<HTMLPreElement>,
   onClose: Function,
   clearProducts: boolean
 ) {
-  console.log('backAction', isFinished, clearProducts);
-
   if (isFinished && clearProducts) {
     onNoThanks();
     setSurchargeAmount(0);
   }
-  setStateChange({ Finished: true, Success: SuccessState.Unknown });
   setTransactionStatus(false);
   if (flowEl.current !== null) {
     const flowMsg = new Logger(flowEl.current);
@@ -318,23 +299,20 @@ function Checkout(props: {
   const txFlowResponse = terminal && terminal.txFlow ? terminal.txFlow.Response : null;
   const txUpdateMessage = terminal && terminal.txFlow ? terminal.txMessage : null;
 
-  const [stateChange, setStateChange] = useState({
-    Finished: txFlowFinished,
-    Success: txFlowSuccess,
-  } as StateChange);
-
-  const handlePurchaseStatusChange = useCallback((event: TxFlowStateChangedEvent) => {
-    handlePurchaseStatusCallback(
-      setStateChange,
-      event,
-      flowEl,
-      receiptEl,
-      setShowSigApproval,
-      setShowUnknownModal,
-      spi,
-      transactionAction
-    );
-  }, []);
+  const handlePurchaseStatusChange = useCallback(
+    (event: TxFlowStateChangedEvent) => {
+      handlePurchaseStatusCallback(
+        event,
+        flowEl,
+        receiptEl,
+        setShowSigApproval,
+        setShowUnknownModal,
+        spi,
+        transactionAction
+      );
+    },
+    [setShowUnknownModal, spi, transactionAction]
+  );
 
   const handleTransactionUpdate = useCallback((event) => {
     const flowMsg = new Logger(flowTransactionEl.current);
@@ -377,31 +355,11 @@ function Checkout(props: {
   const amount = totalBillAmount;
 
   function handleBackAndClearProduts() {
-    backAction(
-      txFlowFinished,
-      onNoThanks,
-      setSurchargeAmount,
-      setStateChange,
-      setTransactionStatus,
-      flowEl,
-      receiptEl,
-      onClose,
-      false
-    );
+    backAction(txFlowFinished, onNoThanks, setSurchargeAmount, setTransactionStatus, flowEl, receiptEl, onClose, false);
   }
 
   function handleBack() {
-    backAction(
-      txFlowFinished,
-      onNoThanks,
-      setSurchargeAmount,
-      setStateChange,
-      setTransactionStatus,
-      flowEl,
-      receiptEl,
-      onClose,
-      true
-    );
+    backAction(txFlowFinished, onNoThanks, setSurchargeAmount, setTransactionStatus, flowEl, receiptEl, onClose, true);
   }
   function handleRetry() {
     setTransactionStatus(false);

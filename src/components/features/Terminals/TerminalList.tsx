@@ -29,6 +29,7 @@ function TerminalList() {
     [SpiStatus.PairedConnected]: 'Connected',
     [SpiStatus.PairedConnecting]: 'Connecting...',
   };
+  console.log(JSON.stringify(terminals));
 
   return (
     <div className="mt-3">

@@ -19,8 +19,10 @@ store.subscribe(() => {
     if (val[0] === 'activeTerminal') return acc;
     acc[val[0]] = {
       id: val[1].id,
+      status: val[1].status,
       terminalStatus: val[1].terminalStatus,
       terminalConfig: val[1].terminalConfig,
+      secret: val[1].secret,
     };
     return acc;
   }, {});

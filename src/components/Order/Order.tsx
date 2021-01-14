@@ -39,7 +39,6 @@ function Order(props: {
   posRefId: string;
   setPosRefId: Function;
   surchargeAmount: number;
-  status: string;
   errorMsg: string;
   onErrorMsg: Function;
 }) {
@@ -54,7 +53,6 @@ function Order(props: {
     posRefId,
     setPosRefId,
     surchargeAmount,
-    status,
     errorMsg,
     onErrorMsg,
   } = props;

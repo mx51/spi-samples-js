@@ -7,7 +7,8 @@ function Inprogress(props: any) {
   const { terminal } = props;
   let message = 'Unpaired';
   let alert: 'danger' | 'success' | 'warning' = 'danger';
-  const isFinishedPairing = terminal?.pairingFlow?.Finished;
+  const isFinishedPairing =
+    (terminal.status === SpiStatus.Unpaired && !terminal.pairingFlow) || terminal?.pairingFlow?.Finished;
 
   if (terminal.status === SpiStatus.PairedConnected && isFinishedPairing) {
     message = 'Paired connected';

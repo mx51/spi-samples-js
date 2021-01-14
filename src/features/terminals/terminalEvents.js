@@ -1,12 +1,14 @@
+import { DeviceAddressResponseCode } from '@mx51/spi-client-js';
 import {
+  updateDeviceAddress,
   updateTxMessage,
   updateTxFlow,
   updateTerminalSerialNumber,
   updatePairingStatus,
   updatePairingFlow,
   updateTerminalStatus,
+  updateTerminalSecret,
 } from './terminalSlice';
-
 import eventBus from '../../pages/Burger/eventBus';
 import events from '../../constants/events';
 
@@ -20,8 +22,6 @@ export default function watchTerminalEvents() {
       };
 
       dispatch(updateTerminalSerialNumber(event));
-
-      // terminalsSlice.actions.updateTerminalSerialNumber(event);
     });
 
     eventBus.addEventListener(events.spiStatusChanged, (e) => {
@@ -32,8 +32,6 @@ export default function watchTerminalEvents() {
       };
 
       dispatch(updatePairingStatus(event));
-
-      // terminalsSlice.actions.updateTerminalSerialNumber(event);
     });
 
     eventBus.addEventListener(events.spiPairingFlowStateChanged, (e) => {
@@ -44,8 +42,29 @@ export default function watchTerminalEvents() {
       };
 
       dispatch(updatePairingFlow(event));
+    });
 
-      // ter
+    eventBus.addEventListener(events.spiSecretsChanged, (e) => {
+      const { detail } = e;
+      const event = {
+        id: detail.id,
+        payload: { ...detail.payload },
+      };
+
+      dispatch(updateTerminalSecret(event));
+    });
+
+    eventBus.addEventListener(events.spiDeviceAddressChanged, (e) => {
+      const { id, payload } = e.detail;
+
+      if (payload.DeviceAddressResponseCode === DeviceAddressResponseCode.SUCCESS) {
+        const event = {
+          id,
+          payload: payload.Address,
+        };
+
+        dispatch(updateDeviceAddress(event));
+      }
     });
 
     eventBus.addEventListener(events.spiTerminalStatusChanged, (e) => {
@@ -56,8 +75,6 @@ export default function watchTerminalEvents() {
       };
 
       dispatch(updateTerminalStatus(event));
-
-      // ter
     });
 
     eventBus.addEventListener(events.spiTxFlowStateChanged, (e) => {

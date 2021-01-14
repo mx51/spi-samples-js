@@ -119,10 +119,21 @@ const terminalsSlice = createSlice({
       return state;
     },
     updateSetting(state, action) {
-      console.log('updateSetting', { state }, { action });
       const { id, payload } = action.payload;
       const data = state[id];
       data.setting = { ...payload };
+      return state;
+    },
+    updateTerminalSecret(state, action) {
+      const { id, payload } = action.payload;
+      const data = state[id];
+      data.secret = payload;
+      return state;
+    },
+    updateDeviceAddress(state, action) {
+      const { id, payload } = action.payload;
+      const data = state[id];
+      data.terminalConfig.eftpos = payload;
       return state;
     },
   },
@@ -146,6 +157,8 @@ export const {
   updateTxFlow,
   updateTxMessage,
   clearTransaction,
+  updateTerminalSecret,
+  updateDeviceAddress,
 } = terminalsSlice.actions;
 
 export default terminalsSlice.reducer;
