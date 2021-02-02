@@ -31,3 +31,10 @@ type CategoryProducts = {
 };
 
 type AllProducts = Array<CategoryProducts>;
+
+type Tenant = {
+  code: string;
+  name: string;
+};
+
+type TenantList = Array<Tenant>;

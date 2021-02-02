@@ -6,6 +6,7 @@ class Spi {
   _eftposAddress: string;
   _spiSecrets: any;
   _options: any;
+  _posName: any;
   _version: any;
   _rcptFromEftpos: Boolean;
   _sigFlowFromEftpos: Boolean;
@@ -24,13 +25,14 @@ class Spi {
     this._eftposAddress = window.localStorage.getItem('eftpos_address') || '192.168.1.1';
     this._spiSecrets = null;
     this._options = null;
-    this._version = '2.8.1';
+    this._version = '2.8.2';
     this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
     this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
     this._printMerchantCopy = window.localStorage.getItem('print_merchant_copy_input') === 'true';
     this._apiKey = window.localStorage.getItem('api_key') || '';
     this._serialNumber = window.localStorage.getItem('serial') || '';
-    this._acquirerCode = 'wbc';
+    this._acquirerCode = window.localStorage.getItem('tenant_code') || '';
+    this._posName = 'mx51';
     this._autoResolveEftposAddress = window.localStorage.getItem('auto_address') === 'true';
     this._testMode = window.localStorage.getItem('test_mode') === 'true';
     this._useSecureWebSockets = window.localStorage.getItem('use_secure_web_sockets') === 'true';
@@ -44,6 +46,8 @@ class Spi {
     } catch (error) {
       this._log.error('unable to access secrets');
     }
+
+    this.getTenantsList();
   }
 
   start() {
@@ -52,7 +56,7 @@ class Spi {
       this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
       this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
       this._spi.Config.PrintMerchantCopy = this._printMerchantCopy;
-      this._spi.SetPosInfo('mx51', this._version);
+      this._spi.SetPosInfo(this._posName, this._version);
       this._spi.SetAcquirerCode(this._acquirerCode);
       this._spi.SetDeviceApiKey(this._apiKey);
       this._options = new TransactionOptions();
@@ -78,6 +82,26 @@ class Spi {
     this.setAutoAddressResolutionState();
     this._spi.Start();
     this.printStatusAndActions();
+  }
+
+  async getTenantsList() {
+    const tenants = await SpiClient.GetAvailableTenants(this._posName, this._apiKey, 'AU');
+    const defaultTenantList = [
+      {
+        code: 'wbc',
+        name: 'Westpac Presto',
+      },
+      {
+        code: 'til',
+        name: 'Till Payments',
+      },
+      {
+        code: 'gko',
+        name: 'Gecko Demo Bank',
+      },
+    ];
+
+    localStorage.setItem('tenants', JSON.stringify(tenants.success ? tenants.data : defaultTenantList));
   }
 
   onSpiStateChange(e: any) {
