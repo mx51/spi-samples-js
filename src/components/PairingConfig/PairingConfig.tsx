@@ -154,7 +154,10 @@ function PairingConfig({ isFinishedPairing, spi, status, setPairButton }: Props)
                 <Input
                   id="otherTenant"
                   label="Other"
-                  onChange={(e: SyntheticEvent<HTMLInputElement>) => setOtherTenantValue(e.currentTarget.value)}
+                  onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                    setSelectedTenant('other');
+                    setOtherTenantValue(e.currentTarget.value);
+                  }}
                   name="otherTenant"
                   placeholder="Other"
                   value={otherTenantValue}
