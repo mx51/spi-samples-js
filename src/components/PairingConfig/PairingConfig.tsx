@@ -3,6 +3,12 @@ import { DeviceAddressResponseCode, SpiStatus } from '@mx51/spi-client-js';
 import { Modal, Button } from 'react-bootstrap';
 import { Input } from '../Input';
 import Checkbox from '../Checkbox';
+import Radio from '../Radio';
+
+import { ReactComponent as IconError } from '../../images/error.svg';
+import { ReactComponent as IconSuccess } from '../../images/success.svg';
+
+import './PairingConfig.scss';
 
 function handleAutoAddressStateChangeCallback(
   event: DeviceAddressChangedEvent,
@@ -78,10 +84,18 @@ function PairingConfig({ isFinishedPairing, spi, status, setPairButton }: Props)
 
   const [errorMsg, setErrorMsg] = useState('');
 
-  useEffect(() => {
-    // The form must not have unsaved data, posId is required always and either eftposAddress or serial number is required
-    setPairButton(isFormSaved && posId && ((!secureWebSocket && eftpos) || (secureWebSocket && serial)));
-  });
+  const tenantList = JSON.parse(window.localStorage.getItem('tenants') || '[]');
+  const [tenantCode, setTenantCode] = useState(window.localStorage.getItem('tenant_code') || '');
+  const [selectedTenantCode, setSelectedTenant] = useState(tenantCode);
+  const [otherTenantValue, setOtherTenantValue] = useState(
+    !tenantList.find((tenant: Tenant) => tenant.code === tenantCode) ? tenantCode : ''
+  );
+  const [isTenantModalOpen, setIsTenantModalOpen] = useState(false);
+
+  // The form must not have unsaved data, posId is required always and either eftposAddress or serial number is required
+  const checkPairButtonState = () =>
+    setPairButton(isFormSaved && posId && ((!secureWebSocket && eftpos) || (secureWebSocket && serial)) && tenantCode);
+  useEffect(checkPairButtonState);
 
   useEffect(() => {
     if (window.location.protocol === 'https:') {
@@ -103,6 +117,99 @@ function PairingConfig({ isFinishedPairing, spi, status, setPairButton }: Props)
 
   return (
     <div>
+      <h2 className="sub-header">Payment provider</h2>
+      <div className="ml-4 mr-4 mt-3">
+        <Modal centered show={isTenantModalOpen} onHide={() => setIsTenantModalOpen(false)}>
+          <Modal.Header closeButton>
+            <Modal.Title>Select payment provider</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <form className="mt-2">
+              {tenantList.map((tenant: Tenant) => (
+                <div key={tenant.code}>
+                  <Radio
+                    checked={tenant.code === selectedTenantCode}
+                    id={`radio-${tenant.code}`}
+                    label={tenant.name}
+                    name="tenants"
+                    onChange={(e: SyntheticEvent<HTMLSelectElement>) => setSelectedTenant(e.currentTarget.value)}
+                    value={tenant.code}
+                  />
+                  <hr className="tenant-divider" />
+                </div>
+              ))}
+              <Radio
+                checked={
+                  selectedTenantCode === 'other' ||
+                  (Boolean(tenantCode) &&
+                    tenantList.findIndex((tenant: Tenant) => tenant.code === selectedTenantCode) === -1)
+                }
+                id="radio-other"
+                isLabelVisible={false}
+                label="Other"
+                name="tenants"
+                onChange={(e: SyntheticEvent<HTMLSelectElement>) => setSelectedTenant(e.currentTarget.value)}
+                value="other"
+              >
+                <Input
+                  id="otherTenant"
+                  label="Other"
+                  onChange={(e: SyntheticEvent<HTMLInputElement>) => {
+                    setSelectedTenant('other');
+                    setOtherTenantValue(e.currentTarget.value);
+                  }}
+                  name="otherTenant"
+                  placeholder="Other"
+                  value={otherTenantValue}
+                />
+              </Radio>
+
+              <hr className="tenant-divider" />
+
+              <Button
+                type="submit"
+                variant="primary"
+                className="btn-custom"
+                onClick={(e: SyntheticEvent<HTMLElement, MouseEvent>) => {
+                  e.preventDefault();
+
+                  const acquirerCode = selectedTenantCode === 'other' ? otherTenantValue : selectedTenantCode;
+                  localStorage.setItem('tenant_code', acquirerCode);
+                  spi.SetAcquirerCode(acquirerCode);
+                  setTenantCode(acquirerCode);
+                  checkPairButtonState();
+                  setIsTenantModalOpen(false);
+                }}
+                block
+              >
+                Select
+              </Button>
+            </form>
+          </Modal.Body>
+        </Modal>
+        {!tenantCode && (
+          <div className="alert alert-danger tenant-message" role="alert">
+            <IconError className="tenant-message-icon" />
+            You must select a payment type before proceeding to use this Sample POS
+          </div>
+        )}
+        {tenantCode && (
+          <div className="alert alert-success tenant-message" role="alert">
+            <IconSuccess className="tenant-message-icon" />
+            {tenantList.find((tenant: Tenant) => tenant.code === tenantCode)?.name || `Other: ${tenantCode}`}
+          </div>
+        )}
+        <button
+          className="btn btn-primary rounded-0 btn-block btn-lg mb-4"
+          disabled={status !== SpiStatus.Unpaired}
+          id="btnSetTenant"
+          onClick={() => setIsTenantModalOpen(true)}
+          type="submit"
+        >
+          Simple Payments Integration
+        </button>
+      </div>
+
       <h2 className="sub-header">Pairing configuration</h2>
       <div className="ml-4 mr-4">
         <Modal show={errorMsg !== ''} onHide={() => setErrorMsg('')}>
