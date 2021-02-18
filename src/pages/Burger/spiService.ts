@@ -47,6 +47,12 @@ class Spi {
       this._log.error('unable to access secrets');
     }
 
+    // Where there is an existing pairing and no tenant code set, default to wbc
+    if (!this._acquirerCode && this._spiSecrets) {
+      this._acquirerCode = 'wbc';
+      window.localStorage.setItem('tenant_code', 'wbc');
+    }
+
     this.getTenantsList();
   }
 
@@ -95,13 +101,8 @@ class Spi {
         code: 'til',
         name: 'Till Payments',
       },
-      {
-        code: 'gko',
-        name: 'Gecko Demo Bank',
-      },
     ];
-
-    localStorage.setItem('tenants', JSON.stringify(tenants.success ? tenants.data : defaultTenantList));
+    localStorage.setItem('tenants', JSON.stringify(tenants.Data.length ? tenants.Data : defaultTenantList));
   }
 
   onSpiStateChange(e: any) {
