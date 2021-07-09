@@ -1,0 +1,31 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo '🏗️👷 Styling, testing your project before committing'
+
+# Check Prettier errors
+npm run check-prettier ||
+(
+    echo '👻👻👻👻 Failed Prettier Check 👻👻👻👻
+        Prettier check failed, please fix the prettier by using: npm run check-prettier'
+    false;
+)
+
+# Check Eslint errors
+npm run check-lint ||
+(
+    echo '🙀🙀🙀🙀 Failed Lint Check 🙀🙀🙀🙀
+        Eslint for typescript check failed and please correct the lint errors. (You can run: npm run check-lint to find the lint errors in detail)'
+    false;
+)
+
+# Check Typescript type errors
+npm run check-types ||
+(
+    echo '🤯🤯🤯🤯 Failed Type Check 🤯🤯🤯🤯
+        Typescript check failed, you need to fix the type errors in specific files'
+    false;
+)
+
+# If everything passes ... then you were lucky today 
+echo '💃🕺💃🕺 Good day 💃🕺💃🕺'
