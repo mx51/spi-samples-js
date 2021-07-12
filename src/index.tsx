@@ -1,5 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+// components
 import App from './App';
+import ThemeStyles from './components/templates/ThemeStyles';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(
+  <ThemeStyles>
+    <App />
+  </ThemeStyles>,
+  document.getElementById('root')
+);
