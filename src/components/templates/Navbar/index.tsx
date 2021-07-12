@@ -41,10 +41,10 @@ const Navbar: React.FC = () => {
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <NavbarHeader handleToggleDrawer={() => toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
+        <NavbarHeader handleToggleDrawer={toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
       </AppBar>
       <Drawer anchor="left" open={drawerToggle.left} onClose={toggleDrawer(false)}>
-        <DrawerList toggleDrawer={toggleDrawer} />
+        <DrawerList toggleDrawer={() => toggleDrawer(false)} />
       </Drawer>
     </div>
   );

@@ -7,6 +7,10 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+// Icons
+import SecondaryLogoIcon from '../../Atoms/Icons/SecondaryLogoIcon';
+// Components
+import NavbarHeader from '../../Molecules/NavbarHeader';
 
 const useStyles = makeStyles({
   list: {
@@ -15,7 +19,8 @@ const useStyles = makeStyles({
 });
 
 interface DrawerListInterface {
-  toggleDrawer: (drawerToggle: boolean) => void;
+  // toggleDrawer: (drawerToggle: boolean) => void;
+  toggleDrawer: (isOpen: boolean) => void;
 }
 
 const DrawerList: React.FC<DrawerListInterface> = ({ toggleDrawer }) => {
@@ -25,9 +30,10 @@ const DrawerList: React.FC<DrawerListInterface> = ({ toggleDrawer }) => {
     <div
       className={classes.list}
       role="presentation"
-      onClick={() => toggleDrawer(false)}
-      onKeyDown={() => toggleDrawer(false)}
+      // onClick={toggleDrawer}
+      // onKeyDown={toggleDrawer}
     >
+      <NavbarHeader handleToggleDrawer={() => toggleDrawer(false)} icon={<SecondaryLogoIcon />} />
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
           <ListItem button key={text}>
