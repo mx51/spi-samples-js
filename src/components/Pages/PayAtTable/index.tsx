@@ -1,0 +1,11 @@
+import React from 'react';
+// Component
+import Layout from '../../Templates/Layout';
+
+const PayAtTable: React.FC = () => (
+  <Layout>
+    <p>Pay At Table Page</p>
+  </Layout>
+);
+
+export default PayAtTable;

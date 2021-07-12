@@ -5,7 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 // Interfaces
 import { DrawerPositionInterface } from '../../../Definitions/Interfaces/NavbarInterface';
 // Icons Components
-import PrimaryLogoIcon from '../../atoms/Icons/PrimaryLogoIcon';
+import PrimaryLogoIcon from '../../Atoms/Icons/PrimaryLogoIcon';
 import DrawerList from '../../Organisms/DrawerList';
 import NavbarHeader from '../../Molecules/NavbarHeader';
 

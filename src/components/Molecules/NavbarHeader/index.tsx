@@ -1,8 +1,10 @@
-import React, { KeyboardEvent, MouseEvent } from 'react';
+import React from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
+// Interfaces
+import { IconButtonInterface, NavbarHeaderInterface } from '../../../Definitions/Interfaces/NavbarInterface';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -11,17 +13,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-interface NavbarHeaderInterface {
-  handleToggleDrawer: (event: KeyboardEvent | MouseEvent) => void;
-  icon: React.ReactNode;
-}
-
-interface IconButtonInterface {
-  'aria-label'?: string;
-  color?: 'default' | 'inherit' | 'primary' | 'secondary';
-  edge?: 'end' | 'start' | undefined;
-}
 
 const NavbarHeader: React.FC<NavbarHeaderInterface> = ({ handleToggleDrawer, icon }) => {
   const classes = useStyles();

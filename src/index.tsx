@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-// components
-import Layout from './components/templates/Layout';
-import ThemeStyles from './components/templates/ThemeStyles';
+// router
+import AppRoutes from './Router';
+import ThemeStyles from './Components/Templates/ThemeStyles';
 
 ReactDOM.render(
   <ThemeStyles>
-    <Layout />
+    <AppRoutes />
   </ThemeStyles>,
   document.getElementById('root')
 );

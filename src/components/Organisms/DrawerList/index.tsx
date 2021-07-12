@@ -1,28 +1,28 @@
-import React, { KeyboardEvent, MouseEvent } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import PairingIcon from '../../atoms/Icons/PairingIcon';
-import SecondaryLogoIcon from '../../atoms/Icons/SecondaryLogoIcon';
+// Icons
+import PairingIcon from '../../Atoms/Icons/PairingIcon';
+import SecondaryLogoIcon from '../../Atoms/Icons/SecondaryLogoIcon';
+// Interfaces
+import { DrawerListInterface } from '../../../Definitions/Interfaces/NavbarInterface';
+// Components
 import NavbarHeader from '../../Molecules/NavbarHeader';
-import PurchaseIcon from '../../atoms/Icons/PurchaseIcon';
-import RefundIcon from '../../atoms/Icons/RefundIcon';
-import PreauthorisationIcon from '../../atoms/Icons/PreauthorisationIcon';
-import TerminalsListIcon from '../../atoms/Icons/TerminalsListIcon';
-import FleetSettingsIcon from '../../atoms/Icons/FleetSettingsIcon';
+import PurchaseIcon from '../../Atoms/Icons/PurchaseIcon';
+import RefundIcon from '../../Atoms/Icons/RefundIcon';
+import PreauthorisationIcon from '../../Atoms/Icons/PreauthorisationIcon';
+import TerminalsListIcon from '../../Atoms/Icons/TerminalsListIcon';
+import FleetSettingsIcon from '../../Atoms/Icons/FleetSettingsIcon';
 
 const useStyles = makeStyles({
   list: {
     width: 256,
   },
 });
-
-interface DrawerListInterface {
-  toggleDrawer: (event: KeyboardEvent | MouseEvent) => void;
-}
 
 const DrawerList: React.FC<DrawerListInterface> = ({ toggleDrawer }) => {
   const classes = useStyles();
