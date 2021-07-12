@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { KeyboardEvent, MouseEvent } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import PrimaryLogoIcon from '../../atoms/Icons/PrimaryLogoIcon';
+import Drawer from '@material-ui/core/Drawer';
+// Interfaces
+import { DrawerPositionInterface } from '../../../Definitions/Interfaces/NavbarInterface';
+// Icons Components
+import PrimaryLogoIcon from '../../Atoms/Icons/PrimaryLogoIcon';
+import DrawerList from '../../Organisms/DrawerList';
+import NavbarHeader from '../../Molecules/NavbarHeader';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,16 +23,29 @@ const useStyles = makeStyles((theme: Theme) =>
 const Navbar: React.FC = () => {
   const classes = useStyles();
 
+  const [drawerToggle, setDrawerToggle] = React.useState<DrawerPositionInterface>({
+    left: false,
+  });
+
+  const toggleDrawer = (isOpen: boolean) => (event: KeyboardEvent | MouseEvent) => {
+    if (
+      event.type === 'keydown' &&
+      ((event as KeyboardEvent).key === 'Tab' || (event as KeyboardEvent).key === 'Shift')
+    ) {
+      return;
+    }
+
+    setDrawerToggle({ left: isOpen });
+  };
+
   return (
     <div className={classes.root}>
       <AppBar position="static">
-        <Toolbar variant="dense">
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <PrimaryLogoIcon />
-        </Toolbar>
+        <NavbarHeader handleToggleDrawer={() => toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
       </AppBar>
+      <Drawer anchor="left" open={drawerToggle.left} onClose={toggleDrawer(false)}>
+        <DrawerList toggleDrawer={toggleDrawer} />
+      </Drawer>
     </div>
   );
 };
