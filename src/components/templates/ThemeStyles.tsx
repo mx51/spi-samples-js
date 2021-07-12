@@ -13,6 +13,8 @@ interface ThemePropsInterface {
 
 const GlobalStyle = createGlobalStyle`
   body {
+    margin: 0;
+    box-sizing: border-box;
     font-family: ${(props: ThemePropsInterface) => props.theme.fontFamily};
   }
 `;
