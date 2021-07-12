@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { KeyboardEvent, MouseEvent } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
@@ -19,21 +19,15 @@ const useStyles = makeStyles({
 });
 
 interface DrawerListInterface {
-  // toggleDrawer: (drawerToggle: boolean) => void;
-  toggleDrawer: (isOpen: boolean) => void;
+  toggleDrawer: (event: KeyboardEvent | MouseEvent) => void;
 }
 
 const DrawerList: React.FC<DrawerListInterface> = ({ toggleDrawer }) => {
   const classes = useStyles();
 
   return (
-    <div
-      className={classes.list}
-      role="presentation"
-      // onClick={toggleDrawer}
-      // onKeyDown={toggleDrawer}
-    >
-      <NavbarHeader handleToggleDrawer={() => toggleDrawer(false)} icon={<SecondaryLogoIcon />} />
+    <div className={classes.list} role="presentation" onClick={toggleDrawer} onKeyDown={toggleDrawer}>
+      <NavbarHeader handleToggleDrawer={toggleDrawer} icon={<SecondaryLogoIcon />} />
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
           <ListItem button key={text}>

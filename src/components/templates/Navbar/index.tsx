@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
         <NavbarHeader handleToggleDrawer={toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
       </AppBar>
       <Drawer anchor="left" open={drawerToggle.left} onClose={toggleDrawer(false)}>
-        <DrawerList toggleDrawer={() => toggleDrawer(false)} />
+        <DrawerList toggleDrawer={toggleDrawer(false)} />
       </Drawer>
     </div>
   );
