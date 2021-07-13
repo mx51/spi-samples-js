@@ -1,60 +1,41 @@
 import React from 'react';
-import { ReactComponent as Logo } from '../../../Images/FleetSettingsIcon.svg';
-import { ReactComponent as IconPairing } from '../../../Images/PairingIcon.svg';
-import { ReactComponent as IconPayAtTable } from '../../../Images/PayAtTableIcon.svg';
-import { ReactComponent as IconPreauthorisation } from '../../../Images/PreauthorisationIcon.svg';
-import { ReactComponent as IconPurchase } from '../../../Images/PurchaseIcon.svg';
-import { ReactComponent as IconRefund } from '../../../Images/RefundIcon.svg';
-import { ReactComponent as IconTerminalsList } from '../../../Images/TerminalsListIcon.svg';
+import { Link } from 'react-router-dom';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
+import ListItemText from '@material-ui/core/ListItemText';
+// Interfaces
+import { MenuItemInterface, MenuItemsInterface } from '../Interfaces/DrawerInterfaces';
 
-export interface MenuItemInterface {
-  name: string;
-  path: string;
-  icon: React.ReactNode;
-}
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    link: {
+      color: 'inherit',
+      textDecoration: 'none',
+    },
+    listItem: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+    },
+  })
+);
 
-export interface MenuItemsInterface {
-  menuItems: MenuItemInterface[];
-}
+const MenuItems: React.FC<MenuItemsInterface> = ({ menuItems }) => {
+  const classes = useStyles();
 
-export default {
-  samplePos: [
-    {
-      name: 'Purchase',
-      path: '/',
-      icon: <IconPurchase />,
-    },
-    {
-      name: 'Refund',
-      path: '/',
-      icon: <IconRefund />,
-    },
-    {
-      name: 'Pay at Table',
-      path: '/',
-      icon: <IconPayAtTable />,
-    },
-    {
-      name: 'Preauthorisation',
-      path: '/',
-      icon: <IconPreauthorisation />,
-    },
-  ],
-  terminals: [
-    {
-      name: 'Terminal lists',
-      path: '/',
-      icon: <IconTerminalsList />,
-    },
-    {
-      name: 'Pairing',
-      path: '/',
-      icon: <IconPairing />,
-    },
-    {
-      name: 'Fleet settings',
-      path: '/',
-      icon: <Logo />,
-    },
-  ],
+  return (
+    <List>
+      {menuItems.map(({ name, path, icon }: MenuItemInterface) => (
+        <Link to={path} key={`${name}`} className={classes.link}>
+          <ListItem button className={classes.listItem}>
+            <ListItemIcon>{icon}</ListItemIcon>
+            <ListItemText primary={name} />
+          </ListItem>
+        </Link>
+      ))}
+    </List>
+  );
 };
+
+export default MenuItems;

@@ -3,9 +3,10 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 // Interfaces
-import { DrawerPositionInterface } from './Interfaces/NavbarInterface';
-// Icons Components
-import PrimaryLogoIcon from '../Icons/PrimaryLogoIcon';
+import { DrawerPositionInterface } from './Interfaces/NavbarInterfaces';
+// Icons
+import { ReactComponent as PrimaryLogoIcon } from '../../Images/PrimaryLogoIcon.svg';
+// Components
 import DrawerList from './DrawerList';
 import NavbarHeader from './NavbarHeader';
 
