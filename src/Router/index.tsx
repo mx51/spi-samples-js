@@ -9,18 +9,18 @@ import {
   PATH_PURCHASE,
   PATH_REFUND,
   PATH_TERMINALS,
-} from '../Definitions/Constants/DrawerConfigs';
+} from '../Definitions/Constants/RouterConfigs';
 // Components
-import Loading from '../Components/Molecules/Loading';
-import NotFound from '../Components/Pages/NotFound';
+import Loading from '../Components/Loading';
 // Components: dynamic imports
-const FleetSettings = React.lazy(() => import('../Components/Pages/FleetSettings'));
-const Pair = React.lazy(() => import('../Components/Pages/Pair'));
-const PayAtTable = React.lazy(() => import('../Components/Pages/PayAtTable'));
-const PreAuth = React.lazy(() => import('../Components/Pages/PreAuth'));
-const Purchase = React.lazy(() => import('../Components/Pages/Purchase'));
-const Refund = React.lazy(() => import('../Components/Pages/Refund'));
-const Terminals = React.lazy(() => import('../Components/Pages/Terminals'));
+const FleetSettings = React.lazy(() => import('../Components/FleetSettingsPage'));
+const Pair = React.lazy(() => import('../Components/PairPage'));
+const PayAtTable = React.lazy(() => import('../Components/PayAtTablePage'));
+const PreAuth = React.lazy(() => import('../Components/PreAuthPage'));
+const Purchase = React.lazy(() => import('../Components/PurchasePage'));
+const Refund = React.lazy(() => import('../Components/RefundPage'));
+const Terminals = React.lazy(() => import('../Components/TerminalsPage'));
+const NotFound = React.lazy(() => import('../Components/NotFoundPage'));
 
 const AppRoutes: React.FC = () => (
   <Suspense fallback={<Loading />}>

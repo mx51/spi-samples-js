@@ -1,6 +1,6 @@
 import React from 'react';
 // Component
-import Layout from '../../Templates/Layout';
+import Layout from '../Layout';
 
 const Terminals: React.FC = () => (
   <Layout>

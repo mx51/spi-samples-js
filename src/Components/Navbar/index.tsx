@@ -3,11 +3,11 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
 // Interfaces
-import { DrawerPositionInterface } from '../../../Definitions/Interfaces/NavbarInterface';
+import { DrawerPositionInterface } from './Interfaces/NavbarInterface';
 // Icons Components
-import PrimaryLogoIcon from '../../Atoms/Icons/PrimaryLogoIcon';
-import DrawerList from '../../Organisms/DrawerList';
-import NavbarHeader from '../../Molecules/NavbarHeader';
+import PrimaryLogoIcon from '../Icons/PrimaryLogoIcon';
+import DrawerList from './DrawerList';
+import NavbarHeader from './NavbarHeader';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

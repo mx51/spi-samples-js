@@ -4,7 +4,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Toolbar from '@material-ui/core/Toolbar';
 // Interfaces
-import { IconButtonInterface, NavbarHeaderInterface } from '../../../Definitions/Interfaces/NavbarInterface';
+import { IconButtonInterface, NavbarHeaderInterface } from '../Interfaces/NavbarInterface';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

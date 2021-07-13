@@ -6,17 +6,17 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 // Icons
-import PairingIcon from '../../Atoms/Icons/PairingIcon';
-import SecondaryLogoIcon from '../../Atoms/Icons/SecondaryLogoIcon';
+import PairingIcon from '../../Icons/PairingIcon';
+import SecondaryLogoIcon from '../../Icons/SecondaryLogoIcon';
 // Interfaces
-import { DrawerListInterface } from '../../../Definitions/Interfaces/NavbarInterface';
+import { DrawerListInterface } from '../Interfaces/NavbarInterface';
 // Components
-import NavbarHeader from '../../Molecules/NavbarHeader';
-import PurchaseIcon from '../../Atoms/Icons/PurchaseIcon';
-import RefundIcon from '../../Atoms/Icons/RefundIcon';
-import PreauthorisationIcon from '../../Atoms/Icons/PreauthorisationIcon';
-import TerminalsListIcon from '../../Atoms/Icons/TerminalsListIcon';
-import FleetSettingsIcon from '../../Atoms/Icons/FleetSettingsIcon';
+import NavbarHeader from '../NavbarHeader';
+import PurchaseIcon from '../../Icons/PurchaseIcon';
+import RefundIcon from '../../Icons/RefundIcon';
+import PreauthorisationIcon from '../../Icons/PreauthorisationIcon';
+import TerminalsListIcon from '../../Icons/TerminalsListIcon';
+import FleetSettingsIcon from '../../Icons/FleetSettingsIcon';
 
 const useStyles = makeStyles({
   list: {

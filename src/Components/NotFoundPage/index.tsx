@@ -2,7 +2,7 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import { Link } from 'react-router-dom';
 // Component
-import Layout from '../../Templates/Layout';
+import Layout from '../Layout';
 
 const NotFound: React.FC = () => (
   <Layout>

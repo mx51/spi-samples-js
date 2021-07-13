@@ -1,6 +1,6 @@
 import React from 'react';
 // Component
-import Layout from '../../Templates/Layout';
+import Layout from '../Layout';
 
 const PreAuth: React.FC = () => (
   <Layout>
