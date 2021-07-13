@@ -49,6 +49,7 @@ const DrawerList: React.FC<DrawerListInterface> = ({ toggleDrawer }) => {
           </ListItemIcon>
           <ListItemText primary="Preauthorisation" />
         </ListItem>
+        {/* List of Items (Molecules) */}
       </List>
       <Divider />
       <List>
