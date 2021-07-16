@@ -21,8 +21,7 @@
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "react/jsx-filename-extension": 0,
-    "react/prop-types": 0
+    "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }]
   },
   "settings": {
     "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
