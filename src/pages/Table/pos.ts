@@ -170,17 +170,13 @@ class TablePos extends Pos {
     (document.getElementById('split_by_amount') as HTMLInputElement).checked = this._pat.Config.SplitByAmountEnabled;
     (document.getElementById('tipping') as HTMLInputElement).checked = this._pat.Config.TippingEnabled;
     (document.getElementById('summary_report') as HTMLInputElement).checked = this._pat.Config.SummaryReportEnabled;
-    // prettier-ignore
-    (document.getElementById(
-      'set_allowed_operatorid'
-    ) as HTMLInputElement).value = this._pat.Config.AllowedOperatorIds.join(',');
+    (document.getElementById('set_allowed_operatorid') as HTMLInputElement).value =
+      this._pat.Config.AllowedOperatorIds.join(',');
     (document.getElementById('set_label_operatorid') as HTMLInputElement).value = this._pat.Config.LabelOperatorId;
     (document.getElementById('set_label_tableid') as HTMLInputElement).value = this._pat.Config.LabelTableId;
     (document.getElementById('set_label_paybutton') as HTMLInputElement).value = this._pat.Config.LabelPayButton;
-    // prettier-ignore
-    (document.getElementById(
-      'table_retrieval_enabled'
-    ) as HTMLInputElement).checked = this._pat.Config.TableRetrievalEnabled;
+    (document.getElementById('table_retrieval_enabled') as HTMLInputElement).checked =
+      this._pat.Config.TableRetrievalEnabled;
   }
 
   PrintStatusAndActions() {
@@ -738,10 +734,8 @@ class TablePos extends Pos {
 
     if (!this._pat.Config.AllowedOperatorIds.includes(operatorId)) {
       this._pat.Config.AllowedOperatorIds.push(operatorId);
-      // prettier-ignore
-      (document.getElementById(
-        'set_allowed_operatorid'
-      ) as HTMLInputElement).value = this._pat.Config.AllowedOperatorIds.join(',');
+      (document.getElementById('set_allowed_operatorid') as HTMLInputElement).value =
+        this._pat.Config.AllowedOperatorIds.join(',');
       this._pat.PushPayAtTableConfig();
       localStorage.setItem('pat_config', JSON.stringify(this._pat.Config));
     }
