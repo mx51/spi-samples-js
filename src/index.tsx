@@ -1,17 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 // router
 import AppRoutes from './router';
 import ThemeStyles from './components/Theme';
-// store
+// redux provider
+import ReduxProvider from './redux/ReduxProvider';
+// redux store
 import { store } from './redux/store';
 
 ReactDOM.render(
   <ThemeStyles>
-    <Provider store={store}>
+    <ReduxProvider reduxStore={store}>
       <AppRoutes />
-    </Provider>
+    </ReduxProvider>
   </ThemeStyles>,
   document.getElementById('root')
 );

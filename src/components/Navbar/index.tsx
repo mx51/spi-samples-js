@@ -5,7 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 // icons
 import { ReactComponent as PrimaryLogoIcon } from '../../images/PrimaryLogoIcon.svg';
 // interfaces
-import { DrawerPositionInterface } from './interfaces/NavbarInterfaces';
+import { IDrawerPosition } from './interfaces/NavbarInterfaces';
 // constants
 import { PRIMARY_DARK_COLOR } from '../../definitions/constants/themeStylesConfigs';
 // components
@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Navbar: React.FC = () => {
   const classes = useStyles();
 
-  const [drawerToggle, setDrawerToggle] = React.useState<DrawerPositionInterface>({
+  const [drawerToggle, setDrawerToggle] = React.useState<IDrawerPosition>({
     left: false,
   });
 

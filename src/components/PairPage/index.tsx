@@ -1,10 +1,11 @@
 import React from 'react';
-// component
+// components
 import Layout from '../Layout';
+import PairForm from './PairForm';
 
 const Pair: React.FC = () => (
   <Layout>
-    <p>Pair Page</p>
+    <PairForm />
   </Layout>
 );
 
