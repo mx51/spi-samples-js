@@ -6,8 +6,8 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 // interfaces
-import { MenuItemInterface, MenuItemsInterface } from '../interfaces/DrawerInterfaces';
-import { PRIMARY_COLOR, TEXT_LIGHT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
+import { IMenuItem, IMenuItems } from '../interfaces/DrawerInterfaces';
+import { PRIMARY_THEME_COLOR, TEXT_LIGHT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginBottom: theme.spacing(1),
     },
     primaryColor: {
-      color: PRIMARY_COLOR,
+      color: PRIMARY_THEME_COLOR,
     },
     textLightColor: {
       color: TEXT_LIGHT_COLOR,
@@ -28,13 +28,13 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const MenuItems: React.FC<MenuItemsInterface> = ({ menuItems }) => {
+const MenuItems: React.FC<IMenuItems> = ({ menuItems }) => {
   const classes = useStyles();
   const { pathname } = useLocation();
 
   return (
     <List>
-      {menuItems.map(({ name, path, icon }: MenuItemInterface) => (
+      {menuItems.map(({ name, path, icon }: IMenuItem) => (
         <ListItem
           button
           key={`${name}`}

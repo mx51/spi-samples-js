@@ -6,7 +6,7 @@ import menuItems from '../../../definitions/constants/menuItemsConfigs';
 // icons
 import { ReactComponent as SecondaryLogoIcon } from '../../../images/SecondaryLogoIcon.svg';
 // interfaces
-import { DrawerListInterface } from '../interfaces/NavbarInterfaces';
+import { IDrawerList } from '../interfaces/NavbarInterfaces';
 // constants
 import { TEXT_LIGHT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
 // components
@@ -34,7 +34,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function DrawerList({ toggleDrawer }: DrawerListInterface): React.ReactElement {
+function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
   const classes = useStyles();
   const { samplePos, terminals } = menuItems;
 

@@ -1,8 +1,8 @@
-export interface ThemeStylesInterface {
+export interface IThemeStyles {
   children: React.ReactNode;
 }
 
-export interface ThemePropsInterface {
+export interface IThemeProps {
   theme: {
     fontFamily?: string;
   };

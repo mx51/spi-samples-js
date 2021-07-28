@@ -1,14 +1,14 @@
 import React from 'react';
 
-export interface DrawerPositionInterface {
+export interface IDrawerPosition {
   left: boolean;
 }
 
-export interface DrawerListInterface {
+export interface IDrawerList {
   toggleDrawer: () => void;
 }
 
-export interface NavbarHeaderInterface {
+export interface INavbarHeader {
   handleToggleDrawer: () => void;
   icon: React.ReactNode;
 }
