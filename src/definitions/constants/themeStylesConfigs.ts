@@ -16,5 +16,7 @@ export const PRIMARY_ERROR_COLOR = '#E44B5D';
 export const PRIMARY_WARNING_COLOR = '#FFC400';
 export const PRIMARY_SUCCESS_COLOR = '#1FB877';
 export const PRIMARY_THEME_COLOR = '#393F73';
+export const CHIP_BACKGROUND_SUCCESS_COLOR = '#E1F4EC';
+export const CHIP_FONT_SUCCESS_COLOR = '#1FB877';
 // secondary colors
 export const SECONDARY_THEME_COLOR = '#686D93';

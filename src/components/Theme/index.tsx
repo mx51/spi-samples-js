@@ -45,6 +45,17 @@ const theme = createTheme({
         textTransform: 'none',
       },
     },
+    MuiTableCell: {
+      root: {
+        borderBottomColor: PRIMARY_BORDER_COLOR,
+      },
+    },
+    MuiPaper: {
+      root: {
+        border: `1px solid ${PRIMARY_BORDER_COLOR}`,
+        boxShadow: 'none',
+      },
+    },
   },
   palette: {
     background: {
