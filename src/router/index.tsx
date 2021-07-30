@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-// Constants
+import Loading from '../components/Loading';
 import {
   PATH_FLEET_SETTINGS,
   PATH_PAIR,
@@ -10,9 +10,7 @@ import {
   PATH_REFUND,
   PATH_TERMINALS,
 } from '../definitions/constants/routerConfigs';
-// Components
-import Loading from '../components/Loading';
-// Components: dynamic imports
+
 const FleetSettings = React.lazy(() => import('../components/FleetSettingsPage'));
 const Pair = React.lazy(() => import('../components/PairPage'));
 const PayAtTable = React.lazy(() => import('../components/PayAtTablePage'));

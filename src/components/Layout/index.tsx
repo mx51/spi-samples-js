@@ -1,5 +1,4 @@
 import React from 'react';
-// component
 import Navbar from '../Navbar';
 
 type ChildrenType = {

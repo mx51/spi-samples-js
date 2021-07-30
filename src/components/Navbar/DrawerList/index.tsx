@@ -1,17 +1,13 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Divider from '@material-ui/core/Divider';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import menuItems from '../../../definitions/constants/menuItemsConfigs';
-// icons
-import { ReactComponent as SecondaryLogoIcon } from '../../../images/SecondaryLogoIcon.svg';
-// interfaces
-import { IDrawerList } from '../interfaces/NavbarInterfaces';
-// constants
 import { TEXT_LIGHT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
-// components
-import MenuItems from './MenuItems';
+import { ReactComponent as SecondaryLogoIcon } from '../../../images/SecondaryLogoIcon.svg';
+import { IDrawerList } from '../interfaces/NavbarInterfaces';
 import NavbarHeader from '../NavbarHeader';
+import MenuItems from './MenuItems';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

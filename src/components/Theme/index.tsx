@@ -1,9 +1,6 @@
 import React from 'react';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-// interfaces
-import { IThemeStyles } from './interfaces';
-// constants
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
   BUTTON_RED_COLOR,
   DEFAULT_DARK_COLOR,
@@ -21,6 +18,7 @@ import {
   TEXT_DARK_COLOR,
   TEXT_LIGHT_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
+import { IThemeStyles } from './interfaces';
 
 const theme = createTheme({
   overrides: {

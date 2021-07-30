@@ -1,6 +1,5 @@
 import React from 'react';
 import { Provider } from 'react-redux';
-// store
 import { store } from './store';
 
 interface ReduxProviderInterface {

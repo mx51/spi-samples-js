@@ -1,11 +1,11 @@
-export interface Terminal {
+export interface ITerminal {
   posId: string;
   pairingStatus: PairingStatus;
   eftposAddress: string;
   serialNumber: string;
 }
 export interface ITerminals {
-  terminals: Array<Terminal>;
+  terminals: Array<ITerminal>;
 }
 
 export enum PairingStatus {

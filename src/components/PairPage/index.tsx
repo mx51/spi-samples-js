@@ -1,5 +1,4 @@
 import React from 'react';
-// components
 import Layout from '../Layout';
 import PairForm from './PairForm';
 

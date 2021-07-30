@@ -1,13 +1,12 @@
 import React from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-// interfaces
-import { IMenuItem, IMenuItems } from '../interfaces/DrawerInterfaces';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { NavLink, useLocation } from 'react-router-dom';
 import { PRIMARY_THEME_COLOR, TEXT_LIGHT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
+import { IMenuItem, IMenuItems } from '../interfaces/DrawerInterfaces';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

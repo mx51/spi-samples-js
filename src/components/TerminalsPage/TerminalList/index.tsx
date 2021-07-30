@@ -10,9 +10,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-// styles
 import useStyles from './index.styles';
-// interfaces
 import { PairingStatus, ITerminals } from './interfaces';
 
 function TerminalList({ terminals }: ITerminals): React.ReactElement {

@@ -1,5 +1,4 @@
 import React from 'react';
-// component
 import Layout from '../Layout';
 
 const PreAuth: React.FC = () => (

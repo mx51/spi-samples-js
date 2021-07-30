@@ -1,7 +1,6 @@
 import React from 'react';
-import ErrorIcon from '@material-ui/icons/Error';
 import InputAdornment from '@material-ui/core/InputAdornment';
-// interfaces
+import ErrorIcon from '@material-ui/icons/Error';
 import { IErrorInputAdornment } from '../interfaces';
 
 function ErrorInputAdornment({ isValid }: IErrorInputAdornment): React.ReactElement {

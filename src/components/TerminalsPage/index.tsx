@@ -1,24 +1,18 @@
 import React from 'react';
-
 import { Box, Button, Container, Typography, Link } from '@material-ui/core';
 import { Link as LinkRouter } from 'react-router-dom';
-
-// constants
 import { PATH_FLEET_SETTINGS, PATH_PAIR } from '../../definitions/constants/routerConfigs';
-// interfaces
-import { PairingStatus, Terminal } from './TerminalList/interfaces';
-// components
 import Layout from '../Layout';
 import NoTerminalPage from '../NoTerminalPage';
-// styles
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
+import { PairingStatus, ITerminal } from './TerminalList/interfaces';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
 
   // Note: This will be replaced by redux
-  const terminals: Array<Terminal> = [
+  const terminals: Array<ITerminal> = [
     {
       posId: 'test1',
       pairingStatus: PairingStatus.Connected,
@@ -37,15 +31,17 @@ const Terminals: React.FC = () => {
     <Layout>
       <Container maxWidth="md" className={classes.root}>
         <Box display="flex">
-          <Box flexGrow={1} justifyContent="flex-end">
+          <Box flexGrow={1}>
             <Typography variant="h6" component="h1">
               Terminals list
             </Typography>
           </Box>
-          <Box>
+          <Box className={classes.manageFleetSettingDiv}>
             <Link href={PATH_FLEET_SETTINGS} className={classes.manageFleetSettingLink}>
               Manage fleet settings
             </Link>
+          </Box>
+          <Box>
             <Button variant="contained" color="primary" component={LinkRouter} to={PATH_PAIR}>
               + Pair terminal
             </Button>

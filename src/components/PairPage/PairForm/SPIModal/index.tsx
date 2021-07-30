@@ -9,15 +9,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
-// constants
 import {
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
 } from '../../../../definitions/constants/commonConfigs';
-// styles
-import useStyles from './index.styles';
-// interfaces
 import { ISPIModel } from '../interfaces';
+import useStyles from './index.styles';
 
 function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }: ISPIModel): React.ReactElement {
   const classes = useStyles();

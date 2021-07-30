@@ -9,6 +9,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(2),
       fontSize: '1rem',
     },
+    manageFleetSettingDiv: {
+      padding: theme.spacing(1),
+    },
   })
 );
 export default useStyles;
