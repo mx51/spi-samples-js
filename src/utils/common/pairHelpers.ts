@@ -1,11 +1,9 @@
 import React from 'react';
-// constants
+import { IFormEventValue, ISPIAttribute, ISPIData } from '../../components/PairPage/PairForm/interfaces';
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
 } from '../../definitions/constants/commonConfigs';
-// interfaces
-import { IFormEventValue, ISPIAttribute, ISPIData } from '../../components/PairPage/PairForm/interfaces';
 
 function isHttps(): boolean {
   return window.location.protocol === 'https:';

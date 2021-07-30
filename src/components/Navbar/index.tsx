@@ -1,15 +1,11 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Drawer from '@material-ui/core/Drawer';
-// icons
-import { ReactComponent as PrimaryLogoIcon } from '../../images/PrimaryLogoIcon.svg';
-// interfaces
-import { IDrawerPosition } from './interfaces/NavbarInterfaces';
-// constants
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { PRIMARY_DARK_COLOR } from '../../definitions/constants/themeStylesConfigs';
-// components
+import { ReactComponent as PrimaryLogoIcon } from '../../images/PrimaryLogoIcon.svg';
 import DrawerList from './DrawerList';
+import { IDrawerPosition } from './interfaces/NavbarInterfaces';
 import NavbarHeader from './NavbarHeader';
 
 const useStyles = makeStyles((theme: Theme) =>

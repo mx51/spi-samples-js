@@ -1,10 +1,8 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
-// component
-import Layout from '../Layout';
-// redux
-import { incrementByAmount } from '../../redux/reducers/counterSlice';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
+import { incrementByAmount } from '../../redux/reducers/counterSlice';
+import Layout from '../Layout';
 
 const Purchase: React.FC = () => {
   const count = useAppSelector((state) => state.counter.value);

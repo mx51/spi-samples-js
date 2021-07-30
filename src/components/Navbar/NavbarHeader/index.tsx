@@ -1,9 +1,8 @@
 import React from 'react';
-import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import Toolbar from '@material-ui/core/Toolbar';
-// interfaces
+import MenuIcon from '@material-ui/icons/Menu';
 import { INavbarHeader } from '../interfaces/NavbarInterfaces';
 
 const useStyles = makeStyles((theme: Theme) =>

@@ -1,6 +1,6 @@
 import React from 'react';
-import Button from '@material-ui/core/Button';
 import Box from '@material-ui/core/Box';
+import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -9,9 +9,6 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
-// styles
-import useStyles from './index.styles';
-// constants
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -20,13 +17,6 @@ import {
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
 } from '../../../definitions/constants/commonConfigs';
-// components
-import CustomTextField from '../../CustomTextField';
-import ErrorInputAdornment from '../../CustomTextField/ErrorInputAdornment';
-import SPIModal from './SPIModal';
-// interfaces
-import { IFormEventValue, IPreventDefault, ISPIData } from './interfaces';
-// utils
 import {
   handleApikeyBlur,
   handleApikeyChange,
@@ -45,12 +35,16 @@ import {
   initialSpi,
 } from '../../../utils/common/pairHelpers';
 import useLocalStorage from '../../../utils/hooks/useLocalStorage';
-// validators
 import {
   fieldRequiredValidator,
   serialNumberValidator,
   saveButtonValidator,
 } from '../../../utils/validators/pairFormValidators';
+import CustomTextField from '../../CustomTextField';
+import ErrorInputAdornment from '../../CustomTextField/ErrorInputAdornment';
+import useStyles from './index.styles';
+import { IFormEventValue, IPreventDefault, ISPIData } from './interfaces';
+import SPIModal from './SPIModal';
 
 const PairForm: React.FC = () => {
   const classes = useStyles();

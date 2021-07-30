@@ -1,8 +1,6 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-
-// component
 import Terminals from '.';
 
 // mock router path

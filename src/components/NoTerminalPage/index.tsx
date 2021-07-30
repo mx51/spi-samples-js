@@ -1,13 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import Paper from '@material-ui/core/Paper';
-import Grid from '@material-ui/core/Grid';
 import { Button, Typography } from '@material-ui/core';
-// icon
-import { ReactComponent as UnpluggedIcon } from '../../images/UnpluggedIcon.svg';
-// constants
+import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+import { Link } from 'react-router-dom';
 import { PATH_PAIR } from '../../definitions/constants/routerConfigs';
-// style
+import { ReactComponent as UnpluggedIcon } from '../../images/UnpluggedIcon.svg';
 import useStyles from './index.styles';
 
 const NoTerminalPage: React.FC = () => {

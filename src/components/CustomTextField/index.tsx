@@ -1,6 +1,5 @@
 import React from 'react';
 import ThemeTextField from './index.styles';
-// interfaces
 import { ICustomTextField } from './interfaces';
 
 function CustomTextField({

@@ -1,12 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-// redux provider helper
-import ReduxProvider from '../../redux/ReduxProvider';
-// store
-import { store } from '../../redux/store';
-// component
 import PurchasePage from '.';
+import ReduxProvider from '../../redux/ReduxProvider';
+import { store } from '../../redux/store';
 
 describe('Test <PurchasePage />', () => {
   test('snapshot for PurchasePage component', () => {
@@ -70,7 +67,7 @@ describe('Test <PurchasePage />', () => {
               <span
                 class="MuiButton-label"
               >
-                Counter is: 
+                Counter is:
                 0
               </span>
               <span

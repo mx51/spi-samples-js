@@ -1,5 +1,11 @@
 import React from 'react';
-// paths & links constants
+import { ReactComponent as IconFleetSettings } from '../../images/FleetSettingsIcon.svg';
+import { ReactComponent as IconPairing } from '../../images/PairingIcon.svg';
+import { ReactComponent as IconPayAtTable } from '../../images/PayAtTableIcon.svg';
+import { ReactComponent as IconPreAuthorisation } from '../../images/PreAuthorisationIcon.svg';
+import { ReactComponent as IconPurchase } from '../../images/PurchaseIcon.svg';
+import { ReactComponent as IconRefund } from '../../images/RefundIcon.svg';
+import { ReactComponent as IconTerminalsList } from '../../images/TerminalsListIcon.svg';
 import {
   LINK_FLEET_SETTINGS,
   LINK_PAIR,
@@ -16,14 +22,6 @@ import {
   PATH_REFUND,
   PATH_TERMINALS,
 } from './routerConfigs';
-// icons
-import { ReactComponent as IconFleetSettings } from '../../images/FleetSettingsIcon.svg';
-import { ReactComponent as IconPairing } from '../../images/PairingIcon.svg';
-import { ReactComponent as IconPayAtTable } from '../../images/PayAtTableIcon.svg';
-import { ReactComponent as IconPreAuthorisation } from '../../images/PreAuthorisationIcon.svg';
-import { ReactComponent as IconPurchase } from '../../images/PurchaseIcon.svg';
-import { ReactComponent as IconRefund } from '../../images/RefundIcon.svg';
-import { ReactComponent as IconTerminalsList } from '../../images/TerminalsListIcon.svg';
 
 export default {
   samplePos: [
