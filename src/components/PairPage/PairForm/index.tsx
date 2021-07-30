@@ -16,7 +16,9 @@ import {
   TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
+  TEXT_STATUS_PAIRING,
 } from '../../../definitions/constants/commonConfigs';
+import { useAppSelector } from '../../../redux/hooks';
 import {
   handleApikeyBlur,
   handleApikeyChange,
@@ -33,7 +35,7 @@ import {
   handleSerialNumberChange,
   handleTestModeChange,
   initialSpi,
-} from '../../../utils/common/pairHelpers';
+} from '../../../utils/common/pair/pairFormHelpers';
 import useLocalStorage from '../../../utils/hooks/useLocalStorage';
 import {
   fieldRequiredValidator,
@@ -54,10 +56,12 @@ const PairForm: React.FC = () => {
   const handleSubmit = (event: IPreventDefault) => {
     event.preventDefault();
   };
+  // read pair states
+  const pair = useAppSelector((state) => state.pair);
 
   return (
     <Grid container direction="column" className={classes.formContainer}>
-      <form autoComplete="off" onSubmit={handleSubmit}>
+      <form autoComplete="off" onSubmit={handleSubmit} className={classes.pairForm}>
         <Grid item className={classes.mainTitle}>
           <Typography variant="h6" component="h1">
             Configuration
@@ -67,6 +71,8 @@ const PairForm: React.FC = () => {
           <Grid container direction="row" className={classes.fieldSpace}>
             <Grid item xs={10} className={classes.columnSpace}>
               <CustomTextField
+                className={classes.paymentProvider}
+                disabled={pair.status === TEXT_STATUS_PAIRING}
                 error={!spi.provider.isValid}
                 fullWidth
                 helperText={
@@ -99,6 +105,7 @@ const PairForm: React.FC = () => {
               <Button
                 className={classes.spiBtn}
                 color="primary"
+                disabled={pair.status === TEXT_STATUS_PAIRING}
                 fullWidth
                 id="spiButton"
                 onClick={() => handleModalOpen(setSpi, 'provider')}
@@ -114,6 +121,7 @@ const PairForm: React.FC = () => {
                 <InputLabel id="configurationLabel">Configuration option</InputLabel>
                 <Select
                   className={classes.configurationField}
+                  disabled={pair.status === TEXT_STATUS_PAIRING}
                   id="configurationField"
                   label="Configuration option"
                   labelId="configurationDropdownLabel"
@@ -128,7 +136,10 @@ const PairForm: React.FC = () => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <CustomTextField
-                disabled={spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE}
+                disabled={
+                  spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE ||
+                  pair.status === TEXT_STATUS_PAIRING
+                }
                 fullWidth
                 id="eftposAddressField"
                 label="EFTPOS address"
@@ -141,6 +152,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
+              disabled={pair.status === TEXT_STATUS_PAIRING}
               error={!spi.serialNumber.isValid}
               fullWidth
               helperText={!spi.serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
@@ -161,6 +173,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
+              disabled={pair.status === TEXT_STATUS_PAIRING}
               error={!spi.posId.isValid}
               fullWidth
               helperText={!spi.posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
@@ -179,6 +192,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
+              disabled={pair.status === TEXT_STATUS_PAIRING}
               error={!spi.apikey.isValid}
               fullWidth
               helperText={!spi.apikey.isValid ? TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD : ''}
@@ -201,6 +215,7 @@ const PairForm: React.FC = () => {
                 <Checkbox
                   checked={spi.testMode}
                   color="primary"
+                  disabled={pair.status === TEXT_STATUS_PAIRING}
                   id="testModeCheckbox"
                   name="testMode"
                   onChange={(event: IFormEventValue) => handleTestModeChange(setSpi, 'testMode')(event)}
@@ -210,11 +225,11 @@ const PairForm: React.FC = () => {
             />
           </Grid>
           <Grid item>
-            <Box marginTop={3} display="flex" justifyContent="flex-end">
+            <Box marginTop={1.5} display="flex" justifyContent="flex-end">
               <Button
                 color="primary"
                 className={classes.saveBtn}
-                disabled={!saveButtonValidator(spi)}
+                disabled={!saveButtonValidator(spi) || pair.status === TEXT_STATUS_PAIRING}
                 id="saveSettingsButton"
                 type="submit"
                 variant="contained"

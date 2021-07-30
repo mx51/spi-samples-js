@@ -26,8 +26,10 @@ describe('Test <PurchasePage />', () => {
                 class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
               >
                 <button
+                  aria-label="menu"
                   class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-4 MuiIconButton-colorInherit MuiIconButton-edgeStart"
                   data-testid="navbarMenuIcon"
+                  name="menuIcon"
                   tabindex="0"
                   type="button"
                 >
@@ -58,23 +60,6 @@ describe('Test <PurchasePage />', () => {
           <p>
             Purchase Page
           </p>
-          <div>
-            <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text"
-              tabindex="0"
-              type="button"
-            >
-              <span
-                class="MuiButton-label"
-              >
-                Counter is:
-                0
-              </span>
-              <span
-                class="MuiTouchRipple-root"
-              />
-            </button>
-          </div>
         </div>
       </div>
     `);

@@ -3,6 +3,7 @@ import ThemeTextField from './index.styles';
 import { ICustomTextField } from './interfaces';
 
 function CustomTextField({
+  className,
   disabled,
   error,
   fullWidth,
@@ -19,6 +20,7 @@ function CustomTextField({
 }: ICustomTextField): React.ReactElement {
   return (
     <ThemeTextField
+      className={className}
       disabled={disabled}
       error={error}
       fullWidth={fullWidth}
