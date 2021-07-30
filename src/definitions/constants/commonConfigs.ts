@@ -9,3 +9,9 @@ export const TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD = 'Please enter an API Key.'
 export const TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD = 'Please enter a POS ID.';
 export const TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD = 'Please enter a supported provider.';
 export const TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD = 'Please enter a 9 digits Serial number.';
+// pair status text
+export const TEXT_STATUS_UNPAIRED = 'Idle';
+export const TEXT_STATUS_PAIRING = 'Pairing';
+export const TEXT_STATUS_PAIRED = 'Transaction';
+// Pair Flow drawer width 4/12 (based on design required)
+export const drawerWidth = 33.33333;

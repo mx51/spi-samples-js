@@ -13,6 +13,7 @@ type TInputProps = {
 };
 
 export interface ICustomTextField {
+  className?: string;
   disabled?: boolean;
   error?: boolean;
   fullWidth?: boolean;

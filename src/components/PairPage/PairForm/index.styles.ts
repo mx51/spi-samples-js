@@ -3,7 +3,13 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formContainer: {
-      padding: theme.spacing(0, 12, 0, 0),
+      paddingRight: theme.spacing(8),
+      '& .MuiInputBase-input': {
+        textOverflow: 'ellipsis',
+      },
+    },
+    pairForm: {
+      marginBottom: -theme.spacing(2),
     },
     mainTitle: {
       marginBottom: theme.spacing(1),
@@ -37,9 +43,33 @@ const useStyles = makeStyles((theme: Theme) =>
     columnSpace: {
       paddingRight: theme.spacing(2),
     },
+    configurationLabel: {
+      width: '100%',
+      whiteSpace: 'nowrap',
+      overflow: 'hidden',
+      textOverflow: 'ellipsis',
+    },
     configurationField: {
       '&:hover .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.info.main,
+      },
+    },
+    [theme.breakpoints.between(960, 1024)]: {
+      formContainer: {
+        paddingRight: theme.spacing(4),
+      },
+    },
+    [theme.breakpoints.between(600, 959)]: {
+      formContainer: {
+        paddingRight: theme.spacing(2),
+      },
+    },
+    [theme.breakpoints.down(600)]: {
+      columnSpace: {
+        paddingRight: 0,
+      },
+      paymentProvider: {
+        paddingRight: theme.spacing(2),
       },
     },
   })
