@@ -1,11 +1,7 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import {
-  TEXT_STATUS_UNPAIRED,
-  TEXT_STATUS_PAIRING,
-  TEXT_STATUS_PAIRED,
-} from '../../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_FLOW } from '../../../../definitions/constants/commonConfigs';
 import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
@@ -19,7 +15,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
   const dispatch = useAppDispatch();
 
   switch (status) {
-    case TEXT_STATUS_UNPAIRED:
+    case SPI_PAIR_FLOW.IDLE:
       return {
         statusTitle: 'Unpaired',
         statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
@@ -35,7 +31,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
           </Button>
         ),
       };
-    case TEXT_STATUS_PAIRING:
+    case SPI_PAIR_FLOW.PAIRING:
       return {
         statusTitle: 'Reconnecting',
         statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
@@ -46,7 +42,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
           </Button>
         ),
       };
-    case TEXT_STATUS_PAIRED:
+    case SPI_PAIR_FLOW.TRANSACTION:
       return {
         statusTitle: 'Connected',
         statusIcon: <ConnectedIcon className={classes.connectedIcon} />,

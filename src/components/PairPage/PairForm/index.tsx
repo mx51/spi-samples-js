@@ -16,7 +16,7 @@ import {
   TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
-  TEXT_STATUS_PAIRING,
+  SPI_PAIR_FLOW,
 } from '../../../definitions/constants/commonConfigs';
 import { useAppSelector } from '../../../redux/hooks';
 import {
@@ -72,7 +72,7 @@ const PairForm: React.FC = () => {
             <Grid item xs={10} className={classes.columnSpace}>
               <CustomTextField
                 className={classes.paymentProvider}
-                disabled={pair.status === TEXT_STATUS_PAIRING}
+                disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
                 error={!spi.provider.isValid}
                 fullWidth
                 helperText={
@@ -105,7 +105,7 @@ const PairForm: React.FC = () => {
               <Button
                 className={classes.spiBtn}
                 color="primary"
-                disabled={pair.status === TEXT_STATUS_PAIRING}
+                disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
                 fullWidth
                 id="spiButton"
                 onClick={() => handleModalOpen(setSpi, 'provider')}
@@ -121,7 +121,7 @@ const PairForm: React.FC = () => {
                 <InputLabel id="configurationLabel">Configuration option</InputLabel>
                 <Select
                   className={classes.configurationField}
-                  disabled={pair.status === TEXT_STATUS_PAIRING}
+                  disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
                   id="configurationField"
                   label="Configuration option"
                   labelId="configurationDropdownLabel"
@@ -138,7 +138,7 @@ const PairForm: React.FC = () => {
               <CustomTextField
                 disabled={
                   spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE ||
-                  pair.status === TEXT_STATUS_PAIRING
+                  pair.status === SPI_PAIR_FLOW.PAIRING
                 }
                 fullWidth
                 id="eftposAddressField"
@@ -152,7 +152,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
-              disabled={pair.status === TEXT_STATUS_PAIRING}
+              disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
               error={!spi.serialNumber.isValid}
               fullWidth
               helperText={!spi.serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
@@ -173,7 +173,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
-              disabled={pair.status === TEXT_STATUS_PAIRING}
+              disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
               error={!spi.posId.isValid}
               fullWidth
               helperText={!spi.posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
@@ -192,7 +192,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
-              disabled={pair.status === TEXT_STATUS_PAIRING}
+              disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
               error={!spi.apikey.isValid}
               fullWidth
               helperText={!spi.apikey.isValid ? TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD : ''}
@@ -215,7 +215,7 @@ const PairForm: React.FC = () => {
                 <Checkbox
                   checked={spi.testMode}
                   color="primary"
-                  disabled={pair.status === TEXT_STATUS_PAIRING}
+                  disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
                   id="testModeCheckbox"
                   name="testMode"
                   onChange={(event: IFormEventValue) => handleTestModeChange(setSpi, 'testMode')(event)}
@@ -229,7 +229,7 @@ const PairForm: React.FC = () => {
               <Button
                 color="primary"
                 className={classes.saveBtn}
-                disabled={!saveButtonValidator(spi) || pair.status === TEXT_STATUS_PAIRING}
+                disabled={!saveButtonValidator(spi) || pair.status === SPI_PAIR_FLOW.PAIRING}
                 id="saveSettingsButton"
                 type="submit"
                 variant="contained"
