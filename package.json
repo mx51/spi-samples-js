@@ -28,6 +28,7 @@
     "start": "PORT=3131 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
+    "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "check-prettier": "prettier --check .",
