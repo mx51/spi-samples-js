@@ -9,7 +9,7 @@ export interface IPreventDefault {
   preventDefault: () => void;
 }
 
-export interface ISPIData {
+export interface ISPIFormData {
   provider: {
     modalToggle: boolean;
     value: string;
@@ -46,7 +46,7 @@ export interface ISPIUpdatedData {
   testMode?: boolean;
 }
 
-export interface ISPIDataValidator {
+export interface ISPIFormDataValidator {
   providerValid: boolean;
   serialNumberValid: boolean;
   posIdValid: boolean;

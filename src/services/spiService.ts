@@ -1,201 +1,219 @@
-import { Spi as SpiClient, SpiFlow, TerminalConfigurationResponse, TransactionOptions } from '@mx51/spi-client-js';
-import { SPI_PAIR_STATUS, TEXT_FORM_MODAL_CODE_WESTPAC } from '../definitions/constants/commonConfigs';
+import { Spi as SpiClient } from '@mx51/spi-client-js';
+import { spiEvents, SPI_PAIR_STATUS } from '../definitions/constants/commonConfigs';
+import { FIELD_PRESSED_COLOR, PRIMARY_THEME_COLOR } from '../definitions/constants/themeStylesConfigs';
+import { ITerminalConfig, ITerminals } from './interfaces';
 
-const events = ['DeviceAddressChanged', 'StatusChanged', 'PairingFlowStateChanged', 'TxFlowStateChanged'];
 const currentVersion = '2.8.5';
 const defaultPosName = 'mx51';
-const defaultPrivateIPAddress = '192.168.1.1';
-const defaultEmptyString = '';
-const defaultTrueString = 'true';
-const defaultCountryCode = 'AU';
+
+function getLocalStorage(name: string) {
+  return window.localStorage.getItem(name);
+}
+
+function setLocalStorage(name: string, value: string) {
+  return window.localStorage.setItem(name, value);
+}
 
 class SpiService {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  private storedSpi: any;
+  private currentInstanceId: string;
 
-  private spi: TSpiObject;
+  private print;
 
-  private posId: string;
-
-  private eftposAddress: string;
-
-  private spiSecrets: unknown;
-
-  private options: TSpiOption;
-
-  private posName: string;
-
-  private version: string;
-
-  private rcptFromEftpos: boolean;
-
-  private sigFlowFromEftpos: boolean;
-
-  private apiKey: string;
-
-  private serialNumber: string;
-
-  private acquirerCode: string;
-
-  private autoResolveEftposAddress: boolean;
-
-  private testMode: boolean;
-
-  private useSecureWebSockets: boolean;
-
-  private log;
-
-  private printMerchantCopy: boolean;
+  private terminalInstance: Any;
 
   constructor() {
-    if (window.localStorage.getItem('spi')) {
-      this.storedSpi = window.localStorage.getItem('spi') || null;
+    this.currentInstanceId = '';
+    this.print = console;
+    this.terminalInstance = null;
+  }
+
+  static readTerminalList(): ITerminals {
+    return JSON.parse(getLocalStorage('terminals') as string);
+  }
+
+  static initializeTerminalInstance(instanceId: string, pairFormSettings: ITerminalConfig): ITerminalConfig {
+    const currentTerminals = SpiService.readTerminalList();
+    // instanceId: terminal instance id
+    // pairFormSettings: JSON stringify string
+    const configs: ITerminals = {};
+    configs[instanceId] = pairFormSettings;
+
+    if (!currentTerminals) {
+      // save terminal instance configs into local storage
+      setLocalStorage('terminals', JSON.stringify(configs));
+    } else {
+      currentTerminals[instanceId] = configs;
+      setLocalStorage('terminals', JSON.stringify(currentTerminals));
     }
-    this.spi = null;
-    this.posId = window.localStorage.getItem('posID') || defaultEmptyString;
-    // this.eftposAddress = window.localStorage.getItem('eftpos_address') || defaultPrivateIPAddress;
-    this.eftposAddress =
-      this.storedSpi.configuration.option === 'eftpos' ? this.storedSpi.configuration.value : defaultPrivateIPAddress;
-    this.spiSecrets = null;
-    this.options = null;
-    this.version = currentVersion;
-    this.rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === defaultTrueString;
-    this.sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === defaultTrueString;
-    this.printMerchantCopy = window.localStorage.getItem('print_merchant_copy_input') === defaultTrueString;
-    /* ----- Step 1: start ----- */
-    // this.apiKey = window.localStorage.getItem('api_key') || defaultEmptyString;
-    this.apiKey = this.storedSpi.apikey.value || defaultEmptyString;
-    // this.serialNumber = window.localStorage.getItem('serial') || defaultEmptyString;
-    this.serialNumber = this.storedSpi.serialNumber.value || defaultEmptyString;
-    // this.acquirerCode = window.localStorage.getItem('tenant_code') || defaultEmptyString;
-    this.acquirerCode = this.storedSpi.provider.value || defaultPrivateIPAddress;
-    // this.posName = defaultPosName;
-    this.posName = this.storedSpi.posId.value || defaultPosName;
-    // this.autoResolveEftposAddress = window.localStorage.getItem('auto_address') === defaultTrueString;
-    this.autoResolveEftposAddress =
-      this.storedSpi.configuration.option === 'auto' ? this.storedSpi.configuration.value : defaultPrivateIPAddress;
-    // this._acquirerCode = window.localStorage.getItem('tenant_code') || defaultTrueString;
-    this.acquirerCode = this.storedSpi.provider.value || defaultEmptyString;
-    // this.testMode = window.localStorage.getItem('test_mode') === defaultTrueString;
-    this.testMode = this.storedSpi.testMode.value || defaultTrueString;
-    /* ----- Step 1: end ----- */
-    this.useSecureWebSockets = window.localStorage.getItem('use_secure_web_sockets') === defaultTrueString;
-    this.log = console;
-    const secretsString = window.localStorage.getItem('secrets') || defaultEmptyString;
-
-    try {
-      const secrets = JSON.parse(secretsString);
-
-      if (secrets) {
-        this.spiSecrets = secrets;
-      }
-    } catch (error) {
-      this.log.error('unable to access secrets');
-    }
-
-    // Where there is an existing pairing and no tenant code set, default to wbc
-    if (!this.acquirerCode && this.spiSecrets) {
-      this.acquirerCode = TEXT_FORM_MODAL_CODE_WESTPAC;
-      // window.localStorage.setItem('tenant_code', TEXT_FORM_MODAL_CODE_WESTPAC); // we have spi object: this.spi.provider.value
-    }
-
-    this.getTenantsList();
+    // get current terminal instance
+    return SpiService.getCurrentInstance(instanceId);
   }
 
-  start(): void {
-    try {
-      this.spi = new SpiClient(this.posId, this.serialNumber, this.eftposAddress, this.spiSecrets); // It is ok to not have the secrets yet to start with.
-      this.spi.Config.PromptForCustomerCopyOnEftpos = this.rcptFromEftpos;
-      this.spi.Config.SignatureFlowOnEftpos = this.sigFlowFromEftpos;
-      this.spi.Config.PrintMerchantCopy = this.printMerchantCopy;
-      this.spi.SetPosInfo(this.posName, this.version);
-      this.spi.SetAcquirerCode(this.acquirerCode);
-      this.spi.SetDeviceApiKey(this.apiKey);
+  static getCurrentInstance(instanceId: string): ITerminalConfig {
+    const terminalList = SpiService.readTerminalList();
+    terminalList[instanceId].secrets = null;
+    // settings page related
+    terminalList[instanceId].print_merchant_copy_input = false;
+    terminalList[instanceId].receipt_from_eftpos = false;
+    terminalList[instanceId].check_sig_eftpos = false;
+    terminalList[instanceId].use_secure_web_sockets = false;
+    terminalList[instanceId].options = null;
+    terminalList[instanceId].spi_receipt_header = '';
+    terminalList[instanceId].spi_receipt_footer = '';
 
-      this.options = new TransactionOptions();
-      this.options.SetCustomerReceiptHeader(window.localStorage.getItem('receipt_header_input') || '');
-      this.options.SetCustomerReceiptFooter(window.localStorage.getItem('receipt_footer_input') || '');
-      this.options.SetMerchantReceiptHeader(window.localStorage.getItem('receipt_header_input') || '');
-      this.options.SetMerchantReceiptFooter(window.localStorage.getItem('receipt_footer_input') || '');
-    } catch (error) {
-      this.log.info(error.Message);
-      return;
-    }
-
-    this.onSpiStateChange = this.onSpiStateChange.bind(this);
-    events.map((eventName) => document.addEventListener(eventName, this.onSpiStateChange));
-    document.addEventListener('SecretsChanged', SpiService.onSecretsChange);
-
-    this.spi.PrintingResponse = this.onSpiResponse.bind(this);
-    this.spi.TerminalConfigurationResponse = SpiService.onTerminalConfigurationChange;
-    this.spi.TerminalStatusResponse = this.onSpiResponse.bind(this);
-    this.spi.BatteryLevelChanged = this.onSpiResponse.bind(this);
-    this.spi.TransactionUpdateMessage = SpiService.onSpiTransactionUpdate.bind(this);
-
-    this.setAutoAddressResolutionState();
-    this.spi.Start(); // spi library pair start function to start pairing terminal
-    this.printStatusAndActions();
+    return terminalList[instanceId];
   }
 
-  async getTenantsList(): Promise<void> {
-    const tenants = await SpiClient.GetAvailableTenants(this.posName, this.apiKey, defaultCountryCode);
-    const defaultTenantList = [
-      {
-        code: 'wbc',
-        name: 'Westpac Presto',
-      },
-      {
-        code: 'til',
-        name: 'Till Payments',
-      },
-    ];
-    localStorage.setItem('tenants', JSON.stringify(tenants.Data.length ? tenants.Data : defaultTenantList));
+  setTerminalConfigurations(instanceId: string, terminalConfigurations: ITerminalConfig): ITerminalConfig {
+    // create terminal event handler instance for handling event changes
+    const { acquirerCode, apiKey, autoAddress, eftpos, posId, secureWebSocket, serialNumber, testMode, secrets } =
+      terminalConfigurations;
+    const terminal = new EventTarget() as ITerminalConfig;
+    this.currentInstanceId = instanceId;
+    this.terminalInstance[instanceId] = terminal;
+    // instantiate spi library as spiClient
+    terminal.spiClient = new SpiClient(posId, serialNumber, eftpos, secrets);
+    terminal.spiClient.SetEventBus(terminal);
+    terminal.spiClient.SetPosInfo(defaultPosName, currentVersion);
+    terminal.spiClient.SetAcquirerCode(acquirerCode);
+    terminal.spiClient.SetDeviceApiKey(apiKey);
+    terminal.spiClient.SetSecureWebSockets(secureWebSocket);
+    terminal.spiClient.SetAutoAddressResolution(autoAddress);
+    terminal.spiClient.SetTestMode(testMode);
+
+    return terminal;
   }
 
-  onSpiStateChange(evt: TSpiEvent): void {
-    if (evt.detail && evt.detail === SPI_PAIR_STATUS.CONNECTED) {
-      this.spi.AckFlowEndedAndBackToIdle();
-    }
+  instantiateTerminal(instanceId: string, pairFormSettings: ITerminalConfig): ITerminalConfig {
+    const currentTerminals = JSON.parse(getLocalStorage('terminals') as string);
+    // check whether the instance id has been created or not
+    const terminalConfigurations =
+      Object.keys(currentTerminals).indexOf(instanceId) > -1
+        ? currentTerminals[instanceId]
+        : SpiService.initializeTerminalInstance(instanceId, pairFormSettings);
+
+    // return configured terminal instance settings
+    const terminal: ITerminalConfig = this.setTerminalConfigurations(instanceId, terminalConfigurations);
+
+    terminal.currentTxFlowStateOverride = null;
+
+    // spiTxFlowStateChanged event
+    terminal.spiClient.setEventMapper(spiEvents.spiTxFlowStateChanged, (event: Any) => {
+      const { detail } = event;
+
+      if (!detail.override) terminal.currentTxFlowStateOverride = null;
+
+      const updates = {
+        type: spiEvents.spiTxFlowStateChanged,
+        detail: this.readCurrentFlow(),
+      };
+
+      terminal.spiClient.AckFlowEndedAndBackToIdle();
+
+      // @Trigger redux action to update state for UI
+      return updates;
+    });
+
+    // spiPairingFlowStateChanged event
+    terminal.spiClient.addEventListener(spiEvents.spiPairingFlowStateChanged, (event: Any) => {
+      const { detail } = event;
+
+      if (detail?.ConfirmationCode && !detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos)
+        terminal.spiClient.PairingConfirmCode();
+
+      // @Trigger redux action to update state for UI
+    });
+
+    // spiDeviceAddressChanged
+    terminal.spiClient.addEventListener(spiEvents.spiPairingFlowStateChanged, (event: Any) => {
+      this.print.log(`%c spiDeviceAddressChanged: ${{ event }}`, `color: ${PRIMARY_THEME_COLOR}`);
+      // @Trigger redux action to update state for UI
+    });
+
+    // spiSecretsChanged event
+    terminal.spiClient.addEventListener(spiEvents.spiSecretsChanged, (event: Any) => {
+      this.print.info(
+        `%c spiSecretsChanged data: ${{ message: 'keys rolled', id: instanceId, event }}`,
+        `color: ${FIELD_PRESSED_COLOR}`
+      );
+      this.print.log(`%c spiSecretsChanged: ${{ event }}`, `color: ${PRIMARY_THEME_COLOR}`);
+      // @Trigger redux action to update state for UI
+    });
+
+    // spiStatusChanged event
+    terminal.spiClient.addEventListener(spiEvents.spiStatusChanged, (event: Any) => {
+      if (event.detail && event.detail === SPI_PAIR_STATUS.CONNECTED) terminal.spiClient.AckFlowEndedAndBackToIdle();
+      this.print.log(`%c spi status: ${{ detail: event.detail }}`, `color: ${PRIMARY_THEME_COLOR}`);
+      // @Trigger redux action to update state for UI
+    });
+
+    // spiTerminalStatusChanged event
+    terminal.spiClient.addEventListener(spiEvents.spiTerminalStatusChanged, (event: Any) => {
+      this.print.log(`%c spiTerminalStatusChanged: ${{ event }}`, `color: ${PRIMARY_THEME_COLOR}`);
+      // @Trigger redux action to update state for UI
+    });
+
+    // spiTerminalConfigChanged action event
+    terminal.spiClient.addEventListener(spiEvents.spiTerminalConfigChanged, (event: Any) => {
+      this.print.log(`%c spiTerminalConfigChanged: ${{ event }}`, `color: ${PRIMARY_THEME_COLOR}`);
+      // @Trigger redux action to update state for UI
+    });
+
+    // spiTerminalStatusChanged action event
+    terminal.spiClient.addEventListener(spiEvents.spiTerminalStatusChanged, (event: Any) => {
+      this.print.log(`%c spiTerminalStatusChanged: ${{ event }}`, `color: ${PRIMARY_THEME_COLOR}`);
+      // @Trigger redux action to update state for UI
+    });
+
+    terminal.spiClient.Start();
+
+    return terminal;
   }
 
-  static onSecretsChange(evt: TSpiEvent): void {
-    window.localStorage.setItem('secrets', JSON.stringify(evt.detail));
+  removeTerminalInstance(): void {
+    const currentTerminals = JSON.parse(getLocalStorage('terminals') as string);
+    delete currentTerminals[this.currentInstanceId];
+    // after delete current instance then update terminal list for localStorage
+    setLocalStorage('terminals', JSON.stringify(currentTerminals));
   }
 
-  static onTerminalConfigurationChange(m: unknown): void {
-    const terminalConfigurationResponse = new TerminalConfigurationResponse(m);
-    window.localStorage.setItem('serialNumber', terminalConfigurationResponse.GetSerialNumber());
+  readCurrentInstance(): ITerminalConfig {
+    // @Trigger redux action to update state for UI
+    return this.terminalInstance[this.currentInstanceId];
   }
 
-  static onSpiTransactionUpdate(m: unknown): void {
-    document.dispatchEvent(new CustomEvent('TxnUpdateMessage', { detail: m }));
+  readCurrentFlow(): Any {
+    // @Trigger redux action to update state for UI
+    return this.readCurrentInstance().currentTxFlowStateOverride || this.readCurrentInstance().CurrentTxFlowState;
   }
 
-  onSpiResponse(): void {
-    this.spi.AckFlowEndedAndBackToIdle();
-    this.printStatusAndActions();
+  // Pair related functionalities
+  spiPairTerminal(): void {
+    this.readCurrentInstance().spiClient.Pair();
+    // @Trigger redux action to update state for UI
   }
 
-  setAutoAddressResolutionState(): void {
-    this.spi.SetTestMode(this.testMode);
-    this.spi.SetSecureWebSockets(this.useSecureWebSockets);
-    this.spi.SetAutoAddressResolution(this.autoResolveEftposAddress);
+  spiCancelPairingTerminal(): void {
+    this.readCurrentInstance().spiClient.PairingCancel();
+    // @Trigger redux action to update state for UI
   }
 
-  printStatusAndActions(): void {
-    this.printFlowInfo();
+  spiUnPairTerminal(): void {
+    this.readCurrentInstance().spiClient.Unpair();
+    // @Trigger redux action to update state for UI
   }
 
-  printFlowInfo(): void {
-    if (SpiFlow.Pairing) {
-      this.log.info(this.spi.CurrentPairingFlowState);
-      // redux action dispatch pair flow state update
-    }
+  // Terminal related functionalities
+  addTerminal(instanceId: string, pairFormSettings: ITerminalConfig): void {
+    // const terminal = this.createTerminalInstance(instanceId, pairFormSettings);
+    this.instantiateTerminal(instanceId, pairFormSettings);
+    // @Destructure spiClient instance and provide certain parameters
+    // @Trigger redux action to update state for UI
+  }
 
-    if (SpiFlow.Transaction) {
-      this.log.info(this.spi.CurrentTxFlowState);
-      // redux action dispatch pair flow state update
-    }
+  removeTerminal(): void {
+    this.removeTerminalInstance();
+    // @Trigger redux action to update state for UI
   }
 }
 

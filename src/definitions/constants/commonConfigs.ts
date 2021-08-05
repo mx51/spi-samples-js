@@ -20,5 +20,31 @@ export const SPI_PAIR_STATUS = {
   CONNECTING: 'PairedConnecting',
   UNPAIRED: 'Unpaired',
 };
-// Pair Flow drawer width 4/12 (based on design required)
+// pair flow drawer width 4/12 (based on design required)
 export const drawerWidth = 33.33333;
+// spi service constants
+export const spiEvents = {
+  spiCallAcceptSignature: 'spiCallAcceptSignature',
+  spiCallAckFlowEnd: 'spiCallAckFlowEnd',
+  spiCallCancelTx: 'spiCallCancelTx',
+  spiCallGetTerminalConfig: 'spiCallGetTerminalConfig',
+  spiCallGetTerminalStatus: 'spiCallGetTerminalStatus',
+  spiCallInitiateTx: 'spiCallInitiateTx',
+  spiCallPair: 'spiCallPair',
+  spiCallPairingCancel: 'spiCallPairingCancel',
+  spiCallPairingConfirmCode: 'spiCallPairingConfirmCode',
+  spiCallSetConfig: 'spiCallSetConfig',
+  spiCallUnpair: 'spiCallUnpair',
+
+  spiAutoAddressResolutionFailed: 'AutoAddressResolutionFailed',
+  spiDeviceAddressChanged: 'DeviceAddressChanged',
+  spiSecretsChanged: 'SecretsChanged',
+  spiFlowChanged: 'spiFlowChanged',
+  spiPairingFlowStateChanged: 'PairingFlowStateChanged',
+  spiPong: 'SpiPong',
+  spiStatusChanged: 'StatusChanged',
+  spiTerminalConfigChanged: 'TerminalConfigChanged',
+  spiTerminalStatusChanged: 'TerminalStatusChanged',
+  spiTxFlowStateChanged: 'TxFlowStateChanged',
+  spiTxUpdateMessage: 'TransactionUpdateMessage',
+};

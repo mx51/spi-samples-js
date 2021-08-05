@@ -34,7 +34,7 @@ import {
   handleSerialNumberBlur,
   handleSerialNumberChange,
   handleTestModeChange,
-  initialSpi,
+  initialSpiFormData,
 } from '../../../utils/common/pair/pairFormHelpers';
 import useLocalStorage from '../../../utils/hooks/useLocalStorage';
 import {
@@ -45,13 +45,13 @@ import {
 import CustomTextField from '../../CustomTextField';
 import ErrorInputAdornment from '../../CustomTextField/ErrorInputAdornment';
 import useStyles from './index.styles';
-import { IFormEventValue, IPreventDefault, ISPIData } from './interfaces';
+import { IFormEventValue, IPreventDefault, ISPIFormData } from './interfaces';
 import SPIModal from './SPIModal';
 
 const PairForm: React.FC = () => {
   const classes = useStyles();
   // spi state
-  const [spi, setSpi] = useLocalStorage<ISPIData>('spi', initialSpi);
+  const [spi, setSpi] = useLocalStorage<ISPIFormData>('spi', initialSpiFormData);
   // save settings logics
   const handleSubmit = (event: IPreventDefault) => {
     event.preventDefault();
@@ -62,7 +62,7 @@ const PairForm: React.FC = () => {
   return (
     <Grid container direction="column" className={classes.formContainer}>
       <form autoComplete="off" onSubmit={handleSubmit} className={classes.pairForm}>
-        <Grid item className={classes.mainTitle}>
+        <Grid item className={classes.title}>
           <Typography variant="h6" component="h1">
             Configuration
           </Typography>

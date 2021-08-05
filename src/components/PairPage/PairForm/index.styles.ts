@@ -11,8 +11,8 @@ const useStyles = makeStyles((theme: Theme) =>
     pairForm: {
       marginBottom: -theme.spacing(2),
     },
-    mainTitle: {
-      marginBottom: theme.spacing(1),
+    title: {
+      marginBottom: theme.spacing(1.5),
     },
     fieldSpace: {
       marginBottom: theme.spacing(1.5),
@@ -21,10 +21,11 @@ const useStyles = makeStyles((theme: Theme) =>
       margin: 0,
     },
     spiBtn: {
-      marginTop: theme.spacing(1),
-      paddingBottom: theme.spacing(1),
       background: theme.palette.primary.main,
       color: theme.palette.common.white,
+      fontWeight: 300,
+      marginTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1),
       textTransform: 'none',
       '&:hover, &:active, &:focus': {
         background: theme.palette.primary.main,
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
     saveBtn: {
       background: theme.palette.primary.main,
       color: theme.palette.common.white,
+      fontWeight: 300,
       textTransform: 'none',
       '&:hover, &:active, &:focus': {
         background: theme.palette.primary.main,

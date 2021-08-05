@@ -10,7 +10,7 @@ import PairForm from './PairForm';
 import PairStatus from './PairStatus';
 
 const PairPage: React.FC = () => {
-  const [flow, setFlow] = useLocalStorage('pairFlow', true);
+  const [flow, setFlow] = useLocalStorage('pairFlow', false); // By default, flow is closed
 
   const handleDrawerToggle = () => {
     setFlow(!flow);

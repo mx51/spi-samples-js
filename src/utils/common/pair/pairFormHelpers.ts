@@ -1,5 +1,5 @@
 import React from 'react';
-import { IFormEventValue, ISPIAttribute, ISPIData } from '../../../components/PairPage/PairForm/interfaces';
+import { IFormEventValue, ISPIAttribute, ISPIFormData } from '../../../components/PairPage/PairForm/interfaces';
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -23,7 +23,7 @@ function serialNumberFormatter(currentSerialNumber: string): string {
   return formatSerialNumber;
 }
 
-export const initialSpi = {
+export const initialSpiFormData = {
   provider: {
     modalToggle: false,
     value: '',
@@ -50,7 +50,7 @@ export const initialSpi = {
 
 // generic state setter (spi)
 export const setFormState = (
-  setState: React.Dispatch<React.SetStateAction<ISPIData>>,
+  setState: React.Dispatch<React.SetStateAction<ISPIFormData>>,
   attribute: string,
   newState: Record<string, unknown> | boolean | string
 ): void => {
@@ -72,7 +72,7 @@ export const setFormState = (
 
 const changeEventHandler =
   () =>
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string) =>
+  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (event: IFormEventValue): void => {
     setFormState(setSpi, attribute, { value: event.target.value as unknown as string });
   };
@@ -80,7 +80,7 @@ const changeEventHandler =
 const blurEventHandler =
   () =>
   (
-    setSpi: React.Dispatch<React.SetStateAction<ISPIData>>,
+    setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
     attribute: string,
     fieldValidator: (value: string) => boolean
   ) =>
@@ -91,7 +91,7 @@ const blurEventHandler =
 
 export const handleProviderChange =
   (
-    setSpi: React.Dispatch<React.SetStateAction<ISPIData>>,
+    setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
     attribute: string,
     fieldValidator: (value: string) => boolean
   ) =>
@@ -99,12 +99,15 @@ export const handleProviderChange =
     setFormState(setSpi, attribute, { value, isValid: fieldValidator(value) });
   };
 
-export const handleModalOpen = (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string): void => {
+export const handleModalOpen = (
+  setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
+  attribute: string
+): void => {
   setFormState(setSpi, attribute, { modalToggle: true });
 };
 
 export const handleModalClose =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string) =>
+  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (newValue: string): void => {
     setFormState(setSpi, attribute, { value: newValue, modalToggle: false, isValid: true });
   };
@@ -112,13 +115,13 @@ export const handleModalClose =
 export const handleProviderBlur = blurEventHandler();
 
 export const handleConfigTypeChange =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string) =>
+  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (event: IFormEventValue): void => {
     setFormState(setSpi, attribute, { type: event.target.value as unknown as string });
   };
 
 export const handleConfigTypeBlur =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string) =>
+  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (event: IFormEventValue): void => {
     setFormState(
       setSpi,
@@ -130,7 +133,7 @@ export const handleConfigTypeBlur =
 export const handleConfigAddressChange = changeEventHandler();
 
 export const handleSerialNumberChange =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string) =>
+  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (event: IFormEventValue): void => {
     const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
     setFormState(setSpi, attribute, { value: serialNumberFormatter(currentSerialNumber) });
@@ -138,7 +141,7 @@ export const handleSerialNumberChange =
 
 export const handleSerialNumberBlur =
   (
-    setSpi: React.Dispatch<React.SetStateAction<ISPIData>>,
+    setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
     attribute: string,
     fieldValidator: (value: string) => boolean
   ) =>
@@ -156,7 +159,7 @@ export const handleApikeyChange = changeEventHandler();
 export const handleApikeyBlur = blurEventHandler();
 
 export const handleTestModeChange =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIData>>, attribute: string) =>
+  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (event: IFormEventValue): void => {
     setFormState(setSpi, attribute, event.target.value as unknown as string);
   };

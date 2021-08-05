@@ -1,4 +1,4 @@
-import { ISPIData } from '../../components/PairPage/PairForm/interfaces';
+import { ISPIFormData } from '../../components/PairPage/PairForm/interfaces';
 
 function serialNumberValidator(value: string): boolean {
   const valueWithoutDash = value.replaceAll('-', '');
@@ -10,7 +10,7 @@ function fieldRequiredValidator(value: string): boolean {
   return value.length > 0;
 }
 
-function saveButtonValidator(spi: ISPIData): boolean {
+function saveButtonValidator(spi: ISPIFormData): boolean {
   const {
     provider: { value: selectedProvider, isValid: providerValid },
     serialNumber: { value: serialNumberValue, isValid: serialNumberValid },

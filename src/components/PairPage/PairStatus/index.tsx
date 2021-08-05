@@ -39,7 +39,7 @@ function PairStatus({ open, handleDrawerToggle }: PairStatusInterface): React.Re
 
   return (
     <Grid container direction="column" className={classes.flowBox} id="pairStatus">
-      <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.mainTitle}>
+      <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.title}>
         <Grid item xs={4}>
           <Typography variant="h6" component="h1">
             Status
