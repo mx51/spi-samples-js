@@ -29,6 +29,7 @@
     "start": "PORT=3131 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
+    "test:deploy": "npm test -- --reporters=jest-junit --reporters=default",
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "check-prettier": "prettier --check .",
@@ -75,6 +76,7 @@
     "eslint-plugin-react": "^7.24.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^7.0.1",
+    "jest-junit": "^12.2.0",
     "prettier": "^2.3.2"
   }
 }
