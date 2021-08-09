@@ -2,8 +2,8 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    mainTitle: {
-      paddingBottom: theme.spacing(1.5),
+    title: {
+      paddingBottom: theme.spacing(2),
       background: theme.palette.background.default,
     },
     flowBox: {
@@ -70,9 +70,11 @@ const useStyles = makeStyles((theme: Theme) =>
       background: 'transparent',
       border: 'none',
       cursor: 'pointer',
+      fontWeight: 300,
       marginBottom: theme.spacing(0.5),
     },
     pairBtn: {
+      fontWeight: 300,
       marginBottom: theme.spacing(0.5),
       textTransform: 'none',
     },
@@ -80,13 +82,14 @@ const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.common.white,
       color: theme.palette.primary.main,
       borderColor: theme.palette.primary.main,
+      fontWeight: 300,
+      marginBottom: theme.spacing(0.5),
       textTransform: 'none',
       '&:hover, &:active, &:focus': {
         background: theme.palette.common.white,
         color: theme.palette.primary.main,
         borderColor: theme.palette.primary.main,
       },
-      marginBottom: theme.spacing(0.5),
     },
     unpairedIcon: {
       color: theme.palette.error.main,

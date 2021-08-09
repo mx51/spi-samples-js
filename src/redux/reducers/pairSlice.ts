@@ -1,13 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // constants
-import { TEXT_STATUS_UNPAIRED } from '../../definitions/constants/commonConfigs';
+import { SPI_PAIR_FLOW } from '../../definitions/constants/commonConfigs';
 
 interface IPairState {
   status: string;
 }
 
 const initialState: IPairState = {
-  status: TEXT_STATUS_UNPAIRED,
+  status: SPI_PAIR_FLOW.IDLE,
 };
 
 export const pairSlice = createSlice({
