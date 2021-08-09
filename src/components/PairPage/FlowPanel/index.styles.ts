@@ -27,6 +27,9 @@ export default makeStyles((theme: Theme) =>
       height: '100%',
       overflowY: 'scroll', // handle flow status longer messages
       padding: theme.spacing(2),
+      '& > h1': {
+        paddingBottom: theme.spacing(2),
+      },
     },
   })
 );

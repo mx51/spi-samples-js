@@ -15,6 +15,10 @@ const textFieldStyles = (theme: Theme) => ({
     '& .MuiOutlinedInput-root.Mui-focused:hover .MuiOutlinedInput-notchedOutline': {
       borderColor: theme.palette.text.hint,
     },
+    '& .MuiOutlinedInput-root.Mui-focused:hover, & .MuiOutlinedInput-root.Mui-focused:active': {
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.primary.main,
+    },
     '& .MuiOutlinedInput-root.Mui-error:hover .MuiOutlinedInput-notchedOutline': {
       borderColor: theme.palette.error.main,
     },

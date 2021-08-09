@@ -9,7 +9,7 @@ export interface IPreventDefault {
   preventDefault: () => void;
 }
 
-export interface ISPIData {
+export interface ISPIFormData {
   provider: {
     modalToggle: boolean;
     value: string;
@@ -46,7 +46,7 @@ export interface ISPIUpdatedData {
   testMode?: boolean;
 }
 
-export interface ISPIDataValidator {
+export interface ISPIFormDataValidator {
   providerValid: boolean;
   serialNumberValid: boolean;
   posIdValid: boolean;
@@ -57,3 +57,14 @@ export type IFormEventValue = React.ChangeEvent<{ value: unknown }>;
 export type IFormEventCheckbox = React.ChangeEvent<{ checked: boolean }>;
 
 export type IFormEventKey = React.KeyboardEvent<{ key: string }>;
+
+export interface IPairFormSettings {
+  acquirerCode?: string;
+  apiKey?: string;
+  autoAddress?: boolean;
+  eftpos?: string;
+  posId?: string;
+  secureWebSocket?: boolean;
+  serialNumber?: string;
+  testMode?: boolean;
+}
