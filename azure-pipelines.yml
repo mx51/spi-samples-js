@@ -1,0 +1,57 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+pr:
+  branches:
+    include:
+      - '*'
+
+trigger:
+  branches:
+    include:
+      - '*'
+  tags:
+    include:
+      - '*'
+
+variables:
+  - name: ARTIFACT_NAME
+    value: spi-samples-js
+  - name: BRANCH_NAME
+    value: $[variables['Build.SourceBranch']]
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - job: build
+        cancelTimeoutInMinutes: 5
+        displayName: Build
+        steps:
+          - task: Npm@1
+            displayName: Install dependencies
+            inputs:
+              command: 'install'
+
+          - task: Npm@1
+            displayName: Build project
+            inputs:
+              command: 'custom'
+              customCommand: 'run build'
+
+          - task: Npm@1
+            displayName: Run unit tests
+            inputs:
+              command: 'custom'
+              customCommand: 'run test:deploy'
+
+          - task: PublishTestResults@2
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: 'junit.xml'
+              failTaskOnFailedTests: true
+
+          - publish: $(System.DefaultWorkingDirectory)/build
+            artifact: $(ARTIFACT_NAME)
+            displayName: Publish Artifact
