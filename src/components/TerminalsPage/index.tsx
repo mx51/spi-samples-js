@@ -36,7 +36,7 @@ const Terminals: React.FC = () => {
               Terminals list
             </Typography>
           </Box>
-          <Box className={classes.manageFleetSettingDiv}>
+          <Box className={classes.manageFleetSetting}>
             <Link href={PATH_FLEET_SETTINGS} className={classes.manageFleetSettingLink}>
               Manage fleet settings
             </Link>
