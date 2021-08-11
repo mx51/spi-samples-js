@@ -1,20 +1,16 @@
 pool:
   vmImage: 'ubuntu-latest'
 
-pr:
-  branches:
-    include:
-      - '*'
+pr: none
 
 trigger:
   branches:
     include:
       - '*'
-  tags:
-    include:
-      - '*'
 
 variables:
+  - group: spi-samples-js-variables
+
   - name: ARTIFACT_NAME
     value: spi-samples-js
   - name: BRANCH_NAME
@@ -55,3 +51,42 @@ stages:
           - publish: $(System.DefaultWorkingDirectory)/build
             artifact: $(ARTIFACT_NAME)
             displayName: Publish Artifact
+
+          - script: ./scripts/failure-alert.py
+            env:
+              PYTHONUNBUFFERED: '1'
+              ALERT_MESSAGE: 'Build pipeline failure'
+            displayName: 'Pipeline failure build stage alert'
+            condition: failed()
+
+  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/heads/feature/sample-pos-two') }}:
+      - stage: deploy
+        displayName: Deploy
+        jobs:
+          - deployment: Deploy_Dev
+            environment: cdn-dev
+            pool: shared
+            workspace:
+              clean: all
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+
+                    - download: current
+                      artifact: $(ARTIFACT_NAME)
+                      displayName: 'Fetch current package from Azure'
+
+                    - script: make deploy
+                      env:
+                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE)
+                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                      displayName: 'Deploy package'
+
+                    - script: ./scripts/failure-alert.py
+                      env:
+                        PYTHONUNBUFFERED: '1'
+                        ALERT_MESSAGE: 'Deploy pipeline failure'
+                      displayName: 'Pipeline failure deploy stage alert'
+                      condition: failed()
