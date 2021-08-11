@@ -1,0 +1,8 @@
+{
+  "name": "@mx51/spi-client-js",
+  "version": "2.9.0",
+  "description": "JavaScript Client Library for mx51's In-Store Integration.",
+  "main": "./spi-client-js.js",
+  "author": "mx51",
+  "license": "Apache-2.0"
+}

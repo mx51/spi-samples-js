@@ -27,13 +27,12 @@
     "build": "react-scripts build",
     "start": "react-scripts start",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
-    "test": "react-scripts test",
-    "postinstall": "cd \"node_modules/@mx51/spi-client-js/\" && npm i && npm run build"
+    "test": "react-scripts test"
   },
   "dependencies": {
     "@iconify/icons-fa-regular": "^1.0.5",
     "@iconify/react": "^1.1.3",
-    "@mx51/spi-client-js": "https://git@github.com/mx51/spi-client-js#feature/v2.9.0",
+    "@mx51/spi-client-js": "file:./library",
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^25.2.1",
     "@types/react": "^16.9.32",
