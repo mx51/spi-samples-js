@@ -6,11 +6,6 @@ import {
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    manageFleetSettingBtn: {
-      marginRight: theme.spacing(2),
-      fontSize: '1rem',
-      textAlign: 'center',
-    },
     table: {
       marginTop: theme.spacing(2),
     },
