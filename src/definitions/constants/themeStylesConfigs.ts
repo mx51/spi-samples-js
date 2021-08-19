@@ -20,3 +20,4 @@ export const PRIMARY_SUCCESS_COLOR = '#1FB877';
 export const PRIMARY_THEME_COLOR = '#393F73';
 // secondary colors
 export const SECONDARY_THEME_COLOR = '#686D93';
+export const SECONDRARY_BACKGROUND_COLOR = '#EAEAF9';

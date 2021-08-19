@@ -35,7 +35,7 @@ const Navbar: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.navbar}>
+      <AppBar position="fixed" className={classes.navbar}>
         <NavbarHeader handleToggleDrawer={toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
       </AppBar>
       <Drawer anchor="left" open={drawerToggle.left} onClose={toggleDrawer(false)}>
