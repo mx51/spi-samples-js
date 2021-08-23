@@ -76,17 +76,19 @@ stages:
 
                     - download: current
                       artifact: $(ARTIFACT_NAME)
-                      displayName: 'Fetch current package from Azure'
+                      displayName: 'Fetch current package from Azure (dev)'
 
                     - script: make deploy
                       env:
                         ASSUMED_ROLE: $(AWS_ASSUMED_ROLE)
                         ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
-                      displayName: 'Deploy package'
+                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
+                        S3_BUCKET: $(S3_BUCKET_DEV)
+                      displayName: 'Deploy package (dev)'
 
                     - script: ./scripts/failure-alert.py
                       env:
                         PYTHONUNBUFFERED: '1'
-                        ALERT_MESSAGE: 'Deploy pipeline failure'
-                      displayName: 'Pipeline failure deploy stage alert'
+                        ALERT_MESSAGE: 'Deploy pipeline failure (dev)'
+                      displayName: 'Pipeline failure deploy stage alert (dev)'
                       condition: failed()
