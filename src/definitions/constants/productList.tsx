@@ -1,60 +1,42 @@
-import React from 'react';
-import { ReactComponent as Cappuccino } from '../../images/product/Cappuccino.svg';
-import { ReactComponent as ChaiLatte } from '../../images/product/ChaiLatte.svg';
-import { ReactComponent as FlatWhite } from '../../images/product/FlatWhite.svg';
-import { ReactComponent as HoneyLatte } from '../../images/product/HoneyLatte.svg';
-import { ReactComponent as Latte } from '../../images/product/Latte.svg';
-import { ReactComponent as Mocha } from '../../images/product/Mocha.svg';
-import { ReactComponent as ProductionTestItem } from '../../images/product/ProductionTestItem.svg';
-import { ReactComponent as RoseTeaLatte } from '../../images/product/RoseTeaLatte.svg';
-
 export default [
   {
     name: 'Mocha',
-    price: '$4.20',
-    image: <Mocha />,
-    backgroundColor: '#F9F0EB',
+    price: 4.2,
+    image: 'images/product/mocha.png',
   },
   {
     name: 'Honey Latte',
-    price: '$4.80',
-    image: <HoneyLatte />,
-    backgroundColor: '#DED9BB',
+    price: 4.8,
+    image: 'images/product/honeyLatte.png',
   },
   {
     name: 'Flat White',
-    price: '$3.80',
-    image: <FlatWhite />,
-    backgroundColor: '#7FB5BF',
+    price: 3.8,
+    image: 'images/product/flatWhite.png',
   },
   {
     name: 'Chai Latte',
-    price: '$4.50',
-    image: <ChaiLatte />,
-    backgroundColor: '#E4B3B2',
+    price: 4.5,
+    image: 'images/product/chaiLatte.png',
   },
   {
     name: 'Rose Tea Latte',
-    price: '$4.50',
-    image: <RoseTeaLatte />,
-    backgroundColor: '#1F3832',
+    price: 4.5,
+    image: 'images/product/roseTeaLatte.png',
   },
   {
     name: 'Cappuccino',
-    price: '$3.80',
-    image: <Cappuccino />,
-    backgroundColor: '#253833',
+    price: 3.8,
+    image: 'images/product/cap.png',
   },
   {
     name: 'Latte',
-    price: '$3.80',
-    image: <Latte />,
-    backgroundColor: '#253833',
+    price: 3.8,
+    image: 'images/product/latte.png',
   },
   {
     name: 'Production Test Item',
-    price: '$0.01',
-    image: <ProductionTestItem />,
-    backgroundColor: '#ffffff',
+    price: 0.01,
+    image: 'images/product/testItem.png',
   },
 ];

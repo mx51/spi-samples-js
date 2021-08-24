@@ -10,13 +10,8 @@ export default function Product({ product }: ProductProps): React.ReactElement {
       <Card className={classes.cardStyle}>
         <CardActionArea>
           <CardMedia className={classes.productText} title={product.name}>
-            <Box
-              className={classes.productImage}
-              bgcolor={product.backgroundColor}
-              display="flex"
-              justifyContent="center"
-            >
-              {product.image}
+            <Box className={classes.productImage} display="flex" justifyContent="center">
+              <img src={product.image} alt={product.name} />
             </Box>
           </CardMedia>
           <CardContent>
@@ -24,7 +19,7 @@ export default function Product({ product }: ProductProps): React.ReactElement {
               {product.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              {product.price}
+              {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(product.price)}
             </Typography>
           </CardContent>
         </CardActionArea>

@@ -57,7 +57,7 @@ const theme = createTheme({
         boxShadow: 'none',
       },
       elevation1: {
-        boxShadow: '0px 4px 15px rgba(57, 63, 115, 0.05)',
+        boxShadow: '0 .25rem .938 rgba(57, 63, 115, 0.05)',
       },
     },
     MuiDivider: {

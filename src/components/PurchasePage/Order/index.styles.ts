@@ -1,5 +1,4 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { SECONDRARY_BACKGROUND_COLOR } from '../../../definitions/constants/themeStylesConfigs';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -18,37 +17,14 @@ export default makeStyles((theme: Theme) =>
       lineHeight: '1.5rem',
       fontWeight: 'lighter',
     },
-    subTotal: {
-      color: theme.palette.primary.main,
-      fontSize: '1rem',
-      fontWeight: 'normal',
-      lineHeight: '1.5rem',
-    },
-    additionalCharges: {
-      color: theme.palette.info.main,
-      letterSpacing: '0.02em',
-      fontSize: '1rem',
-      fontWeight: 'normal',
-      lineHeight: '1.5rem',
-    },
+
     total: {
       color: theme.palette.primary.main,
 
       fontWeight: 500,
       fontSize: '1.25rem',
       lineHeight: '1.5rem',
-      letterSpacing: '0.03em',
-    },
-    price: {
-      fontSize: '1.25rem',
-    },
-    addtionalChargeBtnLabel: {
-      padding: 0,
-    },
-    addtionalChargeBtn: {
-      color: theme.palette.primary.main,
-      backgroundColor: SECONDRARY_BACKGROUND_COLOR,
-      fontSize: '1.25rem',
+      letterSpacing: '0.03rem',
     },
 
     totalPrice: {

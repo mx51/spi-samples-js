@@ -1,6 +1,8 @@
 import React from 'react';
-import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography, IconButton } from '@material-ui/core';
-import { ReactComponent as AddIcon } from '../../../images/AddIcon.svg';
+import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography } from '@material-ui/core';
+
+import OrderLineItem from '../../OrderLineItem';
+import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
 
 function Order(): React.ReactElement {
@@ -21,33 +23,10 @@ function Order(): React.ReactElement {
       </Box>
       <Divider />
       <List>
-        <ListItem>
-          <ListItemText primary="Subtotal" classes={{ primary: classes.subTotal }} />
-          <Typography className={classes.price}>$15.00</Typography>
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Cashout" classes={{ primary: classes.additionalCharges }} />
-          <Button
-            variant="contained"
-            size="small"
-            disableElevation
-            classes={{ root: classes.addtionalChargeBtn, label: classes.addtionalChargeBtnLabel }}
-          >
-            $0.50
-          </Button>
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Surcharge" classes={{ primary: classes.additionalCharges }} />
-          <IconButton>
-            <AddIcon />
-          </IconButton>
-        </ListItem>
-        <ListItem>
-          <ListItemText primary="Tip" classes={{ primary: classes.additionalCharges }} />
-          <IconButton>
-            <AddIcon />
-          </IconButton>
-        </ListItem>
+        <OrderSubTotal label="subtotal" amount={10} />
+        <OrderLineItem label="Surcharge" amount={0.5} />
+        <OrderLineItem label="Cashout" amount={null} />
+        <OrderLineItem label="Tip" amount={null} />
         <Divider variant="middle" />
         <ListItem>
           <ListItemText primary="Total" classes={{ primary: classes.total }} />
