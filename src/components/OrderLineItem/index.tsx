@@ -6,6 +6,7 @@ import { IOrderLineItemProps } from './interfaces/index';
 
 function OrderLineItem({ label, amount }: IOrderLineItemProps): React.ReactElement {
   const classes = useStyles();
+
   return (
     <ListItem>
       <ListItemText primary={label} classes={{ primary: classes.additionalCharges }} />
@@ -20,7 +21,7 @@ function OrderLineItem({ label, amount }: IOrderLineItemProps): React.ReactEleme
           disableElevation
           classes={{ root: classes.addtionalChargeBtn, label: classes.addtionalChargeBtnLabel }}
         >
-          {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(amount ?? 0)}
+          {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format((amount ?? 0) / 100)}
         </Button>
       )}
     </ListItem>

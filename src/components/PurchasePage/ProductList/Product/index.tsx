@@ -5,6 +5,8 @@ import { ProductProps } from './interfaces';
 
 export default function Product({ product }: ProductProps): React.ReactElement {
   const classes = useStyles();
+  const productPriceInDollars = product.price / 100;
+
   return (
     <Box>
       <Card className={classes.cardStyle}>
@@ -19,7 +21,7 @@ export default function Product({ product }: ProductProps): React.ReactElement {
               {product.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(product.price)}
+              {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(productPriceInDollars)}
             </Typography>
           </CardContent>
         </CardActionArea>

@@ -23,8 +23,8 @@ function Order(): React.ReactElement {
       </Box>
       <Divider />
       <List>
-        <OrderSubTotal label="subtotal" amount={10} />
-        <OrderLineItem label="Surcharge" amount={0.5} />
+        <OrderSubTotal label="subtotal" amount={100} />
+        <OrderLineItem label="Surcharge" amount={500} />
         <OrderLineItem label="Cashout" amount={null} />
         <OrderLineItem label="Tip" amount={null} />
         <Divider variant="middle" />

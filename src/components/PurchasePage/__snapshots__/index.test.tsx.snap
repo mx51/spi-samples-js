@@ -541,7 +541,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <p
                 class="MuiTypography-root makeStyles-price-40 MuiTypography-body1"
               >
-                $10.00
+                $1.00
               </p>
             </li>
             <li
@@ -564,7 +564,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 <span
                   class="MuiButton-label makeStyles-addtionalChargeBtnLabel-43"
                 >
-                  $0.50
+                  $5.00
                 </span>
                 <span
                   class="MuiTouchRipple-root"
