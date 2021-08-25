@@ -23,7 +23,7 @@ const PairPage: React.FC = () => {
       <div className={classes.root}>
         <main className={flow ? `${classes.content} ${classes.contentShift}` : classes.content}>
           <Container maxWidth="md">
-            <Grid container spacing={1}>
+            <Grid container>
               <Grid item sm={8} xs={12} className={classes.pairFormContainer}>
                 <PairForm />
               </Grid>

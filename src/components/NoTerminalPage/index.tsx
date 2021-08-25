@@ -10,8 +10,8 @@ import useStyles from './index.styles';
 const NoTerminalPage: React.FC = () => {
   const classes = useStyles();
   return (
-    <Grid container>
-      <Grid item xs={12}>
+    <Grid>
+      <Grid item>
         <Paper className={classes.paper} elevation={0}>
           <UnpluggedIcon />
           <Typography gutterBottom variant="subtitle1">

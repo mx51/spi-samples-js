@@ -1,5 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
+import { BrowserRouter as Router } from 'react-router-dom';
+
 import '@testing-library/jest-dom/extend-expect';
 import PurchasePage from '.';
 import ReduxProvider from '../../redux/ReduxProvider';
@@ -9,59 +11,11 @@ describe('Test <PurchasePage />', () => {
   test('snapshot for PurchasePage component', () => {
     const { container } = render(
       <ReduxProvider reduxStore={store}>
-        <PurchasePage />
+        <Router>
+          <PurchasePage />
+        </Router>
       </ReduxProvider>
     );
-
-    expect(container).toMatchInlineSnapshot(`
-      <div>
-        <div>
-          <div
-            class="makeStyles-root-1"
-          >
-            <header
-              class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary makeStyles-navbar-2 MuiPaper-elevation4"
-            >
-              <div
-                class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
-              >
-                <button
-                  aria-label="menu"
-                  class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-4 MuiIconButton-colorInherit MuiIconButton-edgeStart"
-                  data-testid="navbarMenuIcon"
-                  name="menuIcon"
-                  tabindex="0"
-                  type="button"
-                >
-                  <span
-                    class="MuiIconButton-label"
-                  >
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
-                </button>
-                <svg>
-                  PrimaryLogoIcon.svg
-                </svg>
-              </div>
-            </header>
-          </div>
-          <p>
-            Purchase Page
-          </p>
-        </div>
-      </div>
-    `);
+    expect(container).toMatchSnapshot();
   });
 });

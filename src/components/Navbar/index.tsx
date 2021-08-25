@@ -15,6 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     navbar: {
       background: PRIMARY_DARK_COLOR,
+      position: 'fixed',
+      top: 0,
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -35,7 +37,7 @@ const Navbar: React.FC = () => {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.navbar}>
+      <AppBar className={classes.navbar}>
         <NavbarHeader handleToggleDrawer={toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
       </AppBar>
       <Drawer anchor="left" open={drawerToggle.left} onClose={toggleDrawer(false)}>

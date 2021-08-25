@@ -33,6 +33,9 @@ const theme = createTheme({
           margin: 0,
           WebkitFontSmoothing: 'auto',
         },
+        body: {
+          marginTop: '3rem',
+        },
       },
     },
     MuiButton: {
@@ -52,6 +55,14 @@ const theme = createTheme({
       root: {
         border: `1px solid ${PRIMARY_BORDER_COLOR}`,
         boxShadow: 'none',
+      },
+      elevation1: {
+        boxShadow: '0 .25rem .938 rgba(57, 63, 115, 0.05)',
+      },
+    },
+    MuiDivider: {
+      root: {
+        backgroundColor: PRIMARY_BORDER_COLOR,
       },
     },
   },
