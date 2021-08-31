@@ -1,11 +1,36 @@
-import React from 'react';
+/* eslint-disable no-console */
+import React, { useState } from 'react';
 import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography } from '@material-ui/core';
 
+import { useDispatch, useSelector } from 'react-redux';
+import { IProductSelector } from '../../../redux/reducers/ProductSlice/interfaces';
+import { productsSelector, productSubTotalSelector } from '../../../redux/reducers/ProductSlice/productSelector';
+import { clearAllProducts } from '../../../redux/reducers/ProductSlice/productSlice';
+import currencyFormat from '../../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../../OrderLineItem';
 import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
 
 function Order(): React.ReactElement {
+  const dispatch = useDispatch();
+  const clearAllProductsAction = () => {
+    dispatch(clearAllProducts());
+  };
+  const products: Array<IProductSelector> = useSelector(productsSelector);
+  const subtotalAmount: number = useSelector(productSubTotalSelector);
+
+  const [surchargeAmount, setSurchargeAmount] = useState(0);
+  const [tipAmount, setTipAmount] = useState(0);
+  const [cashoutAmount, setCashoutAmount] = useState(0);
+
+  // Note: logs will be removed once key pad component is created REMINDER: to remove eslint in line 1
+
+  console.log(setSurchargeAmount);
+  console.log(setTipAmount);
+  console.log(setCashoutAmount);
+
+  const totalAmount = subtotalAmount + surchargeAmount + tipAmount + cashoutAmount;
+
   const classes = useStyles();
   return (
     <Box component={Paper} className={classes.root} display="flex" flexDirection="column">
@@ -14,23 +39,37 @@ function Order(): React.ReactElement {
           Order
         </Typography>
         <Box>
-          <Button className={classes.clear}>Clear all</Button>
+          <Button className={classes.clear} onClick={() => clearAllProductsAction()}>
+            Clear all
+          </Button>
         </Box>
       </Box>
       <Divider />
-      <Box flexGrow={1}>
-        <p>TODO</p>
+      <Box className={classes.orderList}>
+        <List>
+          {products.map((product) => (
+            <ListItem key={product.product.id}>
+              <ListItemText
+                primary={`${product.quantity} x ${product.product.name}`}
+                classes={{ primary: classes.items }}
+              />
+              <Typography className={classes.amount}>
+                {currencyFormat((product.product.price * product.quantity) / 100)}
+              </Typography>
+            </ListItem>
+          ))}
+        </List>
       </Box>
       <Divider />
       <List>
-        <OrderSubTotal label="subtotal" amount={100} />
-        <OrderLineItem label="Surcharge" amount={500} />
-        <OrderLineItem label="Cashout" amount={null} />
-        <OrderLineItem label="Tip" amount={null} />
+        <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+        <OrderLineItem label="Surcharge" amount={surchargeAmount} />
+        <OrderLineItem label="Cashout" amount={cashoutAmount} />
+        <OrderLineItem label="Tip" amount={tipAmount} />
         <Divider variant="middle" />
         <ListItem>
           <ListItemText primary="Total" classes={{ primary: classes.total }} />
-          <Typography className={classes.totalPrice}>$0.00</Typography>
+          <Typography className={classes.totalPrice}>{currencyFormat(totalAmount / 100)}</Typography>
         </ListItem>
       </List>
       <Button

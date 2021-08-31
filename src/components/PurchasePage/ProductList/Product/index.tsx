@@ -1,14 +1,15 @@
 import React from 'react';
 import { Box, Card, CardActionArea, CardContent, CardMedia, Typography } from '@material-ui/core';
+import currencyFormat from '../../../../utils/common/intl/currencyFormatter';
 import useStyles from './index.styles';
 import { ProductProps } from './interfaces';
 
-export default function Product({ product }: ProductProps): React.ReactElement {
+export default function Product({ product, onClick }: ProductProps): React.ReactElement {
   const classes = useStyles();
   const productPriceInDollars = product.price / 100;
 
   return (
-    <Box>
+    <Box onClick={onClick}>
       <Card className={classes.cardStyle}>
         <CardActionArea>
           <CardMedia className={classes.productText} title={product.name}>
@@ -21,7 +22,7 @@ export default function Product({ product }: ProductProps): React.ReactElement {
               {product.name}
             </Typography>
             <Typography variant="body2" color="textSecondary" component="p">
-              {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format(productPriceInDollars)}
+              {currencyFormat(productPriceInDollars)}
             </Typography>
           </CardContent>
         </CardActionArea>

@@ -41,5 +41,18 @@ export default makeStyles((theme: Theme) =>
       fontSize: '1.5rem',
       lineHeight: '1.5rem',
     },
+    items: {
+      color: theme.palette.primary.main,
+      fontSize: '1rem',
+      fontWeight: 'normal',
+      lineHeight: '1.5rem',
+    },
+    amount: {
+      fontSize: '1.25rem',
+    },
+    orderList: {
+      flexGrow: 1,
+      overflowY: 'auto',
+    },
   })
 );
