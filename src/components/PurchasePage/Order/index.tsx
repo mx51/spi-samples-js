@@ -39,7 +39,7 @@ function Order(): React.ReactElement {
           Order
         </Typography>
         <Box>
-          <Button className={classes.clear} onClick={() => clearAllProductsAction()}>
+          <Button className={classes.clear} onClick={clearAllProductsAction}>
             Clear all
           </Button>
         </Box>
@@ -48,7 +48,7 @@ function Order(): React.ReactElement {
       <Box className={classes.orderList}>
         <List>
           {products.map((product) => (
-            <ListItem key={product.product.id}>
+            <ListItem key={`product_${product.product.id}`}>
               <ListItemText
                 primary={`${product.quantity} x ${product.product.name}`}
                 classes={{ primary: classes.items }}
