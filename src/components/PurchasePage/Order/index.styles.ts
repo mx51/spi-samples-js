@@ -17,7 +17,11 @@ export default makeStyles((theme: Theme) =>
       lineHeight: '1.5rem',
       fontWeight: 'lighter',
     },
-
+    keypadDrawerPaper: {
+      width: '33.34%',
+      backgroundColor: 'transparent',
+      border: 0,
+    },
     total: {
       color: theme.palette.primary.main,
 

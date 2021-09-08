@@ -1,6 +1,6 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 import {
   BUTTON_RED_COLOR,
   DEFAULT_DARK_COLOR,
@@ -60,11 +60,6 @@ const theme = createTheme({
         boxShadow: '0 .25rem .938 rgba(57, 63, 115, 0.05)',
       },
     },
-    MuiDivider: {
-      root: {
-        backgroundColor: PRIMARY_BORDER_COLOR,
-      },
-    },
   },
   palette: {
     background: {
@@ -100,6 +95,7 @@ const theme = createTheme({
     warning: {
       main: PRIMARY_WARNING_COLOR,
     },
+    divider: PRIMARY_BORDER_COLOR,
   },
   props: {
     MuiButtonBase: {
