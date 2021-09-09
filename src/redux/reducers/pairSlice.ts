@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 // constants
 import { SPI_PAIR_FLOW } from '../../definitions/constants/commonConfigs';
 
-interface IPairState {
+export interface IPairState {
   status: string;
 }
 

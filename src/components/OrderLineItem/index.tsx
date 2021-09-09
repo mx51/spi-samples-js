@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, IconButton, ListItem, ListItemText } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
+import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import useStyles from './index.styles';
 import { IOrderLineItemProps } from './interfaces/index';
 
@@ -10,7 +11,7 @@ function OrderLineItem({ label, amount }: IOrderLineItemProps): React.ReactEleme
   return (
     <ListItem>
       <ListItemText primary={label} classes={{ primary: classes.additionalCharges }} />
-      {amount === null ? (
+      {amount === 0 ? (
         <IconButton aria-label="Add Amount" component="span" className={classes.addAmountBtn}>
           <AddCircleOutlineIcon />
         </IconButton>
@@ -21,7 +22,7 @@ function OrderLineItem({ label, amount }: IOrderLineItemProps): React.ReactEleme
           disableElevation
           classes={{ root: classes.addtionalChargeBtn, label: classes.addtionalChargeBtnLabel }}
         >
-          {Intl.NumberFormat('en-AU', { style: 'currency', currency: 'AUD' }).format((amount ?? 0) / 100)}
+          {currencyFormat(amount / 100)}
         </Button>
       )}
     </ListItem>
