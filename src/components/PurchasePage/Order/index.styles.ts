@@ -39,6 +39,10 @@ export default makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       borderRadius: 0,
       backgroundColor: theme.palette.error.dark,
+      '&:hover, &:active, &:focus': {
+        background: theme.palette.error.main,
+        color: theme.palette.common.white,
+      },
     },
     payNowBtnLabel: {
       fontWeight: 500,

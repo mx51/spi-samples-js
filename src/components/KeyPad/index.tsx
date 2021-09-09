@@ -75,7 +75,7 @@ function KeyPad({ title, defaultAmount, onAmountChange, onClose }: IKeyPadProps)
         variant="contained"
         color="primary"
         size="large"
-        classes={{ root: classes.payNowBtn, label: classes.payNowBtnLabel }}
+        classes={{ root: classes.okBtn, label: classes.okBtnLabel }}
         onClick={amountChangeHandler}
       >
         OK

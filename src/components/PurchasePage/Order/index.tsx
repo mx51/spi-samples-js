@@ -1,11 +1,20 @@
-/* eslint-disable no-console */
 import React, { useState } from 'react';
 import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography, Drawer } from '@material-ui/core';
-
 import { useDispatch, useSelector } from 'react-redux';
 import { IProductSelector } from '../../../redux/reducers/ProductSlice/interfaces';
-import { productsSelector, productSubTotalSelector } from '../../../redux/reducers/ProductSlice/productSelector';
-import { clearAllProducts } from '../../../redux/reducers/ProductSlice/productSlice';
+import {
+  orderCashoutAmountSelector,
+  orderSurchargeAmountSelector,
+  orderTipAmountSelector,
+  productsSelector,
+  productSubTotalSelector,
+} from '../../../redux/reducers/ProductSlice/productSelector';
+import {
+  addCashoutAmount,
+  addSurchargeAmount,
+  addTipAmount,
+  clearAllProducts,
+} from '../../../redux/reducers/ProductSlice/productSlice';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
 import KeyPad from '../../KeyPad';
 import OrderLineItem from '../../OrderLineItem';
@@ -18,16 +27,17 @@ function Order(): React.ReactElement {
   const products: Array<IProductSelector> = useSelector(productsSelector);
   const subtotalAmount: number = useSelector(productSubTotalSelector);
 
-  const [surchargeAmount, setSurchargeAmount] = useState<number>(0);
-  const [tipAmount, setTipAmount] = useState<number>(0);
-  const [cashoutAmount, setCashoutAmount] = useState<number>(0);
+  const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
+  const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
+  const tipAmount: number = useSelector(orderTipAmountSelector);
+
   const [keypad, setKeypad] = useState<number>(0);
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
-    setTipAmount(0);
-    setCashoutAmount(0);
-    setSurchargeAmount(0);
+    dispatch(addSurchargeAmount(0));
+    dispatch(addCashoutAmount(0));
+    dispatch(addTipAmount(0));
   };
 
   const totalAmount = subtotalAmount + surchargeAmount + tipAmount + cashoutAmount;
@@ -43,9 +53,9 @@ function Order(): React.ReactElement {
   };
 
   const setKeypadAmount = (val: number) => {
-    if (keypad === 1) setSurchargeAmount(val);
-    else if (keypad === 2) setCashoutAmount(val);
-    else if (keypad === 3) setTipAmount(val);
+    if (keypad === 1) dispatch(addSurchargeAmount(val));
+    else if (keypad === 2) dispatch(addCashoutAmount(val));
+    else if (keypad === 3) dispatch(addTipAmount(val));
     setKeypad(0);
   };
 
@@ -92,7 +102,7 @@ function Order(): React.ReactElement {
         <Box className={classes.orderList}>
           <List>
             {products.map((product) => (
-              <ListItem key={product.product.id}>
+              <ListItem key={`product_${product.product.id}`}>
                 <ListItemText
                   primary={`${product.quantity} x ${product.product.name}`}
                   classes={{ primary: classes.items }}
@@ -106,17 +116,6 @@ function Order(): React.ReactElement {
         </Box>
         <Divider />
         <List>
-          {products.map((product) => (
-            <ListItem key={`product_${product.product.id}`}>
-              <ListItemText
-                primary={`${product.quantity} x ${product.product.name}`}
-                classes={{ primary: classes.items }}
-              />
-              <Typography className={classes.amount}>
-                {currencyFormat((product.product.price * product.quantity) / 100)}
-              </Typography>
-            </ListItem>
-          ))}
           <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
           <OrderLineItem disabled={false} label="Surcharge" amount={surchargeAmount} onAdd={() => requestAmount(1)} />
           <OrderLineItem

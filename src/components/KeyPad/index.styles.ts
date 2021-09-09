@@ -6,7 +6,6 @@ export default makeStyles((theme: Theme) =>
       height: `calc(100vh - 48px)`,
       position: 'sticky',
       top: theme.spacing(6),
-      zIndex: 1020,
     },
     heading: {
       padding: theme.spacing(2),
@@ -41,12 +40,16 @@ export default makeStyles((theme: Theme) =>
       fontWeight: 400,
       color: theme.palette.text.secondary,
     },
-    payNowBtn: {
+    okBtn: {
       padding: theme.spacing(2),
       borderRadius: 0,
       backgroundColor: theme.palette.error.dark,
+      '&:hover, &:active, &:focus': {
+        background: theme.palette.error.main,
+        color: theme.palette.common.white,
+      },
     },
-    payNowBtnLabel: {
+    okBtnLabel: {
       fontWeight: 500,
       fontSize: '1.5rem',
       lineHeight: '1.5rem',
