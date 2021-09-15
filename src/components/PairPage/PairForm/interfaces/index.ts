@@ -11,25 +11,22 @@ export interface IPreventDefault {
 
 export interface ISPIFormData {
   provider: {
+    isValid: boolean;
     modalToggle: boolean;
     value: string;
-    isValid: boolean;
   };
   configuration: {
+    isValid: boolean;
     type: string;
     value: string;
   };
   serialNumber: {
-    value: string;
     isValid: boolean;
+    value: string;
   };
   posId: {
-    value: string;
     isValid: boolean;
-  };
-  apikey: {
     value: string;
-    isValid: boolean;
   };
   testMode: boolean;
 }
@@ -38,18 +35,10 @@ export interface ISPIAttribute {
   [attribute: string]: Record<string, unknown>;
 }
 
-export interface ISPIUpdatedData {
-  value?: string;
-  modalToggle?: boolean;
-  isValid?: boolean;
-  type?: string;
-  testMode?: boolean;
-}
-
 export interface ISPIFormDataValidator {
+  posIdValid: boolean;
   providerValid: boolean;
   serialNumberValid: boolean;
-  posIdValid: boolean;
 }
 
 export type IFormEventValue = React.ChangeEvent<{ value: unknown }>;
@@ -57,14 +46,3 @@ export type IFormEventValue = React.ChangeEvent<{ value: unknown }>;
 export type IFormEventCheckbox = React.ChangeEvent<{ checked: boolean }>;
 
 export type IFormEventKey = React.KeyboardEvent<{ key: string }>;
-
-export interface IPairFormSettings {
-  acquirerCode?: string;
-  apiKey?: string;
-  autoAddress?: boolean;
-  eftpos?: string;
-  posId?: string;
-  secureWebSocket?: boolean;
-  serialNumber?: string;
-  testMode?: boolean;
-}

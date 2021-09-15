@@ -13,22 +13,37 @@ import {
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
 } from '../../../../definitions/constants/commonConfigs';
+import { useAppDispatch } from '../../../../redux/hooks';
+import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
 import { ISPIModel } from '../interfaces';
 import useStyles from './index.styles';
 
 function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }: ISPIModel): React.ReactElement {
   const classes = useStyles();
+  const dispatch = useAppDispatch();
   const [selectedProvider, setProvider] = useState(providerValue);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setProvider((event.target as HTMLInputElement).value);
   };
+
   const handleClose = () => {
     setProvider(providerValue); // keep previous selection
     onClose(providerValue);
   };
+
   const handleOk = () => {
-    handleProviderChange(selectedProvider); // update selection;
+    dispatch(
+      updatePairFormParams({
+        key: 'acquirerCode',
+        value: {
+          value: selectedProvider,
+          isValid: true,
+        },
+      })
+    );
+
+    handleProviderChange(selectedProvider); // update to latest selection;
     onClose(selectedProvider);
   };
 

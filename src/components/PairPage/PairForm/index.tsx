@@ -1,5 +1,4 @@
-import React from 'react';
-import Box from '@material-ui/core/Box';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
@@ -12,16 +11,21 @@ import Typography from '@material-ui/core/Typography';
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
-  TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD,
   TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
-  SPI_PAIR_FLOW,
+  TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
+  SPI_PAIR_STATUS,
 } from '../../../definitions/constants/commonConfigs';
-import { useAppSelector } from '../../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import {
-  handleApikeyBlur,
-  handleApikeyChange,
+  selectPairFormDeviceAddress,
+  selectPairFormSerialNumber,
+} from '../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import { updatePairFormParams } from '../../../redux/reducers/PairFormSlice/pairFormSlice';
+import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
+import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import {
   handleConfigAddressChange,
   handleConfigTypeBlur,
   handleConfigTypeChange,
@@ -36,32 +40,30 @@ import {
   handleTestModeChange,
   initialSpiFormData,
 } from '../../../utils/common/pair/pairFormHelpers';
-import useLocalStorage from '../../../utils/hooks/useLocalStorage';
 import {
+  eftposAddressValidator,
   fieldRequiredValidator,
   serialNumberValidator,
-  saveButtonValidator,
 } from '../../../utils/validators/pairFormValidators';
 import CustomTextField from '../../CustomTextField';
 import ErrorInputAdornment from '../../CustomTextField/ErrorInputAdornment';
 import useStyles from './index.styles';
-import { IFormEventValue, IPreventDefault, ISPIFormData } from './interfaces';
+import { IFormEventCheckbox, IFormEventValue, ISPIFormData } from './interfaces';
 import SPIModal from './SPIModal';
 
 const PairForm: React.FC = () => {
   const classes = useStyles();
-  // spi state
-  const [spi, setSpi] = useLocalStorage<ISPIFormData>('spi', initialSpiFormData);
-  // save settings logics
-  const handleSubmit = (event: IPreventDefault) => {
-    event.preventDefault();
-  };
-  // read pair states
-  const pair = useAppSelector((state) => state.pair);
+  const dispatch = useAppDispatch();
+  // spi pair form local storage tracker
+  const [spi, setSpi] = useState<ISPIFormData>(initialSpiFormData);
+  // read redux store states
+  const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
+  const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
+  const terminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
 
   return (
     <Grid container direction="column" className={classes.formContainer}>
-      <form autoComplete="off" onSubmit={handleSubmit} className={classes.pairForm}>
+      <form autoComplete="off" className={classes.pairForm}>
         <Grid item className={classes.title}>
           <Typography variant="h6" component="h1">
             Configuration
@@ -72,7 +74,7 @@ const PairForm: React.FC = () => {
             <Grid item xs={10} className={classes.columnSpace}>
               <CustomTextField
                 className={classes.paymentProvider}
-                disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
+                disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                 error={!spi.provider.isValid}
                 fullWidth
                 helperText={
@@ -86,9 +88,18 @@ const PairForm: React.FC = () => {
                 }}
                 label="Payment provider"
                 margin="dense"
-                onBlur={(event: IFormEventValue) =>
-                  handleProviderBlur(setSpi, 'provider', fieldRequiredValidator)(event)
-                }
+                onBlur={(event: IFormEventValue) => {
+                  dispatch(
+                    updatePairFormParams({
+                      key: 'acquirerCode',
+                      value: {
+                        value: event.target.value as string,
+                        isValid: fieldRequiredValidator(event.target.value as string),
+                      },
+                    })
+                  );
+                  handleProviderBlur(setSpi, 'provider', fieldRequiredValidator)(event);
+                }}
                 onChange={(event: IFormEventValue) =>
                   handleProviderChange(
                     setSpi,
@@ -105,7 +116,7 @@ const PairForm: React.FC = () => {
               <Button
                 className={classes.spiBtn}
                 color="primary"
-                disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
+                disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                 fullWidth
                 id="spiButton"
                 onClick={() => handleModalOpen(setSpi, 'provider')}
@@ -121,11 +132,19 @@ const PairForm: React.FC = () => {
                 <InputLabel id="configurationLabel">Configuration option</InputLabel>
                 <Select
                   className={classes.configurationField}
-                  disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
+                  disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                   id="configurationField"
                   label="Configuration option"
                   labelId="configurationDropdownLabel"
-                  onBlur={(event: IFormEventValue) => handleConfigTypeBlur(setSpi, 'testMode')(event)}
+                  onBlur={(event: IFormEventValue) => {
+                    dispatch(
+                      updatePairFormParams({
+                        key: 'addressType',
+                        value: event.target.value as string,
+                      })
+                    );
+                    handleConfigTypeBlur(setSpi, 'testMode')(event);
+                  }}
                   onChange={(event: IFormEventValue) => handleConfigTypeChange(setSpi, 'configuration')(event)}
                   value={spi.configuration.type}
                 >
@@ -138,21 +157,47 @@ const PairForm: React.FC = () => {
               <CustomTextField
                 disabled={
                   spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE ||
-                  pair.status === SPI_PAIR_FLOW.PAIRING
+                  terminal?.status === SPI_PAIR_STATUS.PairedConnecting
                 }
+                error={!spi.configuration.isValid}
                 fullWidth
+                helperText={!spi.configuration.isValid ? TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD : ''}
                 id="eftposAddressField"
+                InputProps={{
+                  endAdornment: <ErrorInputAdornment isValid={!spi.configuration.isValid} />,
+                }}
                 label="EFTPOS address"
                 margin="dense"
-                onChange={(event: IFormEventValue) => handleConfigAddressChange(setSpi, 'configuration')(event)}
-                value={spi.configuration.value}
+                onBlur={(event: IFormEventValue) => {
+                  dispatch(
+                    updatePairFormParams({
+                      key: 'deviceAddress',
+                      value: {
+                        value: event.target.value as string,
+                        isValid: eftposAddressValidator(spi.configuration.type, event.target.value as string),
+                      },
+                    })
+                  );
+                }}
+                onChange={(event: IFormEventValue) =>
+                  handleConfigAddressChange(setSpi, 'configuration', () =>
+                    eftposAddressValidator(spi.configuration.type, event.target.value as string)
+                  )(event.target.value as string)
+                }
+                value={
+                  (spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE &&
+                    terminal?.status === SPI_PAIR_STATUS.PairedConnecting) ||
+                  terminal?.status === SPI_PAIR_STATUS.PairedConnected
+                    ? pairFormDeviceAddress
+                    : spi.configuration.value
+                }
                 variant="outlined"
               />
             </Grid>
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
-              disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
+              disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
               error={!spi.serialNumber.isValid}
               fullWidth
               helperText={!spi.serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
@@ -162,9 +207,18 @@ const PairForm: React.FC = () => {
               }}
               label="Serial number"
               margin="dense"
-              onBlur={(event: IFormEventValue) =>
-                handleSerialNumberBlur(setSpi, 'serialNumber', serialNumberValidator)(event)
-              }
+              onBlur={(event: IFormEventValue) => {
+                dispatch(
+                  updatePairFormParams({
+                    key: 'serialNumber',
+                    value: {
+                      value: event.target.value as string,
+                      isValid: serialNumberValidator(event.target.value as string),
+                    },
+                  })
+                );
+                handleSerialNumberBlur(setSpi, 'serialNumber', serialNumberValidator)(event);
+              }}
               onChange={(event: IFormEventValue) => handleSerialNumberChange(setSpi, 'serialNumber')(event)}
               required
               value={spi.serialNumber.value}
@@ -173,7 +227,7 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
-              disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
+              disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
               error={!spi.posId.isValid}
               fullWidth
               helperText={!spi.posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
@@ -184,28 +238,20 @@ const PairForm: React.FC = () => {
               label="POS ID"
               margin="dense"
               onChange={(event: IFormEventValue) => handlePosIdChange(setSpi, 'posId')(event)}
-              onBlur={(event: IFormEventValue) => handlePosIdBlur(setSpi, 'posId', fieldRequiredValidator)(event)}
+              onBlur={(event: IFormEventValue) => {
+                handlePosIdBlur(setSpi, 'posId', fieldRequiredValidator)(event);
+                dispatch(
+                  updatePairFormParams({
+                    key: 'posId',
+                    value: {
+                      value: event.target.value as string,
+                      isValid: fieldRequiredValidator(event.target.value as string),
+                    },
+                  })
+                );
+              }}
               required
               value={spi.posId.value}
-              variant="outlined"
-            />
-          </Grid>
-          <Grid item className={classes.fieldSpace}>
-            <CustomTextField
-              disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
-              error={!spi.apikey.isValid}
-              fullWidth
-              helperText={!spi.apikey.isValid ? TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD : ''}
-              id="apiKeyField"
-              InputProps={{
-                endAdornment: <ErrorInputAdornment isValid={!spi.apikey.isValid} />,
-              }}
-              label="API Key"
-              margin="dense"
-              onChange={(event: IFormEventValue) => handleApikeyChange(setSpi, 'apikey')(event)}
-              onBlur={(event: IFormEventValue) => handleApikeyBlur(setSpi, 'apikey', fieldRequiredValidator)(event)}
-              required
-              value={spi.apikey.value}
               variant="outlined"
             />
           </Grid>
@@ -215,28 +261,22 @@ const PairForm: React.FC = () => {
                 <Checkbox
                   checked={spi.testMode}
                   color="primary"
-                  disabled={pair.status === SPI_PAIR_FLOW.PAIRING}
+                  disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                   id="testModeCheckbox"
                   name="testMode"
-                  onChange={(event: IFormEventValue) => handleTestModeChange(setSpi, 'testMode')(event)}
+                  onChange={(event: IFormEventCheckbox) => {
+                    dispatch(
+                      updatePairFormParams({
+                        key: 'testMode',
+                        value: event.target.checked,
+                      })
+                    );
+                    handleTestModeChange(setSpi, 'testMode')(event);
+                  }}
                 />
               }
               label="Test mode"
             />
-          </Grid>
-          <Grid item>
-            <Box marginTop={1.5} display="flex" justifyContent="flex-end">
-              <Button
-                color="primary"
-                className={classes.saveBtn}
-                disabled={!saveButtonValidator(spi) || pair.status === SPI_PAIR_FLOW.PAIRING}
-                id="saveSettingsButton"
-                type="submit"
-                variant="contained"
-              >
-                Save settings
-              </Button>
-            </Box>
           </Grid>
         </Grid>
       </form>

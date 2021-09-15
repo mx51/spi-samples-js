@@ -39,6 +39,25 @@
           "caseInsensitive": true
         }
       }
+    ],
+    "no-underscore-dangle": [
+      "error",
+      {
+        "allow": [
+          "_acquirerCode",
+          "_autoAddressResolutionEnabled",
+          "_currentStatus",
+          "_eftposAddress",
+          "_forceSecureWebSockets",
+          "_inTestMode",
+          "_mostRecentPongReceived",
+          "_posId",
+          "_posVersion",
+          "_secrets",
+          "_serialNumber",
+          "_spiPreauth"
+        ]
+      }
     ]
   },
   "settings": {

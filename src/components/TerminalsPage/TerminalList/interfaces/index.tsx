@@ -1,11 +1,12 @@
-export interface ITerminal {
+export interface ITerminalRecord {
   posId: string;
   pairingStatus: PairingStatus;
-  eftposAddress: string;
+  deviceAddress: string;
   serialNumber: string;
+  status: string;
 }
-export interface ITerminals {
-  terminals: Array<ITerminal>;
+export interface ITerminalsRecords {
+  terminals: Array<ITerminalRecord>;
 }
 
 export enum PairingStatus {

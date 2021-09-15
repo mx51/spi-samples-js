@@ -1,22 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
-import useLocalStorage from '../../utils/hooks/useLocalStorage';
 import Layout from '../Layout';
 import FlowPanel from './FlowPanel';
-import { FlowPanelInterface } from './FlowPanel/interfaces';
+import { IFlowPanel } from './FlowPanel/interfaces';
 import useStyles from './index.styles';
 import PairForm from './PairForm';
 import PairStatus from './PairStatus';
 
 const PairPage: React.FC = () => {
-  const [flow, setFlow] = useLocalStorage('pairFlow', false); // By default, flow is closed
-
+  const [flow, setFlow] = useState(false); // By default, flow is closed
   const handleDrawerToggle = () => {
     setFlow(!flow);
   };
-
-  const classes = useStyles(flow as unknown as FlowPanelInterface);
+  const classes = useStyles(flow as unknown as IFlowPanel);
 
   return (
     <Layout>

@@ -1,5 +1,6 @@
 import { SpiStatus } from '@mx51/spi-client-js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import {
   IAddTerminalAction,
   IClearTransactionAction,
@@ -22,44 +23,39 @@ const terminalsSlice = createSlice({
   initialState,
   reducers: {
     addTerminal(state: ITerminalState, action: PayloadAction<IAddTerminalAction>) {
-      const { id, terminal } = action.payload;
-      const data = state[id] || {};
-      data.pairingFlow = data.pairingFlow || {};
-      data.terminalConfig = data.terminalConfig || {};
-
-      data.id = id;
-      data.pairingFlow.finished = true;
-      data.terminalConfig = terminal.terminalConfig;
-      data.terminalStatus = terminal.terminalStatus || data.terminalStatus;
-      data.status = terminal.status || data.status;
-      data.txFlow = terminal.txFlow;
-      state[id] = data;
+      const { id, pairFormValues } = action.payload;
+      const terminalConfigs = {
+        acquirerCode: pairFormValues.acquirerCode,
+        autoAddress: pairFormValues.autoAddress,
+        deviceAddress: pairFormValues.deviceAddress,
+        posId: pairFormValues.posId,
+        secureWebSocket: true,
+        serialNumber: pairFormValues.serialNumber,
+        testMode: pairFormValues.testMode,
+        pluginVersion: '-',
+        merchantId: '-',
+        terminalId: '-',
+        batteryLevel: '-',
+        flow: null,
+        id: '',
+        pairingFlow: null,
+        posVersion: '',
+        secrets: pairFormValues.secrets,
+        settings: null, // not available during pair terminal stage
+        status: SPI_PAIR_STATUS.Unpaired,
+        terminalStatus: '',
+        txFlow: null,
+        txMessage: null, // not available during pair terminal stage
+      };
+      state[id] = terminalConfigs;
     },
 
-    updateDeviceAddress(state: ITerminalState, action: PayloadAction<IUpdateDeviceAddressAction>) {
-      const { id, deviceAddress } = action.payload;
-      const data = state[id] || {};
-      data.terminalConfig = data.terminalConfig || {};
-      data.terminalConfig.deviceAddress = deviceAddress;
-      state[id] = data;
-    },
-
-    updatePairingFlow(state: ITerminalState, action: PayloadAction<IUpdatePairingFlowAction>) {
-      const { id, pairingFlow } = action.payload;
-      const data = state[id] || {};
-      data.pairingFlow = pairingFlow;
-      // can also dispatch updatePairingStatus from spiService when below condition is true
-      if (pairingFlow.finished && !pairingFlow.successful) {
-        data.status = SpiStatus.Unpaired;
-      }
-      state[id] = data;
-    },
-
-    updatePairingStatus(state: ITerminalState, action: PayloadAction<IUpdatePairingStatusAction>) {
-      const { id, status } = action.payload;
-      const data = state[id] || {};
-      data.status = status;
-      state[id] = data;
+    clearTransaction(state: ITerminalState, action: PayloadAction<IClearTransactionAction>) {
+      const { id } = action.payload;
+      const currentState = state[id] || {};
+      currentState.txMessage = null;
+      currentState.txFlow = null;
+      state[id] = currentState;
     },
 
     removeTerminal(state: ITerminalState, action: PayloadAction<IRemoveTerminalAction>) {
@@ -67,48 +63,97 @@ const terminalsSlice = createSlice({
       delete state[id];
     },
 
-    updateTerminalSerialNumber(state: ITerminalState, action: PayloadAction<IUpdateTerminalSerialNumberAction>) {
-      const { id, serialNumber } = action.payload;
-      const data = state[id] || {};
-      data.terminalConfig = data.terminalConfig || {};
-      data.terminalConfig.serialNumber = serialNumber;
-      state[id] = data;
+    updateDeviceAddress(state: ITerminalState, action: PayloadAction<IUpdateDeviceAddressAction>) {
+      const { id, deviceAddress } = action.payload;
+      const currentState = state[id] || {};
+      currentState.deviceAddress = deviceAddress;
+      state[id] = currentState;
     },
 
-    updateTerminalSecret(state: ITerminalState, action: PayloadAction<IUpdateTerminalSecretAction>) {
-      const { id, secret } = action.payload;
-      const data = state[id] || {};
-      data.secret = secret;
-      state[id] = data;
+    updatePairingFlow(state: ITerminalState, action: PayloadAction<IUpdatePairingFlowAction>) {
+      const { id, pairingFlow } = action.payload;
+      const currentState = state[id] || {};
+      currentState.pairingFlow = pairingFlow;
+      // can also dispatch updatePairingStatus from spiService when below condition is true
+      if (currentState.pairingFlow.Finished && !currentState.pairingFlow.Successful)
+        currentState.status = SpiStatus.Unpaired;
+
+      state[id] = currentState;
     },
 
-    clearTransaction(state: ITerminalState, action: PayloadAction<IClearTransactionAction>) {
-      const { id } = action.payload;
-      const data = state[id] || {};
-      data.txMessage = null;
-      data.txFlow = null;
-      state[id] = data;
-    },
-
-    updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
-      const { id, txFlow } = action.payload;
-      const data = state[id] || {};
-      data.txFlow = txFlow;
-      state[id] = data;
+    updatePairingStatus(state: ITerminalState, action: PayloadAction<IUpdatePairingStatusAction>) {
+      const { id, status } = action.payload;
+      const currentState = state[id] || {};
+      if (!currentState.status) {
+        currentState.status = SPI_PAIR_STATUS.PairedConnecting;
+      } else {
+        currentState.status = status;
+      }
     },
 
     updateSetting(state: ITerminalState, action: PayloadAction<IUpdateSettingAction>) {
       const { id, settings } = action.payload;
-      const data = state[id] || {};
-      data.settings = settings;
-      state[id] = data;
+      const currentState = state[id] || {};
+      currentState.settings = settings;
+      state[id] = currentState;
+    },
+
+    updateTerminal(state: ITerminalState, action: PayloadAction<Any>) {
+      const { id, spiClient, pluginVersion, merchantId, terminalId, batteryLevel } = action.payload;
+
+      const response = {
+        acquirerCode: spiClient._acquirerCode,
+        autoAddress: spiClient._autoAddressResolutionEnabled,
+        deviceAddress: spiClient._eftposAddress,
+        posId: spiClient._posId,
+        secureWebSocket: spiClient._forceSecureWebSockets,
+        serialNumber: spiClient._serialNumber,
+        testMode: spiClient._inTestMode,
+        pluginVersion: pluginVersion || '-',
+        merchantId: merchantId || '-',
+        terminalId: terminalId || '-',
+        batteryLevel: batteryLevel || '-',
+        flow: spiClient.CurrentFlow,
+        id: spiClient._serialNumber,
+        pairingFlow: spiClient.CurrentPairingFlowState,
+        posVersion: spiClient._posVersion,
+        secrets: spiClient._secrets,
+        settings: null, // not available during pair terminal stage
+        status: spiClient._currentStatus,
+        terminalStatus: spiClient.CurrentFlow,
+        txFlow: spiClient.CurrentTxFlowState,
+        txMessage: null, // not available during pair terminal stage
+      };
+
+      state[id] = response;
+    },
+
+    updateTerminalSerialNumber(state: ITerminalState, action: PayloadAction<IUpdateTerminalSerialNumberAction>) {
+      const { id, serialNumber } = action.payload;
+      const currentState = state[id] || {};
+      currentState.serialNumber = serialNumber;
+      state[id] = currentState;
+    },
+
+    updateTerminalSecret(state: ITerminalState, action: PayloadAction<IUpdateTerminalSecretAction>) {
+      const { id, secrets } = action.payload;
+      const currentState = state[id] || {};
+      currentState.secrets = secrets;
+      state[id] = currentState;
+    },
+
+    updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
+      const { id, txFlow } = action.payload;
+      const currentState = state[id] || {};
+      currentState.txFlow = txFlow;
+      state[id] = currentState;
     },
 
     updateTxMessage(state: ITerminalState, action: PayloadAction<IUpdateTxMessage>) {
       const { id, txMessage } = action.payload;
-      const data = state[id] || {};
-      data.txMessage = txMessage;
-      state[id] = data;
+      const currentState = state[id] || {};
+      currentState.txMessage = txMessage;
+      state[id] = currentState;
     },
   },
 });
@@ -121,6 +166,7 @@ export const {
   updatePairingFlow,
   updatePairingStatus,
   updateSetting,
+  updateTerminal,
   updateTerminalSecret,
   updateTerminalSerialNumber,
   updateTxFlow,

@@ -7,7 +7,7 @@ export interface PairPanelButtonsInterface {
 
 export interface PairPanelInformationInterface {
   title: string;
-  content: string;
+  content: string | undefined;
 }
 
 export interface PairStatusInterface {

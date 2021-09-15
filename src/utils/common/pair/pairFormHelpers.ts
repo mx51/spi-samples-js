@@ -1,11 +1,16 @@
 import React from 'react';
-import { IFormEventValue, ISPIAttribute, ISPIFormData } from '../../../components/PairPage/PairForm/interfaces';
+import {
+  IFormEventCheckbox,
+  IFormEventValue,
+  ISPIAttribute,
+  ISPIFormData,
+} from '../../../components/PairPage/PairForm/interfaces';
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 
-function isHttps(): boolean {
+export function isHttps(): boolean {
   return window.location.protocol === 'https:';
 }
 
@@ -25,27 +30,24 @@ function serialNumberFormatter(currentSerialNumber: string): string {
 
 export const initialSpiFormData = {
   provider: {
+    isValid: true,
     modalToggle: false,
     value: '',
-    isValid: true,
   },
   configuration: {
+    isValid: true,
     type: isHttps() ? TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE : TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
     value: '',
   },
   serialNumber: {
-    value: '',
     isValid: true,
+    value: '',
   },
   posId: {
-    value: '',
     isValid: true,
-  },
-  apikey: {
     value: '',
-    isValid: true,
   },
-  testMode: isHttps(),
+  testMode: !isHttps(),
 };
 
 // generic state setter (spi)
@@ -89,7 +91,8 @@ const blurEventHandler =
     setFormState(setSpi, attribute, { isValid: fieldValidator(currentSerialNumber) });
   };
 
-export const handleProviderChange =
+const changeEventWithValidatorHandler =
+  () =>
   (
     setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
     attribute: string,
@@ -98,6 +101,8 @@ export const handleProviderChange =
   (value: string): void => {
     setFormState(setSpi, attribute, { value, isValid: fieldValidator(value) });
   };
+
+export const handleProviderChange = changeEventWithValidatorHandler();
 
 export const handleModalOpen = (
   setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
@@ -130,7 +135,7 @@ export const handleConfigTypeBlur =
     );
   };
 
-export const handleConfigAddressChange = changeEventHandler();
+export const handleConfigAddressChange = changeEventWithValidatorHandler();
 
 export const handleSerialNumberChange =
   (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
@@ -154,12 +159,8 @@ export const handlePosIdChange = changeEventHandler();
 
 export const handlePosIdBlur = blurEventHandler();
 
-export const handleApikeyChange = changeEventHandler();
-
-export const handleApikeyBlur = blurEventHandler();
-
 export const handleTestModeChange =
   (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (event: IFormEventValue): void => {
-    setFormState(setSpi, attribute, event.target.value as unknown as string);
+  (event: IFormEventCheckbox): void => {
+    setFormState(setSpi, attribute, event.target.checked as unknown as string);
   };
