@@ -9,6 +9,7 @@ import { store } from '../../redux/store';
 
 describe('Test <PurchasePage />', () => {
   test('snapshot for PurchasePage component', () => {
+    // Act
     const { container } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
@@ -16,6 +17,7 @@ describe('Test <PurchasePage />', () => {
         </Router>
       </ReduxProvider>
     );
+    // Assert
     expect(container).toMatchSnapshot();
   });
 });

@@ -10,11 +10,15 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
+import { useAppDispatch } from '../../../redux/hooks';
+import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
+import { handleUnPairClick } from '../../../utils/common/pair/pairStatusHelpers';
 import useStyles from './index.styles';
-import { PairingStatus, ITerminals } from './interfaces';
 
-function TerminalList({ terminals }: ITerminals): React.ReactElement {
+function TerminalList({ terminals }: Any): React.ReactElement {
   const classes = useStyles();
+  const dispatch = useAppDispatch();
+
   return (
     <div>
       <TableContainer component={Paper} className={classes.table} elevation={0}>
@@ -28,13 +32,15 @@ function TerminalList({ terminals }: ITerminals): React.ReactElement {
             </TableRow>
           </TableHead>
           <TableBody>
-            {terminals.map((terminal) => (
-              <TableRow key={terminal.posId}>
-                <TableCell scope="row">{terminal.posId}</TableCell>
-                <TableCell>
-                  <Chip size="small" label={PairingStatus[terminal.pairingStatus]} className={classes.chipConnected} />
+            {terminals.map((terminal: ITerminalProps) => (
+              <TableRow key={`terminal_${terminal.deviceAddress}`}>
+                <TableCell scope="row" onClick={() => handleUnPairClick(dispatch, terminal.id)}>
+                  {terminal.posId}
                 </TableCell>
-                <TableCell>{terminal.eftposAddress}</TableCell>
+                <TableCell>
+                  <Chip size="small" label={terminal.status} className={classes.chipConnected} />
+                </TableCell>
+                <TableCell>{terminal.deviceAddress}</TableCell>
                 <TableCell>{terminal.serialNumber}</TableCell>
               </TableRow>
             ))}
@@ -51,4 +57,5 @@ function TerminalList({ terminals }: ITerminals): React.ReactElement {
     </div>
   );
 }
+
 export default TerminalList;

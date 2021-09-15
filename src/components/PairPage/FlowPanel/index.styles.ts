@@ -31,5 +31,10 @@ export default makeStyles((theme: Theme) =>
         paddingBottom: theme.spacing(2),
       },
     },
+    flowContent: {
+      marginTop: -theme.spacing(2),
+      whiteSpace: 'pre-wrap',
+      wordWrap: 'break-word',
+    },
   })
 );

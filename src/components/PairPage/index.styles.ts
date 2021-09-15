@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { drawerWidth } from '../../definitions/constants/commonConfigs';
-import { FlowPanelInterface } from './FlowPanel/interfaces';
+import { IFlowPanel } from './FlowPanel/interfaces';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -35,7 +35,7 @@ export default makeStyles((theme: Theme) =>
           padding: theme.spacing(6, 2),
         },
         '& form': {
-          marginBottom: (flow: FlowPanelInterface) => (flow ? 0 : -theme.spacing(2)),
+          marginBottom: (flow: IFlowPanel) => (flow ? 0 : -theme.spacing(2)),
         },
       },
     },
@@ -46,11 +46,11 @@ export default makeStyles((theme: Theme) =>
         },
       },
       pairFormContainer: {
-        display: (flow: FlowPanelInterface) => (flow ? 'none' : 'block'),
+        display: (flow: IFlowPanel) => (flow ? 'none' : 'block'),
       },
       pairStatusContainer: {
-        flexBasis: (flow: FlowPanelInterface) => (flow ? '100%' : '33.333333%'),
-        maxWidth: (flow: FlowPanelInterface) => (flow ? '100%' : '33.333333%'),
+        flexBasis: (flow: IFlowPanel) => (flow ? '100%' : '33.333333%'),
+        maxWidth: (flow: IFlowPanel) => (flow ? '100%' : '33.333333%'),
       },
     },
     [theme.breakpoints.down(600)]: {
@@ -63,7 +63,7 @@ export default makeStyles((theme: Theme) =>
         },
       },
       pairFormContainer: {
-        display: (flow: FlowPanelInterface) => (flow ? 'none' : 'block'),
+        display: (flow: IFlowPanel) => (flow ? 'none' : 'block'),
         flexBasis: '100%',
         maxWidth: '100%',
         '&>div': {

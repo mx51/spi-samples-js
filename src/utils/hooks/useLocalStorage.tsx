@@ -1,9 +1,10 @@
 import { useState } from 'react';
+import { getLocalStorage, setLocalStorage } from '../common/spi/common';
 
 function useLocalStorage<Type>(key: string, initialValue: Type): [Type, (value: Type | ((val: Type) => Type)) => void] {
   const readValue = () => {
     try {
-      const value = localStorage.getItem(key);
+      const value = getLocalStorage(key);
       return value ? JSON.parse(value) : initialValue;
     } catch (error) {
       // console.error(error); // for debugging purposes
@@ -17,7 +18,7 @@ function useLocalStorage<Type>(key: string, initialValue: Type): [Type, (value: 
     try {
       const valueToStore = value instanceof Function ? value(storedValue) : value;
       setStoredValue(valueToStore);
-      localStorage.setItem(key, JSON.stringify(valueToStore));
+      setLocalStorage(key, JSON.stringify(valueToStore));
     } catch (error) {
       // console.error(error); // for debugging purposes
     }

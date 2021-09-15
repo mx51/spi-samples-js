@@ -1,26 +1,38 @@
-export interface ITerminalState {
-  [key: string]: {
-    id: string;
-    status: string | null;
-    terminalStatus: string | null;
-    flow: string | null;
-    txFlow: ITxFlow | null;
-    pairingFlow: IPairingFlow;
-    terminalConfig: ITerminalConfig | Record<string, unknown>;
-    secret: ISecret | null;
-    txMessage: ITxMessage | null;
-    settings: ISettings | null;
-  };
-}
-// Types for common interfaces
-export interface ITerminalConfig {
-  posId: string;
-  deviceAddress: string;
+export interface ITerminalProps {
+  acquirerCode: string;
   autoAddress: boolean;
+  deviceAddress: string;
+  posId: string;
+  secureWebSocket: boolean;
   serialNumber: string;
   testMode: boolean;
+  pluginVersion: string;
+  merchantId: string;
+  terminalId: string;
+  batteryLevel: string;
+  flow: string | null;
+  id: string;
+  pairingFlow: IPairingFlow | null;
+  secrets: ISecrets | null;
+  settings: ISettings | null;
+  status: string;
+  terminalStatus: string | null;
+  txFlow: ITxFlow | null;
+  txMessage: ITxMessage | null;
+}
+
+export interface ITerminalState {
+  [key: string]: ITerminalProps;
+}
+
+export interface ITerminalConfig {
+  acquirerCode: string;
+  autoAddress: boolean;
+  deviceAddress: string;
+  posId: string;
   secureWebSocket: boolean;
-  apiKey: string;
+  serialNumber: string;
+  testMode: boolean;
 }
 export interface ISettings {
   eftposReceipt: boolean;
@@ -64,14 +76,14 @@ export interface ITxFlow {
   };
 }
 export interface IPairingFlow {
-  message: string;
-  awaitingCheckFromEftpos: boolean;
-  awaitingCheckFromPos: boolean;
-  confirmationCode: string;
-  finished: boolean;
-  successful: boolean;
+  Message: string;
+  AwaitingCheckFromEftpos: boolean;
+  AwaitingCheckFromPos: boolean;
+  ConfirmationCode: string;
+  Finished: boolean;
+  Successful: boolean;
 }
-export interface ISecret {
+export interface ISecrets {
   encKey: string;
   hmacKey: string;
 }
@@ -82,21 +94,25 @@ export interface ITxMessage {
   posCounter: string;
   decryptedJson: string;
 }
+
 // Types for Actions
 export interface IAddTerminalAction {
   id: string;
-  terminal: {
-    status: string | null;
-    terminalStatus: string | null;
-    flow: string | null;
-    txFlow: null;
-    terminalConfig: ITerminalConfig | Record<string, unknown>;
+  pairFormValues: {
+    acquirerCode: string;
+    autoAddress: boolean;
+    deviceAddress: string;
+    posId: string;
+    serialNumber: string;
+    secrets: ISecrets | null;
+    testMode: boolean;
   };
 }
 export interface IUpdateDeviceAddressAction {
   id: string;
   deviceAddress: string;
 }
+
 export interface IUpdatePairingFlowAction {
   id: string;
   pairingFlow: IPairingFlow;
@@ -105,23 +121,30 @@ export interface IUpdatePairingStatusAction {
   id: string;
   status: string;
 }
+
+export interface IUpdateTerminalAction {
+  id: string;
+  spiClient: ITerminalProps;
+}
+
 export interface IRemoveTerminalAction {
   id: string;
 }
+
 export interface IUpdateTerminalSerialNumberAction {
   id: string;
   serialNumber: string;
 }
 export interface IUpdateTerminalSecretAction {
   id: string;
-  secret: ISecret;
+  secrets: ISecrets;
 }
 export interface IClearTransactionAction {
   id: string;
 }
 export interface IUpdateTxFlowAction {
   id: string;
-  txFlow: ITxFlow;
+  txFlow: ITxFlow | null;
 }
 export interface IUpdateSettingAction {
   id: string;

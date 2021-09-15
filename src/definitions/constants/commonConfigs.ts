@@ -10,34 +10,30 @@ export const TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD = 'Please enter an API Key.'
 export const TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD = 'Please enter a POS ID.';
 export const TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD = 'Please enter a supported provider.';
 export const TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD = 'Please enter a 9 digits Serial number.';
-// pair status text
+export const TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD = 'Please enter a valid EFTPOS address.';
+// pair flow/status/state
 export const SPI_PAIR_FLOW = {
-  IDLE: SpiFlow.Idle,
-  PAIRING: SpiFlow.Pairing,
-  TRANSACTION: SpiFlow.Transaction,
+  Idle: SpiFlow.Idle,
+  Pairing: SpiFlow.Pairing,
+  Transaction: SpiFlow.Transaction,
 };
 export const SPI_PAIR_STATUS = {
-  CONNECTED: SpiStatus.PairedConnected,
-  CONNECTING: SpiStatus.PairedConnecting,
-  UNPAIRED: SpiStatus.Unpaired,
+  PairedConnected: SpiStatus.PairedConnected,
+  PairedConnecting: SpiStatus.PairedConnecting,
+  Unpaired: SpiStatus.Unpaired,
+};
+export const SPI_PAIR_STATE = {
+  Disconnected: 'Disconnected',
+  Connecting: 'Connecting',
+  Connected: 'Connected',
+  InitialConnected: 'InitialConnected',
 };
 // pair flow drawer width 4/12 (based on design required)
 export const drawerWidth = 33.33333;
 // spi service constants
 export const spiEvents = {
-  spiCallAcceptSignature: 'spiCallAcceptSignature',
-  spiCallAckFlowEnd: 'spiCallAckFlowEnd',
-  spiCallCancelTx: 'spiCallCancelTx',
-  spiCallGetTerminalConfig: 'spiCallGetTerminalConfig',
-  spiCallGetTerminalStatus: 'spiCallGetTerminalStatus',
-  spiCallInitiateTx: 'spiCallInitiateTx',
-  spiCallPair: 'spiCallPair',
-  spiCallPairingCancel: 'spiCallPairingCancel',
-  spiCallPairingConfirmCode: 'spiCallPairingConfirmCode',
-  spiCallSetConfig: 'spiCallSetConfig',
-  spiCallUnpair: 'spiCallUnpair',
-
   spiAutoAddressResolutionFailed: 'AutoAddressResolutionFailed',
+  spiBatteryLevelChanged: 'BatteryLevelChanged',
   spiDeviceAddressChanged: 'DeviceAddressChanged',
   spiSecretsChanged: 'SecretsChanged',
   spiFlowChanged: 'spiFlowChanged',
@@ -48,4 +44,5 @@ export const spiEvents = {
   spiTerminalStatusChanged: 'TerminalStatusChanged',
   spiTxFlowStateChanged: 'TxFlowStateChanged',
   spiTxUpdateMessage: 'TransactionUpdateMessage',
+  TerminalStatusResponse: 'terminal_status',
 };

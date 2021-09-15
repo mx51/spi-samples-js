@@ -1,3 +1,3 @@
-export interface FlowPanelInterface {
+export interface IFlowPanel {
   flow: boolean;
 }

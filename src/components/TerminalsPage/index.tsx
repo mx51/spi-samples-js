@@ -2,31 +2,17 @@ import React from 'react';
 import { Box, Button, Container, Typography, Link } from '@material-ui/core';
 import { Link as LinkRouter } from 'react-router-dom';
 import { PATH_FLEET_SETTINGS, PATH_PAIR } from '../../definitions/constants/routerConfigs';
+import { useAppSelector } from '../../redux/hooks';
 import Layout from '../Layout';
 import NoTerminalPage from '../NoTerminalPage';
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
-import { PairingStatus, ITerminal } from './TerminalList/interfaces';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
+  const terminals = useAppSelector((state) => state.terminals);
+  const terminalList = Object.values(terminals);
 
-  // Note: This will be replaced by redux
-  const terminals: Array<ITerminal> = [
-    {
-      posId: 'test1',
-      pairingStatus: PairingStatus.Connected,
-      eftposAddress: '10.20.30.40',
-      serialNumber: '123-345-567',
-    },
-    {
-      posId: 'test2',
-      pairingStatus: PairingStatus.Connecting,
-      eftposAddress: '10.20.30.40',
-      serialNumber: '123-345-567',
-    },
-  ];
-  // note: once we set up redex we can show and hide noterminal and TerminaList Component
   return (
     <Layout>
       <Container maxWidth="md" className={classes.root}>
@@ -47,8 +33,7 @@ const Terminals: React.FC = () => {
             </Button>
           </Box>
         </Box>
-        <NoTerminalPage />
-        <TerminalList terminals={terminals} />
+        {terminalList.length <= 0 ? <NoTerminalPage /> : <TerminalList terminals={terminalList} />}
       </Container>
     </Layout>
   );

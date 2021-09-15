@@ -21,8 +21,8 @@ const Terminals = React.lazy(() => import('../components/TerminalsPage'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 
 const AppRoutes: React.FC = () => (
-  <Suspense fallback={<Loading />}>
-    <Router>
+  <Router>
+    <Suspense fallback={<Loading />}>
       <Switch>
         <Route exact path={PATH_FLEET_SETTINGS} component={FleetSettings} />
         <Route exact path={PATH_PAIR} component={Pair} />
@@ -33,8 +33,8 @@ const AppRoutes: React.FC = () => (
         <Route exact path={PATH_TERMINALS} component={Terminals} />
         <Route component={NotFound} />
       </Switch>
-    </Router>
-  </Suspense>
+    </Suspense>
+  </Router>
 );
 
 export default AppRoutes;

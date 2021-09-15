@@ -1,58 +1,75 @@
 import React from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import { SPI_PAIR_FLOW } from '../../../../definitions/constants/commonConfigs';
+import { Link } from 'react-router-dom';
+import { SPI_PAIR_FLOW, SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
 import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
-import { useAppDispatch } from '../../../../redux/hooks';
-import handlePairClick from '../../../../utils/common/pair/pairStatusHelpers';
+import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
+import { isPairButtonDisabled, selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import {
+  handleCancelPairClick,
+  handlePairClick,
+  handleUnPairClick,
+} from '../../../../utils/common/pair/pairStatusHelpers';
 import useStyles from '../index.styles';
 import { PairPanelButtonsInterface } from '../interfaces';
 
 export default function PairPanelButtons(status: string): PairPanelButtonsInterface {
   const classes = useStyles();
   const dispatch = useAppDispatch();
+  const pairFormValues = useAppSelector(selectPairFormValues);
+  const isDisabled = useAppSelector(isPairButtonDisabled);
 
   switch (status) {
-    case SPI_PAIR_FLOW.IDLE:
+    case SPI_PAIR_STATUS.Unpaired:
       return {
-        statusTitle: 'Unpaired',
+        statusTitle: SPI_PAIR_STATUS.Unpaired,
         statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
-        statusText: 'Idle',
+        statusText: SPI_PAIR_FLOW.Idle,
         button: (
           <Button
-            variant="contained"
-            color="primary"
             className={classes.pairBtn}
-            onClick={() => handlePairClick(dispatch)}
+            color="primary"
+            disabled={isDisabled}
+            onClick={() => handlePairClick(dispatch, pairFormValues)}
+            variant="contained"
           >
             Pair
           </Button>
         ),
       };
-    case SPI_PAIR_FLOW.PAIRING:
+    case SPI_PAIR_STATUS.PairedConnecting:
       return {
-        statusTitle: 'Reconnecting',
+        statusTitle: SPI_PAIR_STATUS.PairedConnecting,
         statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
-        statusText: 'Pairing',
+        statusText: SPI_PAIR_FLOW.Pairing,
         button: (
-          <Button variant="outlined" className={classes.cancelPairingBtn}>
+          <Button
+            className={classes.cancelPairingBtn}
+            onClick={() => handleCancelPairClick(dispatch, pairFormValues.serialNumber)}
+            variant="outlined"
+          >
             Cancel Pairing
           </Button>
         ),
       };
-    case SPI_PAIR_FLOW.TRANSACTION:
+    case SPI_PAIR_STATUS.PairedConnected:
       return {
-        statusTitle: 'Connected',
+        statusTitle: SPI_PAIR_STATUS.PairedConnected,
         statusIcon: <ConnectedIcon className={classes.connectedIcon} />,
-        statusText: 'Ready',
+        statusText: SPI_PAIR_FLOW.Transaction,
         button: (
           <Box>
-            <Button color="primary" className={classes.unpairButton}>
+            <Button
+              className={classes.unpairButton}
+              color="primary"
+              onClick={() => handleUnPairClick(dispatch, pairFormValues.serialNumber)}
+            >
               Unpair
             </Button>
-            <Button variant="contained" color="primary" className={classes.pairBtn}>
+            <Button className={classes.pairBtn} color="primary" component={Link} to="/" variant="contained">
               Go to Sample POS
             </Button>
           </Box>
@@ -60,15 +77,16 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
       };
     default:
       return {
-        statusTitle: 'Unpaired',
+        statusTitle: SPI_PAIR_STATUS.Unpaired,
         statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
-        statusText: 'Idle',
+        statusText: SPI_PAIR_FLOW.Idle,
         button: (
           <Button
-            variant="contained"
-            color="primary"
             className={classes.pairBtn}
-            onClick={() => handlePairClick(dispatch)}
+            color="primary"
+            disabled={isDisabled}
+            onClick={() => handlePairClick(dispatch, pairFormValues)}
+            variant="contained"
           >
             Pair
           </Button>

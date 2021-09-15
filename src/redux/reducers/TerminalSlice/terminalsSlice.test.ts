@@ -1,4 +1,6 @@
-import { IPairingFlow, ITxFlow } from './interfaces';
+import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
+import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
+import { IPairingFlow, IUpdateDeviceAddressAction, ITerminalState, ITxFlow } from './interfaces';
 import reducer, {
   addTerminal,
   clearTransaction,
@@ -13,19 +15,75 @@ import reducer, {
   updateTxMessage,
 } from './terminalsSlice';
 
-function dummyPairingFlow(): IPairingFlow {
+const mockTerminalInstanceId = '222-222-222';
+
+function mockPairingFlow(): IPairingFlow {
   const pairingFlow = {
-    message: 'Pairing Successful!',
-    awaitingCheckFromEftpos: false,
-    awaitingCheckFromPos: false,
-    confirmationCode: '4D6468',
-    finished: true,
-    successful: true,
+    Finished: true,
+    Message: 'Requesting to pair ..',
+    AwaitingCheckFromEftpos: false,
+    AwaitingCheckFromPos: false,
+    ConfirmationCode: '123123',
+    Successful: false,
   };
+
   return pairingFlow;
 }
 
-function dummyTxFlow(): ITxFlow {
+function mockTerminalConfigurations() {
+  return {
+    acquirerCode: 'string',
+    autoAddress: false,
+    deviceAddress: defaultLocalIP,
+    posId: 'string',
+    posVersion: '',
+    secureWebSocket: true,
+    serialNumber: mockTerminalInstanceId,
+    testMode: true,
+    pairingFlow: mockPairingFlow(),
+    pluginVersion: '-',
+    merchantId: '-',
+    terminalId: '-',
+    batteryLevel: '-',
+    flow: null,
+    id: '',
+    secrets: null,
+    settings: null, // not available during pair terminal stage
+    status: SPI_PAIR_STATUS.Unpaired,
+    terminalStatus: '',
+    txFlow: null,
+    txMessage: null, // not available during pair terminal stage
+  };
+}
+
+function mockPreviousState(): ITerminalState {
+  return {
+    [mockTerminalInstanceId]: {
+      acquirerCode: 'string',
+      autoAddress: false,
+      deviceAddress: defaultLocalIP,
+      posId: 'string',
+      secureWebSocket: true,
+      serialNumber: mockTerminalInstanceId,
+      testMode: true,
+      pluginVersion: '-',
+      merchantId: '-',
+      terminalId: '-',
+      batteryLevel: '-',
+      flow: null,
+      id: '',
+      pairingFlow: mockPairingFlow(),
+      secrets: null,
+      settings: null,
+      status: SPI_PAIR_STATUS.Unpaired,
+      terminalStatus: '',
+      txFlow: null,
+      txMessage: null,
+    },
+  };
+}
+
+function mockTxFlow(): ITxFlow {
   const txFlow = {
     posRefId: 'string',
     id: 'string',
@@ -63,402 +121,257 @@ function dummyTxFlow(): ITxFlow {
 }
 
 test('should handle a initial add terminal state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    terminal: {
-      status: 'Unpaired',
-      terminalStatus: 'Idle',
-      flow: 'Idle',
-      txFlow: null,
-      terminalConfig: {},
-    },
+  const pairFormValues = {
+    acquirerCode: 'test',
+    autoAddress: false,
+    deviceAddress: defaultLocalIP,
+    posId: 'test',
+    secrets: null,
+    serialNumber: mockTerminalInstanceId,
+    testMode: false,
   };
-  expect(reducer(previousState, addTerminal(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: {
-        finished: true,
-      },
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
+  const expectedState = {
+    acquirerCode: 'test',
+    autoAddress: false,
+    deviceAddress: defaultLocalIP,
+    posId: 'test',
+    secureWebSocket: true,
+    serialNumber: mockTerminalInstanceId,
+    testMode: false,
+    pluginVersion: '-',
+    merchantId: '-',
+    terminalId: '-',
+    batteryLevel: '-',
+    flow: null,
+    id: '',
+    pairingFlow: null,
+    posVersion: '',
+    secrets: null,
+    settings: null, // not available during pair terminal stage
+    status: SPI_PAIR_STATUS.Unpaired,
+    terminalStatus: '',
+    txFlow: null,
+    txMessage: null, // not available during pair terminal stage
+  };
+
+  // Act
+  const addTerminalAction = {
+    id: mockTerminalInstanceId,
+    pairFormValues,
+  };
+
+  // Assert
+  expect(reducer(previousState, addTerminal(addTerminalAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...expectedState,
     },
   });
 });
 
 test('should handle when terminal is added', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
+  // Act
+  const addTerminalAction = {
+    id: mockTerminalInstanceId,
+    pairFormValues: mockTerminalConfigurations(),
   };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    terminal: {
-      status: null,
-      terminalStatus: null,
-      flow: null,
-      txFlow: null,
-      terminalConfig: {
-        posId: 'Test',
-        eftpos: '',
-        autoAddress: true,
-        serialNumber: '321-490-753',
-        testMode: true,
-        secureWebSocket: true,
-        apiKey: 'BurgerPosDeviceAPIKey',
-      },
-    },
-  };
-  expect(reducer(previousState, addTerminal(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {
-        posId: 'Test',
-        eftpos: '',
-        autoAddress: true,
-        serialNumber: '321-490-753',
-        testMode: true,
-        secureWebSocket: true,
-        apiKey: 'BurgerPosDeviceAPIKey',
-      },
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
+
+  // Assert
+  expect(reducer(mockPreviousState(), addTerminal(addTerminalAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      pairingFlow: null,
+      posVersion: '',
     },
   });
 });
 
 test('should handle updateDeviceAddress', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    deviceAddress: '321-490-753.z1.sandbox.apdvcs.net',
+  // Act
+  const updateDeviceAddressAction: IUpdateDeviceAddressAction = {
+    id: mockTerminalInstanceId,
+    deviceAddress: `${mockTerminalInstanceId}.mx51.test.link`,
   };
 
-  expect(reducer(previousState, updateDeviceAddress(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {
-        deviceAddress: '321-490-753.z1.sandbox.apdvcs.net',
-      },
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
+  // Assert
+  expect(reducer(mockPreviousState(), updateDeviceAddress(updateDeviceAddressAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      deviceAddress: `${mockTerminalInstanceId}.mx51.test.link`,
     },
   });
 });
 
 test('should handle updateDeviceAddress for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    deviceAddress: '321-490-753.z1.sandbox.apdvcs.net',
+
+  // Act
+  const updateDeviceAddressAction: IUpdateDeviceAddressAction = {
+    id: mockTerminalInstanceId,
+    deviceAddress: `${mockTerminalInstanceId}.mx51.test.link`,
   };
 
-  expect(reducer(previousState, updateDeviceAddress(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      terminalConfig: {
-        deviceAddress: '321-490-753.z1.sandbox.apdvcs.net',
-      },
+  // Assert
+  expect(reducer(previousState, updateDeviceAddress(updateDeviceAddressAction))).toEqual({
+    '222-222-222': {
+      deviceAddress: `${mockTerminalInstanceId}.mx51.test.link`,
     },
   });
 });
 
 test('should handle updatePairingFlow', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Connected',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    pairingFlow: {
-      message: 'Connecting...',
-      awaitingCheckFromEftpos: false,
-      awaitingCheckFromPos: false,
-      confirmationCode: '',
-      finished: false,
-      successful: false,
-    },
+  // Arrange
+  const mockPairingFlowResponse = {
+    Message: 'Connecting...',
+    AwaitingCheckFromEftpos: false,
+    AwaitingCheckFromPos: false,
+    ConfirmationCode: '',
+    Finished: false,
+    Successful: false,
   };
 
-  expect(reducer(previousState, updatePairingFlow(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: {
-        message: 'Connecting...',
-        awaitingCheckFromEftpos: false,
-        awaitingCheckFromPos: false,
-        confirmationCode: '',
-        finished: false,
-        successful: false,
-      },
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Connected',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
+  // Act
+  const updatePairingFlowAction = {
+    id: '222-222-222',
+    pairingFlow: mockPairingFlowResponse,
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updatePairingFlow(updatePairingFlowAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      pairingFlow: mockPairingFlowResponse,
     },
   });
 });
 
 test('should handle updatePairingFlow when empty state & unpaired', () => {
+  // Arrange
+  const mockPairingFlowResponse = {
+    Message: 'Connecting...',
+    AwaitingCheckFromEftpos: false,
+    AwaitingCheckFromPos: false,
+    ConfirmationCode: '',
+    Finished: false,
+    Successful: false,
+  };
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    pairingFlow: {
-      message: 'Connecting...',
-      awaitingCheckFromEftpos: false,
-      awaitingCheckFromPos: false,
-      confirmationCode: '',
-      finished: true,
-      successful: false,
-    },
+
+  // Act
+  const updatePairingFlowAction = {
+    id: mockTerminalInstanceId,
+    pairingFlow: mockPairingFlowResponse,
   };
 
-  expect(reducer(previousState, updatePairingFlow(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      pairingFlow: {
-        message: 'Connecting...',
-        awaitingCheckFromEftpos: false,
-        awaitingCheckFromPos: false,
-        confirmationCode: '',
-        finished: true,
-        successful: false,
-      },
-      status: 'Unpaired',
+  // Assert
+  expect(reducer(previousState, updatePairingFlow(updatePairingFlowAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      pairingFlow: mockPairingFlowResponse,
     },
   });
 });
 
 test('should handle updatePairingStatus', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    status: 'PairedConnecting',
+  // Act
+  const updatePairingStatusAction = {
+    id: mockTerminalInstanceId,
+    status: SPI_PAIR_STATUS.PairedConnected,
   };
 
-  expect(reducer(previousState, updatePairingStatus(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'PairedConnecting',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  });
-});
-
-test('should handle updatePairingStatus for empty state', () => {
-  const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    status: 'PairedConnecting',
-  };
-
-  expect(reducer(previousState, updatePairingStatus(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      status: 'PairedConnecting',
+  // Assert
+  expect(reducer(mockPreviousState(), updatePairingStatus(updatePairingStatusAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      status: SPI_PAIR_STATUS.PairedConnected,
     },
   });
 });
 
 test('should handle removeTerminal', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
+  // Act
+  const removeTerminalAction = {
+    id: mockTerminalInstanceId,
   };
 
-  expect(reducer(previousState, removeTerminal(action))).toEqual({});
+  // Assert
+  expect(reducer(mockPreviousState(), removeTerminal(removeTerminalAction))).toEqual({});
 });
 
 test('should handle updateTerminalSerialNumber', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    serialNumber: '321-490-753',
+  // Act
+  const updateTerminalSerialNumberAction = {
+    id: mockTerminalInstanceId,
+    serialNumber: mockTerminalInstanceId,
   };
 
-  expect(reducer(previousState, updateTerminalSerialNumber(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {
-        serialNumber: '321-490-753',
-      },
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
+  // Assert
+  expect(reducer(mockPreviousState(), updateTerminalSerialNumber(updateTerminalSerialNumberAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      serialNumber: mockTerminalInstanceId,
     },
   });
 });
 
 test('should handle updateTerminalSerialNumber for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    serialNumber: '321-490-753',
+
+  // Act
+  const updateTerminalSerialNumberAction = {
+    id: mockTerminalInstanceId,
+    serialNumber: mockTerminalInstanceId,
   };
 
-  expect(reducer(previousState, updateTerminalSerialNumber(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      terminalConfig: {
-        serialNumber: '321-490-753',
-      },
+  // Assert
+  expect(reducer(previousState, updateTerminalSerialNumber(updateTerminalSerialNumberAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      serialNumber: mockTerminalInstanceId,
     },
   });
 });
 
 test('should handle updateTerminalSecret', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    secret: {
+  // Act
+  const updateTerminalSecretAction = {
+    id: mockTerminalInstanceId,
+    secrets: {
       encKey: '123435u4758475848y8466666',
       hmacKey: '64736574hfrtu437777777',
     },
   };
 
-  expect(reducer(previousState, updateTerminalSecret(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: {
+  // Assert
+  expect(reducer(mockPreviousState(), updateTerminalSecret(updateTerminalSecretAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      secrets: {
         encKey: '123435u4758475848y8466666',
         hmacKey: '64736574hfrtu437777777',
       },
-      txMessage: null,
-      settings: null,
     },
   });
 });
 
 test('should handle updateTerminalSecret for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    secret: {
+
+  // Act
+  const updateTerminalSecretAction = {
+    id: mockTerminalInstanceId,
+    secrets: {
       encKey: '123435u4758475848y8466666',
       hmacKey: '64736574hfrtu437777777',
     },
   };
 
-  expect(reducer(previousState, updateTerminalSecret(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      secret: {
+  // Assert
+  expect(reducer(previousState, updateTerminalSecret(updateTerminalSecretAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      secrets: {
         encKey: '123435u4758475848y8466666',
         hmacKey: '64736574hfrtu437777777',
       },
@@ -467,54 +380,29 @@ test('should handle updateTerminalSecret for empty state', () => {
 });
 
 test('should handle clearTransaction', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: dummyTxFlow(),
-      secret: null,
-      txMessage: {
-        displayMessageCode: 0,
-        displayMessageText: 'string ',
-        posRefId: 'string',
-        posCounter: 'string',
-        decryptedJson: 'string',
-      },
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
+  const clearTransactionAction = {
+    id: mockTerminalInstanceId,
   };
 
-  expect(reducer(previousState, clearTransaction(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
+  expect(reducer(mockPreviousState(), clearTransaction(clearTransactionAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
     },
   });
 });
 
 test('should handle clearTransaction for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
+
+  // Act
+  const clearTransactionAction = {
+    id: mockTerminalInstanceId,
   };
 
-  expect(reducer(previousState, clearTransaction(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
+  // Assert
+  expect(reducer(previousState, clearTransaction(clearTransactionAction))).toEqual({
+    [mockTerminalInstanceId]: {
       txMessage: null,
       txFlow: null,
     },
@@ -522,243 +410,139 @@ test('should handle clearTransaction for empty state', () => {
 });
 
 test('should handle updateTxFlow', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    txFlow: dummyTxFlow(),
+  // Act
+  const updateTxFlowAction = {
+    id: mockTerminalInstanceId,
+    txFlow: mockTxFlow(),
   };
 
-  expect(reducer(previousState, updateTxFlow(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: dummyTxFlow(),
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  });
-});
-
-test('should handle updateTxFlow', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    txFlow: dummyTxFlow(),
-  };
-
-  expect(reducer(previousState, updateTxFlow(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: dummyTxFlow(),
-      secret: null,
-      txMessage: null,
-      settings: null,
+  // Assert
+  expect(reducer(mockPreviousState(), updateTxFlow(updateTxFlowAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      txFlow: mockTxFlow(),
     },
   });
 });
 
 test('should handle updateTxFlow for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    txFlow: dummyTxFlow(),
+
+  // Act
+  const updateTxFlowAction = {
+    id: mockTerminalInstanceId,
+    txFlow: mockTxFlow(),
   };
 
-  expect(reducer(previousState, updateTxFlow(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      txFlow: dummyTxFlow(),
+  // Assert
+  expect(reducer(previousState, updateTxFlow(updateTxFlowAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      txFlow: mockTxFlow(),
     },
   });
 });
 
 test('should handle updateSetting', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    settings: {
-      eftposReceipt: true,
-      sigFlow: true,
-      printMerchantCopy: true,
-      suppressMerchantPassword: true,
-      receiptHeader: '',
-      receiptFooter: '',
-    },
+  // Arrange
+  const mockSettings = {
+    eftposReceipt: true,
+    sigFlow: true,
+    printMerchantCopy: true,
+    suppressMerchantPassword: true,
+    receiptHeader: '',
+    receiptFooter: '',
   };
 
-  expect(reducer(previousState, updateSetting(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: {
-        eftposReceipt: true,
-        sigFlow: true,
-        printMerchantCopy: true,
-        suppressMerchantPassword: true,
-        receiptHeader: '',
-        receiptFooter: '',
-      },
+  // Act
+  const updateSettingAction = {
+    id: mockTerminalInstanceId,
+    settings: mockSettings,
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updateSetting(updateSettingAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      settings: mockSettings,
     },
   });
 });
 
 test('should handle updateSetting for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    settings: {
-      eftposReceipt: true,
-      sigFlow: true,
-      printMerchantCopy: true,
-      suppressMerchantPassword: true,
-      receiptHeader: '',
-      receiptFooter: '',
-    },
+  const mockSettings = {
+    eftposReceipt: true,
+    sigFlow: true,
+    printMerchantCopy: true,
+    suppressMerchantPassword: true,
+    receiptHeader: '',
+    receiptFooter: '',
   };
 
-  expect(reducer(previousState, updateSetting(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      settings: {
-        eftposReceipt: true,
-        sigFlow: true,
-        printMerchantCopy: true,
-        suppressMerchantPassword: true,
-        receiptHeader: '',
-        receiptFooter: '',
-      },
+  // Act
+  const updateSettingAction = {
+    id: mockTerminalInstanceId,
+    settings: mockSettings,
+  };
+
+  // Assert
+  expect(reducer(previousState, updateSetting(updateSettingAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      settings: mockSettings,
     },
   });
 });
 
 test('should handle updateTxMessage', () => {
-  const previousState = {
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      terminalStatus: 'Idle',
-      flow: null,
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: null,
-      settings: null,
-    },
-  };
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    txMessage: {
-      displayMessageCode: 4,
-      displayMessageText: 'Waiting for customer to enter tip',
-      posRefId: 'purchase-2021-08-09T12:10:00.461Z',
-      posCounter: '',
-      decryptedJson:
-        '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
-    },
+  // Arrange
+  const mockTxMessageResponse = {
+    displayMessageCode: 4,
+    displayMessageText: 'Waiting for customer to enter tip',
+    posRefId: 'purchase-2021-08-09T12:10:00.461Z',
+    posCounter: '',
+    decryptedJson:
+      '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
   };
 
-  expect(reducer(previousState, updateTxMessage(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-      pairingFlow: dummyPairingFlow(),
-      terminalConfig: {},
-      flow: null,
-      terminalStatus: 'Idle',
-      status: 'Unpaired',
-      txFlow: null,
-      secret: null,
-      txMessage: {
-        displayMessageCode: 4,
-        displayMessageText: 'Waiting for customer to enter tip',
-        posRefId: 'purchase-2021-08-09T12:10:00.461Z',
-        posCounter: '',
-        decryptedJson:
-          '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
-      },
-      settings: null,
+  // Act
+  const updateTxMessageAction = {
+    id: mockTerminalInstanceId,
+    txMessage: mockTxMessageResponse,
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updateTxMessage(updateTxMessageAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      txMessage: mockTxMessageResponse,
     },
   });
 });
 
 test('should handle updateTxMessage for empty state', () => {
+  // Arrange
   const previousState = {};
-  const action = {
-    id: 'c296b537-4fdd-4d18-92c1-68c330e935c9',
-    txMessage: {
-      displayMessageCode: 4,
-      displayMessageText: 'Waiting for customer to enter tip',
-      posRefId: 'purchase-2021-08-09T12:10:00.461Z',
-      posCounter: '',
-      decryptedJson:
-        '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
-    },
+  const mockTxMessageResponse = {
+    displayMessageCode: 4,
+    displayMessageText: 'Waiting for customer to enter tip',
+    posRefId: 'purchase-2021-08-09T12:10:00.461Z',
+    posCounter: '',
+    decryptedJson:
+      '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
   };
 
-  expect(reducer(previousState, updateTxMessage(action))).toEqual({
-    'c296b537-4fdd-4d18-92c1-68c330e935c9': {
-      txMessage: {
-        displayMessageCode: 4,
-        displayMessageText: 'Waiting for customer to enter tip',
-        posRefId: 'purchase-2021-08-09T12:10:00.461Z',
-        posCounter: '',
-        decryptedJson:
-          '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
-      },
+  // Act
+  const updateTxMessageAction = {
+    id: mockTerminalInstanceId,
+    txMessage: mockTxMessageResponse,
+  };
+
+  // Assert
+  expect(reducer(previousState, updateTxMessage(updateTxMessageAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      txMessage: mockTxMessageResponse,
     },
   });
 });

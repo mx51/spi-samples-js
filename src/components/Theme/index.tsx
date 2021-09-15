@@ -107,6 +107,7 @@ const theme = createTheme({
     },
   },
 });
+
 function ThemeStyles({ children }: IThemeStyles): React.ReactElement {
   return (
     <ThemeProvider theme={theme}>

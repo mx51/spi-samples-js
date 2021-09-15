@@ -3,6 +3,8 @@ class SpiEventTarget {
 
   private mappers: Any;
 
+  spiClient: Any;
+
   constructor() {
     this.listeners = {};
     this.mappers = {};
