@@ -11,9 +11,9 @@ test('should return product quantity for list', () => {
     pair: { status: '' },
     terminals: {},
     products: {
-      surchargeAmount: 0,
-      tipAmount: 0,
-      cashoutAmount: 0,
+      surchargeAmount: 100,
+      tipAmount: 100,
+      cashoutAmount: 100,
       products: [
         { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
@@ -31,9 +31,9 @@ test('should return product quantity for duplicate product', () => {
     pair: { status: '' },
     terminals: {},
     products: {
-      surchargeAmount: 0,
-      tipAmount: 0,
-      cashoutAmount: 0,
+      surchargeAmount: 100,
+      tipAmount: 100,
+      cashoutAmount: 100,
       products: [
         { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
@@ -54,9 +54,9 @@ test('should add all the price and display subtotal', () => {
     pair: { status: '' },
     terminals: {},
     products: {
-      surchargeAmount: 0,
-      tipAmount: 0,
-      cashoutAmount: 0,
+      surchargeAmount: 100,
+      tipAmount: 100,
+      cashoutAmount: 100,
       products: [
         { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
@@ -74,13 +74,13 @@ test('should get surcharge amount', () => {
     pair: { status: '' },
     terminals: {},
     products: {
-      surchargeAmount: 15.5,
-      tipAmount: 12.5,
+      surchargeAmount: 155,
+      tipAmount: 125,
       cashoutAmount: 0,
       products: [],
     },
   };
-  expect(orderSurchargeAmountSelector(state)).toEqual(15.5);
+  expect(orderSurchargeAmountSelector(state)).toEqual(155);
 });
 
 test('should get tip amount', () => {
@@ -88,13 +88,13 @@ test('should get tip amount', () => {
     pair: { status: '' },
     terminals: {},
     products: {
-      surchargeAmount: 15.5,
-      tipAmount: 12.5,
+      surchargeAmount: 155,
+      tipAmount: 125,
       cashoutAmount: 0,
       products: [],
     },
   };
-  expect(orderTipAmountSelector(state)).toEqual(12.5);
+  expect(orderTipAmountSelector(state)).toEqual(125);
 });
 
 test('should get cashout amount', () => {
@@ -102,11 +102,11 @@ test('should get cashout amount', () => {
     pair: { status: '' },
     terminals: {},
     products: {
-      surchargeAmount: 15.5,
+      surchargeAmount: 155,
       tipAmount: 0,
-      cashoutAmount: 5.65,
+      cashoutAmount: 125,
       products: [],
     },
   };
-  expect(orderCashoutAmountSelector(state)).toEqual(5.65);
+  expect(orderCashoutAmountSelector(state)).toEqual(125);
 });

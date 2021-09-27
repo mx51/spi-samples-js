@@ -22,6 +22,11 @@ import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
 
 function Order(): React.ReactElement {
+
+  const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT'
+  const CASHOUT_AMOUNT = 'CASHOUT_AMOUNT'
+  const TIP_AMOUNT = 'TIP_AMOUNT'
+
   const dispatch = useDispatch();
 
   const products: Array<IProductSelector> = useSelector(productsSelector);
@@ -31,7 +36,7 @@ function Order(): React.ReactElement {
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
 
-  const [keypad, setKeypad] = useState<number>(0);
+  const [keypadType, setkeypadType] = useState<string>('');
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
@@ -41,28 +46,28 @@ function Order(): React.ReactElement {
   };
 
   const totalAmount = subtotalAmount + surchargeAmount + tipAmount + cashoutAmount;
-  const requestAmount = (val: number) => {
-    setKeypad(val);
+  const requestAmount = (val: string) => {
+    setkeypadType(val);
   };
 
   const getDefaultKeypadAmount = (): number => {
-    if (keypad === 1) return surchargeAmount;
-    if (keypad === 2) return cashoutAmount;
-    if (keypad === 3) return tipAmount;
+    if (keypadType === SURCHARGE_AMOUNT) return surchargeAmount;
+    if (keypadType === CASHOUT_AMOUNT) return cashoutAmount;
+    if (keypadType === TIP_AMOUNT) return tipAmount;
     return 0;
   };
 
   const setKeypadAmount = (val: number) => {
-    if (keypad === 1) dispatch(addSurchargeAmount(val));
-    else if (keypad === 2) dispatch(addCashoutAmount(val));
-    else if (keypad === 3) dispatch(addTipAmount(val));
-    setKeypad(0);
+    if (keypadType === SURCHARGE_AMOUNT) dispatch(addSurchargeAmount(val));
+    else if (keypadType === CASHOUT_AMOUNT) dispatch(addCashoutAmount(val));
+    else if (keypadType === TIP_AMOUNT) dispatch(addTipAmount(val));
+    setkeypadType('');
   };
 
   const getTitle = () => {
-    if (keypad === 1) return 'Surcharge';
-    if (keypad === 2) return 'Cashout';
-    if (keypad === 3) return 'Tip';
+    if (keypadType === SURCHARGE_AMOUNT) return 'Surcharge';
+    if (keypadType === CASHOUT_AMOUNT) return 'Cashout';
+    if (keypadType === TIP_AMOUNT) return 'Tip';
     return '';
   };
 
@@ -71,17 +76,17 @@ function Order(): React.ReactElement {
     <>
       <Drawer
         anchor="right"
-        open={keypad !== 0}
+        open={keypadType !== ''}
         classes={{
           paper: classes.keypadDrawerPaper,
         }}
       >
         <KeyPad
-          open={keypad !== 0}
+          open={keypadType !== ''}
           title={getTitle()}
           defaultAmount={getDefaultKeypadAmount()}
           onClose={() => {
-            setKeypad(0);
+            setkeypadType('');
           }}
           onAmountChange={setKeypadAmount}
         />
@@ -117,14 +122,14 @@ function Order(): React.ReactElement {
         <Divider />
         <List>
           <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
-          <OrderLineItem disabled={false} label="Surcharge" amount={surchargeAmount} onAdd={() => requestAmount(1)} />
+          <OrderLineItem disabled={false} label="Surcharge" amount={surchargeAmount} onAdd={() => requestAmount(SURCHARGE_AMOUNT)} />
           <OrderLineItem
             disabled={tipAmount > 0}
             label="Cashout"
             amount={cashoutAmount}
-            onAdd={() => requestAmount(2)}
+            onAdd={() => requestAmount(CASHOUT_AMOUNT)}
           />
-          <OrderLineItem disabled={cashoutAmount > 0} label="Tip" amount={tipAmount} onAdd={() => requestAmount(3)} />
+          <OrderLineItem disabled={cashoutAmount > 0} label="Tip" amount={tipAmount} onAdd={() => requestAmount(TIP_AMOUNT)} />
           <Divider variant="middle" />
           <ListItem>
             <ListItemText primary="Total" classes={{ primary: classes.total }} />
