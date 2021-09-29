@@ -8,7 +8,7 @@ function CustomTextField({
   error,
   fullWidth,
   helperText,
-  id,
+  dataTestId,
   InputProps,
   label,
   margin,
@@ -21,11 +21,11 @@ function CustomTextField({
   return (
     <ThemeTextField
       className={className}
+      data-test-id={dataTestId}
       disabled={disabled}
       error={error}
       fullWidth={fullWidth}
       helperText={helperText}
-      id={id}
       InputProps={InputProps}
       label={label}
       margin={margin}

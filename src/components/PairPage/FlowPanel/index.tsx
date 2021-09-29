@@ -23,7 +23,7 @@ export default function FlowPanel({ flow }: IFlowPanel): React.ReactElement {
 # FLOW: ${spi?.flow}
 
 # ------------------------------
-# POS: ${spi?.posVersion ? `v${spi?.posVersion}` : '-'} Spi: ${`${terminal?.pluginVersion}` || '-'}
+# POS: ${spi?.posVersion ? `v${spi?.posVersion}` : '-'} Spi: ${`${spi?.pluginVersion}`}
   `;
 
   const pairFlowInformation = (pairingFlow: IPairingFlow) => `
@@ -39,13 +39,14 @@ export default function FlowPanel({ flow }: IFlowPanel): React.ReactElement {
 
   return (
     <Drawer
-      className={classes.drawer}
-      variant="persistent"
       anchor="right"
-      open={flow}
       classes={{
         paper: classes.drawerPaper,
       }}
+      className={classes.drawer}
+      data-test-id="flowPanel"
+      open={flow}
+      variant="persistent"
     >
       <Box className={classes.flowBoxWrapper}>
         <Box className={classes.flowBox}>

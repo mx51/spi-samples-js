@@ -6,9 +6,22 @@ import {
   ISPIFormData,
 } from '../../../components/PairPage/PairForm/interfaces';
 import {
+  SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+  TEXT_FORM_DEFAULT_VALUE,
+  TEXT_FORM_MODAL_CODE_TILL,
+  TEXT_FORM_MODAL_CODE_WESTPAC,
 } from '../../../definitions/constants/commonConfigs';
+
+export function disableProviderField(status: string, spiProviderValue: string): boolean {
+  return (
+    status === SPI_PAIR_STATUS.PairedConnecting ||
+    spiProviderValue === TEXT_FORM_MODAL_CODE_TILL ||
+    spiProviderValue === TEXT_FORM_MODAL_CODE_WESTPAC ||
+    spiProviderValue === TEXT_FORM_DEFAULT_VALUE
+  );
+}
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
@@ -32,7 +45,7 @@ export const initialSpiFormData = {
   provider: {
     isValid: true,
     modalToggle: false,
-    value: '',
+    value: TEXT_FORM_DEFAULT_VALUE,
   },
   configuration: {
     isValid: true,

@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import useStyles from '../index.styles';
 import { PairPanelInformationInterface } from '../interfaces';
 
-export default function index({ title, content }: PairPanelInformationInterface): React.ReactElement {
+function PairPanelInformation({ title, content }: PairPanelInformationInterface): React.ReactElement {
   const classes = useStyles();
 
   return (
@@ -14,3 +14,5 @@ export default function index({ title, content }: PairPanelInformationInterface)
     </Box>
   );
 }
+
+export default React.memo(PairPanelInformation);

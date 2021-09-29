@@ -26,6 +26,7 @@ import { updatePairFormParams } from '../../../redux/reducers/PairFormSlice/pair
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
+  disableProviderField,
   handleConfigAddressChange,
   handleConfigTypeBlur,
   handleConfigTypeChange,
@@ -74,7 +75,8 @@ const PairForm: React.FC = () => {
             <Grid item xs={10} className={classes.columnSpace}>
               <CustomTextField
                 className={classes.paymentProvider}
-                disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
+                dataTestId="paymentProviderField"
+                disabled={disableProviderField(terminal?.status || SPI_PAIR_STATUS.Unpaired, spi.provider.value)}
                 error={!spi.provider.isValid}
                 fullWidth
                 helperText={
@@ -82,7 +84,6 @@ const PairForm: React.FC = () => {
                     ? TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD
                     : 'Type or select using our Simple Payments Integration (SPI)'
                 }
-                id="paymentProviderField"
                 InputProps={{
                   endAdornment: <ErrorInputAdornment isValid={!spi.provider.isValid} />,
                 }}
@@ -116,9 +117,9 @@ const PairForm: React.FC = () => {
               <Button
                 className={classes.spiBtn}
                 color="primary"
+                data-test-id="spiButton"
                 disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                 fullWidth
-                id="spiButton"
                 onClick={() => handleModalOpen(setSpi, 'provider')}
                 variant="contained"
               >
@@ -128,12 +129,12 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid container direction="row" className={classes.fieldSpace}>
             <Grid item sm={6} xs={12} className={classes.columnSpace}>
-              <FormControl variant="outlined" margin="dense" fullWidth>
-                <InputLabel id="configurationLabel">Configuration option</InputLabel>
+              <FormControl variant="outlined" margin="dense" fullWidth data-test-id="configurationTypeSelector">
+                <InputLabel data-test-id="configurationLabel">Configuration option</InputLabel>
                 <Select
                   className={classes.configurationField}
+                  data-test-id="configurationField"
                   disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
-                  id="configurationField"
                   label="Configuration option"
                   labelId="configurationDropdownLabel"
                   onBlur={(event: IFormEventValue) => {
@@ -155,6 +156,7 @@ const PairForm: React.FC = () => {
             </Grid>
             <Grid item sm={6} xs={12}>
               <CustomTextField
+                dataTestId="eftposAddressField"
                 disabled={
                   spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE ||
                   terminal?.status === SPI_PAIR_STATUS.PairedConnecting
@@ -162,7 +164,6 @@ const PairForm: React.FC = () => {
                 error={!spi.configuration.isValid}
                 fullWidth
                 helperText={!spi.configuration.isValid ? TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD : ''}
-                id="eftposAddressField"
                 InputProps={{
                   endAdornment: <ErrorInputAdornment isValid={!spi.configuration.isValid} />,
                 }}
@@ -197,11 +198,11 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
+              dataTestId="serialNumberField"
               disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
               error={!spi.serialNumber.isValid}
               fullWidth
               helperText={!spi.serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
-              id="serialNumberField"
               InputProps={{
                 endAdornment: <ErrorInputAdornment isValid={!spi.serialNumber.isValid} />,
               }}
@@ -227,11 +228,11 @@ const PairForm: React.FC = () => {
           </Grid>
           <Grid item className={classes.fieldSpace}>
             <CustomTextField
+              dataTestId="posIdField"
               disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
               error={!spi.posId.isValid}
               fullWidth
               helperText={!spi.posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
-              id="posIdField"
               InputProps={{
                 endAdornment: <ErrorInputAdornment isValid={!spi.posId.isValid} />,
               }}
@@ -262,7 +263,7 @@ const PairForm: React.FC = () => {
                   checked={spi.testMode}
                   color="primary"
                   disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
-                  id="testModeCheckbox"
+                  data-test-id="testModeCheckbox"
                   name="testMode"
                   onChange={(event: IFormEventCheckbox) => {
                     dispatch(

@@ -46,6 +46,7 @@ function PairStatus({ open, handleDrawerToggle }: PairStatusInterface): React.Re
         <Grid item xs={8}>
           <Grid
             container
+            data-test-id="flowToggler"
             direction="row"
             alignItems="center"
             justifyContent="flex-end"

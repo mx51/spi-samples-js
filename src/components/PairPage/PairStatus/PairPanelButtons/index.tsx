@@ -7,7 +7,7 @@ import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIco
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { isPairButtonDisabled, selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import { isPairDisabled, selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import {
   handleCancelPairClick,
   handlePairClick,
@@ -20,77 +20,64 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const pairFormValues = useAppSelector(selectPairFormValues);
-  const isDisabled = useAppSelector(isPairButtonDisabled);
+  const pairBtnDisabled = useAppSelector(isPairDisabled);
 
-  switch (status) {
-    case SPI_PAIR_STATUS.Unpaired:
-      return {
-        statusTitle: SPI_PAIR_STATUS.Unpaired,
-        statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
-        statusText: SPI_PAIR_FLOW.Idle,
-        button: (
-          <Button
-            className={classes.pairBtn}
-            color="primary"
-            disabled={isDisabled}
-            onClick={() => handlePairClick(dispatch, pairFormValues)}
-            variant="contained"
-          >
-            Pair
-          </Button>
-        ),
-      };
-    case SPI_PAIR_STATUS.PairedConnecting:
-      return {
-        statusTitle: SPI_PAIR_STATUS.PairedConnecting,
-        statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
-        statusText: SPI_PAIR_FLOW.Pairing,
-        button: (
-          <Button
-            className={classes.cancelPairingBtn}
-            onClick={() => handleCancelPairClick(dispatch, pairFormValues.serialNumber)}
-            variant="outlined"
-          >
-            Cancel Pairing
-          </Button>
-        ),
-      };
-    case SPI_PAIR_STATUS.PairedConnected:
-      return {
-        statusTitle: SPI_PAIR_STATUS.PairedConnected,
-        statusIcon: <ConnectedIcon className={classes.connectedIcon} />,
-        statusText: SPI_PAIR_FLOW.Transaction,
-        button: (
-          <Box>
-            <Button
-              className={classes.unpairButton}
-              color="primary"
-              onClick={() => handleUnPairClick(dispatch, pairFormValues.serialNumber)}
-            >
-              Unpair
-            </Button>
-            <Button className={classes.pairBtn} color="primary" component={Link} to="/" variant="contained">
-              Go to Sample POS
-            </Button>
-          </Box>
-        ),
-      };
-    default:
-      return {
-        statusTitle: SPI_PAIR_STATUS.Unpaired,
-        statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
-        statusText: SPI_PAIR_FLOW.Idle,
-        button: (
-          <Button
-            className={classes.pairBtn}
-            color="primary"
-            disabled={isDisabled}
-            onClick={() => handlePairClick(dispatch, pairFormValues)}
-            variant="contained"
-          >
-            Pair
-          </Button>
-        ),
-      };
+  if (status === SPI_PAIR_STATUS.PairedConnecting) {
+    return {
+      statusTitle: SPI_PAIR_STATUS.PairedConnecting,
+      statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
+      statusText: SPI_PAIR_FLOW.Pairing,
+      button: (
+        <Button
+          className={classes.cancelPairingBtn}
+          data-test-id="cancelPairBtn"
+          onClick={() => handleCancelPairClick(dispatch, pairFormValues.serialNumber)}
+          variant="outlined"
+        >
+          Cancel Pairing
+        </Button>
+      ),
+    };
   }
+
+  if (status === SPI_PAIR_STATUS.PairedConnected && pairFormValues.serialNumber !== '') {
+    return {
+      statusTitle: SPI_PAIR_STATUS.PairedConnected,
+      statusIcon: <ConnectedIcon className={classes.connectedIcon} />,
+      statusText: SPI_PAIR_FLOW.Transaction,
+      button: (
+        <Box>
+          <Button
+            className={classes.unpairButton}
+            color="primary"
+            data-test-id="unPairBtn"
+            onClick={() => handleUnPairClick(dispatch, pairFormValues.serialNumber)}
+          >
+            Unpair
+          </Button>
+          <Button className={classes.pairBtn} color="primary" component={Link} to="/" variant="contained">
+            Go to Sample POS
+          </Button>
+        </Box>
+      ),
+    };
+  }
+
+  return {
+    statusTitle: SPI_PAIR_STATUS.Unpaired,
+    statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
+    statusText: SPI_PAIR_FLOW.Idle,
+    button: (
+      <Button
+        className={classes.pairBtn}
+        color="primary"
+        disabled={pairBtnDisabled}
+        data-test-id="pairBtn"
+        onClick={() => handlePairClick(dispatch, pairFormValues)}
+        variant="contained"
+      >
+        Pair
+      </Button>
+    ),
+  };
 }

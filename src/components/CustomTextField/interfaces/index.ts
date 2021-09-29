@@ -18,7 +18,7 @@ export interface ICustomTextField {
   error?: boolean;
   fullWidth?: boolean;
   helperText?: string;
-  id?: string;
+  dataTestId?: string;
   inputProps?: Partial<TInputProps>;
   InputProps?: Partial<InputProps>;
   label?: string;

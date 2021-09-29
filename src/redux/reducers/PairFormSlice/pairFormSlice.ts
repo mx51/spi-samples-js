@@ -4,7 +4,7 @@ import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { isHttps } from '../../../utils/common/pair/pairFormHelpers';
-import { IFormParamsAction, IPairFormParams } from './interfaces';
+import { IFormParamsAction, IPairFormParams, ITerminalPairError } from './interfaces';
 
 const initialState: IPairFormParams = {
   acquirerCode: {
@@ -15,6 +15,10 @@ const initialState: IPairFormParams = {
   deviceAddress: {
     value: '',
     isValid: false,
+  },
+  error: {
+    isShown: false,
+    message: '',
   },
   posId: {
     value: '',
@@ -32,6 +36,10 @@ export const pairFormSlice = createSlice({
   name: 'pairFormSlice',
   initialState,
   reducers: {
+    readTerminalPairError(state: IPairFormParams, action: PayloadAction<ITerminalPairError>) {
+      const error = action.payload;
+      state.error = error;
+    },
     updatePairFormParams(state: IPairFormParams, action: PayloadAction<Partial<IFormParamsAction>>) {
       const { key, value } = action.payload;
 
@@ -73,6 +81,6 @@ export const pairFormSlice = createSlice({
   },
 });
 
-export const { updatePairFormParams } = pairFormSlice.actions;
+export const { readTerminalPairError, updatePairFormParams } = pairFormSlice.actions;
 
 export default pairFormSlice.reducer;
