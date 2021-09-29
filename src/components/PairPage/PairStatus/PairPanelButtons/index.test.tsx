@@ -9,11 +9,6 @@ import useStyles from '../index.styles';
 jest.mock('../index.styles');
 jest.mock('../../../../redux/hooks');
 
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useMemo: () => jest.fn(),
-}));
-
 describe('Test PairPanelButtons', () => {
   beforeEach(() => {
     (useStyles as Any).mockReturnValue({
