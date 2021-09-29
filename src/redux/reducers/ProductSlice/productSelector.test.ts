@@ -15,14 +15,14 @@ test('should return product quantity for list', () => {
       tipAmount: 100,
       cashoutAmount: 100,
       products: [
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
       ],
     },
   };
   expect(productsSelector(state)).toEqual([
-    { quantity: 1, product: { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' } },
-    { quantity: 1, product: { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' } },
+    { quantity: 1, product: { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' } },
+    { quantity: 1, product: { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' } },
   ]);
 });
 
@@ -35,17 +35,17 @@ test('should return product quantity for duplicate product', () => {
       tipAmount: 100,
       cashoutAmount: 100,
       products: [
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
       ],
     },
   };
   expect(productsSelector(state)).toEqual([
-    { quantity: 3, product: { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' } },
-    { quantity: 2, product: { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' } },
+    { quantity: 3, product: { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' } },
+    { quantity: 2, product: { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' } },
   ]);
 });
 
@@ -58,15 +58,15 @@ test('should add all the price and display subtotal', () => {
       tipAmount: 100,
       cashoutAmount: 100,
       products: [
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 1, name: 'Mocha', price: 5, image: 'Mocha.jpeg' },
-        { id: 2, name: 'Latte', price: 4.5, image: 'Latte.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+        { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
       ],
     },
   };
-  expect(productSubTotalSelector(state)).toEqual(24);
+  expect(productSubTotalSelector(state)).toEqual(2400);
 });
 
 test('should get surcharge amount', () => {

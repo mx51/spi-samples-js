@@ -22,10 +22,9 @@ import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
 
 function Order(): React.ReactElement {
-
-  const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT'
-  const CASHOUT_AMOUNT = 'CASHOUT_AMOUNT'
-  const TIP_AMOUNT = 'TIP_AMOUNT'
+  const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT';
+  const CASHOUT_AMOUNT = 'CASHOUT_AMOUNT';
+  const TIP_AMOUNT = 'TIP_AMOUNT';
 
   const dispatch = useDispatch();
 
@@ -91,7 +90,6 @@ function Order(): React.ReactElement {
           onAmountChange={setKeypadAmount}
         />
       </Drawer>
-
       <Box component={Paper} className={classes.root} display="flex" flexDirection="column">
         <Box display="flex" justifyContent="space-between" className={classes.heading} alignItems="center">
           <Typography variant="h6" component="h1">
@@ -122,14 +120,24 @@ function Order(): React.ReactElement {
         <Divider />
         <List>
           <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
-          <OrderLineItem disabled={false} label="Surcharge" amount={surchargeAmount} onAdd={() => requestAmount(SURCHARGE_AMOUNT)} />
+          <OrderLineItem
+            disabled={false}
+            label="Surcharge"
+            amount={surchargeAmount}
+            onAdd={() => requestAmount(SURCHARGE_AMOUNT)}
+          />
           <OrderLineItem
             disabled={tipAmount > 0}
             label="Cashout"
             amount={cashoutAmount}
             onAdd={() => requestAmount(CASHOUT_AMOUNT)}
           />
-          <OrderLineItem disabled={cashoutAmount > 0} label="Tip" amount={tipAmount} onAdd={() => requestAmount(TIP_AMOUNT)} />
+          <OrderLineItem
+            disabled={cashoutAmount > 0}
+            label="Tip"
+            amount={tipAmount}
+            onAdd={() => requestAmount(TIP_AMOUNT)}
+          />
           <Divider variant="middle" />
           <ListItem>
             <ListItemText primary="Total" classes={{ primary: classes.total }} />

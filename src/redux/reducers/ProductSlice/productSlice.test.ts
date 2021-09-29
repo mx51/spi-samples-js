@@ -14,7 +14,7 @@ test('should handle add product', () => {
     cashoutAmount: 0,
     products: [],
   };
-  const action = { product: { id: 1, name: 'Latte', price: 3.6, image: 'Latte.jpeg' } };
+  const action = { product: { id: 1, name: 'Latte', price: 360, image: 'Latte.jpeg' } };
   expect(reducer(previousState, addProduct(action))).toEqual({
     surchargeAmount: 0,
     tipAmount: 0,
@@ -23,7 +23,7 @@ test('should handle add product', () => {
       {
         id: 1,
         name: 'Latte',
-        price: 3.6,
+        price: 360,
         image: 'Latte.jpeg',
       },
     ],
@@ -39,13 +39,13 @@ test('should handle clear products', () => {
       {
         id: 1,
         name: 'Latte',
-        price: 4,
+        price: 400,
         image: 'Latte.jpeg',
       },
       {
         id: 2,
         name: 'Chai Latte',
-        price: 3.6,
+        price: 360,
         image: 'ChaiLatte.jpeg',
       },
     ],
@@ -65,8 +65,8 @@ test('should add surcharge amount', () => {
     cashoutAmount: 0,
     products: [],
   };
-  expect(reducer(previousState, addSurchargeAmount(10.5))).toEqual({
-    surchargeAmount: 10.5,
+  expect(reducer(previousState, addSurchargeAmount(105))).toEqual({
+    surchargeAmount: 105,
     tipAmount: 0,
     cashoutAmount: 0,
     products: [],
@@ -80,10 +80,10 @@ test('should add cashout amount', () => {
     cashoutAmount: 0,
     products: [],
   };
-  expect(reducer(previousState, addCashoutAmount(10.5))).toEqual({
+  expect(reducer(previousState, addCashoutAmount(105))).toEqual({
     surchargeAmount: 0,
     tipAmount: 0,
-    cashoutAmount: 10.5,
+    cashoutAmount: 105,
     products: [],
   });
 });
@@ -95,9 +95,9 @@ test('should add tip amount', () => {
     cashoutAmount: 0,
     products: [],
   };
-  expect(reducer(previousState, addTipAmount(10.5))).toEqual({
+  expect(reducer(previousState, addTipAmount(105))).toEqual({
     surchargeAmount: 0,
-    tipAmount: 10.5,
+    tipAmount: 105,
     cashoutAmount: 0,
     products: [],
   });
