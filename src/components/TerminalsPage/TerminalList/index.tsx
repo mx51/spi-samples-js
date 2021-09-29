@@ -33,7 +33,7 @@ function TerminalList({ terminals }: Any): React.ReactElement {
           </TableHead>
           <TableBody>
             {terminals.map((terminal: ITerminalProps) => (
-              <TableRow key={`terminal_${terminal.deviceAddress}`}>
+              <TableRow key={`terminal_${terminal.deviceAddress}`} id={`terminal_${terminal.serialNumber}`}>
                 <TableCell scope="row" onClick={() => handleUnPairClick(dispatch, terminal.id)}>
                   {terminal.posId}
                 </TableCell>

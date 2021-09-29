@@ -18,7 +18,7 @@ export const selectPairFormValues = createSelector(pairForm, (params) => ({
   secrets: null,
 }));
 
-export const isPairButtonDisabled = createSelector(
+export const isPairDisabled = createSelector(
   pairForm,
   (params) =>
     (params.addressType === TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE && params.deviceAddress.value === '') ||
@@ -31,3 +31,5 @@ export const isPairButtonDisabled = createSelector(
 export const selectPairFormDeviceAddress = createSelector(pairForm, (params) => params.deviceAddress.value);
 
 export const selectPairFormSerialNumber = createSelector(pairForm, (params) => params.serialNumber.value);
+
+export const selectedPairError = createSelector(pairForm, (params) => params.error);

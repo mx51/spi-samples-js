@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -18,7 +18,9 @@ import PairPanelInformation from './PairPanelInformation';
 function PairStatus({ open, handleDrawerToggle }: PairStatusInterface): React.ReactElement {
   const classes = useStyles();
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
-  const terminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
+  const terminal = useAppSelector(
+    useMemo(() => terminalInstance(pairFormSerialNumber), [pairFormSerialNumber])
+  ) as ITerminalProps;
 
   const panelInformationList = [
     {
@@ -46,6 +48,7 @@ function PairStatus({ open, handleDrawerToggle }: PairStatusInterface): React.Re
         <Grid item xs={8}>
           <Grid
             container
+            data-test-id="flowToggler"
             direction="row"
             alignItems="center"
             justifyContent="flex-end"

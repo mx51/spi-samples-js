@@ -1,0 +1,190 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="makeStyles-root-4"
+    >
+      <header
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-5 mui-fixed MuiPaper-elevation4"
+      >
+        <div
+          class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
+        >
+          <button
+            aria-label="menu"
+            class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-7 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+            data-testid="navbarMenuIcon"
+            name="menuIcon"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiIconButton-label"
+            >
+              <svg
+                aria-hidden="true"
+                class="MuiSvgIcon-root"
+                focusable="false"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <svg>
+            PrimaryLogoIcon.svg
+          </svg>
+        </div>
+      </header>
+    </div>
+    <div
+      class="MuiContainer-root makeStyles-root-1 MuiContainer-maxWidthMd"
+    >
+      <div
+        class="MuiBox-root MuiBox-root-8"
+      >
+        <div
+          class="MuiBox-root MuiBox-root-9"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h6"
+          >
+            Terminals list
+          </h1>
+        </div>
+        <div
+          class="MuiBox-root MuiBox-root-10 makeStyles-manageFleetSetting-3"
+        >
+          <a
+            class="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-manageFleetSettingLink-2 MuiTypography-colorPrimary"
+            href="/fleet-settings"
+          >
+            Manage fleet settings
+          </a>
+        </div>
+        <div
+          class="MuiBox-root MuiBox-root-11"
+        >
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+            href="/pair"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              + Pair terminal
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+      </div>
+      <div>
+        <div
+          class="MuiPaper-root MuiTableContainer-root makeStyles-table-12 MuiPaper-elevation0 MuiPaper-rounded"
+        >
+          <table
+            class="MuiTable-root"
+          >
+            <thead
+              class="MuiTableHead-root"
+            >
+              <tr
+                class="MuiTableRow-root MuiTableRow-head"
+              >
+                <th
+                  class="MuiTableCell-root MuiTableCell-head"
+                  scope="col"
+                >
+                  POS ID
+                </th>
+                <th
+                  class="MuiTableCell-root MuiTableCell-head"
+                  scope="col"
+                >
+                  Pairing status
+                </th>
+                <th
+                  class="MuiTableCell-root MuiTableCell-head"
+                  scope="col"
+                >
+                  EFTPOS address
+                </th>
+                <th
+                  class="MuiTableCell-root MuiTableCell-head"
+                  scope="col"
+                >
+                  Serial number
+                </th>
+              </tr>
+            </thead>
+            <tbody
+              class="MuiTableBody-root"
+            >
+              <tr
+                class="MuiTableRow-root"
+                id="terminal_123-123-123"
+              >
+                <td
+                  class="MuiTableCell-root MuiTableCell-body"
+                  scope="row"
+                >
+                  test
+                </td>
+                <td
+                  class="MuiTableCell-root MuiTableCell-body"
+                >
+                  <div
+                    class="MuiChip-root makeStyles-chipConnected-13 MuiChip-sizeSmall"
+                  >
+                    <span
+                      class="MuiChip-label MuiChip-labelSmall"
+                    >
+                      Unpaired
+                    </span>
+                  </div>
+                </td>
+                <td
+                  class="MuiTableCell-root MuiTableCell-body"
+                >
+                  192.168.1.10
+                </td>
+                <td
+                  class="MuiTableCell-root MuiTableCell-body"
+                >
+                  123-123-123
+                </td>
+              </tr>
+            </tbody>
+            <tfoot
+              class="MuiTableFooter-root"
+            >
+              <tr
+                class="MuiTableRow-root MuiTableRow-footer"
+              >
+                <td
+                  class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
+                  colspan="4"
+                >
+                  Page 1
+                </td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

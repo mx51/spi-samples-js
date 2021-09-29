@@ -9,6 +9,7 @@ import reducer, {
   updatePairingFlow,
   updatePairingStatus,
   updateSetting,
+  updateTerminal,
   updateTerminalSecret,
   updateTerminalSerialNumber,
   updateTxFlow,
@@ -23,7 +24,7 @@ function mockPairingFlow(): IPairingFlow {
     Message: 'Requesting to pair ..',
     AwaitingCheckFromEftpos: false,
     AwaitingCheckFromPos: false,
-    ConfirmationCode: '123123',
+    ConfirmationCode: '',
     Successful: false,
   };
 
@@ -215,7 +216,7 @@ test('should handle updateDeviceAddress for empty state', () => {
 
   // Assert
   expect(reducer(previousState, updateDeviceAddress(updateDeviceAddressAction))).toEqual({
-    '222-222-222': {
+    [mockTerminalInstanceId]: {
       deviceAddress: `${mockTerminalInstanceId}.mx51.test.link`,
     },
   });
@@ -234,7 +235,7 @@ test('should handle updatePairingFlow', () => {
 
   // Act
   const updatePairingFlowAction = {
-    id: '222-222-222',
+    id: mockTerminalInstanceId,
     pairingFlow: mockPairingFlowResponse,
   };
 
@@ -273,6 +274,33 @@ test('should handle updatePairingFlow when empty state & unpaired', () => {
   });
 });
 
+test('should handle updatePairingFlow when empty state & unpaired', () => {
+  // Arrange
+  const mockPairingFlowResponse = {
+    Message: 'Connecting...',
+    AwaitingCheckFromEftpos: false,
+    AwaitingCheckFromPos: false,
+    ConfirmationCode: '',
+    Finished: true,
+    Successful: false,
+  };
+  const previousState = {};
+
+  // Act
+  const updatePairingFlowAction = {
+    id: mockTerminalInstanceId,
+    pairingFlow: mockPairingFlowResponse,
+  };
+
+  // Assert
+  expect(reducer(previousState, updatePairingFlow(updatePairingFlowAction))).toMatchObject({
+    [mockTerminalInstanceId]: {
+      pairingFlow: mockPairingFlowResponse,
+      status: SPI_PAIR_STATUS.Unpaired,
+    },
+  });
+});
+
 test('should handle updatePairingStatus', () => {
   // Act
   const updatePairingStatusAction = {
@@ -285,6 +313,27 @@ test('should handle updatePairingStatus', () => {
     [mockTerminalInstanceId]: {
       ...mockPreviousState()[mockTerminalInstanceId],
       status: SPI_PAIR_STATUS.PairedConnected,
+    },
+  });
+});
+
+test('should show PairedConnecting as status if no status value setup in updatePairingStatus()', () => {
+  // Act
+  const previousState = {
+    [mockTerminalInstanceId]: {
+      status: null,
+    },
+  };
+
+  const updatePairingStatusAction = {
+    id: mockTerminalInstanceId,
+    status: SPI_PAIR_STATUS.Unpaired,
+  };
+
+  // Assert
+  expect(reducer(previousState as Any, updatePairingStatus(updatePairingStatusAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      status: SPI_PAIR_STATUS.PairedConnecting,
     },
   });
 });
@@ -329,6 +378,62 @@ test('should handle updateTerminalSerialNumber for empty state', () => {
   expect(reducer(previousState, updateTerminalSerialNumber(updateTerminalSerialNumberAction))).toEqual({
     [mockTerminalInstanceId]: {
       serialNumber: mockTerminalInstanceId,
+    },
+  });
+});
+
+test('should handle updateTerminal', () => {
+  // Arrange
+  const updateTerminalAction = {
+    id: mockTerminalInstanceId,
+    spiClient: {
+      _acquirerCode: 'test',
+      _autoAddressResolutionEnabled: false,
+      _eftposAddress: defaultLocalIP,
+      _posId: 'test',
+      _forceSecureWebSockets: true,
+      _serialNumber: mockTerminalInstanceId,
+      _inTestMode: true,
+      CurrentFlow: null,
+      CurrentPairingFlowState: null,
+      _posVersion: '1.3.4',
+      _secrets: {
+        encKey: 'string',
+        hmacKey: 'string',
+      },
+      _currentStatus: 'Idle',
+      CurrentTxFlowState: null,
+    },
+  };
+
+  const expectedResponse = {
+    acquirerCode: updateTerminalAction.spiClient._acquirerCode,
+    autoAddress: updateTerminalAction.spiClient._autoAddressResolutionEnabled,
+    deviceAddress: updateTerminalAction.spiClient._eftposAddress,
+    posId: updateTerminalAction.spiClient._posId,
+    secureWebSocket: updateTerminalAction.spiClient._forceSecureWebSockets,
+    serialNumber: updateTerminalAction.spiClient._serialNumber,
+    testMode: updateTerminalAction.spiClient._inTestMode,
+    pluginVersion: '-',
+    merchantId: '-',
+    terminalId: '-',
+    batteryLevel: '-',
+    flow: updateTerminalAction.spiClient.CurrentFlow,
+    id: updateTerminalAction.spiClient._serialNumber,
+    pairingFlow: updateTerminalAction.spiClient.CurrentPairingFlowState,
+    posVersion: updateTerminalAction.spiClient._posVersion,
+    secrets: updateTerminalAction.spiClient._secrets,
+    settings: null, // not available during pair terminal stage
+    status: updateTerminalAction.spiClient._currentStatus,
+    terminalStatus: updateTerminalAction.spiClient.CurrentFlow,
+    txFlow: updateTerminalAction.spiClient.CurrentTxFlowState,
+    txMessage: null,
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updateTerminal(updateTerminalAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...expectedResponse,
     },
   });
 });

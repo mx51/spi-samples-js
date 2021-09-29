@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -10,6 +10,7 @@ import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import Typography from '@material-ui/core/Typography';
 import {
+  TEXT_FORM_DEFAULT_VALUE,
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
 } from '../../../../definitions/constants/commonConfigs';
@@ -28,11 +29,11 @@ function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }:
   };
 
   const handleClose = () => {
-    setProvider(providerValue); // keep previous selection
+    setProvider(providerValue); // keep as previous selection
     onClose(providerValue);
   };
 
-  const handleOk = () => {
+  const handleOk = useCallback(() => {
     dispatch(
       updatePairFormParams({
         key: 'acquirerCode',
@@ -42,9 +43,19 @@ function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }:
         },
       })
     );
-
     handleProviderChange(selectedProvider); // update to latest selection;
     onClose(selectedProvider);
+  }, [selectedProvider]);
+
+  const readOtherTypeValue = (value: string): string => {
+    if (
+      value === TEXT_FORM_MODAL_CODE_TILL ||
+      value === TEXT_FORM_MODAL_CODE_WESTPAC ||
+      value === TEXT_FORM_DEFAULT_VALUE
+    )
+      return '';
+
+    return value;
   };
 
   return (
@@ -53,34 +64,43 @@ function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }:
         Simple Payments Integration
       </DialogTitle>
       <Typography variant="body2" className={classes.spiModalSubHeading}>
-        Select your Payment provider
+        Select Your Payment Provider
       </Typography>
       <DialogContent dividers>
         <FormControl component="fieldset">
           <RadioGroup
             aria-label="paymentProviderSelector"
+            data-test-id="paymentProviderSelector"
             name="paymentProviderSelector"
             value={selectedProvider}
             onChange={handleChange}
           >
             <FormControlLabel
-              value={TEXT_FORM_MODAL_CODE_TILL}
               control={<Radio color="primary" />}
+              data-test-id="till"
               label="Till Payments"
+              value={TEXT_FORM_MODAL_CODE_TILL}
             />
             <FormControlLabel
-              value={TEXT_FORM_MODAL_CODE_WESTPAC}
               control={<Radio color="primary" />}
+              data-test-id="wbc"
               label="Westpac"
+              value={TEXT_FORM_MODAL_CODE_WESTPAC}
+            />
+            <FormControlLabel
+              control={<Radio color="primary" />}
+              data-test-id="other"
+              label="Other (type in field)"
+              value={readOtherTypeValue(providerValue)}
             />
           </RadioGroup>
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button color="primary" onClick={handleClose}>
+        <Button color="primary" id="spiCloseBtn" onClick={handleClose}>
           Cancel
         </Button>
-        <Button color="primary" onClick={handleOk}>
+        <Button color="primary" id="spiOkBtn" onClick={handleOk}>
           OK
         </Button>
       </DialogActions>

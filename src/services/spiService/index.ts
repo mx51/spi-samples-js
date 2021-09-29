@@ -1,5 +1,5 @@
 import { Spi as SpiClient } from '@mx51/spi-client-js';
-import { spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
+import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { currentVersion, defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
   FIELD_PRESSED_COLOR,
@@ -7,7 +7,7 @@ import {
   PRIMARY_THEME_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
 import { IPairFormValues } from '../../redux/reducers/PairFormSlice/interfaces';
-import { updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
+import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import {
   updatePairingFlow,
   updatePairingStatus,
@@ -15,7 +15,6 @@ import {
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
-import { eftposIPAddressValidator } from '../../utils/validators/pairFormValidators';
 import { ITerminal, ITerminals } from '../interfaces';
 
 class SpiService {
@@ -56,6 +55,16 @@ class SpiService {
   // read current terminal instance
   readTerminalInstance(instanceId: string): ITerminal {
     return this.terminals[instanceId];
+  }
+
+  // remove instance record from localStorage
+  removeTerminalInstance(instanceId: string): void {
+    const currentTerminals = JSON.parse(getLocalStorage('terminals'));
+    delete currentTerminals[instanceId];
+
+    this.print.log(`%cSPI terminal instances: ${getLocalStorage('terminals')}`);
+
+    setLocalStorage('terminals', JSON.stringify(currentTerminals));
   }
 
   // update localStorage current terminal configs
@@ -119,13 +128,13 @@ class SpiService {
         // setup auto address resolution when user selected auto address in pair form
         const eftposAddress = await this.getTerminalAddress(instanceId);
 
-        if (!eftposAddress) this.setPairPanelPairStatus(instanceId);
+        if (!eftposAddress) {
+          this.removeTerminalInstance(instanceId);
+          this.handleTerminalPairFailure(instanceId);
+        }
 
-        // setup auto address to show in current pair form (before page refresh)
-
+        // setup AUTO address to show in current pair form
         instance.spiClient.SetEftposAddress(eftposAddress);
-      } else if (!eftposIPAddressValidator(deviceAddress || '')) {
-        this.setPairPanelPairStatus(instanceId);
       }
 
       instance.spiClient.PrintingResponse = () => true;
@@ -146,7 +155,14 @@ class SpiService {
       instance.addEventListener(spiEvents.spiDeviceAddressChanged, ({ detail: address }: Any) => {
         const EftposAddress = address.fqdn || address.ip || defaultLocalIP;
 
-        if (!EftposAddress) this.setPairPanelPairStatus(instanceId);
+        if (!EftposAddress) {
+          // remove localStorage record for pair failed terminal instance
+          this.removeTerminalInstance(instanceId);
+          this.handleTerminalPairFailure(
+            instanceId,
+            'Acquiring EFTPOS address is failed. Please check the pair form configurations and retry it later.'
+          );
+        }
 
         this.dispatchAction(
           updatePairFormParams({
@@ -164,13 +180,12 @@ class SpiService {
 
       // SPI Auto Address Failed Result Listener
       instance.addEventListener(spiEvents.spiAutoAddressResolutionFailed, ({ detail: error }: Any) => {
-        this.updateTerminalStorage(instanceId, 'autoAddressResolutionFailed', error);
+        this.removeTerminalInstance(instanceId);
+        this.handleTerminalPairFailure(instanceId, error?.message);
         this.print.error(`%cautoAddressResolutionFailed: ${JSON.stringify(error)}`, `color: ${PRIMARY_ERROR_COLOR};`);
-
-        if (error) this.setPairPanelPairStatus(instanceId);
       });
 
-      // SPI Paring FLow State Change Listener
+      // SPI Paring Flow State Change Listener
       instance.addEventListener(spiEvents.spiPairingFlowStateChanged, ({ detail }: Any) => {
         this.dispatchAction(
           updatePairingFlow({
@@ -180,7 +195,8 @@ class SpiService {
         );
 
         if (detail.Message === 'Pairing Failed') {
-          this.setPairPanelPairStatus(instanceId);
+          this.handleTerminalPairFailure(instanceId, detail.Message);
+          this.removeTerminalInstance(instanceId);
         }
 
         this.print.log(`%cspiPairingFlowStateChanged: ${JSON.stringify(detail)}`, `color: ${PRIMARY_THEME_COLOR}`);
@@ -199,11 +215,7 @@ class SpiService {
 
       // SPI Status Change Listener
       instance.addEventListener(spiEvents.spiStatusChanged, ({ detail: status }: Any) => {
-        // this.updateTerminalStorage(instanceId, 'status', status);
-
-        if (status === SPI_PAIR_STATUS.PairedConnected) {
-          instance.spiClient.AckFlowEndedAndBackToIdle();
-        }
+        if (status === SPI_PAIR_STATUS.PairedConnected) instance.spiClient.AckFlowEndedAndBackToIdle();
 
         this.dispatchAction(
           updatePairingStatus({
@@ -220,7 +232,7 @@ class SpiService {
 
       // SPI Terminal Configuration Response Function (always get called when browser gets refreshed)
       instance.spiClient.TerminalConfigurationResponse = ({ Data }: Any) => {
-        // after terminal paired and when page refreshed, update terminal status and update the PairStatus Panel UI
+        // after terminal paired and when page refreshed, update terminal status
         if (instance.spiClient._currentStatus === SPI_PAIR_STATUS.PairedConnected) {
           this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.PairedConnected }));
         } else {
@@ -267,18 +279,27 @@ class SpiService {
 
       return instance;
     } catch (error) {
+      // remove localStorage record for pair failed terminal instance
+      this.removeTerminalInstance(instanceId);
       // update terminal connection status after terminal instance creation process failed
-      this.setPairPanelPairStatus(instanceId);
+      this.handleTerminalPairFailure(instanceId);
 
       this.print.error(`%c ${JSON.stringify(error)}`, `color: ${PRIMARY_ERROR_COLOR};`);
+
       throw Error(`Failed during creating terminal instance. ${error?.message ? `Error: ${error?.message}` : ''}`);
     }
   }
 
   // * spi library helpers *
 
-  setPairPanelPairStatus(instanceId: string) {
+  handleTerminalPairFailure(instanceId: string, message: string = commonPairErrorMessage) {
     this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
+    this.dispatchAction(
+      readTerminalPairError({
+        isShown: true,
+        message,
+      })
+    );
   }
 
   async getTerminalAddress(instanceId: string): Promise<string> {

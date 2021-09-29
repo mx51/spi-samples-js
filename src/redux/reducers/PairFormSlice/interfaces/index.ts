@@ -1,3 +1,12 @@
+export interface ITerminalPairError {
+  isShown: boolean;
+  message: string;
+}
+
+export interface IPairErrorAction {
+  key: string;
+  value: ITerminalPairError;
+}
 export interface IPairFormParams {
   acquirerCode: {
     value: string;
@@ -8,6 +17,7 @@ export interface IPairFormParams {
     value: string;
     isValid: boolean;
   };
+  error?: ITerminalPairError;
   posId: {
     value: string;
     isValid: boolean;
