@@ -1,4 +1,9 @@
-export type IProductState = Array<IProduct>;
+export interface IProductState {
+  surchargeAmount: number;
+  tipAmount: number;
+  cashoutAmount: number;
+  products: Array<IProduct>;
+}
 
 export interface IProduct {
   id: number;

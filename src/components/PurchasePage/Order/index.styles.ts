@@ -17,7 +17,11 @@ export default makeStyles((theme: Theme) =>
       lineHeight: '1.5rem',
       fontWeight: 'lighter',
     },
-
+    keypadDrawerPaper: {
+      width: '33.34%',
+      backgroundColor: 'transparent',
+      border: 0,
+    },
     total: {
       color: theme.palette.primary.main,
 
@@ -35,6 +39,10 @@ export default makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       borderRadius: 0,
       backgroundColor: theme.palette.error.dark,
+      '&:hover, &:active, &:focus': {
+        background: theme.palette.error.main,
+        color: theme.palette.common.white,
+      },
     },
     payNowBtnLabel: {
       fontWeight: 500,

@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import products from '../../../definitions/constants/productList';
 import { IProduct } from '../../../redux/reducers/ProductSlice/interfaces';
 import { addProduct } from '../../../redux/reducers/ProductSlice/productSlice';
+
 import Product from './Product';
 
 function ProductList(): React.ReactElement {
