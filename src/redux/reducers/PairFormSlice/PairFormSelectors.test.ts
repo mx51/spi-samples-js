@@ -33,7 +33,12 @@ describe('Test PairFormSelectors', () => {
     const mockState = {
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
-      products: [],
+      products: {
+        tipAmount: 0,
+        cashoutAmount: 0,
+        surchargeAmount: 0,
+        products: [],
+      },
     };
 
     // Assert
@@ -54,7 +59,12 @@ describe('Test PairFormSelectors', () => {
         secrets: null,
       },
       terminals: {},
-      products: [],
+      products: {
+        tipAmount: 0,
+        cashoutAmount: 0,
+        surchargeAmount: 0,
+        products: [],
+      },
     };
 
     // Assert
