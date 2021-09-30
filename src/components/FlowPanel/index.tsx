@@ -2,17 +2,17 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
-import { useAppSelector } from '../../../redux/hooks';
-import { selectPairFormSerialNumber } from '../../../redux/reducers/PairFormSlice/PairFormSelectors';
-import { IPairingFlow, ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
-import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { useAppSelector } from '../../redux/hooks';
+import { selectPairFormSerialNumber } from '../../redux/reducers/PairFormSlice/PairFormSelectors';
+import { IPairingFlow, ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
+import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import useStyles from './index.styles';
-import { IFlowPanel } from './interfaces';
+import { IFlowPanelState } from './interfaces';
 
-export default function FlowPanel({ flow }: IFlowPanel): React.ReactElement {
+export default function FlowPanel({ flow, terminal }: IFlowPanelState): React.ReactElement {
   const classes = useStyles();
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
-  const terminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
+  const currentTerminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
 
   const statusInformation = (spi: Any) => `
 # ----------- STATUS -----------
@@ -54,8 +54,11 @@ export default function FlowPanel({ flow }: IFlowPanel): React.ReactElement {
             Flow
           </Typography>
           <pre className={classes.flowContent}>
-            {terminal?.pairingFlow && pairFlowInformation(terminal?.pairingFlow)}
-            {pairFormSerialNumber !== '' && statusInformation(terminal)}
+            {currentTerminal?.pairingFlow && pairFlowInformation(currentTerminal?.pairingFlow)}
+            {pairFormSerialNumber && currentTerminal && statusInformation(currentTerminal)}
+            {/* Above one is for unpaired terminal (Eg: Terminal Pair page) */}
+            {!pairFormSerialNumber && terminal && statusInformation(terminal)}
+            {/* Above one is for already paired terminal (Eg: Terminal Details page) */}
           </pre>
         </Box>
       </Box>

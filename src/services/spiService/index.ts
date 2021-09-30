@@ -278,7 +278,7 @@ class SpiService {
       instance.spiClient.Start();
 
       return instance;
-    } catch (error) {
+    } catch (error: Any) {
       // remove localStorage record for pair failed terminal instance
       this.removeTerminalInstance(instanceId);
       // update terminal connection status after terminal instance creation process failed

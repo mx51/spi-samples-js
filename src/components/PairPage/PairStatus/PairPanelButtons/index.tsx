@@ -3,6 +3,7 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { SPI_PAIR_FLOW, SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
+import { PATH_PURCHASE } from '../../../../definitions/constants/routerConfigs';
 import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
@@ -55,7 +56,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
           >
             Unpair
           </Button>
-          <Button className={classes.pairBtn} color="primary" component={Link} to="/" variant="contained">
+          <Button className={classes.pairBtn} color="primary" component={Link} to={PATH_PURCHASE} variant="contained">
             Go to Sample POS
           </Button>
         </Box>

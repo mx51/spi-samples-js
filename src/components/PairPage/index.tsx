@@ -3,10 +3,10 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { useAppDispatch } from '../../redux/hooks';
 import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
+import FlowPanel from '../FlowPanel';
+import { IFlowPanel } from '../FlowPanel/interfaces';
 import Layout from '../Layout';
 import SnackbarWrapper from '../Snackbar';
-import FlowPanel from './FlowPanel';
-import { IFlowPanel } from './FlowPanel/interfaces';
 import useStyles from './index.styles';
 import PairForm from './PairForm';
 import PairStatus from './PairStatus';
@@ -15,9 +15,9 @@ const PairPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const [flow, setFlow] = useState(false); // By default, flow is closed
 
-  const handleDrawerToggle = useCallback(() => {
+  const handleDrawerToggle = () => {
     setFlow(!flow);
-  }, [flow]);
+  };
 
   const handlePairFormReset = useCallback(() => {
     dispatch(readTerminalPairError({ isShown: false, message: '' }));
