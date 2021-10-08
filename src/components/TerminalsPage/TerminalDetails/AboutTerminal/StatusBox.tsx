@@ -15,8 +15,12 @@ export default function StatusBox(classes: Any, status: string): React.ReactElem
             <ConnectedIcon className={classes.connectedIcon} />
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
-            <Typography variant="h5">Connected</Typography>
-            <Typography variant="inherit">Ready</Typography>
+            <Typography variant="h5" className={classes.statusTitle}>
+              Connected
+            </Typography>
+            <Typography variant="inherit" className={classes.statusText}>
+              Ready
+            </Typography>
           </Box>
         </Box>
       );
@@ -27,8 +31,12 @@ export default function StatusBox(classes: Any, status: string): React.ReactElem
             <ReconnectingIcon className={classes.reconnectIcon} />
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
-            <Typography variant="h5">Connecting</Typography>
-            <Typography variant="inherit">Pairing</Typography>
+            <Typography variant="h5" className={classes.statusTitle}>
+              Connecting
+            </Typography>
+            <Typography variant="inherit" className={classes.statusText}>
+              Pairing
+            </Typography>
           </Box>
         </Box>
       );
@@ -39,8 +47,12 @@ export default function StatusBox(classes: Any, status: string): React.ReactElem
             <UnpairedIcon className={classes.unpairedIcon} />
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
-            <Typography variant="h5">Disconnected</Typography>
-            <Typography variant="inherit">Unpaired</Typography>
+            <Typography variant="h5" className={classes.statusTitle}>
+              Disconnected
+            </Typography>
+            <Typography variant="inherit" className={classes.statusText}>
+              Unpaired
+            </Typography>
           </Box>
         </Box>
       );

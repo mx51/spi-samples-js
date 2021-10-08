@@ -5,7 +5,7 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
   <div
     class="makeStyles-root-1 makeStyles-root-14"
   >
-    <main
+    <div
       class="makeStyles-panel-2"
     >
       <div
@@ -14,7 +14,7 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
         <div
           class="MuiGrid-root makeStyles-detailsPanelContainer-9"
         >
-          <main
+          <div
             class="makeStyles-detailsPanel-10"
           >
             <div
@@ -84,13 +84,13 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
                 Test Panel One
               </div>
             </div>
-          </main>
+          </div>
           <div
             class="MuiGrid-root makeStyles-receiptPanel-12"
           />
         </div>
       </div>
-    </main>
+    </div>
     <div
       class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-17"
       data-test-id="flowPanel"

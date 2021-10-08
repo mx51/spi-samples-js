@@ -47,8 +47,8 @@ describe('Test <TabPanel />', () => {
       </TabPanel>
     );
 
-    expect(container.innerHTML.includes('<h1 class="MuiTypography-root MuiTypography-h6">Receipt</h1>')).toBeTruthy();
-    expect(container.innerHTML.includes('<div>Test Panel Two</div>')).toBeTruthy();
+    expect(container.innerHTML.includes('Receipt')).toBeTruthy();
+    expect(container.innerHTML.includes('Test Panel Two')).toBeTruthy();
     expect(handleDrawerToggle).toHaveBeenCalled();
   });
 });

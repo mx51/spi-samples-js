@@ -18,7 +18,7 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
       class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
     >
       <div
-        class="MuiBox-root MuiBox-root-3 makeStyles-switchBox-2"
+        class="MuiBox-root MuiBox-root-5 makeStyles-switchBox-2"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
@@ -28,66 +28,15 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
                   aria-label="Pay at Table"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
                   name="payAtTable"
-                  type="checkbox"
-                  value=""
-                />
-                <span
-                  class="MuiSwitch-thumb"
-                />
-              </span>
-              <span
-                class="MuiTouchRipple-root"
-              />
-            </span>
-            <span
-              class="MuiSwitch-track"
-            />
-          </span>
-        </p>
-        <div
-          class="MuiBox-root MuiBox-root-8"
-        >
-          <h5
-            class="MuiTypography-root MuiTypography-h5"
-          >
-            Pay at Table
-          </h5>
-          <span
-            class="MuiTypography-root"
-          >
-            Enable Pay at Table for this terminal
-          </span>
-        </div>
-      </div>
-      <div
-        class="MuiBox-root MuiBox-root-9 makeStyles-switchBox-2"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
-        >
-          <span
-            class="MuiSwitch-root"
-          >
-            <span
-              aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
-            >
-              <span
-                class="MuiIconButton-label"
-              >
-                <input
-                  aria-label="Split bill evenly"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
-                  name="splitBillEvenly"
                   type="checkbox"
                   value=""
                 />
@@ -108,14 +57,14 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           class="MuiBox-root MuiBox-root-10"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5"
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
           >
-            Split bill evenly
+            Pay at Table
           </h5>
           <span
-            class="MuiTypography-root"
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
           >
-            Allow customers to split the bill equally
+            Enable Pay at Table for this terminal
           </span>
         </div>
       </div>
@@ -130,15 +79,15 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  aria-label="Tipping"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
-                  name="tipping"
+                  aria-label="Split bill evenly"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
+                  name="splitBillEvenly"
                   type="checkbox"
                   value=""
                 />
@@ -159,14 +108,14 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           class="MuiBox-root MuiBox-root-12"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5"
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
           >
-            Tipping
+            Split bill evenly
           </h5>
           <span
-            class="MuiTypography-root"
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
           >
-            Allow customers to tip during a Pay at Table transaction
+            Allow customers to split the bill equally
           </span>
         </div>
       </div>
@@ -181,15 +130,15 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  aria-label="Accept cash"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
-                  name="acceptCash"
+                  aria-label="Tipping"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
+                  name="tipping"
                   type="checkbox"
                   value=""
                 />
@@ -210,14 +159,14 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           class="MuiBox-root MuiBox-root-14"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5"
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
           >
-            Accept cash
+            Tipping
           </h5>
           <span
-            class="MuiTypography-root"
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
           >
-            Allow customers to pay by cash during a Pay at Table transaction
+            Allow customers to tip during a Pay at Table transaction
           </span>
         </div>
       </div>
@@ -232,15 +181,15 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  aria-label="Retrieve all tables"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
-                  name="retrieveAllTables"
+                  aria-label="Accept cash"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
+                  name="acceptCash"
                   type="checkbox"
                   value=""
                 />
@@ -261,14 +210,14 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           class="MuiBox-root MuiBox-root-16"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5"
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
           >
-            Retrieve all tables
+            Accept cash
           </h5>
           <span
-            class="MuiTypography-root"
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
           >
-            Request a list of all open tables and sales from the POS
+            Allow customers to pay by cash during a Pay at Table transaction
           </span>
         </div>
       </div>
@@ -283,15 +232,15 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  aria-label="Require Operator ID"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
-                  name="requireOperatorID"
+                  aria-label="Retrieve all tables"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
+                  name="retrieveAllTables"
                   type="checkbox"
                   value=""
                 />
@@ -312,14 +261,14 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           class="MuiBox-root MuiBox-root-18"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5"
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
           >
-            Require Operator ID
+            Retrieve all tables
           </h5>
           <span
-            class="MuiTypography-root"
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
           >
-            Prompt for Operator ID in Pay at Table mode
+            Request a list of all open tables and sales from the POS
           </span>
         </div>
       </div>
@@ -334,15 +283,15 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-4 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  aria-label="Transaction summary report"
-                  class="PrivateSwitchBase-input-7 MuiSwitch-input"
-                  name="transactionSummaryReport"
+                  aria-label="Require Operator ID"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
+                  name="requireOperatorID"
                   type="checkbox"
                   value=""
                 />
@@ -363,12 +312,63 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           class="MuiBox-root MuiBox-root-20"
         >
           <h5
-            class="MuiTypography-root MuiTypography-h5"
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
+          >
+            Require Operator ID
+          </h5>
+          <span
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
+          >
+            Prompt for Operator ID in Pay at Table mode
+          </span>
+        </div>
+      </div>
+      <div
+        class="MuiBox-root MuiBox-root-21 makeStyles-switchBox-2"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
+        >
+          <span
+            class="MuiSwitch-root"
+          >
+            <span
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-6 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  aria-label="Transaction summary report"
+                  class="PrivateSwitchBase-input-9 MuiSwitch-input"
+                  name="transactionSummaryReport"
+                  type="checkbox"
+                  value=""
+                />
+                <span
+                  class="MuiSwitch-thumb"
+                />
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </span>
+            <span
+              class="MuiSwitch-track"
+            />
+          </span>
+        </p>
+        <div
+          class="MuiBox-root MuiBox-root-22"
+        >
+          <h5
+            class="MuiTypography-root makeStyles-switchBoxTitle-3 MuiTypography-h5"
           >
             Transaction summary report
           </h5>
           <span
-            class="MuiTypography-root"
+            class="MuiTypography-root makeStyles-switchBoxSubtitle-4"
           >
             Print a summary at the end of a Pay at Table transaction
           </span>
@@ -392,7 +392,7 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
       class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
     >
       <div
-        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-21 MuiFormControl-marginDense MuiFormControl-fullWidth"
+        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-23 MuiFormControl-marginDense MuiFormControl-fullWidth"
         data-test-id="payAtTableLabelField"
         theme="[object Object]"
       >
@@ -413,10 +413,10 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           />
           <fieldset
             aria-hidden="true"
-            class="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
+            class="PrivateNotchedOutline-root-24 MuiOutlinedInput-notchedOutline"
           >
             <legend
-              class="PrivateNotchedOutline-legendLabelled-24"
+              class="PrivateNotchedOutline-legendLabelled-26"
             >
               <span>
                 Pay at Table label
@@ -431,7 +431,7 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
         </p>
       </div>
       <div
-        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-21 MuiFormControl-marginDense MuiFormControl-fullWidth"
+        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-23 MuiFormControl-marginDense MuiFormControl-fullWidth"
         data-test-id="operatorIDField"
         theme="[object Object]"
       >
@@ -452,10 +452,10 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           />
           <fieldset
             aria-hidden="true"
-            class="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
+            class="PrivateNotchedOutline-root-24 MuiOutlinedInput-notchedOutline"
           >
             <legend
-              class="PrivateNotchedOutline-legendLabelled-24"
+              class="PrivateNotchedOutline-legendLabelled-26"
             >
               <span>
                 Operator ID label
@@ -470,7 +470,7 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
         </p>
       </div>
       <div
-        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-21 MuiFormControl-marginDense MuiFormControl-fullWidth"
+        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-23 MuiFormControl-marginDense MuiFormControl-fullWidth"
         data-test-id="tableLabelField"
         theme="[object Object]"
       >
@@ -491,10 +491,10 @@ exports[`Test <PaTSettings /> should match PaTSettings snapshot test 1`] = `
           />
           <fieldset
             aria-hidden="true"
-            class="PrivateNotchedOutline-root-22 MuiOutlinedInput-notchedOutline"
+            class="PrivateNotchedOutline-root-24 MuiOutlinedInput-notchedOutline"
           >
             <legend
-              class="PrivateNotchedOutline-legendLabelled-24"
+              class="PrivateNotchedOutline-legendLabelled-26"
             >
               <span>
                 Table label

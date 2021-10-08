@@ -34,7 +34,7 @@ const PairPage: React.FC = () => {
   return (
     <Layout>
       <div className={classes.root}>
-        <main className={flow ? `${classes.content} ${classes.contentShift}` : classes.content}>
+        <div className={flow ? `${classes.content} ${classes.contentShift}` : classes.content}>
           <Container maxWidth="md">
             <Grid container>
               <Grid item sm={8} xs={12} className={classes.pairFormContainer}>
@@ -45,7 +45,7 @@ const PairPage: React.FC = () => {
               </Grid>
             </Grid>
           </Container>
-        </main>
+        </div>
         <FlowPanel flow={flow} />
         <SnackbarWrapper />
       </div>

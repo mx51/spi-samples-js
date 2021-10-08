@@ -37,21 +37,21 @@ const useStyles = makeStyles((theme: Theme) =>
       background: theme.palette.background.default,
       borderRadius: theme.spacing(0.625),
       marginBottom: theme.spacing(1.5),
-      '& h5': {
-        fontSize: '1.125rem',
-        fontWeight: 500,
-        wordBreak: 'break-word',
-      },
-      '& span': {
-        fontSize: '0.875rem',
-        fontWeight: 400,
-        color: theme.palette.text.secondary,
-        wordBreak: 'break-word',
-      },
       '&>.MuiTypography-root': {
         display: 'flex',
         alignItems: 'center',
       },
+    },
+    statusTitle: {
+      fontSize: '1.125rem',
+      fontWeight: 500,
+      wordBreak: 'break-word',
+    },
+    statusText: {
+      fontSize: '0.875rem',
+      fontWeight: 400,
+      color: theme.palette.text.secondary,
+      wordBreak: 'break-word',
     },
     statusInfoBox: {
       marginBottom: theme.spacing(1.5),

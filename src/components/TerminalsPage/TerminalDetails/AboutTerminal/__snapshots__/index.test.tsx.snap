@@ -34,27 +34,27 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
         >
           <div
-            class="MuiBox-root MuiBox-root-10 makeStyles-statusBox-6"
+            class="MuiBox-root MuiBox-root-12 makeStyles-statusBox-6"
           >
             <p
               class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
             >
               <svg
-                class="makeStyles-unpairedIcon-7"
+                class="makeStyles-unpairedIcon-9"
               >
                 UnpairedIcon.svg
               </svg>
             </p>
             <div
-              class="MuiBox-root MuiBox-root-11"
+              class="MuiBox-root MuiBox-root-13"
             >
               <h5
-                class="MuiTypography-root MuiTypography-h5"
+                class="MuiTypography-root makeStyles-statusTitle-7 MuiTypography-h5"
               >
                 Disconnected
               </h5>
               <span
-                class="MuiTypography-root"
+                class="MuiTypography-root makeStyles-statusText-8"
               >
                 Unpaired
               </span>

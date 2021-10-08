@@ -67,10 +67,10 @@ function PairStatus({ open, handleDrawerToggle }: PairStatusInterface): React.Re
             {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).statusIcon}
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
-            <Typography variant="h5">
+            <Typography variant="h5" className={classes.statusTitle}>
               {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).statusTitle}
             </Typography>
-            <Typography variant="inherit">
+            <Typography variant="inherit" className={classes.statusText}>
               {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).statusText}
             </Typography>
           </Box>

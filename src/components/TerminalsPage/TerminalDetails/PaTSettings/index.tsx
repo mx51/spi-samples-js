@@ -23,8 +23,12 @@ export default function PaTSettings(): React.ReactElement {
                 <Switch name={name} inputProps={{ 'aria-label': title }} />
               </Typography>
               <Box display="flex" flexDirection="column" marginLeft={2}>
-                <Typography variant="h5">{title}</Typography>
-                <Typography variant="inherit">{subtitle}</Typography>
+                <Typography variant="h5" className={classes.switchBoxTitle}>
+                  {title}
+                </Typography>
+                <Typography variant="inherit" className={classes.switchBoxSubtitle}>
+                  {subtitle}
+                </Typography>
               </Box>
             </Box>
           ))}

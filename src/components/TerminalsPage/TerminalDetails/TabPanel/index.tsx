@@ -28,10 +28,10 @@ export default function TabPanel({
     <>
       {value === index && (
         <div className={classes.root}>
-          <main className={flow ? `${classes.panel} ${classes.panelShift}` : classes.panel}>
+          <div className={flow ? `${classes.panel} ${classes.panelShift}` : classes.panel}>
             <Container maxWidth="lg">
               <Grid className={classes.detailsPanelContainer}>
-                <main
+                <div
                   className={
                     receiptToggle ? `${classes.detailsPanel} ${classes.detailsPanelShift}` : classes.detailsPanel
                   }
@@ -58,13 +58,13 @@ export default function TabPanel({
                     </Grid>
                   </Grid>
                   <Grid>{children}</Grid>
-                </main>
+                </div>
                 <Grid className={receiptToggle ? classes.receiptPanelOpened : classes.receiptPanel}>
                   {receiptToggle && <ReceiptPanel />}
                 </Grid>
               </Grid>
             </Container>
-          </main>
+          </div>
           <FlowPanel flow={flow} terminal={terminal} />
         </div>
       )}
