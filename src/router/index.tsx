@@ -18,9 +18,10 @@ const PreAuth = React.lazy(() => import('../components/PreAuthPage'));
 const Purchase = React.lazy(() => import('../components/PurchasePage'));
 const Refund = React.lazy(() => import('../components/RefundPage'));
 const Terminals = React.lazy(() => import('../components/TerminalsPage'));
+const TerminalsDetails = React.lazy(() => import('../components/TerminalsPage/TerminalDetails'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 
-const AppRoutes: React.FC = () => (
+const AppRoutes = (): React.ReactElement => (
   <Router>
     <Suspense fallback={<Loading />}>
       <Switch>
@@ -31,6 +32,7 @@ const AppRoutes: React.FC = () => (
         <Route exact path={PATH_PURCHASE} component={Purchase} />
         <Route exact path={PATH_REFUND} component={Refund} />
         <Route exact path={PATH_TERMINALS} component={Terminals} />
+        <Route exact path={`${PATH_TERMINALS}/:id`} component={TerminalsDetails} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

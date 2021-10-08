@@ -2,99 +2,97 @@
 
 exports[`Test <TerminalList /> should match TerminalList snapshot test 1`] = `
 <div>
-  <div>
-    <div
-      class="MuiPaper-root MuiTableContainer-root makeStyles-table-1 MuiPaper-elevation0 MuiPaper-rounded"
+  <div
+    class="MuiPaper-root MuiTableContainer-root makeStyles-table-1 MuiPaper-elevation0 MuiPaper-rounded"
+  >
+    <table
+      class="MuiTable-root"
     >
-      <table
-        class="MuiTable-root"
+      <thead
+        class="MuiTableHead-root"
       >
-        <thead
-          class="MuiTableHead-root"
+        <tr
+          class="MuiTableRow-root MuiTableRow-head"
         >
-          <tr
-            class="MuiTableRow-root MuiTableRow-head"
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
           >
-            <th
-              class="MuiTableCell-root MuiTableCell-head"
-              scope="col"
-            >
-              POS ID
-            </th>
-            <th
-              class="MuiTableCell-root MuiTableCell-head"
-              scope="col"
-            >
-              Pairing status
-            </th>
-            <th
-              class="MuiTableCell-root MuiTableCell-head"
-              scope="col"
-            >
-              EFTPOS address
-            </th>
-            <th
-              class="MuiTableCell-root MuiTableCell-head"
-              scope="col"
-            >
-              Serial number
-            </th>
-          </tr>
-        </thead>
-        <tbody
-          class="MuiTableBody-root"
+            POS ID
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            Pairing status
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            EFTPOS address
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            Serial number
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root makeStyles-link-3"
+          id="terminal_123-123-123"
         >
-          <tr
-            class="MuiTableRow-root"
-            id="terminal_123-123-123"
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+            scope="row"
           >
-            <td
-              class="MuiTableCell-root MuiTableCell-body"
-              scope="row"
+            test
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+          >
+            <div
+              class="MuiChip-root makeStyles-chipConnected-2 MuiChip-sizeSmall"
             >
-              test
-            </td>
-            <td
-              class="MuiTableCell-root MuiTableCell-body"
-            >
-              <div
-                class="MuiChip-root makeStyles-chipConnected-2 MuiChip-sizeSmall"
+              <span
+                class="MuiChip-label MuiChip-labelSmall"
               >
-                <span
-                  class="MuiChip-label MuiChip-labelSmall"
-                >
-                  Unpaired
-                </span>
-              </div>
-            </td>
-            <td
-              class="MuiTableCell-root MuiTableCell-body"
-            >
-              https://mx51.aar.mock.link
-            </td>
-            <td
-              class="MuiTableCell-root MuiTableCell-body"
-            >
-              123-123-123
-            </td>
-          </tr>
-        </tbody>
-        <tfoot
-          class="MuiTableFooter-root"
-        >
-          <tr
-            class="MuiTableRow-root MuiTableRow-footer"
+                Unpaired
+              </span>
+            </div>
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
           >
-            <td
-              class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
-              colspan="4"
-            >
-              Page 1
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-    </div>
+            https://mx51.aar.mock.link
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+          >
+            123-123-123
+          </td>
+        </tr>
+      </tbody>
+      <tfoot
+        class="MuiTableFooter-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-footer"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
+            colspan="4"
+          >
+            Page 1
+          </td>
+        </tr>
+      </tfoot>
+    </table>
   </div>
 </div>
 `;

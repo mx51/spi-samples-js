@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -33,7 +33,7 @@ function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }:
     onClose(providerValue);
   };
 
-  const handleOk = useCallback(() => {
+  const handleOk = () => {
     dispatch(
       updatePairFormParams({
         key: 'acquirerCode',
@@ -45,7 +45,7 @@ function SPIModal({ modalToggle, handleProviderChange, onClose, providerValue }:
     );
     handleProviderChange(selectedProvider); // update to latest selection;
     onClose(selectedProvider);
-  }, [selectedProvider]);
+  };
 
   const readOtherTypeValue = (value: string): string => {
     if (

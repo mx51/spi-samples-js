@@ -24,9 +24,6 @@ describe('Test PairPanelButtons', () => {
           flow: null,
           id: mockSerialNumber,
           pairingFlow: null,
-          panelInfo: {
-            connectionStatus: SPI_PAIR_STATUS.PairedConnecting,
-          },
           secret: null,
           settings: {},
           terminalConfig: {},

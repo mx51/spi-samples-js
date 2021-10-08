@@ -113,9 +113,6 @@ export const defaultTerminalFlow = {
       Finished: false,
       Successful: false,
     },
-    panelInfo: {
-      plugin_version: '1.1.1',
-    },
     terminalConfig: {
       deviceAddress: defaultAAR,
     },

@@ -1,5 +1,5 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { drawerWidth } from '../../../definitions/constants/commonConfigs';
+import { drawerWidth } from '../../definitions/constants/commonConfigs';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -9,7 +9,7 @@ export default makeStyles((theme: Theme) =>
     },
     drawerPaper: {
       width: `${drawerWidth}%`,
-      borderLeft: 'none',
+      border: 'none',
       background: 'transparent',
       display: 'flex',
       justifyContent: 'center',
@@ -19,10 +19,14 @@ export default makeStyles((theme: Theme) =>
       maxHeight: '100%',
       display: 'flex',
       alignItems: 'center',
-      padding: theme.spacing(10, 0, 4, 0),
+      padding: theme.spacing(12, 0, 6, 0),
     },
     flowBox: {
       background: theme.palette.common.white,
+      border: `1px solid ${theme.palette.secondary.main}`,
+      borderRight: 'none',
+      borderTopLeftRadius: theme.spacing(0.5),
+      borderBottomLeftRadius: theme.spacing(0.5),
       width: '100%',
       height: '100%',
       overflowY: 'scroll', // handle flow status longer messages

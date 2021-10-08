@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { drawerWidth } from '../../definitions/constants/commonConfigs';
-import { IFlowPanel } from './FlowPanel/interfaces';
+import { IFlowPanel } from '../FlowPanel/interfaces';
 
 export default makeStyles((theme: Theme) =>
   createStyles({

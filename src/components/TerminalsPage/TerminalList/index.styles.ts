@@ -13,6 +13,10 @@ const useStyles = makeStyles((theme: Theme) =>
       background: `${CHIP_BACKGROUND_SUCCESS_COLOR}`,
       color: `${CHIP_FONT_SUCCESS_COLOR}`,
     },
+    link: {
+      textDecoration: 'none',
+      cursor: 'pointer',
+    },
   })
 );
 
