@@ -8,7 +8,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     flowBox: {
       background: theme.palette.common.white,
-      height: '100%',
     },
     flowToggle: {
       zIndex: 2,
@@ -59,6 +58,7 @@ const useStyles = makeStyles((theme: Theme) =>
       '& h6': {
         fontSize: '1rem',
         fontWeight: 500,
+        paddingTop: theme.spacing(1.5),
       },
       '& span': {
         fontSize: '0.875rem',

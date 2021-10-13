@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import {
   IFormEventCheckbox,
   IFormEventValue,
@@ -9,6 +9,7 @@ import {
   SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+  TEXT_FORM_DEFAULT_OPTION,
   TEXT_FORM_DEFAULT_VALUE,
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
@@ -44,8 +45,8 @@ function serialNumberFormatter(currentSerialNumber: string): string {
 export const initialSpiFormData = {
   provider: {
     isValid: true,
-    modalToggle: false,
-    value: TEXT_FORM_DEFAULT_VALUE,
+    option: TEXT_FORM_DEFAULT_OPTION,
+    value: '',
   },
   configuration: {
     isValid: true,
@@ -115,24 +116,23 @@ const changeEventWithValidatorHandler =
     setFormState(setSpi, attribute, { value, isValid: fieldValidator(value) });
   };
 
-export const handleProviderChange = changeEventWithValidatorHandler();
-
-export const handleModalOpen = (
-  setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
-  attribute: string
-): void => {
-  setFormState(setSpi, attribute, { modalToggle: true });
-};
-
-export const handleModalClose =
+export const handleProviderOptionChange =
   (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (newValue: string): void => {
-    setFormState(setSpi, attribute, { value: newValue, modalToggle: false, isValid: true });
+  (event: IFormEventValue): void => {
+    setFormState(setSpi, attribute, { option: event.target.value as unknown as string });
+
+    if (event.target.value === TEXT_FORM_DEFAULT_VALUE || event.target.value === TEXT_FORM_DEFAULT_OPTION) {
+      setFormState(setSpi, attribute, { value: '' });
+    } else {
+      setFormState(setSpi, attribute, { value: event.target.value as unknown as string });
+    }
   };
+
+export const handleProviderOnChange = changeEventWithValidatorHandler();
 
 export const handleProviderBlur = blurEventHandler();
 
-export const handleConfigTypeChange =
+export const handleDeviceAddressTypeOnChange =
   (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
   (event: IFormEventValue): void => {
     setFormState(setSpi, attribute, { type: event.target.value as unknown as string });
@@ -148,7 +148,7 @@ export const handleConfigTypeBlur =
     );
   };
 
-export const handleConfigAddressChange = changeEventWithValidatorHandler();
+export const handleDeviceAddressOnChange = changeEventWithValidatorHandler();
 
 export const handleSerialNumberChange =
   (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
@@ -177,3 +177,145 @@ export const handleTestModeChange =
   (event: IFormEventCheckbox): void => {
     setFormState(setSpi, attribute, event.target.checked as unknown as string);
   };
+
+export const handlePaymentProviderOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  setSpi: Dispatch<SetStateAction<ISPIFormData>>,
+  updatePairFormParams: Any
+): void => {
+  if (event.target.value !== TEXT_FORM_DEFAULT_OPTION && event.target.value !== TEXT_FORM_DEFAULT_VALUE) {
+    dispatch(
+      updatePairFormParams({
+        key: 'acquirerCode',
+        value: {
+          value: event.target.value as string,
+          isValid: fieldRequiredValidator(event.target.value as string),
+        },
+      })
+    );
+  } else {
+    dispatch(
+      updatePairFormParams({
+        key: 'acquirerCode',
+        value: {
+          value: '',
+          isValid: false,
+        },
+      })
+    );
+  }
+
+  handleProviderOptionChange(setSpi, 'provider')(event);
+};
+
+export const handlePaymentProviderOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  setSpi: Dispatch<SetStateAction<ISPIFormData>>,
+  updatePairFormParams: Any
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'acquirerCode',
+      value: {
+        value: event.target.value as string,
+        isValid: fieldRequiredValidator(event.target.value as string),
+      },
+    })
+  );
+
+  handleProviderBlur(setSpi, 'provider', fieldRequiredValidator)(event);
+};
+
+export const handleDeviceAddressTypeOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  setSpi: Dispatch<SetStateAction<ISPIFormData>>,
+  updatePairFormParams: Any
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'addressType',
+      value: event.target.value as string,
+    })
+  );
+
+  handleConfigTypeBlur(setSpi, 'testMode')(event);
+};
+
+export const handleDeviceAddressOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  eftposAddressValidator: (type: string, value: string) => boolean,
+  spi: ISPIFormData,
+  updatePairFormParams: Any
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'deviceAddress',
+      value: {
+        value: event.target.value as string,
+        isValid: eftposAddressValidator(spi.configuration.type, event.target.value as string),
+      },
+    })
+  );
+};
+
+export const handleSerialNumberOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  serialNumberValidator: (value: string) => boolean,
+  setSpi: Dispatch<SetStateAction<ISPIFormData>>,
+  updatePairFormParams: Any
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'serialNumber',
+      value: {
+        value: event.target.value as string,
+        isValid: serialNumberValidator(event.target.value as string),
+      },
+    })
+  );
+
+  handleSerialNumberBlur(setSpi, 'serialNumber', serialNumberValidator)(event);
+};
+
+export const handlerPosIdOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  setSpi: Dispatch<SetStateAction<ISPIFormData>>,
+  updatePairFormParams: Any
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'posId',
+      value: {
+        value: event.target.value as string,
+        isValid: fieldRequiredValidator(event.target.value as string),
+      },
+    })
+  );
+
+  handlePosIdBlur(setSpi, 'posId', fieldRequiredValidator)(event);
+};
+
+export const handleTestModeOnChange = (
+  dispatch: Any,
+  event: IFormEventCheckbox,
+  setSpi: Dispatch<SetStateAction<ISPIFormData>>,
+  updatePairFormParams: Any
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'testMode',
+      value: event.target.checked,
+    })
+  );
+
+  handleTestModeChange(setSpi, 'testMode')(event);
+};

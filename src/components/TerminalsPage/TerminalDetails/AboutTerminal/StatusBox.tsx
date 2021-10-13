@@ -5,8 +5,11 @@ import { SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs
 import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
+import useStyles from './index.styles';
 
-export default function StatusBox(classes: Any, status: string): React.ReactElement {
+export default function StatusBox({ status }: { status: string }): React.ReactElement {
+  const classes = useStyles();
+
   switch (status) {
     case SPI_PAIR_STATUS.PairedConnected:
       return (

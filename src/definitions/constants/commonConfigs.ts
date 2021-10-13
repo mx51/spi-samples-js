@@ -3,7 +3,8 @@ import { SpiFlow, SpiStatus } from '@mx51/spi-client-js';
 export const TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE = 'auto';
 export const TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE = 'eftpos';
 // payment provider codes
-export const TEXT_FORM_DEFAULT_VALUE = 'Please type or select SPI';
+export const TEXT_FORM_DEFAULT_OPTION = 'Payment provider';
+export const TEXT_FORM_DEFAULT_VALUE = '(Other) Please specify';
 export const TEXT_FORM_MODAL_CODE_TILL = 'till';
 export const TEXT_FORM_MODAL_CODE_WESTPAC = 'wbc';
 // form validations

@@ -21,22 +21,22 @@ export const mockTerminalInstanceId = '123-123-123';
 export const defaultMockPairFormParams = {
   acquirerCode: {
     value: 'test',
-    isValid: false,
+    isValid: true,
   },
   addressType: TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   deviceAddress: {
     value: defaultLocalIP,
-    isValid: false,
+    isValid: true,
   },
   posId: {
     value: 'test',
-    isValid: false,
+    isValid: true,
   },
   serialNumber: {
     value: mockTerminalInstanceId,
-    isValid: false,
+    isValid: true,
   },
-  testMode: false,
+  testMode: true,
 };
 
 export const customMockPairFormParamsState = (
@@ -162,7 +162,6 @@ export const mockSpiClient = {
   CurrentFlow: null,
   CurrentPairingFlowState: null,
   CurrentTxFlowState: null,
-  PrintingResponse: () => true,
   _acquirerCode: 'test',
   _autoAddressResolutionEnabled: true,
   _checkOnTxFrequency: 20000,

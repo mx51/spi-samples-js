@@ -47,17 +47,22 @@ describe('Test PairPanelButtons', () => {
     // Assert
     expect(panelButton.statusTitle).toEqual('Unpaired');
     expect(panelButton.statusText).toEqual('Idle');
-    expect((panelButton.button as Any).props.onClick).toBeDefined();
+    expect(panelButton.button as Any).toBeNull();
   });
 
   test('should show Pair button when status is connecting', () => {
     // Act
     const panelButton = PairPanelButtons(SPI_PAIR_STATUS.PairedConnecting);
+    const handleCancelPairClick = jest.fn();
+
+    // Act
+    handleCancelPairClick();
 
     // Assert
     expect(panelButton.statusTitle).toEqual('PairedConnecting');
     expect(panelButton.statusText).toEqual('Pairing');
     expect((panelButton.button as Any).props.onClick).toBeDefined();
+    expect(handleCancelPairClick).toHaveBeenCalledTimes(1);
   });
 
   test('should show Pair button when status is connecting', () => {

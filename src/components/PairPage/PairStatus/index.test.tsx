@@ -30,20 +30,7 @@ function setupContainer(
 }
 
 describe('Test <PairStatus />', () => {
-  let container: Any;
-
   afterEach(cleanup);
-
-  test('should show Pair button when connection is not established', () => {
-    // Arrange
-    const pairButtonText = 'Pair';
-
-    // Act
-    container = setupContainer();
-
-    // Assert
-    expect(container.innerHTML.includes(pairButtonText)).toBeTruthy();
-  });
 
   test('should show Cancel Paring button when connecting a terminal', async () => {
     // Arrange
@@ -101,7 +88,7 @@ describe('Test <PairStatus />', () => {
     expect(mockContainer.innerHTML.includes(connectedButtonText, samplePosLinkText)).toBeTruthy();
   });
 
-  test('should show disabled pair button when form is not completed', () => {
+  test('should not any button when form is not completed', () => {
     // Arrange
     const pairFormParams = {
       acquirerCode: {
@@ -123,12 +110,12 @@ describe('Test <PairStatus />', () => {
       },
       testMode: true,
     };
-    const disabledButtonClassName = 'Mui-disabled';
+    const pairButtonId = 'pairBtn';
 
     // Act
     const mockContainer = setupContainer(pairFormParams);
 
     // Assert
-    expect(mockContainer.innerHTML.includes(disabledButtonClassName)).toBeTruthy();
+    expect(mockContainer.innerHTML.includes(pairButtonId)).toBeFalsy();
   });
 });

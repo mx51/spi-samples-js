@@ -53,22 +53,22 @@ describe('Test pairFormSlice', () => {
     const initialState = customMockPairFormParamsState(
       {
         value: 'test',
-        isValid: false,
+        isValid: true,
       },
       TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
       {
         value: defaultLocalIP,
-        isValid: false,
+        isValid: true,
       },
       {
         value: 'test',
-        isValid: false,
+        isValid: true,
       },
       {
         value: mockTerminalInstanceId,
-        isValid: false,
+        isValid: true,
       },
-      false
+      true
     );
 
     // Assert

@@ -12,7 +12,7 @@ describe('Test <StatusBox />', () => {
     const responses = ['Connected', 'Connecting', 'Disconnected'];
 
     for (let index = 0; index < statusOptions.length; index += 1) {
-      const { container } = render(StatusBox({}, statusOptions[index]));
+      const { container } = render(<StatusBox status={statusOptions[index]} />);
 
       // Assert
       expect(container.innerHTML.includes(responses[index])).toBeTruthy();

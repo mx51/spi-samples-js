@@ -14,8 +14,9 @@ import { useHistory } from 'react-router-dom';
 import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import useStyles from './index.styles';
+import { ITerminalList } from './interfaces';
 
-function TerminalList({ terminals }: Any): React.ReactElement {
+function TerminalList({ terminals }: ITerminalList): React.ReactElement {
   const classes = useStyles();
   const history = useHistory();
 

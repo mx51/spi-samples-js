@@ -122,7 +122,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            -
           </p>
         </div>
       </div>
@@ -144,7 +144,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            -
           </p>
         </div>
       </div>
@@ -166,7 +166,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            123-123-123
           </p>
         </div>
       </div>
@@ -188,7 +188,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            -
           </p>
         </div>
       </div>
@@ -224,7 +224,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            test
           </p>
         </div>
       </div>
@@ -268,7 +268,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            192.168.1.10
           </p>
         </div>
       </div>
@@ -290,7 +290,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            undefined
+            test
           </p>
         </div>
       </div>
