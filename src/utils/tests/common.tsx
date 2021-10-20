@@ -18,9 +18,32 @@ export const mockSerialNumber = '222-222-222';
 
 export const mockTerminalInstanceId = '123-123-123';
 
+export const defaultEmptyMockPairFormParams = {
+  acquirerCode: {
+    value: '',
+    option: TEXT_FORM_DEFAULT_VALUE,
+    isValid: true,
+  },
+  addressType: TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+  deviceAddress: {
+    value: '',
+    isValid: true,
+  },
+  posId: {
+    value: '',
+    isValid: true,
+  },
+  serialNumber: {
+    value: '',
+    isValid: true,
+  },
+  testMode: true,
+};
+
 export const defaultMockPairFormParams = {
   acquirerCode: {
     value: 'test',
+    option: TEXT_FORM_DEFAULT_VALUE,
     isValid: true,
   },
   addressType: TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -42,20 +65,21 @@ export const defaultMockPairFormParams = {
 export const customMockPairFormParamsState = (
   acquirerCode = {
     value: '',
-    isValid: false,
+    option: TEXT_FORM_DEFAULT_VALUE,
+    isValid: true,
   },
   addressType = TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   deviceAddress = {
     value: '',
-    isValid: false,
+    isValid: true,
   },
   posId = {
     value: '',
-    isValid: false,
+    isValid: true,
   },
   serialNumber = {
     value: '',
-    isValid: false,
+    isValid: true,
   },
   testMode = true
 ): IPairFormParams => ({
@@ -66,6 +90,16 @@ export const customMockPairFormParamsState = (
   serialNumber,
   testMode,
 });
+
+export const mockDefaultProducts = {
+  surchargeAmount: 100,
+  tipAmount: 100,
+  cashoutAmount: 100,
+  products: [
+    { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
+    { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
+  ],
+};
 
 export const defaultMockTerminals = {
   [mockTerminalInstanceId]: {

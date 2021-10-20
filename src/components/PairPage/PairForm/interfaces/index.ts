@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfaces';
 
 export interface IPreventDefault {
@@ -46,8 +45,12 @@ export type IFormEventKey = React.KeyboardEvent<{ key: string }>;
 export interface IPaymentType {
   terminal: ITerminalProps;
 }
+
 export interface IPairFormState {
-  setSpi: Dispatch<SetStateAction<ISPIFormData>>;
-  spi: ISPIFormData;
   terminal: ITerminalProps;
+}
+
+export interface IUpdatePairFormParams {
+  key: string;
+  value: { value: string | boolean; option?: string; isValid: boolean };
 }

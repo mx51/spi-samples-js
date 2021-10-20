@@ -10,6 +10,7 @@ export interface IPairErrorAction {
 export interface IPairFormParams {
   acquirerCode: {
     value: string;
+    option: string;
     isValid: boolean;
   };
   addressType: string;
@@ -46,3 +47,17 @@ export interface IFormParamsAction {
   key: string;
   value: Any;
 }
+
+export interface IUpdateFormParams {
+  key: string;
+  value:
+    | {
+        value: string | boolean;
+        option?: string;
+        isValid: boolean;
+      }
+    | boolean
+    | string;
+}
+
+export type IUpdatePairFormParams = ({ key, value }: IUpdateFormParams) => void;

@@ -21,21 +21,21 @@ import {
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { selectPairFormDeviceAddress } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import { pairForm, selectPairFormDeviceAddress } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
 import {
-  handleDeviceAddressOnChange,
-  handleDeviceAddressTypeOnChange,
-  handleDeviceAddressTypeOnBlur,
-  handlePaymentProviderOnBlur,
-  handlePaymentProviderOnChange,
-  handlePosIdChange,
-  handleProviderOnChange,
-  handleSerialNumberChange,
-  handleDeviceAddressOnBlur,
-  handleSerialNumberOnBlur,
-  handlerPosIdOnBlur,
-  handleTestModeOnChange,
+  handlePaymentProviderFieldOnChange,
+  handlePaymentProviderSelectorOnChange,
+  handlePaymentProviderFieldOnBlur,
+  handleTestModeCheckboxOnChange,
+  handleAddressTypeSelectorOnBlur,
+  handleAddressTypeSelectorOnChange,
+  handleDeviceAddressFieldOnChange,
+  handleDeviceAddressFieldOnBlur,
+  handleSerialNumberFieldOnBlur,
+  handleSerialNumberFieldOnChange,
+  handlePosIdFieldOnBlur,
+  handlePosIdFieldOnChange,
 } from '../../../../utils/common/pair/pairFormHelpers';
 import {
   eftposAddressValidator,
@@ -47,9 +47,10 @@ import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
 import { IFormEventCheckbox, IFormEventValue, IPairFormState } from '../interfaces';
 
-export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormState): React.ReactElement {
+export default function PairConfiguration({ terminal }: IPairFormState): React.ReactElement {
   const classes = useStyles();
   const dispatch = useAppDispatch();
+  const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode } = useAppSelector(pairForm);
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
 
   return (
@@ -66,14 +67,14 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
               <InputLabel data-test-id="paymentProviderLabel">Payment provider</InputLabel>
               <Select
                 className={classes.pairFormSelector}
-                data-test-id="paymentProviderSelector"
+                data-test-id="paymentProviderSelectorLabel"
                 disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                 label="Payment provider"
                 labelId="paymentProviderSelectorLabel"
                 onChange={(event: IFormEventValue) =>
-                  handlePaymentProviderOnChange(dispatch, event, fieldRequiredValidator, setSpi, updatePairFormParams)
+                  handlePaymentProviderSelectorOnChange(dispatch, event, fieldRequiredValidator, updatePairFormParams)
                 }
-                value={spi.provider.option}
+                value={acquirerCode.option}
               >
                 <MenuItem value={TEXT_FORM_DEFAULT_OPTION}>Payment provider</MenuItem>
                 <MenuItem value={TEXT_FORM_MODAL_CODE_TILL}>Till Payments</MenuItem>
@@ -86,27 +87,23 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
             <CustomTextField
               dataTestId="paymentProviderField"
               disabled={
-                spi.provider.option !== TEXT_FORM_DEFAULT_VALUE || terminal?.status === SPI_PAIR_STATUS.PairedConnecting
+                acquirerCode.option !== TEXT_FORM_DEFAULT_VALUE || terminal?.status === SPI_PAIR_STATUS.PairedConnecting
               }
-              error={!spi.provider.isValid}
+              error={!acquirerCode.isValid}
               fullWidth
-              helperText={!spi.provider.isValid ? TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD : ''}
+              helperText={!acquirerCode.isValid ? TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD : ''}
               InputProps={{
-                endAdornment: <ErrorInputAdornment isValid={!spi.provider.isValid} />,
+                endAdornment: <ErrorInputAdornment isValid={!acquirerCode.isValid} />,
               }}
               label={TEXT_FORM_DEFAULT_VALUE}
               margin="dense"
               onBlur={(event: IFormEventValue) =>
-                handlePaymentProviderOnBlur(dispatch, event, fieldRequiredValidator, setSpi, updatePairFormParams)
+                handlePaymentProviderFieldOnBlur(dispatch, event, fieldRequiredValidator, updatePairFormParams)
               }
               onChange={(event: IFormEventValue) =>
-                handleProviderOnChange(
-                  setSpi,
-                  'provider',
-                  fieldRequiredValidator
-                )(event.target.value as unknown as string)
+                handlePaymentProviderFieldOnChange(dispatch, event, updatePairFormParams)
               }
-              value={spi.provider.value}
+              value={acquirerCode.value}
               variant="outlined"
             />
           </Grid>
@@ -121,11 +118,11 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
                 disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                 label="Configuration option"
                 labelId="configurationDropdownLabel"
-                onBlur={(event: IFormEventValue) =>
-                  handleDeviceAddressTypeOnBlur(dispatch, event, setSpi, updatePairFormParams)
+                onBlur={() => handleAddressTypeSelectorOnBlur(dispatch, testMode, updatePairFormParams)}
+                onChange={(event: IFormEventValue) =>
+                  handleAddressTypeSelectorOnChange(dispatch, event, updatePairFormParams)
                 }
-                onChange={(event: IFormEventValue) => handleDeviceAddressTypeOnChange(setSpi, 'configuration')(event)}
-                value={spi.configuration.type}
+                value={addressType}
               >
                 <MenuItem value={TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE}>Auto address</MenuItem>
                 <MenuItem value={TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE}>EFTPOS address</MenuItem>
@@ -136,31 +133,35 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
             <CustomTextField
               dataTestId="eftposAddressField"
               disabled={
-                spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE ||
+                addressType === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE ||
                 terminal?.status === SPI_PAIR_STATUS.PairedConnecting
               }
-              error={!spi.configuration.isValid}
+              error={!deviceAddress.isValid}
               fullWidth
-              helperText={!spi.configuration.isValid ? TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD : ''}
+              helperText={!deviceAddress.isValid ? TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD : ''}
               InputProps={{
-                endAdornment: <ErrorInputAdornment isValid={!spi.configuration.isValid} />,
+                endAdornment: <ErrorInputAdornment isValid={!deviceAddress.isValid} />,
               }}
               label="EFTPOS address"
               margin="dense"
               onBlur={(event: IFormEventValue) =>
-                handleDeviceAddressOnBlur(dispatch, event, eftposAddressValidator, spi, updatePairFormParams)
+                handleDeviceAddressFieldOnBlur(
+                  addressType,
+                  dispatch,
+                  event,
+                  eftposAddressValidator,
+                  updatePairFormParams
+                )
               }
               onChange={(event: IFormEventValue) =>
-                handleDeviceAddressOnChange(setSpi, 'configuration', () =>
-                  eftposAddressValidator(spi.configuration.type, event.target.value as string)
-                )(event.target.value as string)
+                handleDeviceAddressFieldOnChange(dispatch, event, updatePairFormParams)
               }
               value={
-                (spi.configuration.type === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE &&
+                (addressType === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE &&
                   terminal?.status === SPI_PAIR_STATUS.PairedConnecting) ||
                 terminal?.status === SPI_PAIR_STATUS.PairedConnected
                   ? pairFormDeviceAddress
-                  : spi.configuration.value
+                  : deviceAddress.value
               }
               variant="outlined"
             />
@@ -170,20 +171,22 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
           <CustomTextField
             dataTestId="serialNumberField"
             disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
-            error={!spi.serialNumber.isValid}
+            error={!serialNumber.isValid}
             fullWidth
-            helperText={!spi.serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
+            helperText={!serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
             InputProps={{
-              endAdornment: <ErrorInputAdornment isValid={!spi.serialNumber.isValid} />,
+              endAdornment: <ErrorInputAdornment isValid={!serialNumber.isValid} />,
             }}
             label="Serial number"
             margin="dense"
             onBlur={(event: IFormEventValue) =>
-              handleSerialNumberOnBlur(dispatch, event, serialNumberValidator, setSpi, updatePairFormParams)
+              handleSerialNumberFieldOnBlur(dispatch, event, serialNumberValidator, updatePairFormParams)
             }
-            onChange={(event: IFormEventValue) => handleSerialNumberChange(setSpi, 'serialNumber')(event)}
+            onChange={(event: IFormEventValue) =>
+              handleSerialNumberFieldOnChange(dispatch, event, updatePairFormParams)
+            }
             required
-            value={spi.serialNumber.value}
+            value={serialNumber.value}
             variant="outlined"
           />
         </Grid>
@@ -191,20 +194,20 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
           <CustomTextField
             dataTestId="posIdField"
             disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
-            error={!spi.posId.isValid}
+            error={!posId.isValid}
             fullWidth
-            helperText={!spi.posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
+            helperText={!posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
             InputProps={{
-              endAdornment: <ErrorInputAdornment isValid={!spi.posId.isValid} />,
+              endAdornment: <ErrorInputAdornment isValid={!posId.isValid} />,
             }}
             label="POS ID"
             margin="dense"
             onBlur={(event: IFormEventValue) =>
-              handlerPosIdOnBlur(dispatch, event, fieldRequiredValidator, setSpi, updatePairFormParams)
+              handlePosIdFieldOnBlur(dispatch, event, fieldRequiredValidator, updatePairFormParams)
             }
-            onChange={(event: IFormEventValue) => handlePosIdChange(setSpi, 'posId')(event)}
+            onChange={(event: IFormEventValue) => handlePosIdFieldOnChange(dispatch, event, updatePairFormParams)}
             required
-            value={spi.posId.value}
+            value={posId.value}
             variant="outlined"
           />
         </Grid>
@@ -212,13 +215,13 @@ export default function PairConfiguration({ setSpi, spi, terminal }: IPairFormSt
           <FormControlLabel
             control={
               <Checkbox
-                checked={spi.testMode}
+                checked={testMode}
                 color="primary"
                 disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
                 data-test-id="testModeCheckbox"
                 name="testMode"
                 onChange={(event: IFormEventCheckbox) =>
-                  handleTestModeOnChange(dispatch, event, setSpi, updatePairFormParams)
+                  handleTestModeCheckboxOnChange(dispatch, event, updatePairFormParams)
                 }
               />
             }

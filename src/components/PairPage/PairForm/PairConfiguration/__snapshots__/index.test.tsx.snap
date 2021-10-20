@@ -33,7 +33,7 @@ exports[`Test <PairConfiguration /> should match PairConfiguration snapshot test
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root makeStyles-pairFormSelector-11 MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
-            data-test-id="paymentProviderSelector"
+            data-test-id="paymentProviderSelectorLabel"
           >
             <div
               aria-haspopup="listbox"

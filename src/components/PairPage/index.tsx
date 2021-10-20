@@ -1,8 +1,8 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { useAppDispatch } from '../../redux/hooks';
-import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
+import { resetPairForm } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import FlowPanel from '../FlowPanel';
 import { IFlowPanel } from '../FlowPanel/interfaces';
 import Layout from '../Layout';
@@ -19,16 +19,10 @@ const PairPage: React.FC = () => {
     setFlow(!flow);
   };
 
-  const handlePairFormReset = useCallback(() => {
-    dispatch(readTerminalPairError({ isShown: false, message: '' }));
-    dispatch(updatePairFormParams({ key: 'serialNumber', value: '' }));
-  }, [dispatch]);
-
   const classes = useStyles(flow as unknown as IFlowPanel);
 
   useEffect(() => {
-    // cleanup status panel after initial connected/paired
-    handlePairFormReset();
+    dispatch(resetPairForm()); // reset paired form when required
   }, [dispatch]);
 
   return (
