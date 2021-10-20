@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+  TEXT_FORM_DEFAULT_OPTION,
 } from '../../../definitions/constants/commonConfigs';
 import { isHttps } from '../../../utils/common/pair/pairFormHelpers';
 import { IFormParamsAction, IPairFormParams, ITerminalPairError } from './interfaces';
@@ -9,12 +10,13 @@ import { IFormParamsAction, IPairFormParams, ITerminalPairError } from './interf
 const initialState: IPairFormParams = {
   acquirerCode: {
     value: '',
-    isValid: false,
+    option: TEXT_FORM_DEFAULT_OPTION,
+    isValid: true,
   },
   addressType: isHttps() ? TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE : TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   deviceAddress: {
     value: '',
-    isValid: false,
+    isValid: true,
   },
   error: {
     isShown: false,
@@ -22,13 +24,13 @@ const initialState: IPairFormParams = {
   },
   posId: {
     value: '',
-    isValid: false,
+    isValid: true,
   },
   serialNumber: {
     value: '',
-    isValid: false,
+    isValid: true,
   },
-  testMode: false,
+  testMode: true,
 };
 
 // The only reason for introducing pairFormSlice is for checking pair Form validation because before pairing process terminal instance id (serial number) is not available
@@ -40,6 +42,7 @@ export const pairFormSlice = createSlice({
       const error = action.payload;
       state.error = error;
     },
+    resetPairForm: () => initialState,
     updatePairFormParams(state: IPairFormParams, action: PayloadAction<Partial<IFormParamsAction>>) {
       const { key, value } = action.payload;
 
@@ -81,6 +84,6 @@ export const pairFormSlice = createSlice({
   },
 });
 
-export const { readTerminalPairError, updatePairFormParams } = pairFormSlice.actions;
+export const { readTerminalPairError, resetPairForm, updatePairFormParams } = pairFormSlice.actions;
 
 export default pairFormSlice.reducer;

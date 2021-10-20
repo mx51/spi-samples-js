@@ -3,11 +3,11 @@ import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfa
 export interface TabPanelProps {
   children: React.ReactNode;
   flow: boolean;
-  index: Any;
+  index: number;
   setFlow: () => void;
   subtitle: string;
   title: string;
-  value: Any;
+  value: number;
   receiptToggle?: boolean;
   terminal: ITerminalProps | null;
 }
@@ -15,4 +15,10 @@ export interface TabPanelProps {
 export interface ITerminalConfigurationConstants {
   title: string;
   content: string;
+}
+
+export interface IAboutTerminal {
+  receiptToggle: boolean;
+  setReceiptToggle: (receiptToggle: boolean) => void;
+  terminal: ITerminalProps;
 }

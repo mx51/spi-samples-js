@@ -1,18 +1,14 @@
-import React from 'react';
-import {
-  IFormEventCheckbox,
-  IFormEventValue,
-  ISPIAttribute,
-  ISPIFormData,
-} from '../../../components/PairPage/PairForm/interfaces';
+import { IFormEventCheckbox, IFormEventValue } from '../../../components/PairPage/PairForm/interfaces';
 import {
   SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+  TEXT_FORM_DEFAULT_OPTION,
   TEXT_FORM_DEFAULT_VALUE,
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
 } from '../../../definitions/constants/commonConfigs';
+import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
 
 export function disableProviderField(status: string, spiProviderValue: string): boolean {
   return (
@@ -44,8 +40,8 @@ function serialNumberFormatter(currentSerialNumber: string): string {
 export const initialSpiFormData = {
   provider: {
     isValid: true,
-    modalToggle: false,
-    value: TEXT_FORM_DEFAULT_VALUE,
+    option: TEXT_FORM_DEFAULT_OPTION,
+    value: '',
   },
   configuration: {
     isValid: true,
@@ -63,117 +59,216 @@ export const initialSpiFormData = {
   testMode: !isHttps(),
 };
 
-// generic state setter (spi)
-export const setFormState = (
-  setState: React.Dispatch<React.SetStateAction<ISPIFormData>>,
-  attribute: string,
-  newState: Record<string, unknown> | boolean | string
+// Payment Provider Selector
+export const handlePaymentProviderSelectorOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  updatePairFormParams: IUpdatePairFormParams
 ): void => {
-  if (typeof newState === 'object') {
-    return setState((prevState) => ({
-      ...prevState,
-      [attribute]: {
-        ...(prevState as unknown as ISPIAttribute)[attribute],
-        ...newState,
-      },
-    }));
-  }
-
-  return setState((prevState) => ({
-    ...prevState,
-    [attribute]: newState,
-  }));
-};
-
-const changeEventHandler =
-  () =>
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (event: IFormEventValue): void => {
-    setFormState(setSpi, attribute, { value: event.target.value as unknown as string });
-  };
-
-const blurEventHandler =
-  () =>
-  (
-    setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
-    attribute: string,
-    fieldValidator: (value: string) => boolean
-  ) =>
-  (event: IFormEventValue): void => {
-    const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
-    setFormState(setSpi, attribute, { isValid: fieldValidator(currentSerialNumber) });
-  };
-
-const changeEventWithValidatorHandler =
-  () =>
-  (
-    setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
-    attribute: string,
-    fieldValidator: (value: string) => boolean
-  ) =>
-  (value: string): void => {
-    setFormState(setSpi, attribute, { value, isValid: fieldValidator(value) });
-  };
-
-export const handleProviderChange = changeEventWithValidatorHandler();
-
-export const handleModalOpen = (
-  setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
-  attribute: string
-): void => {
-  setFormState(setSpi, attribute, { modalToggle: true });
-};
-
-export const handleModalClose =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (newValue: string): void => {
-    setFormState(setSpi, attribute, { value: newValue, modalToggle: false, isValid: true });
-  };
-
-export const handleProviderBlur = blurEventHandler();
-
-export const handleConfigTypeChange =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (event: IFormEventValue): void => {
-    setFormState(setSpi, attribute, { type: event.target.value as unknown as string });
-  };
-
-export const handleConfigTypeBlur =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (event: IFormEventValue): void => {
-    setFormState(
-      setSpi,
-      attribute,
-      (event.target.value as unknown as string) === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE
+  if (event.target.value !== TEXT_FORM_DEFAULT_OPTION && event.target.value !== TEXT_FORM_DEFAULT_VALUE) {
+    dispatch(
+      updatePairFormParams({
+        key: 'acquirerCode',
+        value: {
+          value: event.target.value as string,
+          option: event.target.value as string,
+          isValid: fieldRequiredValidator(event.target.value as string),
+        },
+      })
     );
-  };
+  } else {
+    dispatch(
+      updatePairFormParams({
+        key: 'acquirerCode',
+        value: {
+          value: '',
+          option: event.target.value as string,
+          isValid: false,
+        },
+      })
+    );
+  }
+};
 
-export const handleConfigAddressChange = changeEventWithValidatorHandler();
+// Payment Provider Field
+export const handlePaymentProviderFieldOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'acquirerCode',
+      value: {
+        value: event.target.value as string,
+        option: TEXT_FORM_DEFAULT_VALUE,
+        isValid: true,
+      },
+    })
+  );
+};
 
-export const handleSerialNumberChange =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (event: IFormEventValue): void => {
-    const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
-    setFormState(setSpi, attribute, { value: serialNumberFormatter(currentSerialNumber) });
-  };
+export const handlePaymentProviderFieldOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'acquirerCode',
+      value: {
+        value: event.target.value as string,
+        option: TEXT_FORM_DEFAULT_VALUE,
+        isValid: fieldRequiredValidator(event.target.value as string),
+      },
+    })
+  );
+};
 
-export const handleSerialNumberBlur =
-  (
-    setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>,
-    attribute: string,
-    fieldValidator: (value: string) => boolean
-  ) =>
-  (event: IFormEventValue): void => {
-    const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
-    setFormState(setSpi, attribute, { isValid: fieldValidator(currentSerialNumber) });
-  };
+// Address Type Selector
+export const handleAddressTypeSelectorOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'addressType',
+      value: event.target.value as string,
+    })
+  );
+};
 
-export const handlePosIdChange = changeEventHandler();
+export const handleAddressTypeSelectorOnBlur = (
+  dispatch: Any,
+  checkedValue: boolean,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'testMode',
+      value: !checkedValue,
+    })
+  );
+};
 
-export const handlePosIdBlur = blurEventHandler();
+// Device Address Field
+export const handleDeviceAddressFieldOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'deviceAddress',
+      value: {
+        value: event.target.value as string,
+        isValid: true,
+      },
+    })
+  );
+};
 
-export const handleTestModeChange =
-  (setSpi: React.Dispatch<React.SetStateAction<ISPIFormData>>, attribute: string) =>
-  (event: IFormEventCheckbox): void => {
-    setFormState(setSpi, attribute, event.target.checked as unknown as string);
-  };
+export const handleDeviceAddressFieldOnBlur = (
+  addressType: string,
+  dispatch: Any,
+  event: IFormEventValue,
+  eftposAddressValidator: (type: string, value: string) => boolean,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'deviceAddress',
+      value: {
+        value: event.target.value as string,
+        isValid: eftposAddressValidator(addressType, event.target.value as string),
+      },
+    })
+  );
+};
+
+// Serial Number Field
+export const handleSerialNumberFieldOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
+
+  dispatch(
+    updatePairFormParams({
+      key: 'serialNumber',
+      value: {
+        value: serialNumberFormatter(currentSerialNumber),
+        isValid: true,
+      },
+    })
+  );
+};
+
+export const handleSerialNumberFieldOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  serialNumberValidator: (value: string) => boolean,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'serialNumber',
+      value: {
+        value: event.target.value as string,
+        isValid: serialNumberValidator(event.target.value as string),
+      },
+    })
+  );
+};
+
+// POS ID Field
+export const handlePosIdFieldOnChange = (
+  dispatch: Any,
+  event: IFormEventValue,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'posId',
+      value: {
+        value: event.target.value as string,
+        isValid: true,
+      },
+    })
+  );
+};
+
+export const handlePosIdFieldOnBlur = (
+  dispatch: Any,
+  event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'posId',
+      value: {
+        value: event.target.value as string,
+        isValid: fieldRequiredValidator(event.target.value as string),
+      },
+    })
+  );
+};
+
+// Test Mode Checkbox
+export const handleTestModeCheckboxOnChange = (
+  dispatch: Any,
+  event: IFormEventCheckbox,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'testMode',
+      value: event.target.checked,
+    })
+  );
+};

@@ -8,10 +8,15 @@ import {
 } from '../../../../definitions/constants/terminalConfigs';
 import { useAppDispatch } from '../../../../redux/hooks';
 import { handleUnPairClick } from '../../../../utils/common/pair/pairStatusHelpers';
+import { IAboutTerminal } from '../interfaces';
 import useStyles from './index.styles';
 import StatusBox from './StatusBox';
 
-export default function AboutTerminal({ receiptToggle, setReceiptToggle, terminal }: Any): React.ReactElement {
+export default function AboutTerminal({
+  receiptToggle,
+  setReceiptToggle,
+  terminal,
+}: IAboutTerminal): React.ReactElement {
   const dispatch = useAppDispatch();
   const classes = useStyles();
 
@@ -32,7 +37,7 @@ export default function AboutTerminal({ receiptToggle, setReceiptToggle, termina
               <Typography>Pairing status</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
-              {StatusBox(classes, terminal?.status)}
+              <StatusBox status={terminal?.status} />
               <Button className={classes.actionButton} onClick={handleReceiptPanelDisplay}>
                 Settlement
               </Button>

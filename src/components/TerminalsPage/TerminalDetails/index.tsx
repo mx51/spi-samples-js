@@ -60,7 +60,7 @@ export default function TerminalDetails(): React.ReactElement {
             <AboutTerminal
               receiptToggle={receiptToggle}
               setReceiptToggle={setReceiptToggle}
-              terminal={currentTerminal}
+              terminal={currentTerminal as ITerminalProps}
             />
           </TabPanel>
 

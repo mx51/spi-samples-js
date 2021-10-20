@@ -23,27 +23,27 @@ function PairStatus({ open, handleDrawerToggle }: PairStatusInterface): React.Re
   const panelInformationList = [
     {
       title: 'Merchant ID',
-      content: terminal?.merchantId,
+      content: terminal?.merchantId || '-',
     },
     {
       title: 'Terminal ID',
-      content: terminal?.terminalId,
+      content: terminal?.terminalId || '-',
     },
     {
       title: 'Battery',
-      content: terminal?.batteryLevel,
+      content: terminal?.batteryLevel || '-',
     },
   ];
 
   return (
     <Grid container direction="column" className={classes.flowBox} id="pairStatus">
       <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.title}>
-        <Grid item xs={4}>
+        <Grid item md={7} xs={12}>
           <Typography variant="h6" component="h1">
-            Status
+            Pairing status
           </Typography>
         </Grid>
-        <Grid item xs={8}>
+        <Grid item md={5} xs={12}>
           <Grid
             container
             data-test-id="flowToggler"

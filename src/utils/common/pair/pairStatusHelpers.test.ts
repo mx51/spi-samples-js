@@ -1,11 +1,12 @@
+import { cleanup } from '@testing-library/react';
+import { TEXT_FORM_DEFAULT_VALUE } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import spiService from '../../../services/spiService';
 import { defaultMockPairFormParams, mockTerminalInstance, mockTerminalInstanceId } from '../../tests/common';
-import { setLocalStorage } from '../spi/common';
 import { handleCancelPairClick, handlePairClick, handleUnPairClick } from './pairStatusHelpers';
 
 const mockPairSettings = {
-  provider: { isValid: true, modalToggle: false, value: 'test' },
+  provider: { isValid: true, option: TEXT_FORM_DEFAULT_VALUE, value: 'test' },
   configuration: { isValid: true, type: 'eftpos', value: defaultLocalIP },
   serialNumber: { isValid: true, value: '123-123-123' },
   posId: { isValid: true, value: 'test' },
@@ -17,10 +18,7 @@ describe('Test pairStatusHelpers functions', () => {
   const dispatch = jest.fn();
   const mockInstanceId = mockPairSettings.serialNumber.value;
 
-  beforeEach(() => {
-    setLocalStorage('pairSettings', JSON.stringify(mockPairSettings));
-    setLocalStorage('terminals', '{}');
-  });
+  afterEach(cleanup);
 
   test('test handlePairClick()', () => {
     // Arrange

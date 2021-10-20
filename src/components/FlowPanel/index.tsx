@@ -14,7 +14,7 @@ export default function FlowPanel({ flow, terminal }: IFlowPanelState): React.Re
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const currentTerminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
 
-  const statusInformation = (spi: Any) => `
+  const statusInformation = (spi: ITerminalProps) => `
 # ----------- STATUS -----------
 
 # POSID: ${spi?.posId}

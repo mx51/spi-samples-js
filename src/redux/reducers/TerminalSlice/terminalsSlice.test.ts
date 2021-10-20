@@ -68,6 +68,7 @@ function mockPreviousState(): ITerminalState {
       serialNumber: mockTerminalInstanceId,
       testMode: true,
       pluginVersion: '-',
+      posVersion: '1.2.3',
       merchantId: '-',
       terminalId: '-',
       batteryLevel: '-',

@@ -7,6 +7,7 @@ export interface ITerminalProps {
   serialNumber: string;
   testMode: boolean;
   pluginVersion: string;
+  posVersion: string | null;
   merchantId: string;
   terminalId: string;
   batteryLevel: string;

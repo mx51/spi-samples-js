@@ -13,13 +13,9 @@ describe('Test <Pair />', () => {
 
   afterEach(cleanup);
 
-  afterAll(() => {
-    localStorage.clear();
-  });
-
   test('should contain Pair Page headings', () => {
     // Arrange
-    const pageHeadings = ['Configuration', 'Status', 'Flow'];
+    const pageHeadings = ['Payment type', 'Pairing configuration', 'Pairing status', 'Flow'];
 
     // Assert
     for (let index = 0; index < pageHeadings.length; index += 1) {
