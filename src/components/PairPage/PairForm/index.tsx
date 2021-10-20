@@ -7,8 +7,7 @@ import {
   selectPairFormSerialNumber,
   selectPairFormValues,
 } from '../../../redux/reducers/PairFormSlice/PairFormSelectors';
-import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
-import { isTerminalUnpaired, terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { isTerminalUnpaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { handlePairClick } from '../../../utils/common/pair/pairStatusHelpers';
 import useStyles from './index.styles';
 import PairConfiguration from './PairConfiguration';
@@ -19,17 +18,15 @@ const PairForm: React.FC = () => {
   const dispatch = useAppDispatch();
   // read redux store states
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
-  const terminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
   const terminalUnpaired = useAppSelector(isTerminalUnpaired(pairFormSerialNumber));
-
   const pairFormValues = useAppSelector(selectPairFormValues);
   const pairBtnDisabled = useAppSelector(isPairDisabled);
 
   return (
     <Grid container direction="column" className={classes.formContainer}>
       <form autoComplete="off" className={classes.pairForm}>
-        <PaymentType terminal={terminal} />
-        <PairConfiguration terminal={terminal} />
+        <PaymentType />
+        <PairConfiguration />
         <Button
           className={classes.pairBtn}
           color="primary"

@@ -23,6 +23,7 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { pairForm, selectPairFormDeviceAddress } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
+import { terminalInstance } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
   handlePaymentProviderFieldOnChange,
   handlePaymentProviderSelectorOnChange,
@@ -45,13 +46,15 @@ import {
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
-import { IFormEventCheckbox, IFormEventValue, IPairFormState } from '../interfaces';
+import { IFormEventCheckbox, IFormEventValue } from '../interfaces';
 
-export default function PairConfiguration({ terminal }: IPairFormState): React.ReactElement {
+export default function PairConfiguration(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useAppDispatch();
+  // read redux store states
   const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode } = useAppSelector(pairForm);
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
+  const terminal = useAppSelector(terminalInstance(serialNumber?.value));
 
   return (
     <>

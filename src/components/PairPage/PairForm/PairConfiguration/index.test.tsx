@@ -10,7 +10,7 @@ import {
 } from '../../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../../definitions/constants/spiConfigs';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
-import mockWithRedux, { defaultMockTerminals, mockTerminalInstanceId } from '../../../../utils/tests/common';
+import mockWithRedux, { mockTerminalInstanceId } from '../../../../utils/tests/common';
 
 replaceAllInserter.shim();
 
@@ -19,10 +19,8 @@ describe('Test <PairConfiguration />', () => {
   let mockContainer: Any;
 
   beforeEach(() => {
-    const terminal = defaultMockTerminals[mockTerminalInstanceId];
-
     dispatch = jest.fn();
-    mockContainer = mockWithRedux(<PairConfiguration terminal={terminal} />);
+    mockContainer = mockWithRedux(<PairConfiguration />);
   });
 
   afterEach(cleanup);
