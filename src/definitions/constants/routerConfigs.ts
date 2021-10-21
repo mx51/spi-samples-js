@@ -6,6 +6,7 @@ export const PATH_PRE_AUTH = '/pre-auth';
 export const PATH_PURCHASE = '/';
 export const PATH_REFUND = '/refund';
 export const PATH_TERMINALS = '/terminals';
+export const PATH_PAY_NOW = '/paynow';
 // link names
 export const LINK_FLEET_SETTINGS = 'Fleet settings';
 export const LINK_PAIR = 'Pairing';

@@ -9,18 +9,18 @@ exports[`Test <OrderLineItem /> snapshot for OrderLineItem component 1`] = `
       class="MuiListItemText-root"
     >
       <span
-        class="MuiTypography-root MuiListItemText-primary makeStyles-additionalCharges-1 MuiTypography-body1 MuiTypography-displayBlock"
+        class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-1 MuiTypography-body1 MuiTypography-displayBlock"
       >
         Tip
       </span>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root makeStyles-addtionalChargeBtn-2 MuiButton-contained MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation"
+      class="MuiButtonBase-root MuiButton-root makeStyles-addtionalChargeBtn-3 MuiButton-contained MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation"
       tabindex="0"
       type="button"
     >
       <span
-        class="MuiButton-label makeStyles-addtionalChargeBtnLabel-3"
+        class="MuiButton-label makeStyles-addtionalChargeBtnLabel-4"
       >
         $0.50
       </span>

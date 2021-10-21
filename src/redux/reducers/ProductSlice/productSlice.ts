@@ -19,6 +19,9 @@ const productSlice = createSlice({
     },
     clearAllProducts(state: IProductState) {
       state.products.splice(0, state.products.length);
+      state.surchargeAmount = 0;
+      state.tipAmount = 0;
+      state.cashoutAmount = 0;
     },
     addSurchargeAmount(state: IProductState, action: PayloadAction<number>) {
       state.surchargeAmount = action.payload;

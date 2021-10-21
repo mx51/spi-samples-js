@@ -3,4 +3,5 @@ export interface IOrderLineItemProps {
   amount: number;
   onAdd: () => void;
   disabled: boolean;
+  viewOnly: boolean;
 }

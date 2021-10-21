@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography, Drawer } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link as LinkRouter } from 'react-router-dom';
+import { PATH_PAY_NOW, PATH_PURCHASE } from '../../../definitions/constants/routerConfigs';
 import { IProductSelector } from '../../../redux/reducers/ProductSlice/interfaces';
 import {
   orderCashoutAmountSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
+  orderTotalSelector,
   productsSelector,
   productSubTotalSelector,
 } from '../../../redux/reducers/ProductSlice/productSelector';
@@ -20,8 +23,9 @@ import KeyPad from '../../KeyPad';
 import OrderLineItem from '../../OrderLineItem';
 import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
+import { IOrderProps } from './interface';
 
-function Order(): React.ReactElement {
+function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT';
   const CASHOUT_AMOUNT = 'CASHOUT_AMOUNT';
   const TIP_AMOUNT = 'TIP_AMOUNT';
@@ -36,15 +40,15 @@ function Order(): React.ReactElement {
   const tipAmount: number = useSelector(orderTipAmountSelector);
 
   const [keypadType, setkeypadType] = useState<string>('');
+  const totalAmount: number = useSelector(orderTotalSelector);
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
-    dispatch(addSurchargeAmount(0));
-    dispatch(addCashoutAmount(0));
-    dispatch(addTipAmount(0));
+    // dispatch(addSurchargeAmount(0));
+    // dispatch(addCashoutAmount(0));
+    // dispatch(addTipAmount(0));
   };
 
-  const totalAmount = subtotalAmount + surchargeAmount + tipAmount + cashoutAmount;
   const requestAmount = (val: string) => {
     setkeypadType(val);
   };
@@ -70,6 +74,8 @@ function Order(): React.ReactElement {
     return '';
   };
 
+  const getSubtitle = () => `Enter ${getTitle().toLowerCase()} amount`;
+
   const classes = useStyles();
   return (
     <>
@@ -83,6 +89,7 @@ function Order(): React.ReactElement {
         <KeyPad
           open={keypadType !== ''}
           title={getTitle()}
+          subtitle={getSubtitle()}
           defaultAmount={getDefaultKeypadAmount()}
           onClose={() => {
             setkeypadType('');
@@ -96,9 +103,11 @@ function Order(): React.ReactElement {
             Order
           </Typography>
           <Box>
-            <Button className={classes.clear} onClick={clearAllProductsAction}>
-              Clear all
-            </Button>
+            {!disablePayNow && (
+              <Button className={classes.clear} onClick={clearAllProductsAction}>
+                Clear all
+              </Button>
+            )}
           </Box>
         </Box>
         <Divider />
@@ -125,18 +134,21 @@ function Order(): React.ReactElement {
             label="Surcharge"
             amount={surchargeAmount}
             onAdd={() => requestAmount(SURCHARGE_AMOUNT)}
+            viewOnly={disablePayNow}
           />
           <OrderLineItem
             disabled={tipAmount > 0}
             label="Cashout"
             amount={cashoutAmount}
             onAdd={() => requestAmount(CASHOUT_AMOUNT)}
+            viewOnly={disablePayNow}
           />
           <OrderLineItem
             disabled={cashoutAmount > 0}
             label="Tip"
             amount={tipAmount}
             onAdd={() => requestAmount(TIP_AMOUNT)}
+            viewOnly={disablePayNow}
           />
           <Divider variant="middle" />
           <ListItem>
@@ -144,14 +156,29 @@ function Order(): React.ReactElement {
             <Typography className={classes.totalPrice}>{currencyFormat(totalAmount / 100)}</Typography>
           </ListItem>
         </List>
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          classes={{ root: classes.payNowBtn, label: classes.payNowBtnLabel }}
-        >
-          Pay now
-        </Button>
+        {!disablePayNow ? (
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            classes={{ root: classes.payNowBtn, label: classes.actionBtnLabel }}
+            component={LinkRouter}
+            to={PATH_PAY_NOW}
+          >
+            Pay now
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            classes={{ root: classes.amendBtn, label: classes.actionBtnLabel }}
+            component={LinkRouter}
+            to={PATH_PURCHASE}
+          >
+            &lt; Amend order
+          </Button>
+        )}
       </Box>
     </>
   );

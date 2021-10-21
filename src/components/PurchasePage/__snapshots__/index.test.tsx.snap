@@ -481,10 +481,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <div
-          class="MuiPaper-root MuiBox-root MuiBox-root-39 makeStyles-root-28 MuiPaper-elevation1 MuiPaper-rounded"
+          class="MuiPaper-root MuiBox-root MuiBox-root-40 makeStyles-root-28 MuiPaper-elevation1 MuiPaper-rounded"
         >
           <div
-            class="MuiBox-root MuiBox-root-40 makeStyles-heading-29"
+            class="MuiBox-root MuiBox-root-41 makeStyles-heading-29"
           >
             <h1
               class="MuiTypography-root MuiTypography-h6"
@@ -492,7 +492,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               Order
             </h1>
             <div
-              class="MuiBox-root MuiBox-root-41"
+              class="MuiBox-root MuiBox-root-42"
             >
               <button
                 class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-clear-30"
@@ -514,7 +514,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             class="MuiDivider-root"
           />
           <div
-            class="MuiBox-root MuiBox-root-42 makeStyles-orderList-38"
+            class="MuiBox-root MuiBox-root-43 makeStyles-orderList-39"
           >
             <ul
               class="MuiList-root MuiList-padding"
@@ -533,13 +533,13 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-43 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-44 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Subtotal
                 </span>
               </div>
               <p
-                class="MuiTypography-root makeStyles-price-44 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-price-45 MuiTypography-body1"
               >
                 $0.00
               </p>
@@ -551,7 +551,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalCharges-45 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-46 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Surcharge
                 </span>
@@ -559,7 +559,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-48"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-50"
                 role="button"
                 tabindex="0"
               >
@@ -589,7 +589,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalCharges-45 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-46 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Cashout
                 </span>
@@ -597,7 +597,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-48"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-50"
                 role="button"
                 tabindex="0"
               >
@@ -627,7 +627,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalCharges-45 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-46 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Tip
                 </span>
@@ -635,7 +635,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-48"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-50"
                 role="button"
                 tabindex="0"
               >
@@ -680,20 +680,22 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               </p>
             </li>
           </ul>
-          <button
+          <a
+            aria-disabled="false"
             class="MuiButtonBase-root MuiButton-root makeStyles-payNowBtn-34 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            href="/paynow"
+            role="button"
             tabindex="0"
-            type="button"
           >
             <span
-              class="MuiButton-label makeStyles-payNowBtnLabel-35"
+              class="MuiButton-label makeStyles-actionBtnLabel-36"
             >
               Pay now
             </span>
             <span
               class="MuiTouchRipple-root"
             />
-          </button>
+          </a>
         </div>
       </div>
     </div>

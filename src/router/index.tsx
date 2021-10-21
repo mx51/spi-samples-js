@@ -1,10 +1,12 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Loading from '../components/Loading';
+import PayNow from '../components/PayNow';
 import {
   PATH_FLEET_SETTINGS,
   PATH_PAIR,
   PATH_PAY_AT_TABLE,
+  PATH_PAY_NOW,
   PATH_PRE_AUTH,
   PATH_PURCHASE,
   PATH_REFUND,
@@ -33,6 +35,7 @@ const AppRoutes = (): React.ReactElement => (
         <Route exact path={PATH_REFUND} component={Refund} />
         <Route exact path={PATH_TERMINALS} component={Terminals} />
         <Route exact path={`${PATH_TERMINALS}/:id`} component={TerminalsDetails} />
+        <Route exact path={PATH_PAY_NOW} component={PayNow} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
