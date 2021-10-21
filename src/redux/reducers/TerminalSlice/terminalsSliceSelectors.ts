@@ -8,12 +8,6 @@ export const terminalList = (state: RootState): ITerminalState => state.terminal
 export const terminalInstance = (instanceId: string): ((state: RootState) => ITerminalProps) =>
   createSelector(terminalList, (terminals) => terminals[instanceId]);
 
-export const isTerminalUnpaired = (instanceId: string): ((state: RootState) => boolean) =>
-  createSelector(
-    terminalInstance(instanceId),
-    (terminal: ITerminalProps) =>
-      terminal?.status === SPI_PAIR_STATUS.PairedConnecting || terminal?.status === SPI_PAIR_STATUS.PairedConnected
-  );
 export const pairedTerminalList = createSelector(terminalList, (terminals: ITerminalState) =>
   Object.values(terminals).filter((terminal: ITerminalProps) => terminal.status === SPI_PAIR_STATUS.PairedConnected)
 );
