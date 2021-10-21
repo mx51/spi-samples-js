@@ -68,9 +68,9 @@ function PayNow(): React.ReactElement {
           <Box className={classes.root} display="flex" flexDirection="column">
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box flex="1">
-                <Typography className={classes.payLable}>Pay</Typography>
+                <Typography className={classes.payLabel}>Pay</Typography>
               </Box>
-              <Button className={classes.orderTotalbtn} onClick={() => setDisplayKeypad(true)}>
+              <Button className={classes.orderTotalBtn} onClick={() => setDisplayKeypad(true)}>
                 <Box
                   flex="1"
                   display="flex"
@@ -95,12 +95,13 @@ function PayNow(): React.ReactElement {
               <Box>
                 <List>
                   {terminals.map((terminal) => (
-                    <ListItem dense disableGutters button onClick={() => setSelectedTerminal(terminal.posId)}>
+                    <ListItem key={terminal.id} dense disableGutters>
                       <ListItemIcon>
                         <Radio
-                          className={classes.radiobtn}
-                          checked={terminal.posId === selectedTerminal}
-                          value="1"
+                          onClick={() => setSelectedTerminal(terminal.id)}
+                          className={classes.radioBtn}
+                          checked={terminal.id === selectedTerminal}
+                          value={terminal.id}
                           name="terminal"
                         />
                       </ListItemIcon>

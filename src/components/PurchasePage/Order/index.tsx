@@ -39,18 +39,15 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
 
-  const [keypadType, setkeypadType] = useState<string>('');
+  const [keypadType, setKeypadType] = useState<string>('');
   const totalAmount: number = useSelector(orderTotalSelector);
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
-    // dispatch(addSurchargeAmount(0));
-    // dispatch(addCashoutAmount(0));
-    // dispatch(addTipAmount(0));
   };
 
   const requestAmount = (val: string) => {
-    setkeypadType(val);
+    setKeypadType(val);
   };
 
   const getDefaultKeypadAmount = (): number => {
@@ -64,7 +61,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
     if (keypadType === SURCHARGE_AMOUNT) dispatch(addSurchargeAmount(val));
     else if (keypadType === CASHOUT_AMOUNT) dispatch(addCashoutAmount(val));
     else if (keypadType === TIP_AMOUNT) dispatch(addTipAmount(val));
-    setkeypadType('');
+    setKeypadType('');
   };
 
   const getTitle = () => {
@@ -92,7 +89,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
           subtitle={getSubtitle()}
           defaultAmount={getDefaultKeypadAmount()}
           onClose={() => {
-            setkeypadType('');
+            setKeypadType('');
           }}
           onAmountChange={setKeypadAmount}
         />

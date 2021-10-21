@@ -9,9 +9,9 @@ const useStyles = makeStyles((theme: Theme) =>
       zIndex: 1020,
     },
     gridStyles: {
-      margin: '3rem',
+      margin: theme.spacing(3),
     },
-    payLable: {
+    payLabel: {
       fontSize: '3rem',
       fontWeight: 300,
       lineHeight: '4.08rem',
@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       alignItems: 'center',
       textAlign: 'center',
     },
-    orderTotalbtn: {
+    orderTotalBtn: {
       '&:hover': {
         background: 'none',
       },
@@ -33,15 +33,15 @@ const useStyles = makeStyles((theme: Theme) =>
       overflowY: 'auto',
     },
     orderTotalInputField: {
-      marginRight: '2rem',
+      marginRight: theme.spacing(2),
       padding: '2rem',
       letterSpacing: '0.02rem',
       fontSize: '3rem',
       fontWeight: 'normal',
     },
     label: {
-      marginTop: '2rem',
-      marginBottom: '.5rem',
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(0.5),
     },
     paymentTypeBtnLabel: {
       fontWeight: 500,
@@ -58,9 +58,9 @@ const useStyles = makeStyles((theme: Theme) =>
       },
 
       width: '100%',
-      margin: '1rem',
+      margin: theme.spacing(1),
     },
-    radiobtn: {
+    radioBtn: {
       color: theme.palette.primary.main,
     },
     keypadDrawerPaper: {
