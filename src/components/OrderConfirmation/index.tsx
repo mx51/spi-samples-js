@@ -19,7 +19,7 @@ import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
 import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
-import { pairedTerminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { pairedConnectedTerminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import KeyPad from '../KeyPad';
 import useStyles from './index.styles';
@@ -29,7 +29,7 @@ function PayNow(): React.ReactElement {
 
   const classes = useStyles();
   const originalTotalAmount: number = useSelector(orderTotalSelector);
-  const terminals = useSelector(pairedTerminalList);
+  const terminals = useSelector(pairedConnectedTerminalList);
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());

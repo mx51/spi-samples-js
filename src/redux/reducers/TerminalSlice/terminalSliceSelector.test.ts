@@ -1,4 +1,4 @@
-import { pairedTerminalList } from './terminalsSliceSelectors';
+import { pairedConnectedTerminalList } from './terminalsSliceSelectors';
 
 test('should return terminal which are paired connected', () => {
   const state = {
@@ -80,7 +80,7 @@ test('should return terminal which are paired connected', () => {
     },
   };
 
-  expect(pairedTerminalList(state)).toEqual([
+  expect(pairedConnectedTerminalList(state)).toEqual([
     {
       acquirerCode: 'wbc',
       autoAddress: false,
