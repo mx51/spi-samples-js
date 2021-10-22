@@ -8,7 +8,9 @@ describe('Test <OrderLineItem />', () => {
   test('snapshot for OrderLineItem component', () => {
     const onAdd = jest.fn();
 
-    const { container } = render(<OrderLineItem label="Tip" amount={50} onAdd={onAdd} disabled={false} />);
+    const { container } = render(
+      <OrderLineItem viewOnly={false} label="Tip" amount={50} onAdd={onAdd} disabled={false} />
+    );
     expect(container).toMatchSnapshot();
   });
 });

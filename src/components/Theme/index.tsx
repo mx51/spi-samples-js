@@ -35,6 +35,7 @@ const theme = createTheme({
         },
         body: {
           marginTop: '3rem',
+          overscrollBehaviorY: 'none',
         },
       },
     },

@@ -6,13 +6,18 @@ import calculator from './calculator';
 import useStyles from './index.styles';
 import { IKeyPadProps } from './interfaces';
 
-function KeyPad({ title, defaultAmount, onAmountChange, onClose }: IKeyPadProps): React.ReactElement {
+function KeyPad({ title, subtitle, defaultAmount, onAmountChange, onClose }: IKeyPadProps): React.ReactElement {
   const classes = useStyles();
   const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'Backspace', '0', '.'];
   const [amount, setAmount] = useState((defaultAmount / 100).toString());
 
   const amountChangeHandler = () => {
-    onAmountChange(Math.round(parseFloat(amount) * 100));
+    const newAmount = Math.round(parseFloat(amount) * 100);
+    if (newAmount !== defaultAmount) {
+      onAmountChange(newAmount);
+    } else {
+      onClose();
+    }
   };
 
   const updateAmount = (num: string) => {
@@ -49,7 +54,7 @@ function KeyPad({ title, defaultAmount, onAmountChange, onClose }: IKeyPadProps)
       </Box>
       <Divider />
       <Box className={classes.keypadDisplay}>
-        <Typography className={classes.keypadDisplayLabel}>Enter {title.toLowerCase()} amount</Typography>
+        <Typography className={classes.keypadDisplayLabel}>{subtitle}</Typography>
         <Typography variant="h6" component="h1" className={classes.keypadDisplayAmount}>
           {amount}
         </Typography>

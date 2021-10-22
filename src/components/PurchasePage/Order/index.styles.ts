@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles, alpha } from '@material-ui/core/styles';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -40,12 +40,22 @@ export default makeStyles((theme: Theme) =>
       borderRadius: 0,
       backgroundColor: theme.palette.error.dark,
       '&:hover, &:active, &:focus': {
-        background: theme.palette.error.main,
+        background: alpha(theme.palette.error.dark, 0.75),
         color: theme.palette.common.white,
       },
     },
-    payNowBtnLabel: {
-      fontWeight: 500,
+    amendBtn: {
+      padding: theme.spacing(2),
+      borderRadius: 0,
+      backgroundColor: theme.palette.text.hint,
+      '&:hover, &:active, &:focus': {
+        background: alpha(theme.palette.text.hint, 0.75),
+        color: theme.palette.common.white,
+      },
+      fontWeight: 100,
+    },
+    actionBtnLabel: {
+      fontWeight: 400,
       fontSize: '1.5rem',
       lineHeight: '1.5rem',
     },

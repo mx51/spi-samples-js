@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles, alpha } from '@material-ui/core/styles';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -45,7 +45,7 @@ export default makeStyles((theme: Theme) =>
       borderRadius: 0,
       backgroundColor: theme.palette.error.dark,
       '&:hover, &:active, &:focus': {
-        background: theme.palette.error.main,
+        background: alpha(theme.palette.error.dark, 0.75),
         color: theme.palette.common.white,
       },
     },
