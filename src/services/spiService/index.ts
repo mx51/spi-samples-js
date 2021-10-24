@@ -1,4 +1,4 @@
-import { Spi as SpiClient } from '@mx51/spi-client-js';
+import { Spi as SpiClient, TransactionOptions } from '@mx51/spi-client-js';
 import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { currentVersion, defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
@@ -12,6 +12,8 @@ import {
   updatePairingFlow,
   updatePairingStatus,
   updateTerminal,
+  updateTxFlow,
+  updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
@@ -275,6 +277,68 @@ class SpiService {
         );
       };
 
+      // SPI Tx Flow State Change Listener
+      instance.addEventListener(spiEvents.spiTxFlowStateChanged, (event: Any) => {
+        console.log('spiTxFlowStateChanged', event);
+        const { detail } = event;
+        if (detail.Finished) {
+          instance.spiClient.AckFlowEndedAndBackToIdle();
+        }
+        this.dispatchAction(
+          updateTxFlow({
+            id: instanceId,
+            txFlow: {
+              posRefId: detail.PosRefId,
+              id: detail.Id,
+              type: detail.Type,
+              displayMessage: detail.DisplayMessage,
+              amountCents: 0,
+              awaitingSignatureCheck: detail.AwaitingSignatureCheck,
+              finished: detail.Finished,
+              success: detail.Success,
+              response: '',
+              signatureRequiredMessage: detail.SignatureRequiredMessage,
+              request: {
+                id: detail.Request.Id,
+                eventName: detail.Request.EventName,
+                data: {
+                  posRefId: detail.Request.Data.pos_ref_id,
+                  purchaseAmount: detail.Request.Data.purchase_amount,
+                  tipAmount: detail.Request.Data.tip_amount,
+                  cashAmount: detail.Request.Data.cash_amount,
+                  promptForCashout: detail.Request.prompt_for_cashout,
+                  surchargeAmount: detail.Request.surcharge_amount,
+                  promptForCustomerCopy: false,
+                  printForSignatureRequiredTransactions: false,
+                  printMerchantCopy: false,
+                  customerReceiptHeader: '',
+                  customerReceiptFooter: '',
+                  merchantReceiptHeader: '',
+                  merchantReceiptFooter: '',
+                },
+                posId: '',
+                decryptedJson: '',
+              },
+            },
+          })
+        );
+      });
+
+      instance.spiClient.TransactionUpdateMessage = ({ Data }: Any) => {
+        this.dispatchAction(
+          updateTxMessage({
+            id: instanceId,
+            txMessage: {
+              decryptedJson: '',
+              displayMessageCode: Data.display_message_code,
+              displayMessageText: Data.display_message_text,
+              posCounter: '',
+              posRefId: Data.pos_ref_id,
+            },
+          })
+        );
+      };
+
       instance.spiClient.Start();
 
       return instance;
@@ -340,6 +404,37 @@ class SpiService {
 
   spiTerminalUnPair(instanceId: string): void {
     this.readTerminalInstance(instanceId).spiClient.Unpair();
+  }
+
+  initiatePurchaseTransaction(
+    instanceId: string,
+    posRefId: string,
+    purchaseAmount: number,
+    tipAmount: number,
+    cashoutAmount: number,
+    promptForCashout: boolean,
+    surchargeAmount: number
+  ): void {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    return spi.InitiatePurchaseTxV2(
+      posRefId,
+      purchaseAmount,
+      tipAmount,
+      cashoutAmount,
+      promptForCashout,
+      new TransactionOptions(),
+      surchargeAmount
+    );
+  }
+
+  initiateMotoPurchaseTransaction(
+    instanceId: string,
+    posRefId: string,
+    purchaseAmount: number,
+    surchargeAmount: number
+  ): void {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    return spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount);
   }
 }
 

@@ -13,10 +13,7 @@ test('should return terminal which are paired connected', () => {
       acquirerCode: {
         value: 'string',
         isValid: true,
-<<<<<<< HEAD
         option: '',
-=======
->>>>>>> Add payment page UI
       },
       addressType: 'string',
       deviceAddress: {
@@ -55,10 +52,7 @@ test('should return terminal which are paired connected', () => {
         terminalStatus: null,
         txFlow: null,
         txMessage: null,
-<<<<<<< HEAD
         posVersion: '',
-=======
->>>>>>> Add payment page UI
       },
       '7837239': {
         acquirerCode: 'wbc',
@@ -81,19 +75,12 @@ test('should return terminal which are paired connected', () => {
         terminalStatus: null,
         txFlow: null,
         txMessage: null,
-<<<<<<< HEAD
         posVersion: '',
-=======
->>>>>>> Add payment page UI
       },
     },
   };
 
-<<<<<<< HEAD
   expect(pairedConnectedTerminalList(state)).toEqual([
-=======
-  expect(pairedTerminalList(state)).toEqual([
->>>>>>> Add payment page UI
     {
       acquirerCode: 'wbc',
       autoAddress: false,
@@ -115,10 +102,7 @@ test('should return terminal which are paired connected', () => {
       terminalStatus: null,
       txFlow: null,
       txMessage: null,
-<<<<<<< HEAD
       posVersion: '',
-=======
->>>>>>> Add payment page UI
     },
   ]);
 });
