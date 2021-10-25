@@ -17,11 +17,22 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
-import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+import {
+  orderCashoutAmountSelector,
+  orderSurchargeAmountSelector,
+  orderTipAmountSelector,
+  orderTotalSelector,
+} from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
-import { pairedConnectedTerminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
+import {
+  pairedConnectedTerminalList,
+  terminalInstance,
+} from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
+import { initiatePurchase, initiateMotoPurchase } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
+import TransactionProgressModal from '../TransactionProgressModal';
 import useStyles from './index.styles';
 
 function PayNow(): React.ReactElement {
@@ -29,6 +40,10 @@ function PayNow(): React.ReactElement {
 
   const classes = useStyles();
   const originalTotalAmount: number = useSelector(orderTotalSelector);
+  const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
+  const tipAmount: number = useSelector(orderTipAmountSelector);
+  const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
+
   const terminals = useSelector(pairedConnectedTerminalList);
 
   const clearAllProductsAction = () => {
@@ -36,8 +51,10 @@ function PayNow(): React.ReactElement {
   };
 
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [selectedTerminal, setSelectedTerminal] = useState<string>();
+  const [selectedTerminal, setSelectedTerminal] = useState<string>('');
   const [totalAmount, setTotalAmount] = useState<number>(originalTotalAmount);
+  const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
 
   return (
     <>
@@ -116,6 +133,19 @@ function PayNow(): React.ReactElement {
             </RadioGroup>
             <Typography className={classes.label}>Select payment method</Typography>
             <Divider />
+            {showTransactionProgressModal && (
+              <TransactionProgressModal
+                transactionType={currentTerminal?.txFlow?.type ?? ''}
+                isFinished={currentTerminal?.txFlow?.finished ?? false}
+                isSuccess={currentTerminal?.txFlow?.success === 'Success'}
+                onCancelTransaction={() => {
+                  setShowTransactionProgressModal(false);
+                }}
+                onDone={() => {
+                  setShowTransactionProgressModal(false);
+                }}
+              />
+            )}
             <Box display="flex" justifyContent="space-evenly">
               <Button
                 variant="contained"
@@ -123,6 +153,10 @@ function PayNow(): React.ReactElement {
                 size="large"
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                onClick={() => {
+                  setShowTransactionProgressModal(true);
+                  initiatePurchase(selectedTerminal, totalAmount, tipAmount, cashoutAmount, surchargeAmount, false);
+                }}
               >
                 Card
               </Button>
@@ -132,6 +166,10 @@ function PayNow(): React.ReactElement {
                 size="large"
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                onClick={() => {
+                  setShowTransactionProgressModal(true);
+                  initiateMotoPurchase(selectedTerminal, totalAmount, surchargeAmount);
+                }}
               >
                 Moto
               </Button>
