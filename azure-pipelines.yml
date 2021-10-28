@@ -42,11 +42,17 @@ stages:
               customCommand: 'run test:deploy'
 
           - task: PublishTestResults@2
-            displayName: Publish test results
+            displayName: Publish unit test results
             inputs:
               testResultsFormat: 'JUnit'
-              testResultsFiles: 'junit.xml'
-              failTaskOnFailedTests: true
+              testResultsFiles: '**/junit.xml'
+
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish code coverage results'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+              reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
 
           - publish: $(System.DefaultWorkingDirectory)/build
             artifact: $(ARTIFACT_NAME)
