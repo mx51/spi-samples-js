@@ -23,8 +23,6 @@ stages:
       - job: build
         cancelTimeoutInMinutes: 5
         displayName: Build
-        variables:
-          disable.coverage.autogenerate: 'true'
         steps:
           - task: Npm@1
             displayName: Install dependencies
