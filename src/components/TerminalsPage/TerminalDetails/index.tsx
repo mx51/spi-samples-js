@@ -7,7 +7,6 @@ import { useAppSelector } from '../../../redux/hooks';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import Layout from '../../Layout';
-import Loading from '../../Loading';
 import NotFound from '../../NotFoundPage';
 import AboutTerminal from './AboutTerminal';
 import useStyles from './index.styles';

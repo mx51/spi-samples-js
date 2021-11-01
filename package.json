@@ -28,7 +28,7 @@
     "start": "PORT=3131 react-scripts start",
     "build": "react-scripts build",
     "test": "tsc && react-scripts test --watchAll=false",
-    "test:deploy": "npm test -- --reporters=jest-junit --reporters=default",
+    "test:deploy": "npm test -- --reporters=jest-junit --reporters=default --coverage --coverageReporters=cobertura --coverageReporters=html",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "eject": "react-scripts eject",
     "prepare": "husky install",
