@@ -13,7 +13,7 @@ describe('Test <Order />', () => {
     const { container } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
-          <Order />
+          <Order disablePayNow={false} />
         </Router>
       </ReduxProvider>
     );
@@ -28,17 +28,14 @@ describe('Test <Order />', () => {
     const { getByText } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
-          <Order />
+          <Order disablePayNow={false} />
         </Router>
       </ReduxProvider>
     );
 
     fireEvent.click(getByText(/clear all/i));
-    expect(dispatch.mock.calls.length).toBe(4);
+    expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({ payload: undefined, type: 'product/clearAllProducts' });
-    expect(dispatch.mock.calls[1][0]).toEqual({ payload: 0, type: 'product/addSurchargeAmount' });
-    expect(dispatch.mock.calls[2][0]).toEqual({ payload: 0, type: 'product/addCashoutAmount' });
-    expect(dispatch.mock.calls[3][0]).toEqual({ payload: 0, type: 'product/addTipAmount' });
   });
 
   test('When click on Add button opens keypad', () => {
@@ -49,7 +46,7 @@ describe('Test <Order />', () => {
     const { getByLabelText, getAllByLabelText, getByText } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
-          <Order />
+          <Order disablePayNow={false} />
         </Router>
       </ReduxProvider>
     );

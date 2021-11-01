@@ -1,9 +1,4 @@
-export interface ISPIModel {
-  modalToggle: boolean;
-  handleProviderChange: (value: string) => void;
-  onClose: (newValue: string) => void;
-  providerValue: string;
-}
+import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfaces';
 
 export interface IPreventDefault {
   preventDefault: () => void;
@@ -12,7 +7,7 @@ export interface IPreventDefault {
 export interface ISPIFormData {
   provider: {
     isValid: boolean;
-    modalToggle: boolean;
+    option: string;
     value: string;
   };
   configuration: {
@@ -46,3 +41,16 @@ export type IFormEventValue = React.ChangeEvent<{ value: unknown }>;
 export type IFormEventCheckbox = React.ChangeEvent<{ checked: boolean }>;
 
 export type IFormEventKey = React.KeyboardEvent<{ key: string }>;
+
+export interface IPaymentType {
+  terminal: ITerminalProps;
+}
+
+export interface IPairFormState {
+  terminal: ITerminalProps;
+}
+
+export interface IUpdatePairFormParams {
+  key: string;
+  value: { value: string | boolean; option?: string; isValid: boolean };
+}

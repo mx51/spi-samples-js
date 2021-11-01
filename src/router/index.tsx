@@ -1,10 +1,12 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Loading from '../components/Loading';
+import PayNow from '../components/PayNow';
 import {
   PATH_FLEET_SETTINGS,
   PATH_PAIR,
   PATH_PAY_AT_TABLE,
+  PATH_PAY_NOW,
   PATH_PRE_AUTH,
   PATH_PURCHASE,
   PATH_REFUND,
@@ -18,9 +20,10 @@ const PreAuth = React.lazy(() => import('../components/PreAuthPage'));
 const Purchase = React.lazy(() => import('../components/PurchasePage'));
 const Refund = React.lazy(() => import('../components/RefundPage'));
 const Terminals = React.lazy(() => import('../components/TerminalsPage'));
+const TerminalsDetails = React.lazy(() => import('../components/TerminalsPage/TerminalDetails'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 
-const AppRoutes: React.FC = () => (
+const AppRoutes = (): React.ReactElement => (
   <Router>
     <Suspense fallback={<Loading />}>
       <Switch>
@@ -31,6 +34,8 @@ const AppRoutes: React.FC = () => (
         <Route exact path={PATH_PURCHASE} component={Purchase} />
         <Route exact path={PATH_REFUND} component={Refund} />
         <Route exact path={PATH_TERMINALS} component={Terminals} />
+        <Route exact path={`${PATH_TERMINALS}/:id`} component={TerminalsDetails} />
+        <Route exact path={PATH_PAY_NOW} component={PayNow} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

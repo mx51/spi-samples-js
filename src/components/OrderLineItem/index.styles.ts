@@ -3,12 +3,11 @@ import { SECONDRARY_BACKGROUND_COLOR } from '../../definitions/constants/themeSt
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    additionalCharges: {
+    additionalChargesEnable: {
       color: theme.palette.info.main,
-      letterSpacing: '0.02rem',
-      fontSize: '1rem',
-      fontWeight: 'normal',
-      lineHeight: '1.5rem',
+    },
+    additionalChargesDisable: {
+      color: theme.palette.primary.main,
     },
     addtionalChargeBtn: {
       color: theme.palette.primary.main,

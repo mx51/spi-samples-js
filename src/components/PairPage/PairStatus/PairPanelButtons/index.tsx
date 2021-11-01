@@ -3,16 +3,13 @@ import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { SPI_PAIR_FLOW, SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
+import { PATH_PURCHASE } from '../../../../definitions/constants/routerConfigs';
 import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { isPairDisabled, selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
-import {
-  handleCancelPairClick,
-  handlePairClick,
-  handleUnPairClick,
-} from '../../../../utils/common/pair/pairStatusHelpers';
+import { selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import { handleCancelPairClick, handleUnPairClick } from '../../../../utils/common/pair/pairStatusHelpers';
 import useStyles from '../index.styles';
 import { PairPanelButtonsInterface } from '../interfaces';
 
@@ -20,7 +17,6 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const pairFormValues = useAppSelector(selectPairFormValues);
-  const pairBtnDisabled = useAppSelector(isPairDisabled);
 
   if (status === SPI_PAIR_STATUS.PairedConnecting) {
     return {
@@ -55,7 +51,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
           >
             Unpair
           </Button>
-          <Button className={classes.pairBtn} color="primary" component={Link} to="/" variant="contained">
+          <Button className={classes.pairBtn} color="primary" component={Link} to={PATH_PURCHASE} variant="contained">
             Go to Sample POS
           </Button>
         </Box>
@@ -67,17 +63,6 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
     statusTitle: SPI_PAIR_STATUS.Unpaired,
     statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
     statusText: SPI_PAIR_FLOW.Idle,
-    button: (
-      <Button
-        className={classes.pairBtn}
-        color="primary"
-        disabled={pairBtnDisabled}
-        data-test-id="pairBtn"
-        onClick={() => handlePairClick(dispatch, pairFormValues)}
-        variant="contained"
-      >
-        Pair
-      </Button>
-    ),
+    button: null,
   };
 }

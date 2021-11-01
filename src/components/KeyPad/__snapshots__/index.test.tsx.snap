@@ -51,9 +51,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
       <p
         class="MuiTypography-root makeStyles-keypadDisplayLabel-5 MuiTypography-body1"
       >
-        Enter 
-        surcharge
-         amount
+        Enter surcharge amount
       </p>
       <h1
         class="MuiTypography-root makeStyles-keypadDisplayAmount-6 MuiTypography-h6"

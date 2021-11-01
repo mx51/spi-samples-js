@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { cleanup } from '@testing-library/react';
 import PairStatus from '.';
-import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS, TEXT_FORM_DEFAULT_VALUE } from '../../../definitions/constants/commonConfigs';
 import { IPairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 import mockWithRedux, {
@@ -26,24 +26,11 @@ function setupContainer(
     dispatch: jest.fn(),
   };
 
-  return mockWithRedux(<PairStatus open={false} handleDrawerToggle={jest.fn()} />, customizedStore);
+  return mockWithRedux(<PairStatus />, customizedStore);
 }
 
 describe('Test <PairStatus />', () => {
-  let container: Any;
-
   afterEach(cleanup);
-
-  test('should show Pair button when connection is not established', () => {
-    // Arrange
-    const pairButtonText = 'Pair';
-
-    // Act
-    container = setupContainer();
-
-    // Assert
-    expect(container.innerHTML.includes(pairButtonText)).toBeTruthy();
-  });
 
   test('should show Cancel Paring button when connecting a terminal', async () => {
     // Arrange
@@ -52,6 +39,7 @@ describe('Test <PairStatus />', () => {
     const pairFormParams = {
       acquirerCode: {
         value: 'test',
+        option: TEXT_FORM_DEFAULT_VALUE,
         isValid: false,
       },
       addressType: 'auto',
@@ -101,11 +89,12 @@ describe('Test <PairStatus />', () => {
     expect(mockContainer.innerHTML.includes(connectedButtonText, samplePosLinkText)).toBeTruthy();
   });
 
-  test('should show disabled pair button when form is not completed', () => {
+  test('should not any button when form is not completed', () => {
     // Arrange
     const pairFormParams = {
       acquirerCode: {
         value: 'test',
+        option: TEXT_FORM_DEFAULT_VALUE,
         isValid: false,
       },
       addressType: 'eftpos',
@@ -123,12 +112,12 @@ describe('Test <PairStatus />', () => {
       },
       testMode: true,
     };
-    const disabledButtonClassName = 'Mui-disabled';
+    const pairButtonId = 'pairBtn';
 
     // Act
     const mockContainer = setupContainer(pairFormParams);
 
     // Assert
-    expect(mockContainer.innerHTML.includes(disabledButtonClassName)).toBeTruthy();
+    expect(mockContainer.innerHTML.includes(pairButtonId)).toBeFalsy();
   });
 });

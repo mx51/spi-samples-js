@@ -1,9 +1,10 @@
 import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import { createTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
   BUTTON_RED_COLOR,
   DEFAULT_DARK_COLOR,
+  DEFAULT_DISABLED_BACKGROUND,
   DEFAULT_LIGHT_COLOR,
   FIELD_PRESSED_COLOR,
   HOVER_HIGHLIGHT_COLOR,
@@ -35,6 +36,7 @@ const theme = createTheme({
         },
         body: {
           marginTop: '3rem',
+          overscrollBehaviorY: 'none',
         },
       },
     },
@@ -75,6 +77,7 @@ const theme = createTheme({
     },
     info: {
       main: FIELD_PRESSED_COLOR,
+      light: DEFAULT_DISABLED_BACKGROUND,
     },
     primary: {
       main: PRIMARY_THEME_COLOR,
@@ -96,11 +99,6 @@ const theme = createTheme({
       main: PRIMARY_WARNING_COLOR,
     },
     divider: PRIMARY_BORDER_COLOR,
-  },
-  props: {
-    MuiButtonBase: {
-      disableRipple: true,
-    },
   },
 });
 

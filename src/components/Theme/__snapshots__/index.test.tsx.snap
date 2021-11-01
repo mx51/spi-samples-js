@@ -4,58 +4,125 @@ exports[`Test <ThemeStyles /> should match ThemeStyles snapshot test 1`] = `
 <div>
   <div>
     <div
-      class="makeStyles-root-1"
+      class="makeStyles-root-4"
     >
       <header
-        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-2 mui-fixed MuiPaper-elevation4"
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-5 mui-fixed MuiPaper-elevation4"
       >
         <div
           class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
         >
-          <button
-            aria-label="menu"
-            class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-4 MuiIconButton-colorInherit MuiIconButton-edgeStart"
-            data-testid="navbarMenuIcon"
-            name="menuIcon"
-            tabindex="0"
-            type="button"
+          <div
+            class="MuiBox-root MuiBox-root-10 makeStyles-navbar-7"
           >
-            <span
-              class="MuiIconButton-label"
+            <div
+              class="MuiBox-root MuiBox-root-11"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-8 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
               >
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
                 />
+              </button>
+              <svg>
+                PrimaryLogoIcon.svg
               </svg>
-            </span>
-          </button>
-          <svg>
-            PrimaryLogoIcon.svg
-          </svg>
+            </div>
+            <div
+              class="MuiBox-root MuiBox-root-12"
+            >
+              <p
+                class="MuiTypography-root makeStyles-developerModeText-9 MuiTypography-body1"
+              >
+                Developer mode
+              </p>
+              <span
+                class="MuiSwitch-root"
+              >
+                <span
+                  aria-disabled="false"
+                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+                  data-test-id="developerModeSwitch"
+                >
+                  <span
+                    class="MuiIconButton-label"
+                  >
+                    <input
+                      class="PrivateSwitchBase-input-16 MuiSwitch-input"
+                      name="developerModeSwitch"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="MuiSwitch-thumb"
+                    />
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </span>
+                <span
+                  class="MuiSwitch-track"
+                />
+              </span>
+            </div>
+          </div>
         </div>
       </header>
     </div>
-    <p
-      class="MuiTypography-root MuiTypography-body1"
+    <div
+      class="MuiGrid-root makeStyles-root-1 MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center"
     >
-      404 Error Found ..
-    </p>
-    <p
-      class="MuiTypography-root MuiTypography-body1"
-    >
-      Back to 
-      <a
-        href="/"
+      <svg>
+        NotFoundImage.svg
+      </svg>
+      <h1
+        class="MuiTypography-root makeStyles-title-2 MuiTypography-h6"
       >
-        Home
+        Page not found
+      </h1>
+      <p
+        class="MuiTypography-root makeStyles-subtitle-3 MuiTypography-body2"
+      >
+        The page you are looking for doesn’t exist or another error occurred.
+      </p>
+      <a
+        aria-disabled="false"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+        href="/"
+        role="button"
+        tabindex="0"
+      >
+        <span
+          class="MuiButton-label"
+        >
+          Go to Sample POS
+        </span>
+        <span
+          class="MuiTouchRipple-root"
+        />
       </a>
-    </p>
+    </div>
   </div>
 </div>
 `;

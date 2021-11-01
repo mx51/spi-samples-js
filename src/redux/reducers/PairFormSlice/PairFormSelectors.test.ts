@@ -1,6 +1,7 @@
 import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
+  TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import { customMockPairFormParamsState, mockTerminalInstanceId } from '../../../utils/tests/common';
@@ -12,6 +13,7 @@ describe('Test PairFormSelectors', () => {
     const mockPairFormParamsState = customMockPairFormParamsState(
       {
         value: 'test',
+        option: TEXT_FORM_DEFAULT_VALUE,
         isValid: true,
       },
       TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -31,6 +33,7 @@ describe('Test PairFormSelectors', () => {
     );
 
     const mockState = {
+      common: { showFlowPanel: false },
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
       products: {
@@ -48,10 +51,12 @@ describe('Test PairFormSelectors', () => {
   test('test isPairDisabled() and return true as result', () => {
     // Arrange
     const mockState = {
+      common: { showFlowPanel: false },
       pairForm: {
         ...customMockPairFormParamsState(
           {
             value: '',
+            option: TEXT_FORM_DEFAULT_VALUE,
             isValid: false,
           },
           TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE

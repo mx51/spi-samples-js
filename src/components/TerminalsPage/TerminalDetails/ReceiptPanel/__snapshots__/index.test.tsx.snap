@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <ReceiptPanel /> should match ReceiptPanel snapshot test 1`] = `
+<div>
+  <div
+    class="MuiGrid-root makeStyles-root-1"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h6"
+    >
+      Receipt
+    </h1>
+  </div>
+</div>
+`;

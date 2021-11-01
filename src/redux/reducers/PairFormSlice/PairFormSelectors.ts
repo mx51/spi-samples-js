@@ -9,7 +9,7 @@ import { IPairFormParams } from './interfaces';
 export const pairForm = (state: RootState): IPairFormParams => state.pairForm;
 
 export const selectPairFormValues = createSelector(pairForm, (params) => ({
-  acquirerCode: params.acquirerCode.value,
+  acquirerCode: params.acquirerCode.value.toLowerCase(),
   autoAddress: params.addressType === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   deviceAddress: params.deviceAddress.value,
   posId: params.posId.value,
@@ -23,8 +23,11 @@ export const isPairDisabled = createSelector(
   (params) =>
     (params.addressType === TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE && params.deviceAddress.value === '') ||
     !params.acquirerCode.isValid ||
+    params.acquirerCode.value === '' ||
     !params.posId.isValid ||
+    params.posId.value === '' ||
     !params.serialNumber.isValid ||
+    params.serialNumber.value === '' ||
     (params.addressType !== TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE && !params.deviceAddress.isValid)
 );
 

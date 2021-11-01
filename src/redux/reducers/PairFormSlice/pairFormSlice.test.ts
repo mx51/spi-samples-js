@@ -2,6 +2,7 @@ import { cleanup } from '@testing-library/react';
 import {
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+  TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { defaultAAR, defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import { isHttps } from '../../../utils/common/pair/pairFormHelpers';
@@ -21,7 +22,7 @@ describe('Test pairFormSlice', () => {
   test('Test updatePairFormParams() form params state value update', () => {
     // Arrange
     const mockFormParams = [
-      { key: 'acquirerCode', value: { value: 'test', isValid: true } },
+      { key: 'acquirerCode', value: { value: 'test', option: TEXT_FORM_DEFAULT_VALUE, isValid: true } },
       { key: 'addressType', value: 'auto' },
       { key: 'deviceAddress', value: { value: mockAar, isValid: true } },
       { key: 'posId', value: { value: 'test', isValid: true } },
@@ -53,22 +54,23 @@ describe('Test pairFormSlice', () => {
     const initialState = customMockPairFormParamsState(
       {
         value: 'test',
-        isValid: false,
+        option: TEXT_FORM_DEFAULT_VALUE,
+        isValid: true,
       },
       TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
       {
         value: defaultLocalIP,
-        isValid: false,
+        isValid: true,
       },
       {
         value: 'test',
-        isValid: false,
+        isValid: true,
       },
       {
         value: mockTerminalInstanceId,
-        isValid: false,
+        isValid: true,
       },
-      false
+      true
     );
 
     // Assert

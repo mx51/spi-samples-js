@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, screen } from '@testing-library/react';
+import { cleanup, fireEvent } from '@testing-library/react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import replaceAllInserter from 'string.prototype.replaceall';
@@ -9,15 +9,15 @@ import { IPairFormParams } from '../../../redux/reducers/PairFormSlice/interface
 import { updatePairFormParams } from '../../../redux/reducers/PairFormSlice/pairFormSlice';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 import mockWithRedux, {
+  defaultEmptyMockPairFormParams,
   defaultMockPairFormParams,
   defaultMockTerminals,
-  mockTerminalInstanceId,
 } from '../../../utils/tests/common';
 
 replaceAllInserter.shim();
 
 function setupContainer(
-  pairForm: IPairFormParams = defaultMockPairFormParams,
+  pairForm: IPairFormParams = defaultEmptyMockPairFormParams,
   terminals: ITerminalState = defaultMockTerminals
 ) {
   const customizedStore = {
@@ -35,12 +35,10 @@ function setupContainer(
 describe('Test <PairForm />', () => {
   let mockContainer: Any;
   let dispatch: Any;
-  let setFormState: Any;
 
   beforeEach(() => {
     mockContainer = setupContainer();
     dispatch = jest.fn();
-    setFormState = jest.fn();
   });
 
   afterAll(() => {
@@ -53,12 +51,14 @@ describe('Test <PairForm />', () => {
 
     // Arrange
     const fieldNames = [
+      'Simple Payments Integration',
+      'Cloud Connect',
+      'ZNV PayFast',
+      'Fyro Payments',
       'Payment provider',
+      '(Other) Please specify',
       'Configuration option',
       'EFTPOS address',
-      'Serial number',
-      'POS ID',
-      'Test mode',
     ];
     const labelNodes = mockContainer.getElementsByTagName('label');
 
@@ -66,72 +66,6 @@ describe('Test <PairForm />', () => {
     for (let index = 0; index < fieldNames.length; index += 1) {
       expect(labelNodes[index].innerHTML.includes(fieldNames[index])).toBeTruthy();
     }
-  });
-
-  test('should change the form field value after user started typing', () => {
-    // This test case is for form field onChange event testing
-
-    // Arrange
-    const posIdValue = 'Mock POS';
-    const posIdFieldDOM = mockContainer.querySelector('[data-test-id="posIdField"] input');
-
-    // Act
-    fireEvent.change(posIdFieldDOM, { target: { value: posIdValue } });
-
-    // Assert
-    expect(posIdFieldDOM.value).toEqual(posIdValue);
-  });
-
-  test('should display serial number after changes made', () => {
-    // This test case is for testing useLocalStorage Hook function
-
-    // Arrange
-    const serialNumber = mockTerminalInstanceId;
-    const serialNumberFieldDOM = mockContainer.querySelector('[data-test-id="serialNumberField"] input');
-
-    // Act
-    fireEvent.change(serialNumberFieldDOM, { target: { value: serialNumber } });
-
-    // Assert
-    expect(serialNumberFieldDOM.value).toEqual(serialNumber);
-  });
-
-  test('should show the error adornment icon when field input is invalid', () => {
-    // This test case is for form field error handling
-
-    // Arrange
-    const invalidSerialNumber = '';
-    const adornmentErrorClassName = 'MuiSvgIcon-colorError';
-    const serialNumberFieldDOM = mockContainer.querySelector('[data-test-id="serialNumberField"] input');
-
-    // Act
-    fireEvent.change(serialNumberFieldDOM, { target: { value: invalidSerialNumber } });
-
-    dispatch(
-      updatePairFormParams({
-        key: 'serialNumber',
-        value: {
-          isValid: false,
-          value: invalidSerialNumber,
-        },
-      })
-    );
-    fireEvent.blur(serialNumberFieldDOM, { target: { value: invalidSerialNumber } });
-
-    // Assert
-    expect(mockContainer.innerHTML.includes(adornmentErrorClassName)).toBeTruthy();
-  });
-
-  test('should test mode value be able to be toggled', () => {
-    // Arrange
-    const checkboxClassName = 'Mui-checked';
-    const testModeCheckboxDOM = mockContainer.querySelector('[data-test-id="testModeCheckbox"] input');
-
-    // Act
-    fireEvent.click(testModeCheckboxDOM, { target: { checked: false } });
-
-    // Assert
-    expect(document.body.innerHTML.includes(checkboxClassName)).toBeTruthy();
   });
 
   test('should pairForm params values get updated after blur event triggered', () => {
@@ -144,7 +78,6 @@ describe('Test <PairForm />', () => {
     ];
 
     for (let index = 0; index < mockFormParams.length; index += 1) {
-      // Arrange
       const DOMNode = mockContainer.querySelector(mockFormParams[index].domId);
 
       // Act
@@ -168,69 +101,24 @@ describe('Test <PairForm />', () => {
     }
   });
 
-  test('should SPI provider field disabled by default', async () => {
+  test('should show pair button in pair form screen', () => {
     // Arrange
-    const filedDisabledClass = 'Mui-disabled';
-    const paymentProviderFieldDOM = mockContainer.querySelector('[data-test-id="paymentProviderField"]');
+    const pairBtnDOM = mockContainer.querySelector('[data-test-id="pairBtn"]');
 
     // Assert
-    expect(paymentProviderFieldDOM.outerHTML.includes(filedDisabledClass)).toBeTruthy();
+    expect(pairBtnDOM).toBeInTheDocument();
   });
 
-  test('should show modal when SPI button get clicked', () => {
+  test('should show pair button in pair form screen', () => {
     // Arrange
-    const modalOptionText = 'Other (type in field)';
-    const spiButtonDOM = mockContainer.querySelector('[data-test-id="spiButton"]');
-    const spiCloseBtnDOM = mockContainer.querySelector('[data-test-id="spiCloseBtn"]');
+    const handlePairClick = jest.fn();
+    const pairBtnDOM = mockContainer.querySelector('[data-test-id="pairBtn"]');
 
     // Act
-    fireEvent.click(spiButtonDOM);
+    fireEvent.click(pairBtnDOM);
+    handlePairClick(dispatch, defaultMockPairFormParams);
 
     // Assert
-    expect(spiCloseBtnDOM).toBeNull();
-    expect(document.body.innerHTML.includes(modalOptionText)).toBeTruthy();
-  });
-
-  test('should eftpos address field be disabled when eftpos address type is auto', async () => {
-    // Arrange
-    const autoAddressText = 'Auto address';
-    const configurationTypeSelectorDOM = mockContainer.querySelector('[data-test-id="configurationTypeSelector"]');
-    const eftposAddressFieldDOM = mockContainer.querySelector('[data-test-id="eftposAddressField"] input');
-
-    // Act
-    fireEvent.mouseDown((await screen.findAllByText(/^EFTPOS address/i))[0]);
-    fireEvent.click(await screen.findByText(/^Auto address/i));
-
-    const handleConfigTypeBlur = jest.fn().mockImplementation(() => {
-      setFormState(jest.fn(), 'testMode', true);
-    });
-
-    handleConfigTypeBlur();
-
-    // Assert
-    expect(configurationTypeSelectorDOM.innerHTML.includes(autoAddressText)).toBeTruthy();
-    expect(eftposAddressFieldDOM.disabled).toBe(true);
-    expect(handleConfigTypeBlur).toHaveBeenCalled();
-  });
-
-  test('test function serialNumberFormatter()', () => {
-    // Arrange
-    const mockRawSerialNumber = '1234';
-    const serialNumberFieldDOM = mockContainer.querySelector('[data-test-id="serialNumberField"] input');
-
-    // Act
-    const serialNumberFormatter = jest.fn();
-    const handleSerialNumberChange = jest.fn().mockImplementation(() => {
-      setFormState(jest.fn(), 'serialNumber', { value: serialNumberFormatter(mockRawSerialNumber) });
-    });
-
-    fireEvent.change(serialNumberFieldDOM, { target: { value: mockRawSerialNumber } });
-
-    handleSerialNumberChange();
-
-    // Assert
-    expect(serialNumberFieldDOM.value).toBe('123-4');
-    expect(serialNumberFormatter).toHaveBeenCalled();
-    expect(handleSerialNumberChange).toHaveBeenCalled();
+    expect(handlePairClick).toHaveBeenCalledTimes(1);
   });
 });

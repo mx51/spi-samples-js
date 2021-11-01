@@ -12,35 +12,81 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
         <div
           class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
         >
-          <button
-            aria-label="menu"
-            class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-7 MuiIconButton-colorInherit MuiIconButton-edgeStart"
-            data-testid="navbarMenuIcon"
-            name="menuIcon"
-            tabindex="0"
-            type="button"
+          <div
+            class="MuiBox-root MuiBox-root-10 makeStyles-navbar-7"
           >
-            <span
-              class="MuiIconButton-label"
+            <div
+              class="MuiBox-root MuiBox-root-11"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-8 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
               >
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
                 />
+              </button>
+              <svg>
+                PrimaryLogoIcon.svg
               </svg>
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </button>
-          <svg>
-            PrimaryLogoIcon.svg
-          </svg>
+            </div>
+            <div
+              class="MuiBox-root MuiBox-root-12"
+            >
+              <p
+                class="MuiTypography-root makeStyles-developerModeText-9 MuiTypography-body1"
+              >
+                Developer mode
+              </p>
+              <span
+                class="MuiSwitch-root"
+              >
+                <span
+                  aria-disabled="false"
+                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+                  data-test-id="developerModeSwitch"
+                >
+                  <span
+                    class="MuiIconButton-label"
+                  >
+                    <input
+                      class="PrivateSwitchBase-input-16 MuiSwitch-input"
+                      name="developerModeSwitch"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="MuiSwitch-thumb"
+                    />
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </span>
+                <span
+                  class="MuiSwitch-track"
+                />
+              </span>
+            </div>
+          </div>
         </div>
       </header>
     </div>
@@ -48,10 +94,10 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
       class="MuiContainer-root makeStyles-root-1 MuiContainer-maxWidthMd"
     >
       <div
-        class="MuiBox-root MuiBox-root-8"
+        class="MuiBox-root MuiBox-root-17"
       >
         <div
-          class="MuiBox-root MuiBox-root-9"
+          class="MuiBox-root MuiBox-root-18"
         >
           <h1
             class="MuiTypography-root MuiTypography-h6"
@@ -60,7 +106,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
           </h1>
         </div>
         <div
-          class="MuiBox-root MuiBox-root-10 makeStyles-manageFleetSetting-3"
+          class="MuiBox-root MuiBox-root-19 makeStyles-manageFleetSetting-3"
         >
           <a
             class="MuiTypography-root MuiLink-root MuiLink-underlineHover makeStyles-manageFleetSettingLink-2 MuiTypography-colorPrimary"
@@ -70,7 +116,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
           </a>
         </div>
         <div
-          class="MuiBox-root MuiBox-root-11"
+          class="MuiBox-root MuiBox-root-20"
         >
           <a
             aria-disabled="false"
@@ -90,99 +136,97 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
           </a>
         </div>
       </div>
-      <div>
-        <div
-          class="MuiPaper-root MuiTableContainer-root makeStyles-table-12 MuiPaper-elevation0 MuiPaper-rounded"
+      <div
+        class="MuiPaper-root MuiTableContainer-root makeStyles-table-21 MuiPaper-elevation0 MuiPaper-rounded"
+      >
+        <table
+          class="MuiTable-root"
         >
-          <table
-            class="MuiTable-root"
+          <thead
+            class="MuiTableHead-root"
           >
-            <thead
-              class="MuiTableHead-root"
+            <tr
+              class="MuiTableRow-root MuiTableRow-head"
             >
-              <tr
-                class="MuiTableRow-root MuiTableRow-head"
+              <th
+                class="MuiTableCell-root MuiTableCell-head"
+                scope="col"
               >
-                <th
-                  class="MuiTableCell-root MuiTableCell-head"
-                  scope="col"
-                >
-                  POS ID
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head"
-                  scope="col"
-                >
-                  Pairing status
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head"
-                  scope="col"
-                >
-                  EFTPOS address
-                </th>
-                <th
-                  class="MuiTableCell-root MuiTableCell-head"
-                  scope="col"
-                >
-                  Serial number
-                </th>
-              </tr>
-            </thead>
-            <tbody
-              class="MuiTableBody-root"
+                POS ID
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head"
+                scope="col"
+              >
+                Pairing status
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head"
+                scope="col"
+              >
+                EFTPOS address
+              </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head"
+                scope="col"
+              >
+                Serial number
+              </th>
+            </tr>
+          </thead>
+          <tbody
+            class="MuiTableBody-root"
+          >
+            <tr
+              class="MuiTableRow-root makeStyles-link-23"
+              id="terminal_123-123-123"
             >
-              <tr
-                class="MuiTableRow-root"
-                id="terminal_123-123-123"
+              <td
+                class="MuiTableCell-root MuiTableCell-body"
+                scope="row"
               >
-                <td
-                  class="MuiTableCell-root MuiTableCell-body"
-                  scope="row"
+                test
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body"
+              >
+                <div
+                  class="MuiChip-root makeStyles-chipConnected-22 MuiChip-sizeSmall"
                 >
-                  test
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body"
-                >
-                  <div
-                    class="MuiChip-root makeStyles-chipConnected-13 MuiChip-sizeSmall"
+                  <span
+                    class="MuiChip-label MuiChip-labelSmall"
                   >
-                    <span
-                      class="MuiChip-label MuiChip-labelSmall"
-                    >
-                      Unpaired
-                    </span>
-                  </div>
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body"
-                >
-                  192.168.1.10
-                </td>
-                <td
-                  class="MuiTableCell-root MuiTableCell-body"
-                >
-                  123-123-123
-                </td>
-              </tr>
-            </tbody>
-            <tfoot
-              class="MuiTableFooter-root"
-            >
-              <tr
-                class="MuiTableRow-root MuiTableRow-footer"
+                    Unpaired
+                  </span>
+                </div>
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body"
               >
-                <td
-                  class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
-                  colspan="4"
-                >
-                  Page 1
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </div>
+                192.168.1.10
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body"
+              >
+                123-123-123
+              </td>
+            </tr>
+          </tbody>
+          <tfoot
+            class="MuiTableFooter-root"
+          >
+            <tr
+              class="MuiTableRow-root MuiTableRow-footer"
+            >
+              <td
+                class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
+                colspan="4"
+              >
+                Page 1
+              </td>
+            </tr>
+          </tfoot>
+        </table>
       </div>
     </div>
   </div>

@@ -9,4 +9,5 @@ export interface IDrawerList {
 export interface INavbarHeader {
   handleToggleDrawer: () => void;
   icon: React.ReactNode;
+  isDevelopModeShown: boolean;
 }

@@ -17,6 +17,7 @@ const useStyles = makeStyles((theme: Theme) =>
       background: PRIMARY_DARK_COLOR,
       position: 'fixed',
       top: 0,
+      zIndex: 1201, // ensure developer mode toggle is on the top layer
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -38,7 +39,7 @@ const Navbar: React.FC = () => {
   return (
     <div className={classes.root}>
       <AppBar className={classes.navbar}>
-        <NavbarHeader handleToggleDrawer={toggleDrawer(true)} icon={<PrimaryLogoIcon />} />
+        <NavbarHeader handleToggleDrawer={toggleDrawer(true)} icon={<PrimaryLogoIcon />} isDevelopModeShown />
       </AppBar>
       <Drawer anchor="left" open={drawerToggle.left} onClose={toggleDrawer(false)}>
         <DrawerList toggleDrawer={toggleDrawer(false)} />
