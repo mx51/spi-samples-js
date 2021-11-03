@@ -18,7 +18,7 @@ docker run --rm \
   --userns=host \
   -v ${PWD}:/usr/src/app \
   -w /usr/src/app \
-  ${TEST_IMAGE} /bin/sh -c "npm install && npm run test:deploy"
+  ${TEST_IMAGE} /bin/sh -c "npm install && npm run test:coverage"
 
 echo
 echo " * Done."
