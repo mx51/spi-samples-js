@@ -39,10 +39,6 @@
     "prettier-format": "prettier --write src/**/*.ts{,x}",
     "pre-check": "npm run check-prettier && npm run check-lint && npm run check-types"
   },
-  "jest": {
-    "testResultsProcessor": "jest-sonar-reporter",
-    "collectCoverage": true
-  },
   "husky": {
     "hooks": {
       "pre-commit": "npm run pre-check"
@@ -82,7 +78,6 @@
     "eslint-plugin-react-hooks": "^4.2.0",
     "husky": "^7.0.1",
     "jest-junit": "^12.2.0",
-    "jest-sonar-reporter": "^2.0.0",
     "prettier": "^2.3.2",
     "string.prototype.replaceall": "^1.0.5"
   }
