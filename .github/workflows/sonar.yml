@@ -24,7 +24,7 @@ jobs:
           --userns=host \
           -v ${PWD}:/usr/src/app \
           -w /usr/src/app \
-          ${TEST_IMAGE} /bin/sh -c "npm install && npm run test:coverage"
+          node:12-alpine3.14 /bin/sh -c "npm install && npm run test:coverage"
 
     - name: Determine Sonar projectVersion
       run: |
