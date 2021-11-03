@@ -45,7 +45,7 @@ jobs:
       uses: sonarsource/sonarqube-scan-action@master
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+        SONAR_HOST_URL: "https://code.tools.mspenv.io/"
       with:
         args: >
           -Dsonar.projectVersion=${{ env.TAG_NAME }}
