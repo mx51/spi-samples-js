@@ -15,7 +15,7 @@ jest.mock('react-router-dom', () => ({
 function setupContainer(terminals: ITerminalState = pairedMockTerminals) {
   const customizedStore = {
     getState: () => ({
-      common: { showFlowPanel: false },
+      common: {},
       pairForm: {
         serialNumber: {
           value: mockTerminalInstanceId,
@@ -65,7 +65,7 @@ describe('Test <TerminalDetails />', () => {
 
     const customizedStore = {
       getState: () => ({
-        common: { showFlowPanel: false },
+        common: {},
         pairForm: {},
         products: [],
         terminals: {},

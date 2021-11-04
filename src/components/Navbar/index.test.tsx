@@ -12,7 +12,7 @@ function setupContainer(
 ) {
   const customizedStore = {
     getState: () => ({
-      common: { showFLowPanel: false },
+      common: {},
       pairForm,
       terminals,
     }),

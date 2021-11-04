@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { ICommonState } from './interfaces';
 
-const initialState = {
+const initialState: ICommonState = {
   showFlowPanel: false,
 };
 
@@ -9,8 +10,7 @@ export const commonSlice = createSlice({
   initialState,
   reducers: {
     toggleFlowPanel(state, action: PayloadAction<boolean>) {
-      const showFlowPanel = action.payload;
-      state.showFlowPanel = showFlowPanel;
+      state.showFlowPanel = action.payload;
     },
   },
 });

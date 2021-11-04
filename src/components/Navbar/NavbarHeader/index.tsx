@@ -9,19 +9,21 @@ import { useLocation } from 'react-router-dom';
 import { PATH_PAIR, PATH_PURCHASE, PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { toggleFlowPanel } from '../../../redux/reducers/CommonSlice/commonSlice';
+import selectedShowFlowPanel from '../../../redux/reducers/CommonSlice/commonSliceSelectors';
 import { INavbarHeader } from '../interfaces/NavbarInterfaces';
 import useStyles from './index.styles';
 
 function NavbarHeader({ handleToggleDrawer, icon, isDevelopModeShown }: INavbarHeader): React.ReactElement {
   const classes = useStyles();
-  const commonSlice = useAppSelector((state) => state.common);
+  const showFlowPanel = useAppSelector(selectedShowFlowPanel);
   const dispatch = useAppDispatch();
   const { pathname } = useLocation();
 
-  const isSpecificRoute = pathname === PATH_PURCHASE || pathname === PATH_PAIR || pathname.includes(PATH_TERMINALS);
+  const isDeveloperModeEnabled =
+    pathname === PATH_PURCHASE || pathname === PATH_PAIR || pathname.includes(PATH_TERMINALS);
 
   const handleFlowPanelSwitch = () => {
-    dispatch(toggleFlowPanel(!commonSlice.showFlowPanel));
+    dispatch(toggleFlowPanel(!showFlowPanel));
   };
 
   return (
@@ -46,10 +48,10 @@ function NavbarHeader({ handleToggleDrawer, icon, isDevelopModeShown }: INavbarH
             <Typography className={classes.developerModeText}>Developer mode</Typography>
             <Switch
               data-test-id="developerModeSwitch"
-              checked={commonSlice.showFlowPanel}
+              checked={showFlowPanel}
               name="developerModeSwitch"
               onChange={handleFlowPanelSwitch}
-              disabled={!isSpecificRoute}
+              disabled={!isDeveloperModeEnabled}
             />
           </Box>
         )}

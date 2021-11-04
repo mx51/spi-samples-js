@@ -3,6 +3,7 @@ import { Container } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { useAppSelector } from '../../../../redux/hooks';
+import selectedShowFlowPanel from '../../../../redux/reducers/CommonSlice/commonSliceSelectors';
 import FlowPanel from '../../../FlowPanel';
 import { TabPanelProps } from '../interfaces';
 import ReceiptPanel from '../ReceiptPanel';
@@ -17,8 +18,8 @@ export default function TabPanel({
   receiptToggle,
   terminal,
 }: TabPanelProps): React.ReactElement {
-  const { showFlowPanel } = useAppSelector((state) => state.common);
-  const classes = useStyles({ showFlowPanel, receiptToggle });
+  const showFlowPanel = useAppSelector(selectedShowFlowPanel);
+  const classes = useStyles({ showFlowPanel });
 
   return (
     <>
