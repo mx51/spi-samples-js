@@ -41,11 +41,7 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
               className={classes.link}
               id={`terminal_${terminal.serialNumber}`}
               key={`terminal_${terminal.deviceAddress}`}
-              onClick={() =>
-                goToTerminalDetails(
-                  terminal.serialNumber ? `${PATH_TERMINALS}/${terminal.serialNumber}` : PATH_TERMINALS
-                )
-              }
+              onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
             >
               <TableCell scope="row">{terminal.posId}</TableCell>
               <TableCell>

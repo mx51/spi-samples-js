@@ -3,16 +3,17 @@ import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import { useAppSelector } from '../../redux/hooks';
+import selectedShowFlowPanel from '../../redux/reducers/CommonSlice/commonSliceSelectors';
 import { selectPairFormSerialNumber } from '../../redux/reducers/PairFormSlice/PairFormSelectors';
-import { IPairingFlow, ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
+import { IPairingFlow, ITerminal, ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import useStyles from './index.styles';
-import { IFlowPanelState } from './interfaces';
 
-export default function FlowPanel({ flow, terminal }: IFlowPanelState): React.ReactElement {
+export default function FlowPanel({ terminal }: ITerminal): React.ReactElement {
   const classes = useStyles();
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const currentTerminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
+  const showFlowPanel = useAppSelector(selectedShowFlowPanel);
 
   const statusInformation = (spi: ITerminalProps) => `
 # ----------- STATUS -----------
@@ -45,7 +46,7 @@ export default function FlowPanel({ flow, terminal }: IFlowPanelState): React.Re
       }}
       className={classes.drawer}
       data-test-id="flowPanel"
-      open={flow}
+      open={showFlowPanel}
       variant="persistent"
     >
       <Box className={classes.flowBoxWrapper}>

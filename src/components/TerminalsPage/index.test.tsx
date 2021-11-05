@@ -13,6 +13,7 @@ function setupContainer(
 ) {
   const customizedStore = {
     getState: () => ({
+      common: {},
       pairForm,
       terminals,
     }),

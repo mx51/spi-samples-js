@@ -2,7 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { cleanup, fireEvent } from '@testing-library/react';
 import Pair from '.';
-import mockWithRedux from '../../utils/tests/common';
+import mockWithRedux, { defaultMockPairFormParams, defaultMockTerminals } from '../../utils/tests/common';
 
 describe('Test <Pair />', () => {
   let pairContainer: Any;
@@ -23,27 +23,21 @@ describe('Test <Pair />', () => {
     }
   });
 
-  test('should render empty string of currentSessionId after page refreshed', () => {
+  test('should show "contentShift" class name when showFlowPanel value has been set as true', () => {
     // Arrange
-    const hiddenStylingText = 'visibility: hidden;';
-    const flowTogglerDOM = pairContainer.querySelector('[data-test-id="flowToggler"]');
+    const customizedStore = {
+      getState: () => ({
+        common: { showFlowPanel: true },
+        pairForm: defaultMockPairFormParams,
+        terminals: defaultMockTerminals,
+      }),
+      subscribe: jest.fn(),
+      dispatch: jest.fn(),
+    };
 
-    // Act
-    fireEvent.click(flowTogglerDOM);
+    const mockContainer = mockWithRedux(<Pair />, customizedStore);
 
     // Assert
-    expect(pairContainer.innerHTML.includes(hiddenStylingText)).toBeFalsy();
-  });
-
-  test('should be able to toggle flow panel', () => {
-    // Arrange
-    const flowTogglerDOM = pairContainer.querySelector('[data-test-id="flowToggler"]');
-
-    // Act
-    fireEvent.click(flowTogglerDOM);
-    const flowPanelDOM = pairContainer.querySelector('[data-test-id="flowPanel"]');
-
-    // Assert
-    expect(flowPanelDOM.innerHTML).toBeDefined();
+    expect(mockContainer.innerHTML.includes('contentShift')).toBeTruthy();
   });
 });

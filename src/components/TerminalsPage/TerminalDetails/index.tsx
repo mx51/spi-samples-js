@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { useLocation } from 'react-router-dom';
+import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { useAppSelector } from '../../../redux/hooks';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
@@ -13,28 +14,23 @@ import PaTSettings from './PaTSettings';
 import TabPanel from './TabPanel';
 
 export default function TerminalDetails(): React.ReactElement {
-  const [tabIndex, setTabIndex] = React.useState(0);
-  const [flow, setFlow] = useState(false); // By default, flow is closed
+  const [tabIndex, setTabIndex] = useState(0);
+  const [receiptToggle, setReceiptToggle] = useState(false);
 
   const { pathname } = useLocation();
   const currentInstanceId = pathname?.split('/terminals/')[1];
 
-  const currentTerminal = useAppSelector(terminalInstance(currentInstanceId));
+  const currentTerminal = useAppSelector(terminalInstance(currentInstanceId)) as ITerminalProps;
 
-  const handleDrawerToggle = () => {
-    setFlow(!flow);
-  };
-  const classes = useStyles(flow);
+  const classes = useStyles();
 
   const handleTabChange = (event: React.ReactNode, newValue: number) => {
     setTabIndex(newValue);
   };
 
-  const [receiptToggle, setReceiptToggle] = useState(false);
-
   return (
     <Layout>
-      {currentTerminal ? (
+      {currentTerminal?.status === SPI_PAIR_STATUS.PairedConnected ? (
         <div className={classes.root}>
           <Tabs
             aria-label="terminal details tabs"
@@ -48,14 +44,12 @@ export default function TerminalDetails(): React.ReactElement {
           </Tabs>
 
           <TabPanel
-            flow={flow}
             index={0}
-            setFlow={handleDrawerToggle}
             subtitle="View information about this terminal and the pairing configuration"
             title="About this terminal"
             value={tabIndex}
             receiptToggle={receiptToggle}
-            terminal={currentTerminal as ITerminalProps}
+            terminal={currentTerminal}
           >
             <AboutTerminal
               receiptToggle={receiptToggle}
@@ -65,13 +59,11 @@ export default function TerminalDetails(): React.ReactElement {
           </TabPanel>
 
           <TabPanel
-            flow={flow}
             index={1}
-            setFlow={handleDrawerToggle}
             subtitle="Configure your Pay at Table settings for this terminal"
             title="Pay at Table"
             value={tabIndex}
-            terminal={currentTerminal as ITerminalProps}
+            terminal={currentTerminal}
           >
             <PaTSettings />
           </TabPanel>

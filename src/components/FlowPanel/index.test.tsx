@@ -18,6 +18,7 @@ function setupContainer(
 ) {
   const customizedStore = {
     getState: () => ({
+      common: {},
       pairForm,
       terminals,
     }),
@@ -25,7 +26,7 @@ function setupContainer(
     dispatch: jest.fn(),
   };
 
-  return mockWithRedux(<FlowPanel flow />, customizedStore);
+  return mockWithRedux(<FlowPanel />, customizedStore);
 }
 
 describe('Test <FlowPanel />', () => {

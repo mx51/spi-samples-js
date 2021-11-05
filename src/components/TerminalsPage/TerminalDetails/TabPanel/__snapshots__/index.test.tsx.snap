@@ -24,56 +24,18 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
                 class="MuiGrid-root makeStyles-tabPanelContainer-4 MuiGrid-item"
               >
                 <div
-                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-justify-content-xs-space-between"
+                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-direction-xs-column MuiGrid-justify-content-xs-space-between"
                 >
-                  <div
-                    class="MuiGrid-root MuiGrid-item"
+                  <h1
+                    class="MuiTypography-root MuiTypography-h6"
                   >
-                    <h1
-                      class="MuiTypography-root MuiTypography-h6"
-                    >
-                      Test tab 1 title
-                    </h1>
-                    <p
-                      class="MuiTypography-root makeStyles-text-6 MuiTypography-body1"
-                    >
-                      Test tab 1 subtitle
-                    </p>
-                  </div>
-                  <div
-                    class="MuiGrid-root MuiGrid-item"
-                    id="terminalFlow"
+                    Test tab 1 title
+                  </h1>
+                  <p
+                    class="MuiTypography-root makeStyles-text-6 MuiTypography-body1"
                   >
-                    <div
-                      class="MuiBox-root MuiBox-root-16"
-                    >
-                      <svg
-                        aria-hidden="true"
-                        class="MuiSvgIcon-root makeStyles-flowIcon-8"
-                        focusable="false"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          d="M15.41 16.59L10.83 12l4.58-4.59L14 6l-6 6 6 6 1.41-1.41z"
-                        />
-                      </svg>
-                      <button
-                        class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-flowButton-7 MuiButton-textPrimary"
-                        tabindex="0"
-                        type="button"
-                      >
-                        <span
-                          class="MuiButton-label"
-                        >
-                          Show
-                           flow
-                        </span>
-                        <span
-                          class="MuiTouchRipple-root"
-                        />
-                      </button>
-                    </div>
-                  </div>
+                    Test tab 1 subtitle
+                  </p>
                 </div>
               </div>
             </div>
@@ -92,18 +54,18 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
       </div>
     </div>
     <div
-      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-17"
+      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-16"
       data-test-id="flowPanel"
     >
       <div
-        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-18 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
+        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-17 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
         style="visibility: hidden; webkit-transform: translateX(1024px) translateX(0px); transform: translateX(1024px) translateX(0px);"
       >
         <div
-          class="MuiBox-root MuiBox-root-22 makeStyles-flowBoxWrapper-19"
+          class="MuiBox-root MuiBox-root-21 makeStyles-flowBoxWrapper-18"
         >
           <div
-            class="MuiBox-root MuiBox-root-23 makeStyles-flowBox-20"
+            class="MuiBox-root MuiBox-root-22 makeStyles-flowBox-19"
           >
             <h1
               class="MuiTypography-root MuiTypography-h6"
@@ -111,7 +73,7 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
               Flow
             </h1>
             <pre
-              class="makeStyles-flowContent-21"
+              class="makeStyles-flowContent-20"
             >
               
               

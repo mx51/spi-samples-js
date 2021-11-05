@@ -1,36 +1,30 @@
-import React from 'react';
 import { cleanup } from '@testing-library/react';
-import {
-  SPI_PAIR_STATUS,
-  TEXT_FORM_DEFAULT_OPTION,
-  TEXT_FORM_MODAL_CODE_WESTPAC,
-} from '../../../definitions/constants/commonConfigs';
-import { disableProviderField } from './pairFormHelpers';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import replaceAllInserter from 'string.prototype.replaceall';
+import { isHttps, serialNumberFormatter } from './pairFormHelpers';
+
+replaceAllInserter.shim();
 
 describe('Test pairFormHelpers()', () => {
   afterEach(cleanup);
 
-  test('should return true when status is PairedConnecting during running disableProviderField()', () => {
-    // Arrange
-    const status = SPI_PAIR_STATUS.PairedConnecting;
-    const spiProviderValue = TEXT_FORM_MODAL_CODE_WESTPAC;
-
+  test('should return false when running isHttps()', () => {
     // Act
-    const result = disableProviderField(status, spiProviderValue);
-
-    // Assert
-    expect(result).toBeTruthy();
-  });
-
-  test('should return false when status is Unpaired during running disableProviderField()', () => {
-    // Arrange
-    const status = SPI_PAIR_STATUS.Unpaired;
-    const spiProviderValue = TEXT_FORM_DEFAULT_OPTION;
-
-    // Act
-    const result = disableProviderField(status, spiProviderValue);
+    const result = isHttps();
 
     // Assert
     expect(result).toBeFalsy();
+  });
+
+  test('should return serial number with dash when running serialNumberFormatter()', () => {
+    // Arrange
+    const inputSerialNumber = '123456789';
+
+    // Act
+    const result = serialNumberFormatter(inputSerialNumber);
+
+    // Assert
+    expect(result).toBe('123-456-789');
   });
 });

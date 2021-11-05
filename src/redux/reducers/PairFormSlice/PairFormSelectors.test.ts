@@ -33,6 +33,7 @@ describe('Test PairFormSelectors', () => {
     );
 
     const mockState = {
+      common: { showFlowPanel: false },
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
       products: {
@@ -50,6 +51,7 @@ describe('Test PairFormSelectors', () => {
   test('test isPairDisabled() and return true as result', () => {
     // Arrange
     const mockState = {
+      common: { showFlowPanel: false },
       pairForm: {
         ...customMockPairFormParamsState(
           {

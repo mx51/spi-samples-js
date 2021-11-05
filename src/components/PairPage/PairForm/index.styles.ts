@@ -62,10 +62,10 @@ const useStyles = makeStyles((theme: Theme) =>
     paymentTypeWrapper: {
       backgroundColor: theme.palette.common.white,
       borderRadius: theme.spacing(0.5),
-      padding: theme.spacing(0, 3),
       '&.MuiFormControl-root': {
         border: `1px solid ${theme.palette.secondary.main}`,
         marginTop: theme.spacing(1),
+        padding: theme.spacing(0, 1),
       },
       '& .MuiFormControlLabel-root': {
         margin: theme.spacing(0, 2),
@@ -100,6 +100,18 @@ const useStyles = makeStyles((theme: Theme) =>
       },
       paymentProvider: {
         paddingRight: theme.spacing(2),
+      },
+    },
+    [theme.breakpoints.between(600, 768)]: {
+      formContainer: {
+        '& .MuiTextField-root, & .MuiFormControl-root': {
+          '&>.MuiInputLabel-root': {
+            width: '80%', // for handling text truncate when text is too long
+            whiteSpace: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+          },
+        },
       },
     },
   })

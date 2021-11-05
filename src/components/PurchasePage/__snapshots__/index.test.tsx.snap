@@ -12,35 +12,81 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
         <div
           class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
         >
-          <button
-            aria-label="menu"
-            class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-5 MuiIconButton-colorInherit MuiIconButton-edgeStart"
-            data-testid="navbarMenuIcon"
-            name="menuIcon"
-            tabindex="0"
-            type="button"
+          <div
+            class="MuiBox-root MuiBox-root-8 makeStyles-navbar-5"
           >
-            <span
-              class="MuiIconButton-label"
+            <div
+              class="MuiBox-root MuiBox-root-9"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-6 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
               >
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
                 />
+              </button>
+              <svg>
+                PrimaryLogoIcon.svg
               </svg>
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </button>
-          <svg>
-            PrimaryLogoIcon.svg
-          </svg>
+            </div>
+            <div
+              class="MuiBox-root MuiBox-root-10"
+            >
+              <p
+                class="MuiTypography-root makeStyles-developerModeText-7 MuiTypography-body1"
+              >
+                Developer mode
+              </p>
+              <span
+                class="MuiSwitch-root"
+              >
+                <span
+                  aria-disabled="false"
+                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-11 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+                  data-test-id="developerModeSwitch"
+                >
+                  <span
+                    class="MuiIconButton-label"
+                  >
+                    <input
+                      class="PrivateSwitchBase-input-14 MuiSwitch-input"
+                      name="developerModeSwitch"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="MuiSwitch-thumb"
+                    />
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </span>
+                <span
+                  class="MuiSwitch-track"
+                />
+              </span>
+            </div>
+          </div>
         </div>
       </header>
     </div>
@@ -62,7 +108,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             class="MuiGrid-root MuiGrid-item"
           >
             <div
-              class="MuiPaper-root makeStyles-paper-6 MuiPaper-elevation0 MuiPaper-rounded"
+              class="MuiPaper-root makeStyles-paper-15 MuiPaper-elevation0 MuiPaper-rounded"
             >
               <svg>
                 UnpluggedIcon.svg
@@ -97,13 +143,13 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
           </div>
         </div>
         <div
-          class="MuiBox-root MuiBox-root-7"
+          class="MuiBox-root MuiBox-root-16"
         >
           <div
-            class="MuiBox-root MuiBox-root-12"
+            class="MuiBox-root MuiBox-root-21"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -111,11 +157,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Mocha"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-13 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-22 makeStyles-productImage-20"
                   >
                     <img
                       alt="Mocha"
@@ -127,7 +173,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Mocha
                   </h2>
@@ -147,10 +193,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-14"
+            class="MuiBox-root MuiBox-root-23"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -158,11 +204,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Honey Latte"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-15 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-24 makeStyles-productImage-20"
                   >
                     <img
                       alt="Honey Latte"
@@ -174,7 +220,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Honey Latte
                   </h2>
@@ -194,10 +240,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-16"
+            class="MuiBox-root MuiBox-root-25"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -205,11 +251,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Flat White"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-17 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-26 makeStyles-productImage-20"
                   >
                     <img
                       alt="Flat White"
@@ -221,7 +267,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Flat White
                   </h2>
@@ -241,10 +287,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-18"
+            class="MuiBox-root MuiBox-root-27"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -252,11 +298,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Chai Latte"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-19 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-28 makeStyles-productImage-20"
                   >
                     <img
                       alt="Chai Latte"
@@ -268,7 +314,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Chai Latte
                   </h2>
@@ -288,10 +334,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-20"
+            class="MuiBox-root MuiBox-root-29"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -299,11 +345,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Rose Tea Latte"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-21 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-30 makeStyles-productImage-20"
                   >
                     <img
                       alt="Rose Tea Latte"
@@ -315,7 +361,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Rose Tea Latte
                   </h2>
@@ -335,10 +381,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-22"
+            class="MuiBox-root MuiBox-root-31"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -346,11 +392,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Cappuccino"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-23 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-32 makeStyles-productImage-20"
                   >
                     <img
                       alt="Cappuccino"
@@ -362,7 +408,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Cappuccino
                   </h2>
@@ -382,10 +428,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-24"
+            class="MuiBox-root MuiBox-root-33"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -393,11 +439,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Latte"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-25 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-34 makeStyles-productImage-20"
                   >
                     <img
                       alt="Latte"
@@ -409,7 +455,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Latte
                   </h2>
@@ -429,10 +475,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             </div>
           </div>
           <div
-            class="MuiBox-root MuiBox-root-26"
+            class="MuiBox-root MuiBox-root-35"
           >
             <div
-              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-8 MuiPaper-elevation1 MuiPaper-rounded"
+              class="MuiPaper-root MuiCard-root makeStyles-cardStyle-17 MuiPaper-elevation1 MuiPaper-rounded"
             >
               <button
                 class="MuiButtonBase-root MuiCardActionArea-root"
@@ -440,11 +486,11 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 type="button"
               >
                 <div
-                  class="MuiCardMedia-root makeStyles-productText-9"
+                  class="MuiCardMedia-root makeStyles-productText-18"
                   title="Production Test Item"
                 >
                   <div
-                    class="MuiBox-root MuiBox-root-27 makeStyles-productImage-11"
+                    class="MuiBox-root MuiBox-root-36 makeStyles-productImage-20"
                   >
                     <img
                       alt="Production Test Item"
@@ -456,7 +502,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                   class="MuiCardContent-root"
                 >
                   <h2
-                    class="MuiTypography-root makeStyles-productName-10 MuiTypography-h5"
+                    class="MuiTypography-root makeStyles-productName-19 MuiTypography-h5"
                   >
                     Production Test Item
                   </h2>
@@ -481,10 +527,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <div
-          class="MuiPaper-root MuiBox-root MuiBox-root-40 makeStyles-root-28 MuiPaper-elevation1 MuiPaper-rounded"
+          class="MuiPaper-root MuiBox-root MuiBox-root-49 makeStyles-root-37 MuiPaper-elevation1 MuiPaper-rounded"
         >
           <div
-            class="MuiBox-root MuiBox-root-41 makeStyles-heading-29"
+            class="MuiBox-root MuiBox-root-50 makeStyles-heading-38"
           >
             <h1
               class="MuiTypography-root MuiTypography-h6"
@@ -492,10 +538,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               Order
             </h1>
             <div
-              class="MuiBox-root MuiBox-root-42"
+              class="MuiBox-root MuiBox-root-51"
             >
               <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-clear-30"
+                class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-clear-39"
                 tabindex="0"
                 type="button"
               >
@@ -514,7 +560,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             class="MuiDivider-root"
           />
           <div
-            class="MuiBox-root MuiBox-root-43 makeStyles-orderList-39"
+            class="MuiBox-root MuiBox-root-52 makeStyles-orderList-48"
           >
             <ul
               class="MuiList-root MuiList-padding"
@@ -533,13 +579,13 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-44 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-53 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Subtotal
                 </span>
               </div>
               <p
-                class="MuiTypography-root makeStyles-price-45 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-price-54 MuiTypography-body1"
               >
                 $0.00
               </p>
@@ -551,7 +597,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-46 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-55 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Surcharge
                 </span>
@@ -559,7 +605,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-50"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-59"
                 role="button"
                 tabindex="0"
               >
@@ -589,7 +635,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-46 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-55 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Cashout
                 </span>
@@ -597,7 +643,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-50"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-59"
                 role="button"
                 tabindex="0"
               >
@@ -627,7 +673,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-46 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-55 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Tip
                 </span>
@@ -635,7 +681,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-50"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-59"
                 role="button"
                 tabindex="0"
               >
@@ -668,13 +714,13 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-total-32 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-total-41 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Total
                 </span>
               </div>
               <p
-                class="MuiTypography-root makeStyles-totalPrice-33 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-totalPrice-42 MuiTypography-body1"
               >
                 $0.00
               </p>
@@ -682,13 +728,13 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
           </ul>
           <a
             aria-disabled="false"
-            class="MuiButtonBase-root MuiButton-root makeStyles-payNowBtn-34 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            class="MuiButtonBase-root MuiButton-root makeStyles-payNowBtn-43 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
             href="/paynow"
             role="button"
             tabindex="0"
           >
             <span
-              class="MuiButton-label makeStyles-actionBtnLabel-36"
+              class="MuiButton-label makeStyles-actionBtnLabel-45"
             >
               Pay now
             </span>
