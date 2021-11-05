@@ -18,6 +18,11 @@ export const mockSerialNumber = '222-222-222';
 
 export const mockTerminalInstanceId = '123-123-123';
 
+export const defaultMockCommonState = {
+  showFlowPanel: false,
+  acquireConfirmPairingFlow: false,
+};
+
 export const defaultEmptyMockPairFormParams = {
   acquirerCode: {
     value: '',

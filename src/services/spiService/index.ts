@@ -6,6 +6,7 @@ import {
   PRIMARY_ERROR_COLOR,
   PRIMARY_THEME_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
+import { setConfirmPairingFlow } from '../../redux/reducers/CommonSlice/commonSlice';
 import { IPairFormValues } from '../../redux/reducers/PairFormSlice/interfaces';
 import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import {
@@ -198,6 +199,13 @@ class SpiService {
           })
         );
 
+        if (detail?.ConfirmationCode && detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos)
+          this.dispatchAction(setConfirmPairingFlow(true)); // turn on "show confirm pairing flow message in flow panel"
+
+        if (detail?.ConfirmationCode && !detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos) {
+          instance.spi.PairingConfirmCode();
+        }
+
         if (detail.Message === 'Pairing Failed') {
           this.handleTerminalPairFailure(instanceId, detail.Message);
           this.removeTerminalInstance(instanceId);
@@ -346,6 +354,7 @@ class SpiService {
       };
 
       instance.spiClient.Start();
+      this.dispatchAction(setConfirmPairingFlow(false)); // turn off "show confirm pairing flow message in flow panel"
 
       return instance;
     } catch (error: Any) {

@@ -1,5 +1,6 @@
 import { cleanup } from '@testing-library/react';
 import {
+  defaultMockCommonState,
   defaultMockPairFormParams,
   defaultMockTerminals,
   mockDefaultProducts,
@@ -13,9 +14,7 @@ import {
 } from './terminalsSliceSelectors';
 
 const mockStoreState = {
-  common: {
-    showFlowPanel: false,
-  },
+  common: defaultMockCommonState,
   pairForm: defaultMockPairFormParams,
   products: mockDefaultProducts,
   terminals: defaultMockTerminals,
@@ -49,7 +48,7 @@ describe('Test terminals slice selectors', () => {
 
   test('should return terminal which are paired connected', () => {
     const state = {
-      common: { showFlowPanel: false },
+      common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
       pair: { status: '' },
       products: {
         surchargeAmount: 0,

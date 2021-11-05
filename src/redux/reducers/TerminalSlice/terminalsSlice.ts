@@ -77,10 +77,8 @@ const terminalsSlice = createSlice({
       const { id, pairingFlow } = action.payload;
       const currentState = state[id] || {};
       currentState.pairingFlow = pairingFlow;
-
       // can also dispatch updatePairingStatus from spiService when below condition is true
-      if (currentState.pairingFlow.Finished && !currentState.pairingFlow.Successful)
-        currentState.status = SpiStatus.Unpaired;
+      if (pairingFlow.Finished && !pairingFlow.Successful) currentState.status = SpiStatus.Unpaired;
 
       state[id] = currentState;
     },

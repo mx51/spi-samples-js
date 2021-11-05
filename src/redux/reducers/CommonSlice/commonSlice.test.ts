@@ -1,17 +1,29 @@
 import { cleanup } from '@testing-library/react';
-import reducer, { toggleFlowPanel } from './commonSlice';
+import { defaultMockCommonState } from '../../../utils/tests/common';
+import reducer, { setConfirmPairingFlow, toggleFlowPanel } from './commonSlice';
 
 describe('Test commonSlice', () => {
   afterEach(cleanup);
 
-  test('test toggleFlowPanel()', () => {
+  test('test setConfirmPairingFlow()', () => {
     // Arrange
-    const initialState = { showFlowPanel: false };
     const expectedResult = {
-      showFlowPanel: true,
+      showFlowPanel: false,
+      acquireConfirmPairingFlow: true,
     };
 
     // Assert
-    expect(reducer(initialState, toggleFlowPanel(true))).toMatchObject(expectedResult);
+    expect(reducer(defaultMockCommonState, setConfirmPairingFlow(true))).toMatchObject(expectedResult);
+  });
+
+  test('test toggleFlowPanel()', () => {
+    // Arrange
+    const expectedResult = {
+      showFlowPanel: true,
+      acquireConfirmPairingFlow: false,
+    };
+
+    // Assert
+    expect(reducer(defaultMockCommonState, toggleFlowPanel(true))).toMatchObject(expectedResult);
   });
 });
