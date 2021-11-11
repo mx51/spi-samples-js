@@ -3,10 +3,10 @@
 exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
 <div>
   <div
-    class="makeStyles-root-1 makeStyles-root-14"
+    class="makeStyles-root-1 makeStyles-root-15"
   >
     <div
-      class="makeStyles-panel-2"
+      class="makeStyles-panel-2 makeStyles-panelShift-3"
     >
       <div
         class="MuiContainer-root MuiContainer-maxWidthLg"
@@ -15,7 +15,7 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
           class="MuiGrid-root makeStyles-detailsPanelContainer-9"
         >
           <div
-            class="makeStyles-detailsPanel-10"
+            class="makeStyles-detailsPanel-10 makeStyles-detailsPanelShift-11"
           >
             <div
               class="MuiGrid-root MuiGrid-container"
@@ -48,24 +48,33 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
             </div>
           </div>
           <div
-            class="MuiGrid-root makeStyles-receiptPanel-12"
-          />
+            class="MuiGrid-root makeStyles-receiptPanelOpened-13"
+          >
+            <div
+              class="MuiGrid-root makeStyles-root-17"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-h6"
+              >
+                Settlement Receipt
+              </h1>
+            </div>
+          </div>
         </div>
       </div>
     </div>
     <div
-      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-16"
+      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-18"
       data-test-id="flowPanel"
     >
       <div
-        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-17 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
-        style="visibility: hidden; webkit-transform: translateX(1024px) translateX(0px); transform: translateX(1024px) translateX(0px);"
+        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-19 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
       >
         <div
-          class="MuiBox-root MuiBox-root-21 makeStyles-flowBoxWrapper-18"
+          class="MuiBox-root MuiBox-root-23 makeStyles-flowBoxWrapper-20"
         >
           <div
-            class="MuiBox-root MuiBox-root-22 makeStyles-flowBox-19"
+            class="MuiBox-root MuiBox-root-24 makeStyles-flowBox-21"
           >
             <h1
               class="MuiTypography-root MuiTypography-h6"
@@ -73,22 +82,8 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
               Flow
             </h1>
             <pre
-              class="makeStyles-flowContent-20"
-            >
-              
-              
-              
-# ----------- STATUS -----------
-
-# POSID: test
-# EFTPOS: 192.168.1.10
-# SPI STATUS: Unpaired
-# FLOW: null
-
-# ------------------------------
-# POS: - Spi: -
-  
-            </pre>
+              class="makeStyles-flowContent-22"
+            />
           </div>
         </div>
       </div>

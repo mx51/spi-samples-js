@@ -44,7 +44,7 @@ exports[`Test <TerminalList /> should match TerminalList snapshot test 1`] = `
         class="MuiTableBody-root"
       >
         <tr
-          class="MuiTableRow-root makeStyles-link-3"
+          class="MuiTableRow-root makeStyles-unclickable-6"
           id="terminal_123-123-123"
         >
           <td
@@ -57,7 +57,7 @@ exports[`Test <TerminalList /> should match TerminalList snapshot test 1`] = `
             class="MuiTableCell-root MuiTableCell-body"
           >
             <div
-              class="MuiChip-root makeStyles-chipConnected-2 MuiChip-sizeSmall"
+              class="MuiChip-root makeStyles-chipUnpaired-4 MuiChip-sizeSmall"
             >
               <span
                 class="MuiChip-label MuiChip-labelSmall"

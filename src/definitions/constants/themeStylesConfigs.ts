@@ -12,6 +12,10 @@ export const DEFAULT_DISABLED_BACKGROUND = '#ffffff61';
 // primary colors
 export const CHIP_BACKGROUND_SUCCESS_COLOR = '#E1F4EC';
 export const CHIP_FONT_SUCCESS_COLOR = '#1FB877';
+export const CHIP_BACKGROUND_PENDING_COLOR = '#fefe7f';
+export const CHIP_FONT_PENDING_COLOR = '#FFC400';
+export const CHIP_BACKGROUND_FAILURE_COLOR = '#ffae9d';
+export const CHIP_FONT_FAILURE_COLOR = '#E44B5D';
 export const PRIMARY_BACKGROUND_COLOR = '#F3F3F7';
 export const PRIMARY_BORDER_COLOR = '#CACAF1';
 export const PRIMARY_DARK_COLOR = '#1A1F4F';

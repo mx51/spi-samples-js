@@ -15,6 +15,7 @@ import {
   updateTerminal,
   updateTerminalBatteryLevel,
   updateTerminalConfigurations,
+  updateTxFlowResponse,
   updateTxFlow,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
@@ -55,6 +56,14 @@ class SpiService {
   readTerminalList(): ITerminals {
     this.print.log(getLocalStorage('terminals'));
     return JSON.parse(getLocalStorage('terminals') || '{}');
+  }
+
+  // remove terminal record from localStorage
+  removeUnpairedTerminalLocalStorage(instanceId: string): void {
+    this.print.log(getLocalStorage('terminals'));
+    const recordedTerminals = JSON.parse(getLocalStorage('terminals') as string);
+    delete recordedTerminals[instanceId];
+    setLocalStorage('terminals', JSON.stringify(recordedTerminals));
   }
 
   // read current terminal instance
@@ -295,9 +304,20 @@ class SpiService {
       instance.addEventListener(spiEvents.spiTxFlowStateChanged, (event: Any) => {
         console.log('spiTxFlowStateChanged', event);
         const { detail } = event;
+
         if (detail.Finished) {
           instance.spiClient.AckFlowEndedAndBackToIdle();
         }
+
+        // when Response Data available, update transaction flow response data
+        if (detail?.Response?.Data)
+          this.dispatchAction(
+            updateTxFlowResponse({
+              id: instanceId,
+              responseData: detail.Response.Data,
+            })
+          );
+
         this.dispatchAction(
           updateTxFlow({
             id: instanceId,
@@ -415,6 +435,7 @@ class SpiService {
 
   spiTerminalCancelPair(instanceId: string): void {
     this.readTerminalInstance(instanceId).spiClient.PairingCancel();
+    this.removeUnpairedTerminalLocalStorage(instanceId);
   }
 
   spiTerminalUnPair(instanceId: string): void {
@@ -450,6 +471,14 @@ class SpiService {
   ): void {
     const spi = this.readTerminalInstance(instanceId).spiClient;
     return spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount);
+  }
+
+  initTxSettlement(instanceId: string, posRefId: string) {
+    return this.readTerminalInstance(instanceId).spiClient.InitiateSettleTx(posRefId);
+  }
+
+  initTxSettlementEnquiry(instanceId: string, posRefId: string) {
+    return this.readTerminalInstance(instanceId).spiClient.InitiateSettlementEnquiry(posRefId);
   }
 }
 

@@ -148,7 +148,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
         </div>
       </div>
       <div
-        class="makeStyles-root-20 makeStyles-root-33"
+        class="makeStyles-root-20 makeStyles-root-34"
       >
         <div
           class="makeStyles-panel-21"
@@ -191,7 +191,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                     class="MuiGrid-root MuiGrid-container"
                   >
                     <div
-                      class="MuiGrid-root makeStyles-sectionSpacing-37 MuiGrid-item"
+                      class="MuiGrid-root makeStyles-sectionSpacing-38 MuiGrid-item"
                     >
                       <h1
                         class="MuiTypography-root MuiTypography-h6"
@@ -199,12 +199,12 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                         Terminal information
                       </h1>
                       <p
-                        class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                        class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                       >
                         Information about this terminal
                       </p>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -219,34 +219,35 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <div
-                            class="MuiBox-root MuiBox-root-46 makeStyles-statusBox-40"
+                            class="MuiBox-root MuiBox-root-47 makeStyles-statusBox-41"
                           >
                             <p
                               class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
                             >
                               <svg
-                                class="makeStyles-connectedIcon-45"
+                                class="makeStyles-connectedIcon-46"
                               >
                                 ConnectedIcon.svg
                               </svg>
                             </p>
                             <div
-                              class="MuiBox-root MuiBox-root-47"
+                              class="MuiBox-root MuiBox-root-48"
                             >
                               <h5
-                                class="MuiTypography-root makeStyles-statusTitle-41 MuiTypography-h5"
+                                class="MuiTypography-root makeStyles-statusTitle-42 MuiTypography-h5"
                               >
                                 Connected
                               </h5>
                               <span
-                                class="MuiTypography-root makeStyles-statusText-42"
+                                class="MuiTypography-root makeStyles-statusText-43"
                               >
                                 Ready
                               </span>
                             </div>
                           </div>
                           <button
-                            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-39"
+                            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-40"
+                            data-test-id="terminalDetailsSettlementBtn"
                             tabindex="0"
                             type="button"
                           >
@@ -260,7 +261,8 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                             />
                           </button>
                           <button
-                            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-39"
+                            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-40"
+                            data-test-id="terminalDetailsSettlementEnquiryBtn"
                             tabindex="0"
                             type="button"
                           >
@@ -273,10 +275,13 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                               class="MuiTouchRipple-root"
                             />
                           </button>
-                          <button
-                            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-39"
+                          <a
+                            aria-disabled="false"
+                            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-40"
+                            data-test-id="terminalDetailsUnpairBtn"
+                            href="/terminals"
+                            role="button"
                             tabindex="0"
-                            type="button"
                           >
                             <span
                               class="MuiButton-label"
@@ -286,11 +291,11 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                             <span
                               class="MuiTouchRipple-root"
                             />
-                          </button>
+                          </a>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -305,14 +310,14 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             123456789
                           </p>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -327,14 +332,14 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             987654321
                           </p>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -349,14 +354,14 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             123-123-123
                           </p>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -371,7 +376,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             40%
                           </p>
@@ -379,7 +384,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                       </div>
                     </div>
                     <div
-                      class="MuiGrid-root makeStyles-sectionSpacing-37 MuiGrid-item"
+                      class="MuiGrid-root makeStyles-sectionSpacing-38 MuiGrid-item"
                     >
                       <h1
                         class="MuiTypography-root MuiTypography-h6"
@@ -387,12 +392,12 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                         Pairing configuration
                       </h1>
                       <p
-                        class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                        class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                       >
                         To update the Pairing configuration you need to unpair this terminal using the Unpair button above
                       </p>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -407,14 +412,14 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             test
                           </p>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -429,14 +434,14 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             No
                           </p>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -451,14 +456,14 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             192.168.1.10
                           </p>
                         </div>
                       </div>
                       <div
-                        class="MuiGrid-root makeStyles-detailRow-36 MuiGrid-container"
+                        class="MuiGrid-root makeStyles-detailRow-37 MuiGrid-container"
                       >
                         <div
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
@@ -473,7 +478,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
                         >
                           <p
-                            class="MuiTypography-root makeStyles-text-35 MuiTypography-body1"
+                            class="MuiTypography-root makeStyles-text-36 MuiTypography-body1"
                           >
                             test
                           </p>
@@ -490,18 +495,18 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
           </div>
         </div>
         <div
-          class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-48"
+          class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-49"
           data-test-id="flowPanel"
         >
           <div
-            class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-49 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
+            class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-50 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
             style="visibility: hidden; webkit-transform: translateX(1024px) translateX(0px); transform: translateX(1024px) translateX(0px);"
           >
             <div
-              class="MuiBox-root MuiBox-root-53 makeStyles-flowBoxWrapper-50"
+              class="MuiBox-root MuiBox-root-54 makeStyles-flowBoxWrapper-51"
             >
               <div
-                class="MuiBox-root MuiBox-root-54 makeStyles-flowBox-51"
+                class="MuiBox-root MuiBox-root-55 makeStyles-flowBox-52"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-h6"
@@ -509,7 +514,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                   Flow
                 </h1>
                 <pre
-                  class="makeStyles-flowContent-52"
+                  class="makeStyles-flowContent-53"
                 >
                   
 # ----------- STATUS -----------

@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
+import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import useStyles from './index.styles';
@@ -22,6 +23,19 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
 
   const goToTerminalDetails = (path: string) => {
     history.push(path);
+  };
+
+  const chipStyles = (status: string) => {
+    switch (status) {
+      case SPI_PAIR_STATUS.PairedConnected:
+        return classes.chipConnected;
+      case SPI_PAIR_STATUS.PairedConnecting:
+        return classes.chipPending;
+      case SPI_PAIR_STATUS.Unpaired:
+        return classes.chipUnpaired;
+      default:
+        return classes.chipUnpaired;
+    }
   };
 
   return (
@@ -38,14 +52,14 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
         <TableBody>
           {terminals.map((terminal: ITerminalProps) => (
             <TableRow
-              className={classes.link}
+              className={terminal.status !== SPI_PAIR_STATUS.PairedConnected ? classes.unclickable : classes.link}
               id={`terminal_${terminal.serialNumber}`}
               key={`terminal_${terminal.deviceAddress}`}
               onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
             >
               <TableCell scope="row">{terminal.posId}</TableCell>
               <TableCell>
-                <Chip size="small" label={terminal.status} className={classes.chipConnected} />
+                <Chip size="small" label={terminal.status} className={chipStyles(terminal.status)} />
               </TableCell>
               <TableCell>{terminal.deviceAddress}</TableCell>
               <TableCell>{terminal.serialNumber}</TableCell>

@@ -1,5 +1,6 @@
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
+import { mockReceiptRawResponse, mockReceiptResponse } from '../../../utils/tests/common';
 import { IPairingFlow, IUpdateDeviceAddressAction, ITerminalState, ITxFlow } from './interfaces';
 import reducer, {
   addTerminal,
@@ -10,9 +11,12 @@ import reducer, {
   updatePairingStatus,
   updateSetting,
   updateTerminal,
+  updateTerminalBatteryLevel,
+  updateTerminalConfigurations,
   updateTerminalSecret,
   updateTerminalSerialNumber,
   updateTxFlow,
+  updateTxFlowResponse,
   updateTxMessage,
 } from './terminalsSlice';
 
@@ -646,6 +650,74 @@ test('should handle updateTxMessage for empty state', () => {
   expect(reducer(previousState, updateTxMessage(updateTxMessageAction))).toEqual({
     [mockTerminalInstanceId]: {
       txMessage: mockTxMessageResponse,
+    },
+  });
+});
+
+test('should handle updateTerminalConfigurations', () => {
+  // Arrange
+  const updateTerminalConfigurationsAction = {
+    id: mockTerminalInstanceId,
+    pluginVersion: '11.2.3',
+    merchantId: '123456789',
+    terminalId: '987654321',
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updateTerminalConfigurations(updateTerminalConfigurationsAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      pluginVersion: '11.2.3',
+      merchantId: '123456789',
+      terminalId: '987654321',
+    },
+  });
+});
+
+test('should handle updateTerminalBatteryLevel', () => {
+  // Arrange
+  const updateTerminalBatteryLevelAction = {
+    id: mockTerminalInstanceId,
+    batteryLevel: '80',
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updateTerminalBatteryLevel(updateTerminalBatteryLevelAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      batteryLevel: '80',
+    },
+  });
+});
+
+test('should handle updateTxFlowResponse', () => {
+  // Arrange
+  const updateTxFlowResponseAction = {
+    id: mockTerminalInstanceId,
+    responseData: mockReceiptRawResponse,
+  };
+
+  // Assert
+  expect(reducer(mockPreviousState(), updateTxFlowResponse(updateTxFlowResponseAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      ...mockPreviousState()[mockTerminalInstanceId],
+      receipt: mockReceiptResponse,
+    },
+  });
+});
+
+test('should handle updateTxFlowResponse for empty state', () => {
+  // Arrange
+  const previousState = {};
+  const updateTxFlowResponseAction = {
+    id: mockTerminalInstanceId,
+    responseData: mockReceiptRawResponse,
+  };
+
+  // Assert
+  expect(reducer(previousState, updateTxFlowResponse(updateTxFlowResponseAction))).toEqual({
+    [mockTerminalInstanceId]: {
+      receipt: mockReceiptResponse,
     },
   });
 });

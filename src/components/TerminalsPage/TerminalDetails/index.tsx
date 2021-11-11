@@ -15,11 +15,13 @@ import TabPanel from './TabPanel';
 
 export default function TerminalDetails(): React.ReactElement {
   const [tabIndex, setTabIndex] = useState(0);
-  const [receiptToggle, setReceiptToggle] = useState(false);
+  const [receiptToggle, setReceiptToggle] = useState({
+    settlement: false,
+    settlementEnquiry: false,
+  });
 
   const { pathname } = useLocation();
   const currentInstanceId = pathname?.split('/terminals/')[1];
-
   const currentTerminal = useAppSelector(terminalInstance(currentInstanceId)) as ITerminalProps;
 
   const classes = useStyles();

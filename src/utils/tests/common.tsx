@@ -14,9 +14,17 @@ import ReduxProvider from '../../redux/ReduxProvider';
 import { store } from '../../redux/store';
 import { ITerminal } from '../../services/interfaces';
 
+export const mockPosRefId = 'mock-pos-ref-id-01';
 export const mockSerialNumber = '222-222-222';
-
 export const mockTerminalInstanceId = '123-123-123';
+export const mockReceiptContent = `
+EFTPOS FROM TEST TENANT
+Presto VAA Sales
+TEST Street
+Address 0000
+\n
+Country
+`;
 
 export const defaultMockCommonState = {
   showFlowPanel: false,
@@ -287,6 +295,84 @@ export const mockTerminalInstance: ITerminal = {
   spi_receipt_header: 'test',
   spi_receipt_footer: 'test',
   use_secure_web_sockets: false,
+};
+
+export const mockReceiptRawResponse = {
+  accumulated_settle_by_acquirer_count: 'string',
+  accumulated_settle_by_acquirer_value: 'string',
+  accumulated_total_count: 'string',
+  accumulated_total_value: 'string',
+  bank_date: 'string',
+  bank_time: 'string',
+  error_detail: 'string',
+  error_reason: 'string',
+  host_response_code: 'string',
+  host_response_text: 'string',
+  merchant_acquirer: 'string',
+  merchant_address: 'string',
+  merchant_city: 'string',
+  merchant_country: 'string',
+  merchant_name: 'string',
+  merchant_postcode: 'string',
+  merchant_receipt: mockReceiptContent,
+  merchant_receipt_printed: false,
+  schemes: [
+    {
+      scheme_name: 'string',
+      settle_by_acquirer: 'string',
+      total_count: 'string',
+      total_value: 'string',
+    },
+  ],
+  settlement_period_end_date: 'string',
+  settlement_period_end_time: 'string',
+  settlement_period_start_date: 'string',
+  settlement_period_start_time: 'string',
+  settlement_triggered_date: 'string',
+  settlement_triggered_time: 'string',
+  stan: 'string',
+  success: true,
+  terminal_id: 'string',
+  transaction_range: 'string',
+};
+
+export const mockReceiptResponse = {
+  accumulatedSettleByAcquirerCount: 'string',
+  accumulatedSettleByAcquirerValue: 'string',
+  accumulatedTotalCount: 'string',
+  accumulatedTotalValue: 'string',
+  bankDate: 'string',
+  bankTime: 'string',
+  errorDetail: 'string',
+  errorReason: 'string',
+  hostResponseCode: 'string',
+  hostResponseText: 'string',
+  merchantAcquirer: 'string',
+  merchantAddress: 'string',
+  merchantCity: 'string',
+  merchantCountry: 'string',
+  merchantName: 'string',
+  merchantPostcode: 'string',
+  merchantReceipt: mockReceiptContent,
+  merchantReceiptPrinted: false,
+  schemes: [
+    {
+      scheme_name: 'string',
+      settle_by_acquirer: 'string',
+      total_count: 'string',
+      total_value: 'string',
+    },
+  ],
+  settlementPeriodEndDate: 'string',
+  settlementPeriodEndTime: 'string',
+  settlementPeriodStartDate: 'string',
+  settlementPeriodStartTime: 'string',
+  settlementTriggeredDate: 'string',
+  settlementTriggeredTime: 'string',
+  stan: 'string',
+  success: true,
+  terminalId: 'string',
+  transactionRange: 'string',
 };
 
 // mock container with redux provider

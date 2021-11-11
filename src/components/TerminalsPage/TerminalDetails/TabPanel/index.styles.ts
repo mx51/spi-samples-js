@@ -122,6 +122,9 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(4),
       width: `${drawerWidth}%`,
     },
+    preContent: {
+      whiteSpace: 'pre-wrap',
+    },
   })
 );
 

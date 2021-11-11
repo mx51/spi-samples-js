@@ -8,8 +8,19 @@ exports[`Test <ReceiptPanel /> should match ReceiptPanel snapshot test 1`] = `
     <h1
       class="MuiTypography-root MuiTypography-h6"
     >
-      Receipt
+      Mock Receipt
     </h1>
+    <pre>
+      
+EFTPOS FROM TEST TENANT
+Presto VAA Sales
+TEST Street
+Address 0000
+
+
+Country
+
+    </pre>
   </div>
 </div>
 `;

@@ -12,7 +12,7 @@ function setupContainer(
 ) {
   const customizedStore = {
     getState: () => ({
-      common: { showFLowPanel: true, acquireConfirmPairingFlow: true },
+      common: { showFlowPanel: true, acquireConfirmPairingFlow: true },
       pairForm,
       terminals,
     }),
@@ -30,16 +30,16 @@ function setupContainer(
 }
 
 describe('Test <FlowPanel />', () => {
-  let mockContainer: Any;
+  let initialContainer: Any;
 
   beforeEach(() => {
-    mockContainer = setupContainer();
+    initialContainer = setupContainer();
   });
 
   afterEach(cleanup);
 
   test('should match FlowPanel snapshot test', () => {
     // Assert
-    expect(mockContainer).toMatchSnapshot();
+    expect(initialContainer).toMatchSnapshot();
   });
 });

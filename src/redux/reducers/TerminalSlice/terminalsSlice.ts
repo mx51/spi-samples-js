@@ -10,6 +10,7 @@ import {
   IUpdatePairingFlowAction,
   IUpdatePairingStatusAction,
   IUpdateSettingAction,
+  IUpdateTerminalReceipt,
   IUpdateTerminalSecretAction,
   IUpdateTerminalSerialNumberAction,
   IUpdateTxFlowAction,
@@ -161,6 +162,45 @@ const terminalsSlice = createSlice({
       state[id] = currentState;
     },
 
+    updateTxFlowResponse(state: ITerminalState, action: PayloadAction<IUpdateTerminalReceipt>) {
+      const { id, responseData } = action.payload;
+      const currentState = state[id] || {};
+
+      currentState.receipt = {
+        accumulatedSettleByAcquirerCount: responseData?.accumulated_settle_by_acquirer_count,
+        accumulatedSettleByAcquirerValue: responseData?.accumulated_settle_by_acquirer_value,
+        accumulatedTotalCount: responseData?.accumulated_total_count,
+        accumulatedTotalValue: responseData?.accumulated_total_value,
+        bankDate: responseData?.bank_date,
+        bankTime: responseData?.bank_time,
+        errorDetail: responseData?.error_detail,
+        errorReason: responseData?.error_reason,
+        hostResponseCode: responseData?.host_response_code,
+        hostResponseText: responseData?.host_response_text,
+        merchantAcquirer: responseData?.merchant_acquirer,
+        merchantAddress: responseData?.merchant_address,
+        merchantCity: responseData?.merchant_city,
+        merchantCountry: responseData?.merchant_country,
+        merchantName: responseData?.merchant_name,
+        merchantPostcode: responseData?.merchant_postcode,
+        merchantReceipt: responseData?.merchant_receipt,
+        merchantReceiptPrinted: responseData?.merchant_receipt_printed,
+        schemes: responseData?.schemes,
+        settlementPeriodEndDate: responseData?.settlement_period_end_date,
+        settlementPeriodEndTime: responseData?.settlement_period_end_time,
+        settlementPeriodStartDate: responseData?.settlement_period_start_date,
+        settlementPeriodStartTime: responseData?.settlement_period_start_time,
+        settlementTriggeredDate: responseData?.settlement_triggered_date,
+        settlementTriggeredTime: responseData?.settlement_triggered_time,
+        stan: responseData?.stan,
+        success: responseData?.success,
+        terminalId: responseData?.terminal_id,
+        transactionRange: responseData?.transaction_range,
+      };
+
+      state[id] = currentState;
+    },
+
     updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
       const { id, txFlow } = action.payload;
       const currentState = state[id] || {};
@@ -190,6 +230,7 @@ export const {
   updateTerminalBatteryLevel,
   updateTerminalSecret,
   updateTerminalSerialNumber,
+  updateTxFlowResponse,
   updateTxFlow,
   updateTxMessage,
 } = terminalsSlice.actions;

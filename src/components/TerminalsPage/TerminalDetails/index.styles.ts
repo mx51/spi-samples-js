@@ -8,7 +8,11 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     tabs: {
+      backgroundColor: theme.palette.background.default,
       borderBottom: `1px solid ${theme.palette.secondary.main}`,
+      position: 'sticky',
+      top: theme.spacing(6),
+      zIndex: 1,
     },
   })
 );

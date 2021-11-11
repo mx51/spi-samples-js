@@ -1,14 +1,16 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { cleanup } from '@testing-library/react';
-import FlowPanel from '.';
+import FlowPanel, { getReceiptSchemes } from '.';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import { IPairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 import mockWithRedux, {
   defaultMockPairFormParams,
+  mockReceiptResponse,
   mockPairingFlow,
+  mockTerminalInstanceId,
   mockTerminalsConfigs,
   pairedMockTerminals,
 } from '../../../utils/tests/common';
@@ -19,7 +21,7 @@ function setupContainer(
 ) {
   const customizedStore = {
     getState: () => ({
-      common: { showFLowPanel: true, acquireConfirmPairingFlow: true },
+      common: { showFlowPanel: true, acquireConfirmPairingFlow: true },
       pairForm,
       terminals,
     }),
@@ -110,7 +112,7 @@ describe('Test <FlowPanel />', () => {
     expect(newMockContainer.innerHTML.includes(mockPluginVersion)).toBeTruthy();
   });
 
-  test('show display plugin version value', () => {
+  test('show display spi version value', () => {
     // Arrange
     const mockPluginVersion = 'v2.2.3';
     const mockText = 'POS: - Spi: v2.2.3';
@@ -145,5 +147,83 @@ describe('Test <FlowPanel />', () => {
 
     // Assert
     expect(newMockContainer.innerHTML.includes(mockText)).toBeTruthy();
+  });
+
+  test('display scheme message during calling getReceiptSchemes()', () => {
+    // Arrange
+    const mockSchemes = [{ scheme_name: 'test', settle_by_acquirer: 'test', total_count: '1', total_value: '1' }];
+    const expectedSchemeText = 'Scheme Name: test, Settle By Acquirer: test, Total Count: 1, Total Value: 1';
+
+    // Act
+    const result = getReceiptSchemes(mockSchemes);
+
+    // Assert
+    expect(result.trim()).toBe(expectedSchemeText);
+  });
+
+  test('display empty string ("") message when schemes is set as [] during calling getReceiptSchemes()', () => {
+    // Arrange
+    const mockSchemes: [] = [];
+    const expectedSchemeText = '';
+
+    // Act
+    const result = getReceiptSchemes(mockSchemes);
+
+    // Assert
+    expect(result).toBe(expectedSchemeText);
+  });
+
+  test('should return transaction flow receipt flow content', () => {
+    // Arrange
+    const mockReceiptTitle = 'SETTLEMENT SUCCESSFUL!';
+    const mockSchemesText = 'Scheme Name: string, Settle By Acquirer: string, Total Count: string, Total Value: string';
+    const mockTerminalWithReceipt = {
+      ...pairedMockTerminals[mockTerminalInstanceId],
+      receipt: mockReceiptResponse,
+    };
+    const newMockContainer = mockWithRedux(<FlowPanel terminal={mockTerminalWithReceipt} />);
+
+    // Assert
+    expect(newMockContainer.innerHTML.includes(mockReceiptTitle)).toBeTruthy();
+    expect(newMockContainer.innerHTML.includes(mockSchemesText)).toBeTruthy();
+  });
+
+  test('should return failed transaction flow receipt flow content when success value is false', () => {
+    // Arrange
+    const mockReceiptTitle = 'SETTLEMENT FAILED!';
+    const mockTerminalWithReceipt = {
+      ...pairedMockTerminals[mockTerminalInstanceId],
+      receipt: {
+        ...mockReceiptResponse,
+        success: false,
+      },
+    };
+    const newMockContainer = mockWithRedux(<FlowPanel terminal={mockTerminalWithReceipt} />);
+
+    // Assert
+    expect(newMockContainer.innerHTML.includes(mockReceiptTitle)).toBeTruthy();
+  });
+
+  test('should not display any scheme message inside flow panel when schemes list are empty', () => {
+    // Arrange
+    const mockSchemeText = 'Scheme Name';
+    const mockResult = `
+# SCHEME SETTLEMENTS:
+
+
+    `;
+
+    const mockTerminalWithReceipt = {
+      ...pairedMockTerminals[mockTerminalInstanceId],
+      receipt: {
+        ...mockReceiptResponse,
+        schemes: [],
+      },
+    };
+    const newMockContainer = mockWithRedux(<FlowPanel terminal={mockTerminalWithReceipt} />);
+
+    // Assert
+    expect(newMockContainer.innerHTML.includes(mockSchemeText)).toBeFalsy();
+    expect(newMockContainer.innerHTML.includes(mockResult)).toBe(true);
   });
 });
