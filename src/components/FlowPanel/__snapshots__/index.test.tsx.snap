@@ -21,21 +21,12 @@ exports[`Test <FlowPanel /> should match FlowPanel snapshot test 1`] = `
           >
             Flow
           </h1>
-          <pre
-            class="makeStyles-flowContent-5"
-          >
-            
-# ----------- STATUS -----------
-
-# POSID: test
-# EFTPOS: 192.168.1.10
-# SPI STATUS: Unpaired
-# FLOW: null
-
-# ------------------------------
-# POS: - Spi: -
-  
-          </pre>
+          <h6>
+            Flow
+          </h6>
+          <p>
+            Mock flow panel content
+          </p>
         </div>
       </div>
     </div>

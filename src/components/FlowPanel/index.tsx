@@ -3,40 +3,12 @@ import Box from '@material-ui/core/Box';
 import Drawer from '@material-ui/core/Drawer';
 import Typography from '@material-ui/core/Typography';
 import { useAppSelector } from '../../redux/hooks';
-import selectedShowFlowPanel from '../../redux/reducers/CommonSlice/commonSliceSelectors';
-import { selectPairFormSerialNumber } from '../../redux/reducers/PairFormSlice/PairFormSelectors';
-import { IPairingFlow, ITerminal, ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
-import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { selectedShowFlowPanel } from '../../redux/reducers/CommonSlice/commonSliceSelectors';
 import useStyles from './index.styles';
 
-export default function FlowPanel({ terminal }: ITerminal): React.ReactElement {
+export default function FlowPanel({ children }: { children: React.ReactNode }): React.ReactElement {
   const classes = useStyles();
-  const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
-  const currentTerminal = useAppSelector(terminalInstance(pairFormSerialNumber)) as ITerminalProps;
   const showFlowPanel = useAppSelector(selectedShowFlowPanel);
-
-  const statusInformation = (spi: ITerminalProps) => `
-# ----------- STATUS -----------
-
-# POSID: ${spi?.posId}
-# EFTPOS: ${spi?.deviceAddress}
-# SPI STATUS: ${spi?.status}
-# FLOW: ${spi?.flow}
-
-# ------------------------------
-# POS: ${spi?.posVersion ? `v${spi?.posVersion}` : '-'} Spi: ${`${spi?.pluginVersion}`}
-  `;
-
-  const pairFlowInformation = (pairingFlow: IPairingFlow) => `
-### PAIRING PROCESS UPDATE ###
-
-# ${pairingFlow.Message}
-# Finished? ${pairingFlow.Finished}
-# Successful? ${pairingFlow.Successful}
-# Confirmation Code: ${pairingFlow.ConfirmationCode}
-# Waiting Confirm from Eftpos? ${pairingFlow.AwaitingCheckFromEftpos}
-# Waiting Confirm from POS? ${pairingFlow.AwaitingCheckFromPos}
-  `;
 
   return (
     <Drawer
@@ -54,13 +26,7 @@ export default function FlowPanel({ terminal }: ITerminal): React.ReactElement {
           <Typography variant="h6" component="h1">
             Flow
           </Typography>
-          <pre className={classes.flowContent}>
-            {currentTerminal?.pairingFlow && pairFlowInformation(currentTerminal?.pairingFlow)}
-            {pairFormSerialNumber && currentTerminal && statusInformation(currentTerminal)}
-            {/* Above one is for unpaired terminal (Eg: Terminal Pair page) */}
-            {!pairFormSerialNumber && terminal && statusInformation(terminal)}
-            {/* Above one is for already paired terminal (Eg: Terminal Details page) */}
-          </pre>
+          {children}
         </Box>
       </Box>
     </Drawer>

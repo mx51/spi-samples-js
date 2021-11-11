@@ -3,8 +3,9 @@ import { Container } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { useAppSelector } from '../../../../redux/hooks';
-import selectedShowFlowPanel from '../../../../redux/reducers/CommonSlice/commonSliceSelectors';
+import { selectedShowFlowPanel } from '../../../../redux/reducers/CommonSlice/commonSliceSelectors';
 import FlowPanel from '../../../FlowPanel';
+import PairFlow from '../../../FlowPanel/PairFlow';
 import { TabPanelProps } from '../interfaces';
 import ReceiptPanel from '../ReceiptPanel';
 import useStyles from './index.styles';
@@ -51,7 +52,9 @@ export default function TabPanel({
               </Grid>
             </Container>
           </div>
-          <FlowPanel terminal={terminal} />
+          <FlowPanel>
+            <PairFlow terminal={terminal} />
+          </FlowPanel>
         </div>
       )}
     </>

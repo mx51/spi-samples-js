@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { RootState } from '../../store';
-import { ITerminalProps, ITerminalState } from './interfaces';
+import { IPairingFlow, ITerminalProps, ITerminalState } from './interfaces';
 
 export const terminalList = (state: RootState): ITerminalState => state.terminals;
 
@@ -16,6 +16,10 @@ export const isPaired = createSelector(
   pairedConnectedTerminalList,
   (terminals: Array<ITerminalProps>) => terminals.length > 0
 );
+
+export const terminalPairingFlow = (instanceId: string): ((state: RootState) => IPairingFlow | null) =>
+  createSelector(terminalInstance(instanceId), (terminal) => terminal?.pairingFlow);
+
 export const isTerminalUnpaired = (instanceId: string): ((state: RootState) => boolean) =>
   createSelector(
     terminalInstance(instanceId),

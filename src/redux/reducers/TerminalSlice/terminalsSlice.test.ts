@@ -291,6 +291,7 @@ test('should handle updatePairingFlow when empty state & unpaired', () => {
   const updatePairingFlowAction = {
     id: mockTerminalInstanceId,
     pairingFlow: mockPairingFlowResponse,
+    status: undefined,
   };
 
   // Assert

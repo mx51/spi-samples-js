@@ -1,6 +1,6 @@
 import { cleanup } from '@testing-library/react';
 import { defaultMockPairFormParams, defaultMockTerminals } from '../../../utils/tests/common';
-import selectedShowFlowPanel from './commonSliceSelectors';
+import { selectedShowFlowPanel } from './commonSliceSelectors';
 
 describe('Test CommonSelectors', () => {
   let mockStoreState: Any;

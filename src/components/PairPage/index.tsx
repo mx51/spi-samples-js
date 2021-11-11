@@ -2,10 +2,11 @@ import React, { useEffect } from 'react';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
-import selectedShowFlowPanel from '../../redux/reducers/CommonSlice/commonSliceSelectors';
+import { selectedShowFlowPanel } from '../../redux/reducers/CommonSlice/commonSliceSelectors';
 import { resetPairForm } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import FlowPanel from '../FlowPanel';
 import { IFlowPanel } from '../FlowPanel/interfaces';
+import PairFlow from '../FlowPanel/PairFlow';
 import Layout from '../Layout';
 import SnackbarWrapper from '../Snackbar';
 import useStyles from './index.styles';
@@ -36,7 +37,9 @@ const PairPage: React.FC = () => {
             </Grid>
           </Container>
         </div>
-        <FlowPanel />
+        <FlowPanel>
+          <PairFlow />
+        </FlowPanel>
         <SnackbarWrapper />
       </div>
     </Layout>

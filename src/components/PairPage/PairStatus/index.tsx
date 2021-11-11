@@ -53,11 +53,9 @@ function PairStatus(): React.ReactElement {
           </Box>
         </Box>
 
-        {panelInformationList.map(({ title, content }) =>
-          title === 'Battery' && terminal?.batteryLevel === '-' ? null : (
-            <PairPanelInformation key={title} title={title} content={content} />
-          )
-        )}
+        {panelInformationList.map(({ title, content }) => (
+          <PairPanelInformation key={title} title={title} content={content} />
+        ))}
       </Grid>
       <Grid container alignItems="center" justifyContent="flex-end" className={classes.statusButtonBox}>
         {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).button}

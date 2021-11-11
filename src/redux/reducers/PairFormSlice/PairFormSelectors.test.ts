@@ -4,7 +4,11 @@ import {
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
-import { customMockPairFormParamsState, mockTerminalInstanceId } from '../../../utils/tests/common';
+import {
+  customMockPairFormParamsState,
+  defaultMockCommonState,
+  mockTerminalInstanceId,
+} from '../../../utils/tests/common';
 import { isPairDisabled } from './PairFormSelectors';
 
 describe('Test PairFormSelectors', () => {
@@ -33,7 +37,7 @@ describe('Test PairFormSelectors', () => {
     );
 
     const mockState = {
-      common: { showFlowPanel: false },
+      common: defaultMockCommonState,
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
       products: {
@@ -51,7 +55,7 @@ describe('Test PairFormSelectors', () => {
   test('test isPairDisabled() and return true as result', () => {
     // Arrange
     const mockState = {
-      common: { showFlowPanel: false },
+      common: defaultMockCommonState,
       pairForm: {
         ...customMockPairFormParamsState(
           {

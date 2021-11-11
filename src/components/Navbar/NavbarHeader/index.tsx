@@ -9,7 +9,7 @@ import { useLocation } from 'react-router-dom';
 import { PATH_PAIR, PATH_PURCHASE, PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { toggleFlowPanel } from '../../../redux/reducers/CommonSlice/commonSlice';
-import selectedShowFlowPanel from '../../../redux/reducers/CommonSlice/commonSliceSelectors';
+import { selectedShowFlowPanel } from '../../../redux/reducers/CommonSlice/commonSliceSelectors';
 import { INavbarHeader } from '../interfaces/NavbarInterfaces';
 import useStyles from './index.styles';
 
