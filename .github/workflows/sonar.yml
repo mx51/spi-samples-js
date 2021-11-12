@@ -51,7 +51,7 @@ jobs:
           -Dsonar.projectVersion=${{ env.TAG_NAME }}
 
     - name: Update Pull Request
-      uses: awilmore/tmp-composite-action@master
+      uses: mx51/sonar-results-action@master
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
