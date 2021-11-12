@@ -6,12 +6,15 @@ import {
   PRIMARY_ERROR_COLOR,
   PRIMARY_THEME_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
+import { setConfirmPairingFlow } from '../../redux/reducers/CommonSlice/commonSlice';
 import { IPairFormValues } from '../../redux/reducers/PairFormSlice/interfaces';
 import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import {
   updatePairingFlow,
   updatePairingStatus,
   updateTerminal,
+  updateTerminalBatteryLevel,
+  updateTerminalConfigurations,
   updateTxFlow,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
@@ -196,6 +199,13 @@ class SpiService {
           })
         );
 
+        if (detail?.ConfirmationCode && detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos)
+          this.dispatchAction(setConfirmPairingFlow(true)); // turn on "show confirm pairing flow message in flow panel"
+
+        if (detail?.ConfirmationCode && !detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos) {
+          instance.spi.PairingConfirmCode();
+        }
+
         if (detail.Message === 'Pairing Failed') {
           this.handleTerminalPairFailure(instanceId, detail.Message);
           this.removeTerminalInstance(instanceId);
@@ -237,6 +247,7 @@ class SpiService {
         // after terminal paired and when page refreshed, update terminal status
         if (instance.spiClient._currentStatus === SPI_PAIR_STATUS.PairedConnected) {
           this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.PairedConnected }));
+          instance.spiClient.GetTerminalStatus(); // for trigger to call TerminalStatusResponse()
         } else {
           this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
         }
@@ -246,6 +257,12 @@ class SpiService {
           updateTerminal({
             id: instanceId,
             spiClient: instance.spiClient,
+          })
+        );
+
+        this.dispatchAction(
+          updateTerminalConfigurations({
+            id: instanceId,
             pluginVersion: Data?.plugin_version,
             merchantId: Data?.merchant_id,
             terminalId: Data?.terminal_id,
@@ -260,13 +277,10 @@ class SpiService {
 
       // SPI Terminal Status Response Function
       instance.spiClient.TerminalStatusResponse = ({ Data }: Any) => {
-        this.updateTerminalStorage(instanceId, 'terminal_id', Data?.battery_level);
-
         // ensure current terminal redux store object is update to date
         this.dispatchAction(
-          updateTerminal({
+          updateTerminalBatteryLevel({
             id: instanceId,
-            spiClient: instance.spiClient,
             batteryLevel: Data?.battery_level,
           })
         );
@@ -340,6 +354,7 @@ class SpiService {
       };
 
       instance.spiClient.Start();
+      this.dispatchAction(setConfirmPairingFlow(false)); // turn off "show confirm pairing flow message in flow panel"
 
       return instance;
     } catch (error: Any) {

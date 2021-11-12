@@ -12,35 +12,81 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
         <div
           class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
         >
-          <button
-            aria-label="menu"
-            class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-4 MuiIconButton-colorInherit MuiIconButton-edgeStart"
-            data-testid="navbarMenuIcon"
-            name="menuIcon"
-            tabindex="0"
-            type="button"
+          <div
+            class="MuiBox-root MuiBox-root-7 makeStyles-navbar-4"
           >
-            <span
-              class="MuiIconButton-label"
+            <div
+              class="MuiBox-root MuiBox-root-8"
             >
-              <svg
-                aria-hidden="true"
-                class="MuiSvgIcon-root"
-                focusable="false"
-                viewBox="0 0 24 24"
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-5 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
               >
-                <path
-                  d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
                 />
+              </button>
+              <svg>
+                PrimaryLogoIcon.svg
               </svg>
-            </span>
-            <span
-              class="MuiTouchRipple-root"
-            />
-          </button>
-          <svg>
-            PrimaryLogoIcon.svg
-          </svg>
+            </div>
+            <div
+              class="MuiBox-root MuiBox-root-9"
+            >
+              <p
+                class="MuiTypography-root makeStyles-developerModeText-6 MuiTypography-body1"
+              >
+                Developer mode
+              </p>
+              <span
+                class="MuiSwitch-root"
+              >
+                <span
+                  aria-disabled="false"
+                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-10 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+                  data-test-id="developerModeSwitch"
+                >
+                  <span
+                    class="MuiIconButton-label"
+                  >
+                    <input
+                      class="PrivateSwitchBase-input-13 MuiSwitch-input"
+                      name="developerModeSwitch"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="MuiSwitch-thumb"
+                    />
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </span>
+                <span
+                  class="MuiSwitch-track"
+                />
+              </span>
+            </div>
+          </div>
         </div>
       </header>
     </div>

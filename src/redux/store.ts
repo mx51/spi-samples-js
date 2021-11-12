@@ -1,6 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import spiService from '../services/spiService';
 import { getLocalStorage } from '../utils/common/spi/common';
+import commonReducer from './reducers/CommonSlice/commonSlice';
 import pairFormReducer from './reducers/PairFormSlice/pairFormSlice';
 import productSlice from './reducers/ProductSlice/productSlice';
 import terminalReducer from './reducers/TerminalSlice/terminalsSlice';
@@ -21,6 +22,7 @@ export const store = configureStore({
       },
     }),
   reducer: {
+    common: commonReducer,
     pairForm: pairFormReducer,
     products: productSlice,
     terminals: terminalReducer,

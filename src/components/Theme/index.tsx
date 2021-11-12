@@ -4,6 +4,7 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import {
   BUTTON_RED_COLOR,
   DEFAULT_DARK_COLOR,
+  DEFAULT_DISABLED_BACKGROUND,
   DEFAULT_LIGHT_COLOR,
   FIELD_PRESSED_COLOR,
   HOVER_HIGHLIGHT_COLOR,
@@ -76,6 +77,7 @@ const theme = createTheme({
     },
     info: {
       main: FIELD_PRESSED_COLOR,
+      light: DEFAULT_DISABLED_BACKGROUND,
     },
     primary: {
       main: PRIMARY_THEME_COLOR,

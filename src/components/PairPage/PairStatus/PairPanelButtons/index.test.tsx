@@ -21,7 +21,6 @@ describe('Test PairPanelButtons', () => {
       pairForm: defaultEFTPOSBasedPairFormParams,
       terminal: {
         [mockSerialNumber]: {
-          flow: null,
           id: mockSerialNumber,
           pairingFlow: null,
           secret: null,

@@ -4,8 +4,6 @@ import TerminalList from '.';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultAAR } from '../../../definitions/constants/spiConfigs';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
-import { updatePairingStatus } from '../../../redux/reducers/TerminalSlice/terminalsSlice';
-import spiService from '../../../services/spiService';
 import mockWithRedux, { defaultMockTerminals, mockTerminalInstanceId } from '../../../utils/tests/common';
 
 jest.mock('../../../services/spiService');
@@ -19,6 +17,12 @@ const mockTerminalConfig: ITerminalProps = {
 };
 
 describe('Test <TerminalList />', () => {
+  let mockContainer: Any;
+
+  beforeEach(() => {
+    mockContainer = mockWithRedux(<TerminalList terminals={[mockTerminalConfig]} />);
+  });
+
   afterEach(cleanup);
 
   afterAll(() => {
@@ -26,44 +30,34 @@ describe('Test <TerminalList />', () => {
   });
 
   test('should match TerminalList snapshot test', () => {
-    // Arrange
-    const container = mockWithRedux(<TerminalList terminals={[mockTerminalConfig]} />);
-
     // Assert
-    expect(container).toMatchSnapshot();
+    expect(mockContainer).toMatchSnapshot();
   });
 
   test('should be able to click current un-pair terminal instance', () => {
     // Arrange
-    mockWithRedux(<TerminalList terminals={[mockTerminalConfig]} />);
     const terminalRecord = document.querySelector(`#terminal_${mockTerminalInstanceId}`) as Element;
+    const goToTerminalDetails = jest.fn();
 
     // Act
-    const dispatch = jest.fn().mockImplementation(() =>
-      updatePairingStatus({
-        id: mockTerminalInstanceId,
-        status: SPI_PAIR_STATUS.Unpaired,
-      })
-    );
-
     fireEvent.click(terminalRecord);
-
-    spiService.readTerminalInstance = jest.fn().mockReturnValue(() => ({
-      spiClient: {
-        Unpair: jest.fn(),
-      },
-    }));
-
-    spiService.spiTerminalUnPair = jest
-      .fn()
-      .mockImplementation(() => spiService.readTerminalInstance(mockTerminalInstanceId));
-
-    spiService.spiTerminalUnPair(mockTerminalInstanceId);
-    dispatch();
+    goToTerminalDetails();
 
     // Assert
-    expect(spiService.spiTerminalUnPair).toBeDefined();
-    expect(spiService.spiTerminalUnPair).toHaveBeenCalled();
-    expect(dispatch).toHaveBeenCalled();
+    expect(window.location.href.includes('/terminals/123-123-123')).toBeTruthy();
+  });
+
+  test('should not display any record if terminal number does not exist', () => {
+    // Arrange
+    const newMockTerminalConfig: ITerminalProps = {
+      ...mockTerminalConfig,
+      serialNumber: '',
+    };
+
+    const newMockContainer = mockWithRedux(<TerminalList terminals={[newMockTerminalConfig]} />);
+    const terminalRecord = newMockContainer.querySelector(`#terminal_${mockTerminalInstanceId}`) as Element;
+
+    // Assert
+    expect(terminalRecord).toBeNull();
   });
 });

@@ -18,6 +18,11 @@ export const mockSerialNumber = '222-222-222';
 
 export const mockTerminalInstanceId = '123-123-123';
 
+export const defaultMockCommonState = {
+  showFlowPanel: false,
+  acquireConfirmPairingFlow: false,
+};
+
 export const defaultEmptyMockPairFormParams = {
   acquirerCode: {
     value: '',
@@ -117,10 +122,38 @@ export const defaultMockTerminals = {
     flow: null,
     id: '',
     pairingFlow: null,
-    posVersion: null,
     secrets: null,
     settings: null, // not available during pair terminal stage
     status: SPI_PAIR_STATUS.Unpaired,
+    terminalStatus: '',
+    txFlow: null,
+    txMessage: null, // not available during pair terminal stage
+  },
+};
+
+export const pairedMockTerminals = {
+  [mockTerminalInstanceId]: {
+    acquirerCode: 'test',
+    autoAddress: false,
+    deviceAddress: defaultLocalIP,
+    posId: 'test',
+    secureWebSocket: true,
+    serialNumber: mockTerminalInstanceId,
+    testMode: true,
+    pluginVersion: '1.2.2',
+    posVersion: '1.2.3',
+    merchantId: '123456789',
+    terminalId: '987654321',
+    batteryLevel: '40',
+    flow: null,
+    id: mockTerminalInstanceId,
+    pairingFlow: null,
+    secrets: {
+      encKey: 'test-hash-01',
+      hmacKey: 'test-hash-02',
+    },
+    settings: null, // not available during pair terminal stage
+    status: SPI_PAIR_STATUS.PairedConnected,
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage

@@ -1,29 +1,17 @@
 import { IFormEventCheckbox, IFormEventValue } from '../../../components/PairPage/PairForm/interfaces';
 import {
-  SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_OPTION,
   TEXT_FORM_DEFAULT_VALUE,
-  TEXT_FORM_MODAL_CODE_TILL,
-  TEXT_FORM_MODAL_CODE_WESTPAC,
 } from '../../../definitions/constants/commonConfigs';
 import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
-
-export function disableProviderField(status: string, spiProviderValue: string): boolean {
-  return (
-    status === SPI_PAIR_STATUS.PairedConnecting ||
-    spiProviderValue === TEXT_FORM_MODAL_CODE_TILL ||
-    spiProviderValue === TEXT_FORM_MODAL_CODE_WESTPAC ||
-    spiProviderValue === TEXT_FORM_DEFAULT_VALUE
-  );
-}
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
 }
 
-function serialNumberFormatter(currentSerialNumber: string): string {
+export function serialNumberFormatter(currentSerialNumber: string): string {
   let formatSerialNumber = currentSerialNumber.replaceAll('-', '');
 
   if (formatSerialNumber.length > 3 && formatSerialNumber.length <= 6)
@@ -112,7 +100,7 @@ export const handlePaymentProviderFieldOnChange = (
 export const handlePaymentProviderFieldOnBlur = (
   dispatch: Any,
   event: IFormEventValue,
-  fieldRequiredValidator: (value: string) => boolean,
+  paymentProviderValidator: (value: string) => boolean,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
   dispatch(
@@ -121,7 +109,7 @@ export const handlePaymentProviderFieldOnBlur = (
       value: {
         value: event.target.value as string,
         option: TEXT_FORM_DEFAULT_VALUE,
-        isValid: fieldRequiredValidator(event.target.value as string),
+        isValid: paymentProviderValidator(event.target.value as string),
       },
     })
   );

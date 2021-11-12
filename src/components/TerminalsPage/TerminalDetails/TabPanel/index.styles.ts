@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) =>
           padding: theme.spacing(6, 2),
         },
         '& form': {
-          marginBottom: (flow: IFlowPanel) => (flow ? 0 : -theme.spacing(2)),
+          marginBottom: (showFlowPanel: IFlowPanel) => (showFlowPanel ? 0 : -theme.spacing(2)),
         },
       },
     },
@@ -48,8 +48,8 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
       pairStatusContainer: {
-        flexBasis: (flow: IFlowPanel) => (flow ? '100%' : '33.333333%'),
-        maxWidth: (flow: IFlowPanel) => (flow ? '100%' : '33.333333%'),
+        flexBasis: (showFlowPanel: IFlowPanel) => (showFlowPanel ? '100%' : '33.333333%'),
+        maxWidth: (showFlowPanel: IFlowPanel) => (showFlowPanel ? '100%' : '33.333333%'),
       },
     },
     [theme.breakpoints.down(600)]: {
@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme: Theme) =>
         },
       },
     },
-    // tab flow stylings
+    // tab showFlowPanel stylings
     text: {
       fontWeight: 300,
     },

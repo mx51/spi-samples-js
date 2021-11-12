@@ -6,11 +6,11 @@ export interface ITerminalProps {
   secureWebSocket: boolean;
   serialNumber: string;
   testMode: boolean;
-  pluginVersion: string;
-  posVersion: string | null;
-  merchantId: string;
-  terminalId: string;
-  batteryLevel: string;
+  pluginVersion?: string;
+  posVersion?: string;
+  merchantId?: string;
+  terminalId?: string;
+  batteryLevel?: string;
   flow: string | null;
   id: string;
   pairingFlow: IPairingFlow | null;
@@ -24,6 +24,10 @@ export interface ITerminalProps {
 
 export interface ITerminalState {
   [key: string]: ITerminalProps;
+}
+
+export interface ITerminal {
+  terminal?: ITerminalProps | null;
 }
 
 export interface ITerminalConfig {

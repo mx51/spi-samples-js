@@ -2,9 +2,7 @@ import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfa
 
 export interface TabPanelProps {
   children: React.ReactNode;
-  flow: boolean;
   index: number;
-  setFlow: () => void;
   subtitle: string;
   title: string;
   value: number;

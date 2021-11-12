@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent, screen } from '@testing-library/react';
+import { cleanup, fireEvent } from '@testing-library/react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import replaceAllInserter from 'string.prototype.replaceall';

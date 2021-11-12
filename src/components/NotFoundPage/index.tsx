@@ -13,7 +13,14 @@ const NotFound: React.FC = () => {
 
   return (
     <Layout>
-      <Grid alignItems="center" className={classes.root} container direction="column" spacing={0} justify="center">
+      <Grid
+        alignItems="center"
+        className={classes.root}
+        container
+        direction="column"
+        spacing={0}
+        justifyContent="center"
+      >
         <NotFoundImage />
         <Typography className={classes.title} component="h1" variant="h6">
           Page not found

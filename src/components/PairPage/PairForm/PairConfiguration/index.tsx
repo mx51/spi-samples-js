@@ -41,6 +41,7 @@ import {
 import {
   eftposAddressValidator,
   fieldRequiredValidator,
+  paymentProviderValidator,
   serialNumberValidator,
 } from '../../../../utils/validators/pairFormValidators';
 import CustomTextField from '../../../CustomTextField';
@@ -79,7 +80,9 @@ export default function PairConfiguration(): React.ReactElement {
                 }
                 value={acquirerCode.option}
               >
-                <MenuItem value={TEXT_FORM_DEFAULT_OPTION}>Payment provider</MenuItem>
+                <MenuItem value={TEXT_FORM_DEFAULT_OPTION} disabled>
+                  Payment provider
+                </MenuItem>
                 <MenuItem value={TEXT_FORM_MODAL_CODE_TILL}>Till Payments</MenuItem>
                 <MenuItem value={TEXT_FORM_MODAL_CODE_WESTPAC}>Westpac</MenuItem>
                 <MenuItem value={TEXT_FORM_DEFAULT_VALUE}>Other</MenuItem>
@@ -101,7 +104,7 @@ export default function PairConfiguration(): React.ReactElement {
               label={TEXT_FORM_DEFAULT_VALUE}
               margin="dense"
               onBlur={(event: IFormEventValue) =>
-                handlePaymentProviderFieldOnBlur(dispatch, event, fieldRequiredValidator, updatePairFormParams)
+                handlePaymentProviderFieldOnBlur(dispatch, event, paymentProviderValidator, updatePairFormParams)
               }
               onChange={(event: IFormEventValue) =>
                 handlePaymentProviderFieldOnChange(dispatch, event, updatePairFormParams)

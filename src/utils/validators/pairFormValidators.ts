@@ -3,6 +3,7 @@ import { TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE } from '../../definitions/co
 
 export const eftposIPAddressRegex = /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\:[0-9]{1,5})?$/;
 export const eftposAutoAddressRegex = /^[a-zA-Z0-9\.-]+$/;
+export const numberCharactersRegex = /^[a-zA-Z0-9]+$/;
 
 function eftposAddressValidator(addressType: string, value: string): boolean {
   const eftposRegex =
@@ -19,10 +20,25 @@ function fieldRequiredValidator(value: string): boolean {
   return value.length > 0;
 }
 
+function numberCharactersValidator(value: string): boolean {
+  return !!value.match(numberCharactersRegex);
+}
+
+function paymentProviderValidator(value: string): boolean {
+  return fieldRequiredValidator(value) && numberCharactersValidator(value);
+}
+
 function serialNumberValidator(value: string): boolean {
   const valueWithoutDash = value.replaceAll('-', '');
 
   return valueWithoutDash.length > 0 && valueWithoutDash.length === 9;
 }
 
-export { eftposAddressValidator, eftposIPAddressValidator, serialNumberValidator, fieldRequiredValidator };
+export {
+  eftposAddressValidator,
+  eftposIPAddressValidator,
+  numberCharactersValidator,
+  paymentProviderValidator,
+  serialNumberValidator,
+  fieldRequiredValidator,
+};

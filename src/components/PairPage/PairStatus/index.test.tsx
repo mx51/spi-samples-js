@@ -26,7 +26,7 @@ function setupContainer(
     dispatch: jest.fn(),
   };
 
-  return mockWithRedux(<PairStatus open={false} handleDrawerToggle={jest.fn()} />, customizedStore);
+  return mockWithRedux(<PairStatus />, customizedStore);
 }
 
 describe('Test <PairStatus />', () => {

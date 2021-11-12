@@ -291,6 +291,7 @@ test('should handle updatePairingFlow when empty state & unpaired', () => {
   const updatePairingFlowAction = {
     id: mockTerminalInstanceId,
     pairingFlow: mockPairingFlowResponse,
+    status: undefined,
   };
 
   // Assert
@@ -415,10 +416,6 @@ test('should handle updateTerminal', () => {
     secureWebSocket: updateTerminalAction.spiClient._forceSecureWebSockets,
     serialNumber: updateTerminalAction.spiClient._serialNumber,
     testMode: updateTerminalAction.spiClient._inTestMode,
-    pluginVersion: '-',
-    merchantId: '-',
-    terminalId: '-',
-    batteryLevel: '-',
     flow: updateTerminalAction.spiClient.CurrentFlow,
     id: updateTerminalAction.spiClient._serialNumber,
     pairingFlow: updateTerminalAction.spiClient.CurrentPairingFlowState,

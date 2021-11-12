@@ -35,7 +35,7 @@ export default makeStyles((theme: Theme) =>
           padding: theme.spacing(6, 2),
         },
         '& form': {
-          marginBottom: (flow: IFlowPanel) => (flow ? 0 : -theme.spacing(2)),
+          marginBottom: (showFlowPanel: IFlowPanel) => (showFlowPanel ? 0 : -theme.spacing(2)),
         },
       },
     },
@@ -46,11 +46,11 @@ export default makeStyles((theme: Theme) =>
         },
       },
       pairFormContainer: {
-        display: (flow: IFlowPanel) => (flow ? 'none' : 'block'),
+        display: (showFlowPanel: IFlowPanel) => (showFlowPanel ? 'none' : 'block'),
       },
       pairStatusContainer: {
-        flexBasis: (flow: IFlowPanel) => (flow ? '100%' : '33.333333%'),
-        maxWidth: (flow: IFlowPanel) => (flow ? '100%' : '33.333333%'),
+        flexBasis: (showFlowPanel: IFlowPanel) => (showFlowPanel ? '100%' : '33.333333%'),
+        maxWidth: (showFlowPanel: IFlowPanel) => (showFlowPanel ? '100%' : '33.333333%'),
       },
     },
     [theme.breakpoints.down(600)]: {
@@ -63,7 +63,7 @@ export default makeStyles((theme: Theme) =>
         },
       },
       pairFormContainer: {
-        display: (flow: IFlowPanel) => (flow ? 'none' : 'block'),
+        display: (showFlowPanel: IFlowPanel) => (showFlowPanel ? 'none' : 'block'),
         flexBasis: '100%',
         maxWidth: '100%',
         '&>div': {

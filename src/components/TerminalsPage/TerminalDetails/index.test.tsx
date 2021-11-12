@@ -3,7 +3,7 @@ import { cleanup, fireEvent } from '@testing-library/react';
 import TerminalDetails from '.';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
-import mockWithRedux, { defaultMockTerminals, mockTerminalInstanceId } from '../../../utils/tests/common';
+import mockWithRedux, { mockTerminalInstanceId, pairedMockTerminals } from '../../../utils/tests/common';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -12,9 +12,10 @@ jest.mock('react-router-dom', () => ({
   }),
 }));
 
-function setupContainer(terminals: ITerminalState = defaultMockTerminals) {
+function setupContainer(terminals: ITerminalState = pairedMockTerminals) {
   const customizedStore = {
     getState: () => ({
+      common: {},
       pairForm: {
         serialNumber: {
           value: mockTerminalInstanceId,
@@ -64,6 +65,7 @@ describe('Test <TerminalDetails />', () => {
 
     const customizedStore = {
       getState: () => ({
+        common: {},
         pairForm: {},
         products: [],
         terminals: {},

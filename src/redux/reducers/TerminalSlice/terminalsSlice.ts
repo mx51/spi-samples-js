@@ -47,6 +47,7 @@ const terminalsSlice = createSlice({
         txFlow: null,
         txMessage: null, // not available during pair terminal stage
       };
+
       state[id] = terminalConfigs;
     },
 
@@ -55,6 +56,7 @@ const terminalsSlice = createSlice({
       const currentState = state[id] || {};
       currentState.txMessage = null;
       currentState.txFlow = null;
+
       state[id] = currentState;
     },
 
@@ -67,6 +69,7 @@ const terminalsSlice = createSlice({
       const { id, deviceAddress } = action.payload;
       const currentState = state[id] || {};
       currentState.deviceAddress = deviceAddress;
+
       state[id] = currentState;
     },
 
@@ -74,10 +77,8 @@ const terminalsSlice = createSlice({
       const { id, pairingFlow } = action.payload;
       const currentState = state[id] || {};
       currentState.pairingFlow = pairingFlow;
-
       // can also dispatch updatePairingStatus from spiService when below condition is true
-      if (currentState.pairingFlow.Finished && !currentState.pairingFlow.Successful)
-        currentState.status = SpiStatus.Unpaired;
+      if (pairingFlow.Finished && !pairingFlow.Successful) currentState.status = SpiStatus.Unpaired;
 
       state[id] = currentState;
     },
@@ -101,7 +102,7 @@ const terminalsSlice = createSlice({
     },
 
     updateTerminal(state: ITerminalState, action: PayloadAction<Any>) {
-      const { id, spiClient, pluginVersion, merchantId, terminalId, batteryLevel } = action.payload;
+      const { id, spiClient } = action.payload;
 
       const response = {
         acquirerCode: spiClient._acquirerCode,
@@ -111,10 +112,6 @@ const terminalsSlice = createSlice({
         secureWebSocket: spiClient._forceSecureWebSockets,
         serialNumber: spiClient._serialNumber,
         testMode: spiClient._inTestMode,
-        pluginVersion: pluginVersion || '-',
-        merchantId: merchantId || '-',
-        terminalId: terminalId || '-',
-        batteryLevel: batteryLevel || '-',
         flow: spiClient.CurrentFlow,
         id: spiClient._serialNumber,
         pairingFlow: spiClient.CurrentPairingFlowState,
@@ -128,6 +125,26 @@ const terminalsSlice = createSlice({
       };
 
       state[id] = response;
+    },
+
+    updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<Any>) {
+      const { id, pluginVersion, merchantId, terminalId } = action.payload;
+
+      state[id] = {
+        ...state[id],
+        pluginVersion,
+        merchantId,
+        terminalId,
+      };
+    },
+
+    updateTerminalBatteryLevel(state: ITerminalState, action: PayloadAction<Any>) {
+      const { id, batteryLevel } = action.payload;
+
+      state[id] = {
+        ...state[id],
+        batteryLevel,
+      };
     },
 
     updateTerminalSerialNumber(state: ITerminalState, action: PayloadAction<IUpdateTerminalSerialNumberAction>) {
@@ -169,6 +186,8 @@ export const {
   updatePairingStatus,
   updateSetting,
   updateTerminal,
+  updateTerminalConfigurations,
+  updateTerminalBatteryLevel,
   updateTerminalSecret,
   updateTerminalSerialNumber,
   updateTxFlow,
