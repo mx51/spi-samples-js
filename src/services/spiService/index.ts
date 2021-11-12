@@ -440,6 +440,7 @@ class SpiService {
 
   spiTerminalUnPair(instanceId: string): void {
     this.readTerminalInstance(instanceId).spiClient.Unpair();
+    this.removeUnpairedTerminalLocalStorage(instanceId);
   }
 
   initiatePurchaseTransaction(
