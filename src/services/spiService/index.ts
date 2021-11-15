@@ -23,6 +23,12 @@ import { getLocalStorage, setLocalStorage } from '../../utils/common/spi/common'
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
 import { ITerminal, ITerminals } from '../interfaces';
 
+declare global {
+  interface Window {
+    Spi: Any;
+  }
+}
+
 class SpiService {
   dispatchAction: Any; // redux dispatch action
 
@@ -375,6 +381,8 @@ class SpiService {
 
       instance.spiClient.Start();
       this.dispatchAction(setConfirmPairingFlow(false)); // turn off "show confirm pairing flow message in flow panel"
+
+      window.Spi = instance; // export as window object
 
       return instance;
     } catch (error: Any) {
