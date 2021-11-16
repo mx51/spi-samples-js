@@ -16,7 +16,7 @@ import reducer, {
   updateTerminalSecret,
   updateTerminalSerialNumber,
   updateTxFlow,
-  updateTxFlowResponse,
+  updateTxFlowSettlementResponse,
   updateTxMessage,
 } from './terminalsSlice';
 
@@ -690,15 +690,15 @@ test('should handle updateTerminalBatteryLevel', () => {
   });
 });
 
-test('should handle updateTxFlowResponse', () => {
+test('should handle updateTxFlowSettlementResponse', () => {
   // Arrange
-  const updateTxFlowResponseAction = {
+  const updateTxFlowSettlementResponseAction = {
     id: mockTerminalInstanceId,
     responseData: mockReceiptRawResponse,
   };
 
   // Assert
-  expect(reducer(mockPreviousState(), updateTxFlowResponse(updateTxFlowResponseAction))).toEqual({
+  expect(reducer(mockPreviousState(), updateTxFlowSettlementResponse(updateTxFlowSettlementResponseAction))).toEqual({
     [mockTerminalInstanceId]: {
       ...mockPreviousState()[mockTerminalInstanceId],
       receipt: mockReceiptResponse,
@@ -706,16 +706,16 @@ test('should handle updateTxFlowResponse', () => {
   });
 });
 
-test('should handle updateTxFlowResponse for empty state', () => {
+test('should handle updateTxFlowSettlementResponse for empty state', () => {
   // Arrange
   const previousState = {};
-  const updateTxFlowResponseAction = {
+  const updateTxFlowSettlementResponseAction = {
     id: mockTerminalInstanceId,
     responseData: mockReceiptRawResponse,
   };
 
   // Assert
-  expect(reducer(previousState, updateTxFlowResponse(updateTxFlowResponseAction))).toEqual({
+  expect(reducer(previousState, updateTxFlowSettlementResponse(updateTxFlowSettlementResponseAction))).toEqual({
     [mockTerminalInstanceId]: {
       receipt: mockReceiptResponse,
     },

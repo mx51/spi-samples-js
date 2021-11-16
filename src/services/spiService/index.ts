@@ -15,7 +15,7 @@ import {
   updateTerminal,
   updateTerminalBatteryLevel,
   updateTerminalConfigurations,
-  updateTxFlowResponse,
+  updateTxFlowSettlementResponse,
   updateTxFlow,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
@@ -318,7 +318,7 @@ class SpiService {
         // when Response Data available, update transaction flow response data
         if (detail?.Response?.Data)
           this.dispatchAction(
-            updateTxFlowResponse({
+            updateTxFlowSettlementResponse({
               id: instanceId,
               responseData: detail.Response.Data,
             })

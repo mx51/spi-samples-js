@@ -162,7 +162,7 @@ const terminalsSlice = createSlice({
       state[id] = currentState;
     },
 
-    updateTxFlowResponse(state: ITerminalState, action: PayloadAction<IUpdateTerminalReceipt>) {
+    updateTxFlowSettlementResponse(state: ITerminalState, action: PayloadAction<IUpdateTerminalReceipt>) {
       const { id, responseData } = action.payload;
       const currentState = state[id] || {};
 
@@ -230,7 +230,7 @@ export const {
   updateTerminalBatteryLevel,
   updateTerminalSecret,
   updateTerminalSerialNumber,
-  updateTxFlowResponse,
+  updateTxFlowSettlementResponse,
   updateTxFlow,
   updateTxMessage,
 } = terminalsSlice.actions;
