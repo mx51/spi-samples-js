@@ -4,6 +4,7 @@ import { getLocalStorage } from '../utils/common/spi/common';
 import commonReducer from './reducers/CommonSlice/commonSlice';
 import pairFormReducer from './reducers/PairFormSlice/pairFormSlice';
 import productSlice from './reducers/ProductSlice/productSlice';
+import selectedTerminalReducer from './reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import terminalReducer from './reducers/TerminalSlice/terminalsSlice';
 
 const recordedTerminals = getLocalStorage('terminals');
@@ -26,6 +27,7 @@ export const store = configureStore({
     pairForm: pairFormReducer,
     products: productSlice,
     terminals: terminalReducer,
+    selectedTerminal: selectedTerminalReducer,
   },
   preloadedState: persistedState,
 });

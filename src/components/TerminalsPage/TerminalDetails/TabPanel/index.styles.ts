@@ -125,6 +125,9 @@ const useStyles = makeStyles((theme: Theme) =>
     preContent: {
       whiteSpace: 'pre-wrap',
     },
+    receiptBoxWrapper: {
+      padding: theme.spacing(2.5, 3, 3),
+    },
   })
 );
 

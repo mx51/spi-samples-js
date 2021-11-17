@@ -9,6 +9,8 @@ export const HOVER_HIGHLIGHT_COLOR = '#F5F5F5';
 export const DEFAULT_DARK_COLOR = '#000000';
 export const DEFAULT_LIGHT_COLOR = '#ffffff';
 export const DEFAULT_DISABLED_BACKGROUND = '#ffffff61';
+export const FONT_COLOR = '#7B7D85';
+
 // primary colors
 export const CHIP_BACKGROUND_SUCCESS_COLOR = '#E1F4EC';
 export const CHIP_FONT_SUCCESS_COLOR = '#1FB877';

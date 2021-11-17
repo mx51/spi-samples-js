@@ -15,6 +15,7 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
+
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -24,6 +25,8 @@ import {
   orderTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
+import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
+import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 import {
   pairedConnectedTerminalList,
@@ -43,18 +46,21 @@ function PayNow(): React.ReactElement {
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
-
   const terminals = useSelector(pairedConnectedTerminalList);
+  const selectedTerminal = useSelector(selectedTerminalIdSelector);
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
   };
 
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [selectedTerminal, setSelectedTerminal] = useState<string>('');
   const [totalAmount, setTotalAmount] = useState<number>(originalTotalAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+
+  function selectTerminal(terminalId: string) {
+    dispatch(updateSelectedTerminal(terminalId));
+  }
 
   return (
     <>
@@ -115,7 +121,7 @@ function PayNow(): React.ReactElement {
                     <ListItem key={terminal.id} dense disableGutters>
                       <ListItemIcon>
                         <Radio
-                          onClick={() => setSelectedTerminal(terminal.id)}
+                          onClick={() => selectTerminal(terminal.id)}
                           className={classes.radioBtn}
                           checked={terminal.id === selectedTerminal}
                           value={terminal.id}
@@ -151,6 +157,7 @@ function PayNow(): React.ReactElement {
                 variant="contained"
                 color="primary"
                 size="large"
+                disabled={!selectedTerminal}
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                 onClick={() => {
@@ -164,6 +171,7 @@ function PayNow(): React.ReactElement {
                 variant="contained"
                 color="primary"
                 size="large"
+                disabled={!selectedTerminal}
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                 onClick={() => {

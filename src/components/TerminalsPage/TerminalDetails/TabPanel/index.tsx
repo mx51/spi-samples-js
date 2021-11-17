@@ -84,12 +84,12 @@ export default function TabPanel({
                   }
                 >
                   {receiptToggle?.settlement && (
-                    <ReceiptPanel title="Settlement Receipt">
+                    <ReceiptPanel title="Settlement Receipt" css={classes.receiptBoxWrapper}>
                       <ReceiptContentDOM />
                     </ReceiptPanel>
                   )}
                   {receiptToggle?.settlementEnquiry && (
-                    <ReceiptPanel title="Settlement Enquiry Receipt">
+                    <ReceiptPanel title="Settlement Enquiry Receipt" css={classes.receiptBoxWrapper}>
                       <ReceiptContentDOM />
                     </ReceiptPanel>
                   )}

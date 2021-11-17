@@ -336,7 +336,16 @@ class SpiService {
               awaitingSignatureCheck: detail.AwaitingSignatureCheck,
               finished: detail.Finished,
               success: detail.Success,
-              response: '',
+              response: {
+                data: {
+                  rrn: detail?.Response?.Data.rrn,
+                  schemeAppName: detail?.Response?.Data.scheme_app_name as string,
+                  schemeName: detail?.Response?.Data.scheme_name,
+                  merchantReceipt: detail?.Response?.Data.merchant_receipt,
+                  transactionType: detail?.Response?.Data.transaction_Type,
+                  hostResponseText: detail?.Response?.Data.host_response_text,
+                },
+              },
               signatureRequiredMessage: detail.SignatureRequiredMessage,
               request: {
                 id: detail.Request.Id,
@@ -346,8 +355,8 @@ class SpiService {
                   purchaseAmount: detail.Request.Data.purchase_amount,
                   tipAmount: detail.Request.Data.tip_amount,
                   cashAmount: detail.Request.Data.cash_amount,
-                  promptForCashout: detail.Request.prompt_for_cashout,
-                  surchargeAmount: detail.Request.surcharge_amount,
+                  promptForCashout: detail.Request.Data.prompt_for_cashout,
+                  surchargeAmount: detail.Request.Data.surcharge_amount,
                   promptForCustomerCopy: false,
                   printForSignatureRequiredTransactions: false,
                   printMerchantCopy: false,

@@ -2,7 +2,10 @@ import React from 'react';
 import { Button, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
+import { Link as LinkRouter } from 'react-router-dom';
+import { PATH_ORDER_FINISHED } from '../../definitions/constants/routerConfigs';
 import useStyles from './index.styles';
+
 import { TransactionProgressModalProps } from './interfaces';
 
 function TransactionProgressModal({
@@ -10,7 +13,6 @@ function TransactionProgressModal({
   isFinished,
   isSuccess,
   onCancelTransaction,
-  onDone,
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
   return (
@@ -72,7 +74,13 @@ function TransactionProgressModal({
             Cancel transaction
           </Button>
         ) : (
-          <Button color="primary" variant="contained" onClick={onDone} className={classes.modalBtn}>
+          <Button
+            color="primary"
+            variant="contained"
+            component={LinkRouter}
+            to={PATH_ORDER_FINISHED}
+            className={classes.modalBtn}
+          >
             Done
           </Button>
         )}

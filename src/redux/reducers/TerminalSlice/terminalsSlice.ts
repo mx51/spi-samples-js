@@ -204,6 +204,8 @@ const terminalsSlice = createSlice({
     updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
       const { id, txFlow } = action.payload;
       const currentState = state[id] || {};
+      console.log('txFlow is', JSON.stringify(txFlow));
+
       currentState.txFlow = txFlow;
       state[id] = currentState;
     },

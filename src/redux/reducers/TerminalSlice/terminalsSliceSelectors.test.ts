@@ -5,6 +5,7 @@ import {
   defaultMockTerminals,
   mockDefaultProducts,
   mockTerminalInstanceId,
+  defaultMockSelectedTerminals,
 } from '../../../utils/tests/common';
 import {
   terminalList,
@@ -18,6 +19,7 @@ const mockStoreState = {
   pairForm: defaultMockPairFormParams,
   products: mockDefaultProducts,
   terminals: defaultMockTerminals,
+  selectedTerminal: defaultMockSelectedTerminals,
 };
 
 describe('Test terminals slice selectors', () => {
@@ -125,6 +127,7 @@ describe('Test terminals slice selectors', () => {
           posVersion: '',
         },
       },
+      selectedTerminal: { selectedTerminalId: '' },
     };
 
     expect(pairedConnectedTerminalList(state)).toEqual([

@@ -46,6 +46,7 @@ describe('Test PairFormSelectors', () => {
         surchargeAmount: 0,
         products: [],
       },
+      selectedTerminal: { selectedTerminalId: '' },
     };
 
     // Assert
@@ -74,6 +75,7 @@ describe('Test PairFormSelectors', () => {
         surchargeAmount: 0,
         products: [],
       },
+      selectedTerminal: { selectedTerminalId: '' },
     };
 
     // Assert

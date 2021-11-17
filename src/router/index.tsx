@@ -11,6 +11,7 @@ import {
   PATH_PURCHASE,
   PATH_REFUND,
   PATH_TERMINALS,
+  PATH_ORDER_FINISHED,
 } from '../definitions/constants/routerConfigs';
 
 const FleetSettings = React.lazy(() => import('../components/FleetSettingsPage'));
@@ -21,6 +22,7 @@ const Purchase = React.lazy(() => import('../components/PurchasePage'));
 const Refund = React.lazy(() => import('../components/RefundPage'));
 const Terminals = React.lazy(() => import('../components/TerminalsPage'));
 const TerminalsDetails = React.lazy(() => import('../components/TerminalsPage/TerminalDetails'));
+const OrderFinished = React.lazy(() => import('../components/OrderFinished'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 
 const AppRoutes = (): React.ReactElement => (
@@ -36,6 +38,7 @@ const AppRoutes = (): React.ReactElement => (
         <Route exact path={PATH_TERMINALS} component={Terminals} />
         <Route exact path={`${PATH_TERMINALS}/:id`} component={TerminalsDetails} />
         <Route exact path={PATH_PAY_NOW} component={PayNow} />
+        <Route exact path={PATH_ORDER_FINISHED} component={OrderFinished} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
