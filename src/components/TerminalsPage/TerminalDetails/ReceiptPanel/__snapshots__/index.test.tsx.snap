@@ -3,13 +3,18 @@
 exports[`Test <ReceiptPanel /> should match ReceiptPanel snapshot test 1`] = `
 <div>
   <div
-    class="MuiGrid-root makeStyles-root-1"
+    class="MuiBox-root MuiBox-root-3 makeStyles-receiptBoxWrapper-1"
   >
-    <h1
-      class="MuiTypography-root MuiTypography-h6"
+    <div
+      class="MuiBox-root MuiBox-root-4 makeStyles-receiptBox-2"
     >
-      Receipt
-    </h1>
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Receipt
+      </h1>
+      <pre />
+    </div>
   </div>
 </div>
 `;

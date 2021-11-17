@@ -45,6 +45,8 @@ export const defaultEmptyMockPairFormParams = {
   testMode: true,
 };
 
+export const defaultMockSelectedTerminals = { selectedTerminalId: 'test' };
+
 export const defaultMockPairFormParams = {
   acquirerCode: {
     value: 'test',

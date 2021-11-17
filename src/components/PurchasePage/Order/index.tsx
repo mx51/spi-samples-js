@@ -18,6 +18,7 @@ import {
   addTipAmount,
   clearAllProducts,
 } from '../../../redux/reducers/ProductSlice/productSlice';
+import { isPaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
 import KeyPad from '../../KeyPad';
 import OrderLineItem from '../../OrderLineItem';
@@ -32,9 +33,9 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
 
   const dispatch = useDispatch();
 
+  const isTerminalPaired: boolean = useSelector(isPaired);
   const products: Array<IProductSelector> = useSelector(productsSelector);
   const subtotalAmount: number = useSelector(productSubTotalSelector);
-
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
@@ -158,6 +159,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
             variant="contained"
             color="primary"
             size="large"
+            disabled={!isTerminalPaired}
             classes={{ root: classes.payNowBtn, label: classes.actionBtnLabel }}
             component={LinkRouter}
             to={PATH_PAY_NOW}

@@ -56,7 +56,16 @@ export interface ITxFlow {
   awaitingSignatureCheck: boolean;
   finished: boolean;
   success: string;
-  response: string | null;
+  response: {
+    data: {
+      rrn: string;
+      schemeAppName: string;
+      schemeName: string;
+      merchantReceipt: string;
+      transactionType: string;
+      hostResponseText: string;
+    };
+  };
   signatureRequiredMessage: string | null;
   request: {
     id: string;
@@ -76,6 +85,7 @@ export interface ITxFlow {
       merchantReceiptHeader: string;
       merchantReceiptFooter: string;
     };
+
     posId: string;
     decryptedJson: string;
   };
