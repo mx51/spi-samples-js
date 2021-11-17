@@ -9,7 +9,7 @@ export function initiatePurchase(
   promptForCashout: boolean
 ): void {
   const posRefId = `purchase-${new Date().toISOString()}`;
-  const res = spiService.initiatePurchaseTransaction(
+  spiService.initiatePurchaseTransaction(
     instanceId,
     posRefId,
     purchaseAmount,
@@ -18,11 +18,9 @@ export function initiatePurchase(
     promptForCashout,
     surchargeAmount
   );
-  console.log('res', res);
 }
 
 export function initiateMotoPurchase(instanceId: string, purchaseAmount: number, surchargeAmount: number): void {
   const posRefId = `moto-${new Date().toISOString()}`;
-  const res = spiService.initiateMotoPurchaseTransaction(instanceId, posRefId, purchaseAmount, surchargeAmount);
-  console.log('res', res);
+  spiService.initiateMotoPurchaseTransaction(instanceId, posRefId, purchaseAmount, surchargeAmount);
 }
