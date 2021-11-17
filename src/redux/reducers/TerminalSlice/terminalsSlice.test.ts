@@ -95,7 +95,16 @@ function mockTxFlow(): ITxFlow {
     awaitingSignatureCheck: true,
     finished: true,
     success: 'string',
-    response: 'string',
+    response: {
+      data: {
+        rrn: 'string',
+        schemeAppName: 'string',
+        schemeName: 'string',
+        merchantReceipt: 'string',
+        transactionType: 'string',
+        hostResponseText: 'string',
+      },
+    },
     signatureRequiredMessage: 'string',
     request: {
       id: 'string',

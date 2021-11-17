@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
       textAlign: 'center',
       display: 'flex',
       alignItems: 'center',
-      height: `calc(100vh - 48px)`,
+      height: `calc(100vh - 60px)`,
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
