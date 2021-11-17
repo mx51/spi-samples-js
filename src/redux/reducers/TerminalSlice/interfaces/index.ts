@@ -160,7 +160,43 @@ export interface IClearTransactionAction {
 }
 export interface IUpdateTxFlowAction {
   id: string;
-  txFlow: ITxFlow | null;
+  txFlow: ITxFlowRawProps;
+}
+
+export interface ITxFlowRawProps {
+  PosRefId: string;
+  Id: string;
+  Type: string;
+  DisplayMessage: string;
+  AwaitingSignatureCheck: boolean;
+  Finished: boolean;
+  Success: string;
+  Response: {
+    Data: {
+      rrn: string;
+      scheme_app_name: string;
+      scheme_name: string;
+      merchant_receipt: string;
+      transaction_Type: string;
+      host_response_text: string;
+    };
+  };
+  SignatureRequiredMessage: string | null;
+  Request: {
+    Id: string;
+    EventName: string;
+    Data: {
+      pos_ref_id: string;
+      purchase_amount: number;
+      tip_amount: number;
+      cash_amount: number;
+      prompt_for_cashout: boolean;
+      surcharge_amount: number;
+    };
+
+    posId: string;
+    decryptedJson: string;
+  };
 }
 export interface IUpdateSettingAction {
   id: string;

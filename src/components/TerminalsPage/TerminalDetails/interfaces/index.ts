@@ -30,5 +30,5 @@ export interface IAboutTerminal {
 export interface IReceiptPanel {
   children?: React.ReactNode;
   title: string;
-  css: Any;
+  css: string;
 }

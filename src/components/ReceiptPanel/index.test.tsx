@@ -15,7 +15,7 @@ describe('Test <ReceiptPanel />', () => {
 
   beforeEach(() => {
     mockContainer = mockWithRedux(
-      <ReceiptPanel title="Mock Receipt" css={{}}>
+      <ReceiptPanel title="Mock Receipt" css="{}">
         <pre>{mockReceiptContent}</pre>
       </ReceiptPanel>
     );
@@ -50,7 +50,7 @@ describe('Test <ReceiptPanel />', () => {
       dispatch: jest.fn(),
     };
     const newMockContainer = mockWithRedux(
-      <ReceiptPanel title="Mock Receipt" css={{}}>
+      <ReceiptPanel title="Mock Receipt" css="{}">
         <pre>{mockReceiptContent}</pre>
       </ReceiptPanel>,
       customizedStore
@@ -83,7 +83,7 @@ describe('Test <ReceiptPanel />', () => {
       dispatch: jest.fn(),
     };
     const newMockContainer = mockWithRedux(
-      <ReceiptPanel title="Mock Receipt" css={{}}>
+      <ReceiptPanel title="Mock Receipt" css="{}">
         <pre>{fetchingText}</pre>
       </ReceiptPanel>,
       customizedStore

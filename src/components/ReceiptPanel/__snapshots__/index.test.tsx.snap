@@ -3,7 +3,7 @@
 exports[`Test <ReceiptPanel /> should match ReceiptPanel snapshot test 1`] = `
 <div>
   <div
-    class="MuiGrid-root"
+    class="MuiGrid-root {}"
   >
     <div
       class="MuiBox-root MuiBox-root-1"

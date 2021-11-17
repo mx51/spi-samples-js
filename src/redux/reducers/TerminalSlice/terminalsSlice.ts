@@ -202,11 +202,52 @@ const terminalsSlice = createSlice({
     },
 
     updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
-      const { id, txFlow } = action.payload;
+      const { id, txFlow: detail } = action.payload;
       const currentState = state[id] || {};
-      console.log('txFlow is', JSON.stringify(txFlow));
+      const txFlowDetails = {
+        posRefId: detail.PosRefId,
+        id: detail.Id,
+        type: detail.Type,
+        displayMessage: detail.DisplayMessage,
+        amountCents: 0,
+        awaitingSignatureCheck: detail.AwaitingSignatureCheck,
+        finished: detail.Finished,
+        success: detail.Success,
+        response: {
+          data: {
+            rrn: detail?.Response?.Data.rrn,
+            schemeAppName: detail?.Response?.Data.scheme_app_name as string,
+            schemeName: detail?.Response?.Data.scheme_name,
+            merchantReceipt: detail?.Response?.Data.merchant_receipt,
+            transactionType: detail?.Response?.Data.transaction_Type,
+            hostResponseText: detail?.Response?.Data.host_response_text,
+          },
+        },
+        signatureRequiredMessage: detail.SignatureRequiredMessage,
+        request: {
+          id: detail.Request.Id,
+          eventName: detail.Request.EventName,
+          data: {
+            posRefId: detail.Request.Data.pos_ref_id,
+            purchaseAmount: detail.Request.Data.purchase_amount,
+            tipAmount: detail.Request.Data.tip_amount,
+            cashAmount: detail.Request.Data.cash_amount,
+            promptForCashout: detail.Request.Data.prompt_for_cashout,
+            surchargeAmount: detail.Request.Data.surcharge_amount,
+            promptForCustomerCopy: false,
+            printForSignatureRequiredTransactions: false,
+            printMerchantCopy: false,
+            customerReceiptHeader: '',
+            customerReceiptFooter: '',
+            merchantReceiptHeader: '',
+            merchantReceiptFooter: '',
+          },
+          posId: '',
+          decryptedJson: '',
+        },
+      };
 
-      currentState.txFlow = txFlow;
+      currentState.txFlow = txFlowDetails;
       state[id] = currentState;
     },
 
