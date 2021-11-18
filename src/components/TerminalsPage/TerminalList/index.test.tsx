@@ -30,8 +30,12 @@ describe('Test <TerminalList />', () => {
   });
 
   test('should match TerminalList snapshot test', () => {
+    // Arrange
+    const terminalNotConnectedClass = 'makeStyles-unclickable';
+
     // Assert
     expect(mockContainer).toMatchSnapshot();
+    expect(mockContainer.innerHTML.includes(terminalNotConnectedClass)).toBeTruthy();
   });
 
   test('should be able to click current un-pair terminal instance', () => {
@@ -59,5 +63,44 @@ describe('Test <TerminalList />', () => {
 
     // Assert
     expect(terminalRecord).toBeNull();
+  });
+
+  test('should be unclickable when terminal status is unpaired', () => {
+    // Arrange
+    const terminalConnectedClass = 'makeStyles-link';
+    const newNockTerminalConfig = {
+      ...mockTerminalConfig,
+      status: SPI_PAIR_STATUS.PairedConnected,
+    };
+    const newMockContainer = mockWithRedux(<TerminalList terminals={[newNockTerminalConfig]} />);
+
+    // Assert
+    expect(newMockContainer.innerHTML.includes(terminalConnectedClass)).toBeTruthy();
+  });
+
+  test('should show chipPending classname when terminal status is PairedConnecting', () => {
+    // Arrange
+    const chipPendingClass = 'chipPending';
+    const newNockTerminalConfig = {
+      ...mockTerminalConfig,
+      status: SPI_PAIR_STATUS.PairedConnecting,
+    };
+    const newMockContainer = mockWithRedux(<TerminalList terminals={[newNockTerminalConfig]} />);
+
+    // Assert
+    expect(newMockContainer.innerHTML.includes(chipPendingClass)).toBeTruthy();
+  });
+
+  test('should show chipUnpaired classname when terminal status is unknown', () => {
+    // Arrange
+    const chipUnpairedClass = 'chipUnpaired';
+    const newNockTerminalConfig = {
+      ...mockTerminalConfig,
+      status: 'Unknown Status',
+    };
+    const newMockContainer = mockWithRedux(<TerminalList terminals={[newNockTerminalConfig]} />);
+
+    // Assert
+    expect(newMockContainer.innerHTML.includes(chipUnpairedClass)).toBeTruthy();
   });
 });

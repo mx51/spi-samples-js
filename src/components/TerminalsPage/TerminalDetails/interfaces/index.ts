@@ -1,4 +1,10 @@
+import React from 'react';
 import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfaces';
+
+export interface IReceiptToggles {
+  settlement: boolean;
+  settlementEnquiry: boolean;
+}
 
 export interface TabPanelProps {
   children: React.ReactNode;
@@ -6,7 +12,7 @@ export interface TabPanelProps {
   subtitle: string;
   title: string;
   value: number;
-  receiptToggle?: boolean;
+  receiptToggle?: IReceiptToggles;
   terminal: ITerminalProps | null;
 }
 
@@ -16,7 +22,13 @@ export interface ITerminalConfigurationConstants {
 }
 
 export interface IAboutTerminal {
-  receiptToggle: boolean;
-  setReceiptToggle: (receiptToggle: boolean) => void;
+  receiptToggle: IReceiptToggles;
+  setReceiptToggle: (receiptToggle: IReceiptToggles) => void;
   terminal: ITerminalProps;
+}
+
+export interface IReceiptPanel {
+  children?: React.ReactNode;
+  title: string;
+  css: string;
 }

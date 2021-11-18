@@ -14,6 +14,7 @@ export interface ITerminalProps {
   flow: string | null;
   id: string;
   pairingFlow: IPairingFlow | null;
+  receipt?: ITerminalReceiptFormatProps;
   secrets: ISecrets | null;
   settings: ISettings | null;
   status: string;
@@ -159,7 +160,43 @@ export interface IClearTransactionAction {
 }
 export interface IUpdateTxFlowAction {
   id: string;
-  txFlow: ITxFlow | null;
+  txFlow: ITxFlowRawProps;
+}
+
+export interface ITxFlowRawProps {
+  PosRefId: string;
+  Id: string;
+  Type: string;
+  DisplayMessage: string;
+  AwaitingSignatureCheck: boolean;
+  Finished: boolean;
+  Success: string;
+  Response: {
+    Data: {
+      rrn: string;
+      scheme_app_name: string;
+      scheme_name: string;
+      merchant_receipt: string;
+      transaction_Type: string;
+      host_response_text: string;
+    };
+  };
+  SignatureRequiredMessage: string | null;
+  Request: {
+    Id: string;
+    EventName: string;
+    Data: {
+      pos_ref_id: string;
+      purchase_amount: number;
+      tip_amount: number;
+      cash_amount: number;
+      prompt_for_cashout: boolean;
+      surcharge_amount: number;
+    };
+
+    posId: string;
+    decryptedJson: string;
+  };
 }
 export interface IUpdateSettingAction {
   id: string;
@@ -168,4 +205,80 @@ export interface IUpdateSettingAction {
 export interface IUpdateTxMessage {
   id: string;
   txMessage: ITxMessage;
+}
+
+export interface IUpdateTerminalReceipt {
+  id: string;
+  responseData: ITerminalReceiptRawProps;
+}
+
+export interface ITerminalReceiptRawProps {
+  accumulated_settle_by_acquirer_count: string;
+  accumulated_settle_by_acquirer_value: string;
+  accumulated_total_count: string;
+  accumulated_total_value: string;
+  bank_date: string;
+  bank_time: string;
+  error_detail: string;
+  error_reason: string;
+  host_response_code: string;
+  host_response_text: string;
+  merchant_acquirer: string;
+  merchant_address: string;
+  merchant_city: string;
+  merchant_country: string;
+  merchant_name: string;
+  merchant_postcode: string;
+  merchant_receipt: string;
+  merchant_receipt_printed: boolean;
+  schemes: Array<IReceiptSchemes>;
+  settlement_period_end_date: string;
+  settlement_period_end_time: string;
+  settlement_period_start_date: string;
+  settlement_period_start_time: string;
+  settlement_triggered_date: string;
+  settlement_triggered_time: string;
+  stan: string;
+  success: boolean;
+  terminal_id: string;
+  transaction_range: string;
+}
+
+export interface ITerminalReceiptFormatProps {
+  accumulatedSettleByAcquirerCount: string;
+  accumulatedSettleByAcquirerValue: string;
+  accumulatedTotalCount: string;
+  accumulatedTotalValue: string;
+  bankDate: string;
+  bankTime: string;
+  errorDetail: string;
+  errorReason: string;
+  hostResponseCode: string;
+  hostResponseText: string;
+  merchantAcquirer: string;
+  merchantAddress: string;
+  merchantCity: string;
+  merchantCountry: string;
+  merchantName: string;
+  merchantPostcode: string;
+  merchantReceipt: string;
+  merchantReceiptPrinted: boolean;
+  schemes: Array<IReceiptSchemes>;
+  settlementPeriodEndDate: string;
+  settlementPeriodEndTime: string;
+  settlementPeriodStartDate: string;
+  settlementPeriodStartTime: string;
+  settlementTriggeredDate: string;
+  settlementTriggeredTime: string;
+  stan: string;
+  success: boolean;
+  terminalId: string;
+  transactionRange: string;
+}
+
+export interface IReceiptSchemes {
+  scheme_name: string;
+  settle_by_acquirer: string;
+  total_count: string;
+  total_value: string;
 }

@@ -8,7 +8,6 @@ exports[`Test <FlowPanel /> should match FlowPanel snapshot test 1`] = `
   >
     <div
       class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-2 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
-      style="visibility: hidden; webkit-transform: translateX(1024px) translateX(0px); transform: translateX(1024px) translateX(0px);"
     >
       <div
         class="MuiBox-root MuiBox-root-6 makeStyles-flowBoxWrapper-3"

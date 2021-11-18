@@ -1,6 +1,12 @@
 import { ITerminalConfigurationConstants } from '../../components/TerminalsPage/TerminalDetails/interfaces';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 
+export enum TxFlowState {
+  Unknown = 'Unknown',
+  Success = 'Success',
+  Failed = 'Failed',
+}
+
 export const terminalConfigurationsPartOne = (terminal: ITerminalProps): Array<ITerminalConfigurationConstants> => [
   {
     title: 'Merchant ID',

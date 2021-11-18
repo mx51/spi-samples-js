@@ -10,6 +10,7 @@ import {
   IUpdatePairingFlowAction,
   IUpdatePairingStatusAction,
   IUpdateSettingAction,
+  IUpdateTerminalReceipt,
   IUpdateTerminalSecretAction,
   IUpdateTerminalSerialNumberAction,
   IUpdateTxFlowAction,
@@ -161,12 +162,92 @@ const terminalsSlice = createSlice({
       state[id] = currentState;
     },
 
-    updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
-      const { id, txFlow } = action.payload;
+    updateTxFlowSettlementResponse(state: ITerminalState, action: PayloadAction<IUpdateTerminalReceipt>) {
+      const { id, responseData } = action.payload;
       const currentState = state[id] || {};
-      console.log('txFlow is', JSON.stringify(txFlow));
 
-      currentState.txFlow = txFlow;
+      currentState.receipt = {
+        accumulatedSettleByAcquirerCount: responseData?.accumulated_settle_by_acquirer_count,
+        accumulatedSettleByAcquirerValue: responseData?.accumulated_settle_by_acquirer_value,
+        accumulatedTotalCount: responseData?.accumulated_total_count,
+        accumulatedTotalValue: responseData?.accumulated_total_value,
+        bankDate: responseData?.bank_date,
+        bankTime: responseData?.bank_time,
+        errorDetail: responseData?.error_detail,
+        errorReason: responseData?.error_reason,
+        hostResponseCode: responseData?.host_response_code,
+        hostResponseText: responseData?.host_response_text,
+        merchantAcquirer: responseData?.merchant_acquirer,
+        merchantAddress: responseData?.merchant_address,
+        merchantCity: responseData?.merchant_city,
+        merchantCountry: responseData?.merchant_country,
+        merchantName: responseData?.merchant_name,
+        merchantPostcode: responseData?.merchant_postcode,
+        merchantReceipt: responseData?.merchant_receipt,
+        merchantReceiptPrinted: responseData?.merchant_receipt_printed,
+        schemes: responseData?.schemes,
+        settlementPeriodEndDate: responseData?.settlement_period_end_date,
+        settlementPeriodEndTime: responseData?.settlement_period_end_time,
+        settlementPeriodStartDate: responseData?.settlement_period_start_date,
+        settlementPeriodStartTime: responseData?.settlement_period_start_time,
+        settlementTriggeredDate: responseData?.settlement_triggered_date,
+        settlementTriggeredTime: responseData?.settlement_triggered_time,
+        stan: responseData?.stan,
+        success: responseData?.success,
+        terminalId: responseData?.terminal_id,
+        transactionRange: responseData?.transaction_range,
+      };
+
+      state[id] = currentState;
+    },
+
+    updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
+      const { id, txFlow: detail } = action.payload;
+      const currentState = state[id] || {};
+      const txFlowDetails = {
+        posRefId: detail.PosRefId,
+        id: detail.Id,
+        type: detail.Type,
+        displayMessage: detail.DisplayMessage,
+        amountCents: 0,
+        awaitingSignatureCheck: detail.AwaitingSignatureCheck,
+        finished: detail.Finished,
+        success: detail.Success,
+        response: {
+          data: {
+            rrn: detail?.Response?.Data.rrn,
+            schemeAppName: detail?.Response?.Data.scheme_app_name as string,
+            schemeName: detail?.Response?.Data.scheme_name,
+            merchantReceipt: detail?.Response?.Data.merchant_receipt,
+            transactionType: detail?.Response?.Data.transaction_Type,
+            hostResponseText: detail?.Response?.Data.host_response_text,
+          },
+        },
+        signatureRequiredMessage: detail.SignatureRequiredMessage,
+        request: {
+          id: detail.Request.Id,
+          eventName: detail.Request.EventName,
+          data: {
+            posRefId: detail.Request.Data.pos_ref_id,
+            purchaseAmount: detail.Request.Data.purchase_amount,
+            tipAmount: detail.Request.Data.tip_amount,
+            cashAmount: detail.Request.Data.cash_amount,
+            promptForCashout: detail.Request.Data.prompt_for_cashout,
+            surchargeAmount: detail.Request.Data.surcharge_amount,
+            promptForCustomerCopy: false,
+            printForSignatureRequiredTransactions: false,
+            printMerchantCopy: false,
+            customerReceiptHeader: '',
+            customerReceiptFooter: '',
+            merchantReceiptHeader: '',
+            merchantReceiptFooter: '',
+          },
+          posId: '',
+          decryptedJson: '',
+        },
+      };
+
+      currentState.txFlow = txFlowDetails;
       state[id] = currentState;
     },
 
@@ -192,6 +273,7 @@ export const {
   updateTerminalBatteryLevel,
   updateTerminalSecret,
   updateTerminalSerialNumber,
+  updateTxFlowSettlementResponse,
   updateTxFlow,
   updateTxMessage,
 } = terminalsSlice.actions;

@@ -1,7 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import Loading from '../components/Loading';
-import PayNow from '../components/PayNow';
 import {
   PATH_FLEET_SETTINGS,
   PATH_PAIR,
@@ -24,6 +23,7 @@ const Terminals = React.lazy(() => import('../components/TerminalsPage'));
 const TerminalsDetails = React.lazy(() => import('../components/TerminalsPage/TerminalDetails'));
 const OrderFinished = React.lazy(() => import('../components/OrderFinished'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
+const PayNow = React.lazy(() => import('../components/PayNow'));
 
 const AppRoutes = (): React.ReactElement => (
   <Router>

@@ -11,7 +11,7 @@ import {
   defaultMockPairFormParams,
   mockTerminalInstanceId,
 } from '../../../utils/tests/common';
-import reducer, { updatePairFormParams } from './pairFormSlice';
+import reducer, { readTerminalPairError, updatePairFormParams } from './pairFormSlice';
 
 const mockSerialNumber = '222-222-222';
 const mockAar = defaultAAR;
@@ -19,7 +19,7 @@ const mockAar = defaultAAR;
 describe('Test pairFormSlice', () => {
   afterEach(cleanup);
 
-  test('Test updatePairFormParams() form params state value update', () => {
+  test('should form params state value updated when calling updatePairFormParams()', () => {
     // Arrange
     const mockFormParams = [
       { key: 'acquirerCode', value: { value: 'test', option: TEXT_FORM_DEFAULT_VALUE, isValid: true } },
@@ -116,5 +116,22 @@ describe('Test pairFormSlice', () => {
 
     // Assert
     expect(mockInitialState.addressType).toBe(TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE);
+  });
+
+  test('should return error state when calling readTerminalPairError()', () => {
+    // Arrange
+    const mockErrorState = {
+      isShown: true,
+      message: 'Mock error message ..',
+    };
+    const currentMockPairFormState = {
+      ...defaultMockPairFormParams,
+      error: mockErrorState,
+    };
+
+    // Assert
+    expect(reducer(defaultMockPairFormParams, readTerminalPairError(mockErrorState))).toMatchObject(
+      currentMockPairFormState
+    );
   });
 });

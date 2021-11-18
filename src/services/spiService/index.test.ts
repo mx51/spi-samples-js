@@ -6,6 +6,7 @@ import { updatePairingStatus } from '../../redux/reducers/TerminalSlice/terminal
 import { setLocalStorage } from '../../utils/common/spi/common';
 import {
   defaultMockPairFormParams,
+  mockPosRefId,
   mockSpiClient,
   mockTerminalInstance,
   mockTerminalInstanceId,
@@ -289,5 +290,41 @@ describe('Test SpiService functionalities', () => {
 
     // Assert
     expect(mockSpiTerminalUnPair).toHaveBeenCalled();
+  });
+
+  test('test function initTxSettlement()', () => {
+    // Arrange
+    const mockInitTxSettlement = jest.spyOn(spiService, 'initTxSettlement');
+
+    // Act
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        InitiateSettleTx: jest.fn(),
+      },
+    });
+
+    spiService.initTxSettlement(mockTerminalInstanceId, mockPosRefId);
+
+    // Assert
+    expect(mockInitTxSettlement).toHaveBeenCalled();
+  });
+
+  test('test function initTxSettlementEnquiry()', () => {
+    // Arrange
+    const mockInitTxSettlementEnquiry = jest.spyOn(spiService, 'initTxSettlementEnquiry');
+
+    // Act
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        InitiateSettlementEnquiry: jest.fn(),
+      },
+    });
+
+    spiService.initTxSettlementEnquiry(mockTerminalInstanceId, mockPosRefId);
+
+    // Assert
+    expect(mockInitTxSettlementEnquiry).toHaveBeenCalled();
   });
 });

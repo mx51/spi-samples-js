@@ -122,6 +122,12 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(4),
       width: `${drawerWidth}%`,
     },
+    preContent: {
+      whiteSpace: 'pre-wrap',
+    },
+    receiptBoxWrapper: {
+      padding: theme.spacing(2.5, 3, 3),
+    },
   })
 );
 

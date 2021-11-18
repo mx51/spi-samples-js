@@ -15,12 +15,19 @@ import {
   updateTerminal,
   updateTerminalBatteryLevel,
   updateTerminalConfigurations,
+  updateTxFlowSettlementResponse,
   updateTxFlow,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
 import { ITerminal, ITerminals } from '../interfaces';
+
+declare global {
+  interface Window {
+    Spi: Any;
+  }
+}
 
 class SpiService {
   dispatchAction: Any; // redux dispatch action
@@ -55,6 +62,14 @@ class SpiService {
   readTerminalList(): ITerminals {
     this.print.log(getLocalStorage('terminals'));
     return JSON.parse(getLocalStorage('terminals') || '{}');
+  }
+
+  // remove terminal record from localStorage
+  removeUnpairedTerminalLocalStorage(instanceId: string): void {
+    this.print.log(getLocalStorage('terminals'));
+    const recordedTerminals = JSON.parse(getLocalStorage('terminals') as string);
+    delete recordedTerminals[instanceId];
+    setLocalStorage('terminals', JSON.stringify(recordedTerminals));
   }
 
   // read current terminal instance
@@ -293,56 +308,25 @@ class SpiService {
 
       // SPI Tx Flow State Change Listener
       instance.addEventListener(spiEvents.spiTxFlowStateChanged, (event: Any) => {
-        console.log('spiTxFlowStateChanged', event);
         const { detail } = event;
+
         if (detail.Finished) {
           instance.spiClient.AckFlowEndedAndBackToIdle();
         }
+
+        // when Response Data available, update transaction flow response data
+        if (detail?.Response?.Data)
+          this.dispatchAction(
+            updateTxFlowSettlementResponse({
+              id: instanceId,
+              responseData: detail.Response.Data,
+            })
+          );
+
         this.dispatchAction(
           updateTxFlow({
             id: instanceId,
-            txFlow: {
-              posRefId: detail.PosRefId,
-              id: detail.Id,
-              type: detail.Type,
-              displayMessage: detail.DisplayMessage,
-              amountCents: 0,
-              awaitingSignatureCheck: detail.AwaitingSignatureCheck,
-              finished: detail.Finished,
-              success: detail.Success,
-              response: {
-                data: {
-                  rrn: detail?.Response?.Data.rrn,
-                  schemeAppName: detail?.Response?.Data.scheme_app_name as string,
-                  schemeName: detail?.Response?.Data.scheme_name,
-                  merchantReceipt: detail?.Response?.Data.merchant_receipt,
-                  transactionType: detail?.Response?.Data.transaction_Type,
-                  hostResponseText: detail?.Response?.Data.host_response_text,
-                },
-              },
-              signatureRequiredMessage: detail.SignatureRequiredMessage,
-              request: {
-                id: detail.Request.Id,
-                eventName: detail.Request.EventName,
-                data: {
-                  posRefId: detail.Request.Data.pos_ref_id,
-                  purchaseAmount: detail.Request.Data.purchase_amount,
-                  tipAmount: detail.Request.Data.tip_amount,
-                  cashAmount: detail.Request.Data.cash_amount,
-                  promptForCashout: detail.Request.Data.prompt_for_cashout,
-                  surchargeAmount: detail.Request.Data.surcharge_amount,
-                  promptForCustomerCopy: false,
-                  printForSignatureRequiredTransactions: false,
-                  printMerchantCopy: false,
-                  customerReceiptHeader: '',
-                  customerReceiptFooter: '',
-                  merchantReceiptHeader: '',
-                  merchantReceiptFooter: '',
-                },
-                posId: '',
-                decryptedJson: '',
-              },
-            },
+            txFlow: detail,
           })
         );
       });
@@ -364,6 +348,8 @@ class SpiService {
 
       instance.spiClient.Start();
       this.dispatchAction(setConfirmPairingFlow(false)); // turn off "show confirm pairing flow message in flow panel"
+
+      window.Spi = instance; // export as window object
 
       return instance;
     } catch (error: Any) {
@@ -424,10 +410,12 @@ class SpiService {
 
   spiTerminalCancelPair(instanceId: string): void {
     this.readTerminalInstance(instanceId).spiClient.PairingCancel();
+    this.removeUnpairedTerminalLocalStorage(instanceId);
   }
 
   spiTerminalUnPair(instanceId: string): void {
     this.readTerminalInstance(instanceId).spiClient.Unpair();
+    this.removeUnpairedTerminalLocalStorage(instanceId);
   }
 
   initiatePurchaseTransaction(
@@ -459,6 +447,14 @@ class SpiService {
   ): void {
     const spi = this.readTerminalInstance(instanceId).spiClient;
     return spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount);
+  }
+
+  initTxSettlement(instanceId: string, posRefId: string) {
+    return this.readTerminalInstance(instanceId).spiClient.InitiateSettleTx(posRefId);
+  }
+
+  initTxSettlementEnquiry(instanceId: string, posRefId: string) {
+    return this.readTerminalInstance(instanceId).spiClient.InitiateSettlementEnquiry(posRefId);
   }
 }
 

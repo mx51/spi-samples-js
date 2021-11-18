@@ -62,6 +62,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           </div>
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
+            data-test-id="terminalDetailsSettlementBtn"
             tabindex="0"
             type="button"
           >
@@ -76,6 +77,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           </button>
           <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
+            data-test-id="terminalDetailsSettlementEnquiryBtn"
             tabindex="0"
             type="button"
           >
@@ -88,10 +90,13 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
               class="MuiTouchRipple-root"
             />
           </button>
-          <button
+          <a
+            aria-disabled="false"
             class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
+            data-test-id="terminalDetailsUnpairBtn"
+            href="/terminals"
+            role="button"
             tabindex="0"
-            type="button"
           >
             <span
               class="MuiButton-label"
@@ -101,7 +106,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
             <span
               class="MuiTouchRipple-root"
             />
-          </button>
+          </a>
         </div>
       </div>
       <div

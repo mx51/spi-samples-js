@@ -1,7 +1,7 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { RootState } from '../../store';
-import { IPairingFlow, ITerminalProps, ITerminalState } from './interfaces';
+import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState } from './interfaces';
 
 export const terminalList = (state: RootState): ITerminalState => state.terminals;
 
@@ -26,3 +26,20 @@ export const isTerminalUnpaired = (instanceId: string): ((state: RootState) => b
     (terminal: ITerminalProps) =>
       terminal?.status === SPI_PAIR_STATUS.PairedConnecting || terminal?.status === SPI_PAIR_STATUS.PairedConnected
   );
+
+export const terminalPosRefId = (instanceId: string): ((state: RootState) => string | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.posRefId);
+
+export const terminalTxFlowReceiptContent = (instanceId: string): ((state: RootState) => string | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.receipt?.merchantReceipt);
+
+export const terminalTxFlowReceipt = (
+  instanceId: string
+): ((state: RootState) => ITerminalReceiptFormatProps | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.receipt);
+
+export const terminalTxFlowSuccessTracker = (instanceId: string): ((state: RootState) => string | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.success);
+
+export const terminalTxFlowFinishedTracker = (instanceId: string): ((state: RootState) => boolean | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.finished);
