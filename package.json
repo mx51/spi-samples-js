@@ -1,6 +1,6 @@
 {
   "name": "spi-samples-js",
-  "version": "2.9.0",
+  "version": "2.9.1",
   "description": "Point of service samples which integrate with mx51 spi module",
   "main": "index.html",
   "author": "mx51",
@@ -32,7 +32,7 @@
   "dependencies": {
     "@iconify/icons-fa-regular": "^1.0.5",
     "@iconify/react": "^1.1.3",
-    "@mx51/spi-client-js": "^2.9.0",
+    "@mx51/spi-client-js": "^2.9.1",
     "@types/enzyme": "^3.10.5",
     "@types/jest": "^25.2.1",
     "@types/react": "^16.9.32",
