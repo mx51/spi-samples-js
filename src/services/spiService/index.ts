@@ -269,7 +269,7 @@ class SpiService {
           this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
         }
 
-        // ensure current terminal redux store object is update to date
+        // ensure current terminal redux store instance object is update to date
         this.dispatchAction(
           updateTerminal({
             id: instanceId,
@@ -280,9 +280,7 @@ class SpiService {
         this.dispatchAction(
           updateTerminalConfigurations({
             id: instanceId,
-            pluginVersion: Data?.plugin_version,
-            merchantId: Data?.merchant_id,
-            terminalId: Data?.terminal_id,
+            configurations: Data,
           })
         );
 
@@ -298,7 +296,7 @@ class SpiService {
         this.dispatchAction(
           updateTerminalBatteryLevel({
             id: instanceId,
-            batteryLevel: Data?.battery_level,
+            batteryConfig: Data,
           })
         );
 
@@ -337,13 +335,7 @@ class SpiService {
         this.dispatchAction(
           updateTxMessage({
             id: instanceId,
-            txMessage: {
-              decryptedJson: '',
-              displayMessageCode: Data.display_message_code,
-              displayMessageText: Data.display_message_text,
-              posCounter: '',
-              posRefId: Data.pos_ref_id,
-            },
+            txMessage: Data,
           })
         );
       };

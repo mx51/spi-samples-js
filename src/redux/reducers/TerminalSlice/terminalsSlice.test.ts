@@ -650,19 +650,25 @@ test('should handle updateSetting for empty state', () => {
 
 test('should handle updateTxMessage', () => {
   // Arrange
+  const mockTxMessageRawResponse = {
+    display_message_code: 4,
+    display_message_text: 'Waiting for customer to enter tip',
+    pos_ref_id: 'purchase-2021-08-09T12:10:00.461Z',
+    posCounter: '',
+    decryptedJson: '',
+  };
   const mockTxMessageResponse = {
     displayMessageCode: 4,
     displayMessageText: 'Waiting for customer to enter tip',
     posRefId: 'purchase-2021-08-09T12:10:00.461Z',
     posCounter: '',
-    decryptedJson:
-      '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
+    decryptedJson: '',
   };
 
   // Act
   const updateTxMessageAction = {
     id: mockTerminalInstanceId,
-    txMessage: mockTxMessageResponse,
+    txMessage: mockTxMessageRawResponse,
   };
 
   // Assert
@@ -677,19 +683,25 @@ test('should handle updateTxMessage', () => {
 test('should handle updateTxMessage for empty state', () => {
   // Arrange
   const previousState = {};
+  const mockTxMessageRawResponse = {
+    display_message_code: 4,
+    display_message_text: 'Waiting for customer to enter tip',
+    pos_ref_id: 'purchase-2021-08-09T12:10:00.461Z',
+    posCounter: '',
+    decryptedJson: '',
+  };
   const mockTxMessageResponse = {
     displayMessageCode: 4,
     displayMessageText: 'Waiting for customer to enter tip',
     posRefId: 'purchase-2021-08-09T12:10:00.461Z',
     posCounter: '',
-    decryptedJson:
-      '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
+    decryptedJson: '',
   };
 
   // Act
   const updateTxMessageAction = {
     id: mockTerminalInstanceId,
-    txMessage: mockTxMessageResponse,
+    txMessage: mockTxMessageRawResponse,
   };
 
   // Assert
@@ -704,9 +716,11 @@ test('should handle updateTerminalConfigurations', () => {
   // Arrange
   const updateTerminalConfigurationsAction = {
     id: mockTerminalInstanceId,
-    pluginVersion: '11.2.3',
-    merchantId: '123456789',
-    terminalId: '987654321',
+    configurations: {
+      plugin_version: '11.2.3',
+      merchant_id: '123456789',
+      terminal_id: '987654321',
+    },
   };
 
   // Assert
@@ -722,9 +736,12 @@ test('should handle updateTerminalConfigurations', () => {
 
 test('should handle updateTerminalBatteryLevel', () => {
   // Arrange
+  const batteryConfig = {
+    battery_level: '80',
+  };
   const updateTerminalBatteryLevelAction = {
     id: mockTerminalInstanceId,
-    batteryLevel: '80',
+    batteryConfig,
   };
 
   // Assert
