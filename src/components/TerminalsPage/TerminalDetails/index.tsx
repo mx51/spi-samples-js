@@ -3,6 +3,7 @@ import Tab from '@material-ui/core/Tab';
 import Tabs from '@material-ui/core/Tabs';
 import { useLocation } from 'react-router-dom';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
+import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { useAppSelector } from '../../../redux/hooks';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
@@ -21,7 +22,7 @@ export default function TerminalDetails(): React.ReactElement {
   });
 
   const { pathname } = useLocation();
-  const currentInstanceId = pathname?.split('/terminals/')[1];
+  const currentInstanceId = pathname?.split(`${PATH_TERMINALS}/`)[1];
   const currentTerminal = useAppSelector(terminalInstance(currentInstanceId)) as ITerminalProps;
 
   const classes = useStyles();

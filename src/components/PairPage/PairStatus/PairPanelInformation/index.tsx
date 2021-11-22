@@ -2,9 +2,9 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import useStyles from '../index.styles';
-import { PairPanelInformationInterface } from '../interfaces';
+import { IPairPanelInformation } from '../interfaces';
 
-function PairPanelInformation({ title, content }: PairPanelInformationInterface): React.ReactElement {
+function PairPanelInformation({ title, content }: IPairPanelInformation): React.ReactElement {
   const classes = useStyles();
 
   return (

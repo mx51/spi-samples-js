@@ -21,7 +21,11 @@ import {
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { pairForm, selectPairFormDeviceAddress } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import {
+  pairForm,
+  selectPairFormDeviceAddress,
+  selectPairFormSerialNumber,
+} from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
 import { terminalInstance } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
@@ -55,7 +59,8 @@ export default function PairConfiguration(): React.ReactElement {
   // read redux store states
   const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode } = useAppSelector(pairForm);
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
-  const terminal = useAppSelector(terminalInstance(serialNumber?.value));
+  const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
+  const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));
 
   return (
     <>
@@ -163,11 +168,12 @@ export default function PairConfiguration(): React.ReactElement {
                 handleDeviceAddressFieldOnChange(dispatch, event, updatePairFormParams)
               }
               value={
-                (addressType === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE &&
-                  terminal?.status === SPI_PAIR_STATUS.PairedConnecting) ||
-                terminal?.status === SPI_PAIR_STATUS.PairedConnected
-                  ? pairFormDeviceAddress
-                  : deviceAddress.value
+                // (addressType === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE &&
+                //   terminal?.status === SPI_PAIR_STATUS.PairedConnecting) ||
+                // terminal?.status === SPI_PAIR_STATUS.PairedConnected
+                //   ? pairFormDeviceAddress
+                //   : deviceAddress.value
+                pairFormDeviceAddress
               }
               variant="outlined"
             />

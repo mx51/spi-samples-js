@@ -1,4 +1,3 @@
-import { Z_FIXED } from 'zlib';
 import React from 'react';
 import { useSelector } from 'react-redux';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
@@ -9,7 +8,7 @@ import currencyFormat from '../../utils/common/intl/currencyFormatter';
 export default function PurchaseFlow(): React.ReactElement {
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const isSuccess = currentTerminal.txFlow?.success === 'Success';
+  const isSuccess = currentTerminal?.txFlow?.success === 'Success';
 
   const statusInformation = (spi: ITerminalProps) => `
 # ----------- STATUS -----------
@@ -22,10 +21,10 @@ export default function PurchaseFlow(): React.ReactElement {
 
 # ----------- Customer Receipt -----------
 
-# PURCHASE: ${currencyFormat((spi.txFlow?.request.data.purchaseAmount ?? 0) / 100)}
-# TIP: ${currencyFormat((spi.txFlow?.request.data.tipAmount ?? 0) / 100)}
-# SURCHARGE: ${currencyFormat((spi.txFlow?.request.data.surchargeAmount ?? 0) / 100)}
-# CASHOUT: ${currencyFormat((spi.txFlow?.request.data.cashAmount ?? 0) / 100)}
+# PURCHASE: ${currencyFormat((spi?.txFlow?.request.data.purchaseAmount ?? 0) / 100)}
+# TIP: ${currencyFormat((spi?.txFlow?.request.data.tipAmount ?? 0) / 100)}
+# SURCHARGE: ${currencyFormat((spi?.txFlow?.request.data.surchargeAmount ?? 0) / 100)}
+# CASHOUT: ${currencyFormat((spi?.txFlow?.request.data.cashAmount ?? 0) / 100)}
 
 `;
 
@@ -34,8 +33,8 @@ export default function PurchaseFlow(): React.ReactElement {
 
 # WE DID NOT GET PAID :(
 # Error Detail: see 'host_response_text' for details
-# Response: ${spi.txFlow?.response.data.hostResponseText}
-# RRN: ${spi.txFlow?.response.data.rrn}
+# Response: ${spi?.txFlow?.response.data.hostResponseText}
+# RRN: ${spi?.txFlow?.response.data.rrn}
 `;
 
   return <pre>{isSuccess ? statusInformation(currentTerminal) : failedStatusInformation(currentTerminal)}</pre>;

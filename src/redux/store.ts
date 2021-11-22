@@ -13,14 +13,7 @@ const persistedState = JSON.parse(recordedTerminals || '{}');
 export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
-      serializableCheck: {
-        // Ignore these action types
-        ignoredActions: ['your/action/type'],
-        // Ignore these field paths in all actions
-        ignoredActionPaths: ['meta.arg', 'payload.timestamp'],
-        // Ignore these paths in the state
-        ignoredPaths: ['items.dates'],
-      },
+      serializableCheck: process.env.NODE_ENV === 'development',
     }),
   reducer: {
     common: commonReducer,
@@ -30,6 +23,7 @@ export const store = configureStore({
     selectedTerminal: selectedTerminalReducer,
   },
   preloadedState: persistedState,
+  devTools: process.env.NODE_ENV === 'development',
 });
 
 export type RootState = ReturnType<typeof store.getState>;

@@ -77,7 +77,14 @@ const terminalsSlice = createSlice({
     updatePairingFlow(state: ITerminalState, action: PayloadAction<IUpdatePairingFlowAction>) {
       const { id, pairingFlow } = action.payload;
       const currentState = state[id] || {};
-      currentState.pairingFlow = pairingFlow;
+      currentState.pairingFlow = {
+        Message: pairingFlow.Message,
+        AwaitingCheckFromEftpos: pairingFlow.AwaitingCheckFromEftpos,
+        AwaitingCheckFromPos: pairingFlow.AwaitingCheckFromPos,
+        ConfirmationCode: pairingFlow.ConfirmationCode,
+        Finished: pairingFlow.Finished,
+        Successful: pairingFlow.Successful,
+      };
       // can also dispatch updatePairingStatus from spiService when below condition is true
       if (pairingFlow.Finished && !pairingFlow.Successful) currentState.status = SpiStatus.Unpaired;
 

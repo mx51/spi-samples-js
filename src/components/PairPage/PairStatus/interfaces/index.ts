@@ -5,7 +5,7 @@ export interface PairPanelButtonsInterface {
   button: React.ReactNode;
 }
 
-export interface PairPanelInformationInterface {
+export interface IPairPanelInformation {
   title: string;
   content: string | undefined;
 }

@@ -28,7 +28,7 @@ export const isTerminalUnpaired = (instanceId: string): ((state: RootState) => b
   );
 
 export const terminalPosRefId = (instanceId: string): ((state: RootState) => string | undefined) =>
-  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.posRefId);
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.request?.data?.posRefId);
 
 export const terminalTxFlowReceiptContent = (instanceId: string): ((state: RootState) => string | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.receipt?.merchantReceipt);
