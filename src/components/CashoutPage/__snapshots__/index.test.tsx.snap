@@ -197,7 +197,7 @@ exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
                 <span
                   class="MuiButton-label makeStyles-paymentTypeBtnLabel-22"
                 >
-                  Cash out
+                  Cashout
                 </span>
               </button>
             </div>

@@ -207,7 +207,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                   initiateCashoutOnlyTx(selectedTerminal, totalAmount, surchargeAmount);
                 }}
               >
-                Cash out
+                Cashout
               </Button>
             )}
           </Box>
