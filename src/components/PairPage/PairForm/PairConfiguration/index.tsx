@@ -167,14 +167,7 @@ export default function PairConfiguration(): React.ReactElement {
               onChange={(event: IFormEventValue) =>
                 handleDeviceAddressFieldOnChange(dispatch, event, updatePairFormParams)
               }
-              value={
-                // (addressType === TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE &&
-                //   terminal?.status === SPI_PAIR_STATUS.PairedConnecting) ||
-                // terminal?.status === SPI_PAIR_STATUS.PairedConnected
-                //   ? pairFormDeviceAddress
-                //   : deviceAddress.value
-                pairFormDeviceAddress
-              }
+              value={pairFormDeviceAddress}
               variant="outlined"
             />
           </Grid>
