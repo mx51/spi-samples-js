@@ -69,16 +69,24 @@ function PaymentSummary(): React.ReactElement {
         <OrderLineItem
           disabled
           label="Surcharge"
+          onAdd={() => 0}
           amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
           viewOnly
         />
         <OrderLineItem
           disabled
           label="Cashout"
+          onAdd={() => 0}
           amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
           viewOnly
         />
-        <OrderLineItem disabled label="Tip" amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0} viewOnly />
+        <OrderLineItem
+          disabled
+          label="Tip"
+          onAdd={() => 0}
+          amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
+          viewOnly
+        />
         <Grid container spacing={1}>
           {typePath !== PATH_PURCHASE && (
             <Grid item xs={6}>
