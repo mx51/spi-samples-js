@@ -5,7 +5,7 @@ const previousState = {
 };
 
 test('should handle when terminal is selected', () => {
-  // Act
+  // Arrange
   const updateSelectedTerminalAction = '111';
 
   // Assert
