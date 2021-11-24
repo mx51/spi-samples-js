@@ -57,6 +57,7 @@ const terminalsSlice = createSlice({
     clearTransaction(state: ITerminalState, action: PayloadAction<IClearTransactionAction>) {
       const { id } = action.payload;
       const currentState = state[id] || {};
+
       currentState.txMessage = null;
       currentState.txFlow = null;
 
@@ -71,14 +72,15 @@ const terminalsSlice = createSlice({
     updateDeviceAddress(state: ITerminalState, action: PayloadAction<IUpdateDeviceAddressAction>) {
       const { id, deviceAddress } = action.payload;
       const currentState = state[id] || {};
-      currentState.deviceAddress = deviceAddress;
 
+      currentState.deviceAddress = deviceAddress;
       state[id] = currentState;
     },
 
     updatePairingFlow(state: ITerminalState, action: PayloadAction<IUpdatePairingFlowAction>) {
       const { id, pairingFlow } = action.payload;
       const currentState = state[id] || {};
+
       currentState.pairingFlow = {
         Message: pairingFlow.Message,
         AwaitingCheckFromEftpos: pairingFlow.AwaitingCheckFromEftpos,
@@ -108,6 +110,7 @@ const terminalsSlice = createSlice({
     updateSetting(state: ITerminalState, action: PayloadAction<IUpdateSettingAction>) {
       const { id, settings } = action.payload;
       const currentState = state[id] || {};
+
       currentState.settings = settings;
       state[id] = currentState;
     },
@@ -139,35 +142,29 @@ const terminalsSlice = createSlice({
     },
 
     updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<IConfigurations>) {
-      const { id, configurations } = action.payload;
-
-      const configs = {
-        pluginVersion: configurations.plugin_version,
-        merchantId: configurations.merchant_id,
-        terminalId: configurations.terminal_id,
-      };
+      const { id, pluginVersion, merchantId, terminalId } = action.payload;
 
       state[id] = {
         ...state[id],
-        ...configs,
+        pluginVersion,
+        merchantId,
+        terminalId,
       };
     },
 
     updateTerminalBatteryLevel(state: ITerminalState, action: PayloadAction<IBatteryLevel>) {
-      const { id, batteryConfig } = action.payload;
-      const battery = {
-        batteryLevel: batteryConfig.battery_level,
-      };
+      const { id, batteryLevel } = action.payload;
 
       state[id] = {
         ...state[id],
-        ...battery,
+        batteryLevel,
       };
     },
 
     updateTerminalSerialNumber(state: ITerminalState, action: PayloadAction<IUpdateTerminalSerialNumberAction>) {
       const { id, serialNumber } = action.payload;
       const currentState = state[id] || {};
+
       currentState.serialNumber = serialNumber;
       state[id] = currentState;
     },
@@ -175,6 +172,7 @@ const terminalsSlice = createSlice({
     updateTerminalSecret(state: ITerminalState, action: PayloadAction<IUpdateTerminalSecretAction>) {
       const { id, secrets } = action.payload;
       const currentState = state[id] || {};
+
       currentState.secrets = secrets;
       state[id] = currentState;
     },
@@ -270,15 +268,8 @@ const terminalsSlice = createSlice({
     updateTxMessage(state: ITerminalState, action: PayloadAction<IUpdateTxMessage>) {
       const { id, txMessage } = action.payload;
       const currentState = state[id] || {};
-      const txMessageResponse = {
-        decryptedJson: '',
-        displayMessageCode: txMessage.display_message_code,
-        displayMessageText: txMessage.display_message_text,
-        posCounter: '',
-        posRefId: txMessage.pos_ref_id,
-      };
 
-      currentState.txMessage = txMessageResponse;
+      currentState.txMessage = txMessage;
       state[id] = currentState;
     },
   },

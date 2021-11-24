@@ -111,12 +111,6 @@ export interface ITxMessage {
   decryptedJson: string;
 }
 
-export interface ITxMessageRaw {
-  display_message_code: number;
-  display_message_text: string;
-  pos_ref_id: string;
-}
-
 // Types for Actions
 export interface IAddTerminalAction {
   id: string;
@@ -211,27 +205,19 @@ export interface IUpdateSettingAction {
 
 export interface IConfigurations {
   id: string;
-  configurations: IConfigurationsRaw;
-}
-
-export interface IConfigurationsRaw {
-  plugin_version: string;
-  merchant_id: string;
-  terminal_id: string;
+  pluginVersion: string;
+  merchantId: string;
+  terminalId: string;
 }
 
 export interface IBatteryLevel {
   id: string;
-  batteryConfig: IBatteryLevelRaw;
-}
-
-export interface IBatteryLevelRaw {
-  battery_level: string;
+  batteryLevel: string;
 }
 
 export interface IUpdateTxMessage {
   id: string;
-  txMessage: ITxMessageRaw;
+  txMessage: ITxMessage;
 }
 
 export interface IUpdateTerminalReceipt {

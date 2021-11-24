@@ -650,13 +650,6 @@ test('should handle updateSetting for empty state', () => {
 
 test('should handle updateTxMessage', () => {
   // Arrange
-  const mockTxMessageRawResponse = {
-    display_message_code: 4,
-    display_message_text: 'Waiting for customer to enter tip',
-    pos_ref_id: 'purchase-2021-08-09T12:10:00.461Z',
-    posCounter: '',
-    decryptedJson: '',
-  };
   const mockTxMessageResponse = {
     displayMessageCode: 4,
     displayMessageText: 'Waiting for customer to enter tip',
@@ -668,7 +661,7 @@ test('should handle updateTxMessage', () => {
   // Act
   const updateTxMessageAction = {
     id: mockTerminalInstanceId,
-    txMessage: mockTxMessageRawResponse,
+    txMessage: mockTxMessageResponse,
   };
 
   // Assert
@@ -683,13 +676,6 @@ test('should handle updateTxMessage', () => {
 test('should handle updateTxMessage for empty state', () => {
   // Arrange
   const previousState = {};
-  const mockTxMessageRawResponse = {
-    display_message_code: 4,
-    display_message_text: 'Waiting for customer to enter tip',
-    pos_ref_id: 'purchase-2021-08-09T12:10:00.461Z',
-    posCounter: '',
-    decryptedJson: '',
-  };
   const mockTxMessageResponse = {
     displayMessageCode: 4,
     displayMessageText: 'Waiting for customer to enter tip',
@@ -701,7 +687,7 @@ test('should handle updateTxMessage for empty state', () => {
   // Act
   const updateTxMessageAction = {
     id: mockTerminalInstanceId,
-    txMessage: mockTxMessageRawResponse,
+    txMessage: mockTxMessageResponse,
   };
 
   // Assert
@@ -716,11 +702,9 @@ test('should handle updateTerminalConfigurations', () => {
   // Arrange
   const updateTerminalConfigurationsAction = {
     id: mockTerminalInstanceId,
-    configurations: {
-      plugin_version: '11.2.3',
-      merchant_id: '123456789',
-      terminal_id: '987654321',
-    },
+    pluginVersion: '11.2.3',
+    merchantId: '123456789',
+    terminalId: '987654321',
   };
 
   // Assert
@@ -736,12 +720,9 @@ test('should handle updateTerminalConfigurations', () => {
 
 test('should handle updateTerminalBatteryLevel', () => {
   // Arrange
-  const batteryConfig = {
-    battery_level: '80',
-  };
   const updateTerminalBatteryLevelAction = {
     id: mockTerminalInstanceId,
-    batteryConfig,
+    batteryLevel: '80',
   };
 
   // Assert

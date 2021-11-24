@@ -280,7 +280,9 @@ class SpiService {
         this.dispatchAction(
           updateTerminalConfigurations({
             id: instanceId,
-            configurations: Data,
+            pluginVersion: Data?.plugin_version,
+            merchantId: Data?.merchant_id,
+            terminalId: Data?.terminal_id,
           })
         );
 
@@ -296,7 +298,7 @@ class SpiService {
         this.dispatchAction(
           updateTerminalBatteryLevel({
             id: instanceId,
-            batteryConfig: Data,
+            batteryLevel: Data?.battery_level,
           })
         );
 
@@ -335,7 +337,13 @@ class SpiService {
         this.dispatchAction(
           updateTxMessage({
             id: instanceId,
-            txMessage: Data,
+            txMessage: {
+              decryptedJson: '',
+              displayMessageCode: Data.display_message_code,
+              displayMessageText: Data.display_message_text,
+              posCounter: '',
+              posRefId: Data.pos_ref_id,
+            },
           })
         );
       };
