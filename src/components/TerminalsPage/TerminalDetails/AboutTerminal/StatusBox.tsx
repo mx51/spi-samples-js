@@ -2,9 +2,9 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import { SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
-import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
+import { ReactComponent as FailedIcon } from '../../../../images/FailedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
-import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
+import { ReactComponent as SuccessIcon } from '../../../../images/SuccessIcon.svg';
 import useStyles from './index.styles';
 
 export default function StatusBox({ status }: { status: string }): React.ReactElement {
@@ -15,7 +15,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
       return (
         <Box display="flex" alignItems="center" className={classes.statusBox}>
           <Typography align="right">
-            <ConnectedIcon className={classes.connectedIcon} />
+            <SuccessIcon className={classes.successIcon} />
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
             <Typography variant="h5" className={classes.statusTitle}>
@@ -47,7 +47,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
       return (
         <Box display="flex" alignItems="center" className={classes.statusBox}>
           <Typography align="right">
-            <UnpairedIcon className={classes.unpairedIcon} />
+            <FailedIcon className={classes.failedIcon} />
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
             <Typography variant="h5" className={classes.statusTitle}>

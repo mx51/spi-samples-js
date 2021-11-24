@@ -142,9 +142,9 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       class="MuiBox-root MuiBox-root-131 makeStyles-roots-111"
     >
       <svg
-        class="makeStyles-unpairedIcon-113"
+        class="makeStyles-failedIcon-113"
       >
-        UnpairedIcon.svg
+        FailedIcon.svg
       </svg>
       <h1
         class="MuiTypography-root MuiTypography-h5"
@@ -309,9 +309,9 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
       class="MuiBox-root MuiBox-root-108 makeStyles-roots-88"
     >
       <svg
-        class="makeStyles-connectedIcon-89"
+        class="makeStyles-successIcon-89"
       >
-        ConnectedIcon.svg
+        SuccessIcon.svg
       </svg>
       <h1
         class="MuiTypography-root MuiTypography-h5"

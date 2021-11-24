@@ -225,9 +225,9 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                               class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
                             >
                               <svg
-                                class="makeStyles-connectedIcon-47"
+                                class="makeStyles-successIcon-47"
                               >
-                                ConnectedIcon.svg
+                                SuccessIcon.svg
                               </svg>
                             </p>
                             <div

@@ -99,13 +99,13 @@ const useStyles = makeStyles((theme: Theme) =>
         borderColor: theme.palette.primary.main,
       },
     },
-    unpairedIcon: {
+    failedIcon: {
       color: theme.palette.error.main,
     },
     reconnectIcon: {
       color: theme.palette.warning.main,
     },
-    connectedIcon: {
+    successIcon: {
       color: theme.palette.success.main,
     },
   })
