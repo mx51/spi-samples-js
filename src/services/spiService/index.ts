@@ -184,15 +184,17 @@ class SpiService {
           );
         }
 
-        this.dispatchAction(
-          updatePairFormParams({
-            key: 'deviceAddress',
-            value: {
-              value: EftposAddress,
-              isValid: true,
-            },
-          })
-        );
+        // Only first time pair show the eftpos address (When form reset, no eftpos address will be shown)
+        if (EftposAddress && !getLocalStorage('terminals').includes(EftposAddress))
+          this.dispatchAction(
+            updatePairFormParams({
+              key: 'deviceAddress',
+              value: {
+                value: EftposAddress,
+                isValid: true,
+              },
+            })
+          );
 
         // save eftposAddress (deviceAddress) into localStorage
         this.updateTerminalStorage(instanceId, 'deviceAddress', EftposAddress);
@@ -267,7 +269,7 @@ class SpiService {
           this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
         }
 
-        // ensure current terminal redux store object is update to date
+        // ensure current terminal redux store instance object is update to date
         this.dispatchAction(
           updateTerminal({
             id: instanceId,
@@ -349,7 +351,7 @@ class SpiService {
       instance.spiClient.Start();
       this.dispatchAction(setConfirmPairingFlow(false)); // turn off "show confirm pairing flow message in flow panel"
 
-      window.Spi = instance; // export as window object
+      window.Spi = instance; // export as window object (For debugging purposes)
 
       return instance;
     } catch (error: Any) {
@@ -428,13 +430,19 @@ class SpiService {
     surchargeAmount: number
   ): void {
     const spi = this.readTerminalInstance(instanceId).spiClient;
+    const options = new TransactionOptions();
+    options.SetCustomerReceiptHeader('');
+    options.SetMerchantReceiptHeader('');
+    options.SetCustomerReceiptFooter('');
+    options.SetMerchantReceiptFooter('');
+
     return spi.InitiatePurchaseTxV2(
       posRefId,
       purchaseAmount,
       tipAmount,
       cashoutAmount,
       promptForCashout,
-      new TransactionOptions(),
+      options,
       surchargeAmount
     );
   }
@@ -447,6 +455,19 @@ class SpiService {
   ): void {
     const spi = this.readTerminalInstance(instanceId).spiClient;
     return spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount);
+  }
+
+  initiateCashoutOnlyTxTransaction(
+    instanceId: string,
+    posRefId: string,
+    purchaseAmount: number,
+    surchargeAmount: number
+  ): void {
+    return this.readTerminalInstance(instanceId).spiClient.InitiateCashoutOnlyTx(
+      posRefId,
+      purchaseAmount,
+      surchargeAmount
+    );
   }
 
   initTxSettlement(instanceId: string, posRefId: string) {

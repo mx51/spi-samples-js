@@ -655,8 +655,7 @@ test('should handle updateTxMessage', () => {
     displayMessageText: 'Waiting for customer to enter tip',
     posRefId: 'purchase-2021-08-09T12:10:00.461Z',
     posCounter: '',
-    decryptedJson:
-      '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
+    decryptedJson: '',
   };
 
   // Act
@@ -682,8 +681,7 @@ test('should handle updateTxMessage for empty state', () => {
     displayMessageText: 'Waiting for customer to enter tip',
     posRefId: 'purchase-2021-08-09T12:10:00.461Z',
     posCounter: '',
-    decryptedJson:
-      '{"message":{"data":{"display_me ssage_code":4,"display_message_text":"Waiting for customer to enter tip","pos_ref_id":"purchase-2021-08-09T12:10:00.461Z"},"datetime":"2021-08-09T22:09:59.871","event":"txn_update_message"}}',
+    decryptedJson: '',
   };
 
   // Act

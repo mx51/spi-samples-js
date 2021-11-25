@@ -15,14 +15,14 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
-
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
+import { PATH_CASH_OUT, PATH_PAY_NOW } from '../../definitions/constants/routerConfigs';
 import {
   orderCashoutAmountSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
-  orderTotalSelector,
+  productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
@@ -33,17 +33,22 @@ import {
   terminalInstance,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
-import { initiatePurchase, initiateMotoPurchase } from '../../utils/common/purchase/purchaseHelper';
+import {
+  initiatePurchase,
+  initiateMotoPurchase,
+  initiateCashoutOnlyTx,
+} from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
 import useStyles from './index.styles';
+import { IOrderConfirmation } from './interfaces';
 
-function PayNow(): React.ReactElement {
+function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmation): React.ReactElement {
   const dispatch = useDispatch();
 
   const classes = useStyles();
-  const originalTotalAmount: number = useSelector(orderTotalSelector);
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
+  const subtotalAmount: number = useSelector(productSubTotalSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const terminals = useSelector(pairedConnectedTerminalList);
@@ -55,11 +60,15 @@ function PayNow(): React.ReactElement {
   };
 
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [totalAmount, setTotalAmount] = useState<number>(originalTotalAmount);
+  const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
 
   function selectTerminal(terminalId: string) {
     dispatch(updateSelectedTerminal(terminalId));
+  }
+
+  function isDisabled() {
+    return !selectedTerminal || totalAmount <= 0;
   }
 
   return (
@@ -91,16 +100,10 @@ function PayNow(): React.ReactElement {
           <Box className={classes.root} display="flex" flexDirection="column">
             <Box display="flex" alignItems="center" justifyContent="space-between">
               <Box flex="1">
-                <Typography className={classes.payLabel}>Pay</Typography>
+                <Typography className={classes.payLabel}>{title}</Typography>
               </Box>
               <Button className={classes.orderTotalBtn} onClick={() => setDisplayKeypad(true)}>
-                <Box
-                  flex="1"
-                  display="flex"
-                  className={classes.paper}
-                  onClick={() => setDisplayKeypad(true)}
-                  component={Paper}
-                >
+                <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
                     {currencyFormat(totalAmount / 100)}
                   </Box>
@@ -152,36 +155,61 @@ function PayNow(): React.ReactElement {
                 }}
               />
             )}
-            <Box display="flex" justifyContent="space-evenly">
+            {pathname === PATH_PAY_NOW && (
+              <Box display="flex" justifyContent="space-evenly">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  disabled={isDisabled()}
+                  focusRipple
+                  classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                  onClick={() => {
+                    setShowTransactionProgressModal(true);
+                    initiatePurchase(
+                      selectedTerminal,
+                      subtotalAmount,
+                      tipAmount,
+                      cashoutAmount,
+                      surchargeAmount,
+                      false
+                    );
+                  }}
+                >
+                  Card
+                </Button>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  size="large"
+                  disabled={isDisabled()}
+                  focusRipple
+                  classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                  onClick={() => {
+                    setShowTransactionProgressModal(true);
+                    initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
+                  }}
+                >
+                  Moto
+                </Button>
+              </Box>
+            )}
+            {pathname === PATH_CASH_OUT && (
               <Button
                 variant="contained"
                 color="primary"
                 size="large"
-                disabled={!selectedTerminal}
+                disabled={isDisabled()}
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                 onClick={() => {
                   setShowTransactionProgressModal(true);
-                  initiatePurchase(selectedTerminal, totalAmount, tipAmount, cashoutAmount, surchargeAmount, false);
+                  initiateCashoutOnlyTx(selectedTerminal, totalAmount, surchargeAmount);
                 }}
               >
-                Card
+                Cashout
               </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={!selectedTerminal}
-                focusRipple
-                classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                onClick={() => {
-                  setShowTransactionProgressModal(true);
-                  initiateMotoPurchase(selectedTerminal, totalAmount, surchargeAmount);
-                }}
-              >
-                Moto
-              </Button>
-            </Box>
+            )}
           </Box>
         </Grid>
       </Grid>
@@ -189,4 +217,4 @@ function PayNow(): React.ReactElement {
   );
 }
 
-export default PayNow;
+export default OrderConfirmation;

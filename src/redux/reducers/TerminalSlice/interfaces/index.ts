@@ -202,6 +202,19 @@ export interface IUpdateSettingAction {
   id: string;
   settings: ISettings;
 }
+
+export interface IConfigurations {
+  id: string;
+  pluginVersion: string;
+  merchantId: string;
+  terminalId: string;
+}
+
+export interface IBatteryLevel {
+  id: string;
+  batteryLevel: string;
+}
+
 export interface IUpdateTxMessage {
   id: string;
   txMessage: ITxMessage;

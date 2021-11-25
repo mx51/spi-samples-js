@@ -1,0 +1,210 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="makeStyles-root-1"
+    >
+      <header
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-2 mui-fixed MuiPaper-elevation4"
+      >
+        <div
+          class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-7 makeStyles-navbar-4"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-8"
+            >
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-5 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </button>
+              <svg>
+                PrimaryLogoIcon.svg
+              </svg>
+            </div>
+            <div
+              class="MuiBox-root MuiBox-root-9"
+            >
+              <p
+                class="MuiTypography-root makeStyles-developerModeText-6 MuiTypography-body1"
+              >
+                Developer mode
+              </p>
+              <span
+                class="MuiSwitch-root"
+              >
+                <span
+                  aria-disabled="false"
+                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-10 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+                  data-test-id="developerModeSwitch"
+                >
+                  <span
+                    class="MuiIconButton-label"
+                  >
+                    <input
+                      class="PrivateSwitchBase-input-13 MuiSwitch-input"
+                      name="developerModeSwitch"
+                      type="checkbox"
+                      value=""
+                    />
+                    <span
+                      class="MuiSwitch-thumb"
+                    />
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </span>
+                <span
+                  class="MuiSwitch-track"
+                />
+              </span>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <div
+      class="MuiGrid-root MuiGrid-container"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+        >
+          <div
+            class="MuiGrid-root makeStyles-gridStyles-15 MuiGrid-item MuiGrid-grid-xs-7"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-26 makeStyles-root-14"
+            >
+              <div
+                class="MuiBox-root MuiBox-root-27"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-28"
+                >
+                  <p
+                    class="MuiTypography-root makeStyles-payLabel-16 MuiTypography-body1"
+                  >
+                    Cashout
+                  </p>
+                </div>
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-18"
+                  tabindex="0"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label"
+                  >
+                    <div
+                      class="MuiPaper-root MuiBox-root MuiBox-root-29 makeStyles-paper-17 MuiPaper-elevation1 MuiPaper-rounded"
+                    >
+                      <div
+                        class="MuiBox-root MuiBox-root-30 makeStyles-orderTotalInputField-20"
+                      >
+                        $0.00
+                      </div>
+                      <div
+                        class="MuiBox-root MuiBox-root-31"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="material-icons MuiIcon-root"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+              <p
+                class="MuiTypography-root makeStyles-label-21 MuiTypography-body1"
+              >
+                Select terminal
+              </p>
+              <hr
+                class="MuiDivider-root"
+              />
+              <div
+                aria-label="terminalList"
+                class="MuiFormGroup-root makeStyles-radioGroup-19"
+                role="radiogroup"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-32"
+                >
+                  <ul
+                    class="MuiList-root MuiList-padding"
+                  />
+                </div>
+              </div>
+              <p
+                class="MuiTypography-root makeStyles-label-21 MuiTypography-body1"
+              >
+                Select payment method
+              </p>
+              <hr
+                class="MuiDivider-root"
+              />
+              <button
+                class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-23 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                disabled=""
+                tabindex="-1"
+                type="button"
+              >
+                <span
+                  class="MuiButton-label makeStyles-paymentTypeBtnLabel-22"
+                >
+                  Cashout
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

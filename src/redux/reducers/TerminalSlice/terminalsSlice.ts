@@ -3,7 +3,9 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import {
   IAddTerminalAction,
+  IBatteryLevel,
   IClearTransactionAction,
+  IConfigurations,
   IRemoveTerminalAction,
   ITerminalState,
   IUpdateDeviceAddressAction,
@@ -55,6 +57,7 @@ const terminalsSlice = createSlice({
     clearTransaction(state: ITerminalState, action: PayloadAction<IClearTransactionAction>) {
       const { id } = action.payload;
       const currentState = state[id] || {};
+
       currentState.txMessage = null;
       currentState.txFlow = null;
 
@@ -69,15 +72,24 @@ const terminalsSlice = createSlice({
     updateDeviceAddress(state: ITerminalState, action: PayloadAction<IUpdateDeviceAddressAction>) {
       const { id, deviceAddress } = action.payload;
       const currentState = state[id] || {};
-      currentState.deviceAddress = deviceAddress;
 
+      currentState.deviceAddress = deviceAddress;
       state[id] = currentState;
     },
 
     updatePairingFlow(state: ITerminalState, action: PayloadAction<IUpdatePairingFlowAction>) {
       const { id, pairingFlow } = action.payload;
       const currentState = state[id] || {};
-      currentState.pairingFlow = pairingFlow;
+
+      currentState.pairingFlow = {
+        Message: pairingFlow.Message,
+        AwaitingCheckFromEftpos: pairingFlow.AwaitingCheckFromEftpos,
+        AwaitingCheckFromPos: pairingFlow.AwaitingCheckFromPos,
+        ConfirmationCode: pairingFlow.ConfirmationCode,
+        Finished: pairingFlow.Finished,
+        Successful: pairingFlow.Successful,
+      };
+
       // can also dispatch updatePairingStatus from spiService when below condition is true
       if (pairingFlow.Finished && !pairingFlow.Successful) currentState.status = SpiStatus.Unpaired;
 
@@ -98,6 +110,7 @@ const terminalsSlice = createSlice({
     updateSetting(state: ITerminalState, action: PayloadAction<IUpdateSettingAction>) {
       const { id, settings } = action.payload;
       const currentState = state[id] || {};
+
       currentState.settings = settings;
       state[id] = currentState;
     },
@@ -128,7 +141,7 @@ const terminalsSlice = createSlice({
       state[id] = response;
     },
 
-    updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<Any>) {
+    updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<IConfigurations>) {
       const { id, pluginVersion, merchantId, terminalId } = action.payload;
 
       state[id] = {
@@ -139,7 +152,7 @@ const terminalsSlice = createSlice({
       };
     },
 
-    updateTerminalBatteryLevel(state: ITerminalState, action: PayloadAction<Any>) {
+    updateTerminalBatteryLevel(state: ITerminalState, action: PayloadAction<IBatteryLevel>) {
       const { id, batteryLevel } = action.payload;
 
       state[id] = {
@@ -151,6 +164,7 @@ const terminalsSlice = createSlice({
     updateTerminalSerialNumber(state: ITerminalState, action: PayloadAction<IUpdateTerminalSerialNumberAction>) {
       const { id, serialNumber } = action.payload;
       const currentState = state[id] || {};
+
       currentState.serialNumber = serialNumber;
       state[id] = currentState;
     },
@@ -158,6 +172,7 @@ const terminalsSlice = createSlice({
     updateTerminalSecret(state: ITerminalState, action: PayloadAction<IUpdateTerminalSecretAction>) {
       const { id, secrets } = action.payload;
       const currentState = state[id] || {};
+
       currentState.secrets = secrets;
       state[id] = currentState;
     },
@@ -165,7 +180,6 @@ const terminalsSlice = createSlice({
     updateTxFlowSettlementResponse(state: ITerminalState, action: PayloadAction<IUpdateTerminalReceipt>) {
       const { id, responseData } = action.payload;
       const currentState = state[id] || {};
-
       currentState.receipt = {
         accumulatedSettleByAcquirerCount: responseData?.accumulated_settle_by_acquirer_count,
         accumulatedSettleByAcquirerValue: responseData?.accumulated_settle_by_acquirer_value,
@@ -254,6 +268,7 @@ const terminalsSlice = createSlice({
     updateTxMessage(state: ITerminalState, action: PayloadAction<IUpdateTxMessage>) {
       const { id, txMessage } = action.payload;
       const currentState = state[id] || {};
+
       currentState.txMessage = txMessage;
       state[id] = currentState;
     },
