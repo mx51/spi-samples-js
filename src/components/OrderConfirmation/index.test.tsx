@@ -91,7 +91,7 @@ describe('Test <OrderConfirmation />', () => {
     const spiCancelTransaction = jest.spyOn(spiService, 'spiCancelTransaction');
     spiCancelTransaction.mockReturnValue();
 
-    // Arrange
+    // Act
     mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />);
     fireEvent.click(screen.getByText(/moto/i));
 
@@ -108,7 +108,7 @@ describe('Test <OrderConfirmation />', () => {
     const spiCancelTransaction = jest.spyOn(spiService, 'spiCancelTransaction');
     spiCancelTransaction.mockReturnValue();
 
-    // Arrange
+    // Act
     mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={600} />);
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByText(/5/i));
