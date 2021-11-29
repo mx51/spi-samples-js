@@ -35,7 +35,7 @@ function OrderLineItem({ label, amount, onAdd, disabled, viewOnly }: IOrderLineI
             size="small"
             disableElevation
             disabled={disabled}
-            classes={{ root: classes.addtionalChargeBtn, label: classes.addtionalChargeBtnLabel }}
+            classes={{ root: classes.additionalChargeBtn, label: classes.additionalChargeBtnLabel }}
             onClick={onAdd}
           >
             {currencyFormat(amount / 100)}

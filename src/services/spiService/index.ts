@@ -470,6 +470,10 @@ class SpiService {
     );
   }
 
+  initiateRefundTxTransaction(instanceId: string, posRefId: string, refundAmount: number): void {
+    return this.readTerminalInstance(instanceId).spiClient.InitiateRefundTx(posRefId, refundAmount);
+  }
+
   initTxSettlement(instanceId: string, posRefId: string) {
     return this.readTerminalInstance(instanceId).spiClient.InitiateSettleTx(posRefId);
   }

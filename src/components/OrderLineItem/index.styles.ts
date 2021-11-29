@@ -9,13 +9,13 @@ const useStyles = makeStyles((theme: Theme) =>
     additionalChargesDisable: {
       color: theme.palette.primary.main,
     },
-    addtionalChargeBtn: {
+    additionalChargeBtn: {
       color: theme.palette.primary.main,
       backgroundColor: SECONDRARY_BACKGROUND_COLOR,
       fontSize: '1.25rem',
       padding: 0,
     },
-    addtionalChargeBtnLabel: {
+    additionalChargeBtnLabel: {
       padding: 0,
     },
     addAmountBtn: {

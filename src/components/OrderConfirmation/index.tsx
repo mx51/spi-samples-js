@@ -17,7 +17,7 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
-import { PATH_CASH_OUT, PATH_PAY_NOW } from '../../definitions/constants/routerConfigs';
+import { PATH_CASH_OUT, PATH_PAY_NOW, PATH_REFUND } from '../../definitions/constants/routerConfigs';
 import {
   orderCashoutAmountSelector,
   orderSurchargeAmountSelector,
@@ -37,6 +37,7 @@ import {
   initiatePurchase,
   initiateMotoPurchase,
   initiateCashoutOnlyTx,
+  initiateRefundTx,
 } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
@@ -140,8 +141,13 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 </List>
               </Box>
             </RadioGroup>
-            <Typography className={classes.label}>Select payment method</Typography>
-            <Divider />
+            {pathname === PATH_PAY_NOW && (
+              <>
+                <Typography className={classes.label}>Select payment method</Typography>
+                <Divider />
+              </>
+            )}
+
             {showTransactionProgressModal && (
               <TransactionProgressModal
                 transactionType={currentTerminal?.txFlow?.type ?? ''}
@@ -208,6 +214,22 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 }}
               >
                 Cashout
+              </Button>
+            )}
+            {pathname === PATH_REFUND && (
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                disabled={isDisabled()}
+                focusRipple
+                classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                onClick={() => {
+                  setShowTransactionProgressModal(true);
+                  initiateRefundTx(selectedTerminal, totalAmount);
+                }}
+              >
+                Refund
               </Button>
             )}
           </Box>
