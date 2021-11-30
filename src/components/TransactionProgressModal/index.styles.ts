@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '1.125rem',
       color: theme.palette.text.secondary,
     },
-    modalSublHeading: {
+    modalSubHeading: {
       fontWeight: 500,
       fontSize: '1.5rem',
       color: theme.palette.text.primary,

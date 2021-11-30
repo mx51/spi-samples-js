@@ -15,6 +15,9 @@ function TransactionProgressModal({
   onCancelTransaction,
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
+
+  const modalTitle = transactionType.toUpperCase() === 'CASHOUTONLY' ? 'CASHOUT' : transactionType.toUpperCase();
+
   return (
     <Dialog aria-labelledby="spiModalTitle" open>
       <DialogContent className={classes.transactionProgressModalContnent}>
@@ -30,7 +33,7 @@ function TransactionProgressModal({
             <Typography variant="body2" className={classes.modalHeading}>
               {transactionType.toUpperCase()}
             </Typography>
-            <Typography variant="body2" className={classes.modalSublHeading}>
+            <Typography variant="body2" className={classes.modalSubHeading}>
               In progress
             </Typography>
           </>
@@ -45,9 +48,9 @@ function TransactionProgressModal({
               height="56"
             />
             <Typography variant="body2" className={classes.modalHeading}>
-              {transactionType.toUpperCase()}
+              {modalTitle}
             </Typography>
-            <Typography variant="body2" className={classes.modalSublHeading}>
+            <Typography variant="body2" className={classes.modalSubHeading}>
               Approved
             </Typography>
           </>
@@ -62,9 +65,9 @@ function TransactionProgressModal({
               height="56"
             />
             <Typography variant="body2" className={classes.modalHeading}>
-              {transactionType.toUpperCase()}
+              {modalTitle}
             </Typography>
-            <Typography variant="body2" className={classes.modalSublHeading}>
+            <Typography variant="body2" className={classes.modalSubHeading}>
               Declined
             </Typography>
           </>

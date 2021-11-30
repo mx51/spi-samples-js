@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <TransactionProgressModal /> should match TransactionProgressModalPage finished & not success snapshot test 1`] = `
+<div
+  aria-hidden="true"
+/>
+`;
+
+exports[`Test <TransactionProgressModal /> should match TransactionProgressModalPage finished & success snapshot test 1`] = `
+<div
+  aria-hidden="true"
+/>
+`;
+
+exports[`Test <TransactionProgressModal /> should match TransactionProgressModalPage pending snapshot test 1`] = `
+<div
+  aria-hidden="true"
+/>
+`;
