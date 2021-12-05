@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography, Drawer } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
-import { PATH_PAY_NOW, PATH_PURCHASE } from '../../../definitions/constants/routerConfigs';
+import { PATH_PAY_NOW, PATH_PURCHASE, TEXT_CASHOUT } from '../../../definitions/constants/routerConfigs';
 import { IProductSelector } from '../../../redux/reducers/ProductSlice/interfaces';
 import {
   orderCashoutAmountSelector,
@@ -67,7 +67,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
 
   const getTitle = () => {
     if (keypadType === SURCHARGE_AMOUNT) return 'Surcharge';
-    if (keypadType === CASHOUT_AMOUNT) return 'Cashout';
+    if (keypadType === CASHOUT_AMOUNT) return TEXT_CASHOUT;
     if (keypadType === TIP_AMOUNT) return 'Tip';
     return '';
   };

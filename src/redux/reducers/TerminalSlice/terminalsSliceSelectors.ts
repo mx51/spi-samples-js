@@ -1,6 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
-import { PATH_CASH_OUT, PATH_PURCHASE, PATH_REFUND } from '../../../definitions/constants/routerConfigs';
+import { SPI_PAIR_STATUS, SPI_TRANSACTION_TYPES } from '../../../definitions/constants/commonConfigs';
+import {
+  PATH_CASH_OUT,
+  PATH_PURCHASE,
+  PATH_REFUND,
+  TEXT_CASHOUT,
+  TEXT_PURCHASE,
+  TEXT_REFUND,
+} from '../../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../../definitions/constants/terminalConfigs';
 import { RootState } from '../../store';
 import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState } from './interfaces';
@@ -37,20 +44,20 @@ export const terminalTransactionTypeObject = (
 ): ((state: RootState) => { typePath: string; typeTitle: string }) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => {
     switch (terminal?.txFlow?.type) {
-      case 'CashoutOnly':
+      case SPI_TRANSACTION_TYPES.CashoutOnly:
         return {
           typePath: PATH_CASH_OUT,
-          typeTitle: 'Cashout',
+          typeTitle: TEXT_CASHOUT,
         };
-      case 'Refund':
+      case SPI_TRANSACTION_TYPES.Refund:
         return {
           typePath: PATH_REFUND,
-          typeTitle: 'Refund',
+          typeTitle: TEXT_REFUND,
         };
       default:
         return {
           typePath: PATH_PURCHASE,
-          typeTitle: 'Purchase',
+          typeTitle: TEXT_PURCHASE,
         };
     }
   });

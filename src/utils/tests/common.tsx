@@ -7,6 +7,7 @@ import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../definitions/constants/commonConfigs';
+import { TEXT_REFUND } from '../../definitions/constants/routerConfigs';
 import { defaultAAR, defaultLocalIP } from '../../definitions/constants/spiConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import { IPairFormParams } from '../../redux/reducers/PairFormSlice/interfaces';
@@ -277,7 +278,7 @@ export const mockSpiClient = {
 export const mockRefundTxFlow = {
   posRefId: 'string',
   id: 'string',
-  type: 'Refund',
+  type: TEXT_REFUND,
   displayMessage: 'string',
   amountCents: 100,
   awaitingSignatureCheck: false,

@@ -1,6 +1,8 @@
 import React from 'react';
 import { cleanup } from '@testing-library/react';
 import TransactionProgressModal from '.';
+import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs';
+import { TEXT_CASHOUT, TEXT_PURCHASE } from '../../definitions/constants/routerConfigs';
 import mockWithRedux from '../../utils/tests/common';
 
 describe('Test <TransactionProgressModal />', () => {
@@ -25,29 +27,29 @@ describe('Test <TransactionProgressModal />', () => {
 
   test('should match TransactionProgressModalPage finished & success snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup('purchase', true, true);
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, true);
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should match TransactionProgressModalPage finished & not success snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup('purchase', true, false);
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, false);
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should match TransactionProgressModalPage pending snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup('purchase', false, true);
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, false, true);
     // Assert
     expect(container).toMatchSnapshot();
   });
 
-  test('should show "CASHOUT" as modal title when transactionType value is returned as "cashoutonly"', () => {
+  test('should show "CASHOUT" as modal title when transactionType value is returned as "CashoutOnly"', () => {
     // Arrange
-    transactionProgressModalSetup('cashoutonly', true, true);
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.CashoutOnly, true, true);
     // Assert
-    expect(document.body.innerHTML.includes('CASHOUT')).toBeTruthy();
+    expect(document.body.innerHTML.includes(TEXT_CASHOUT.toUpperCase())).toBeTruthy();
   });
 });

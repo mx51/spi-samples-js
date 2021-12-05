@@ -1,4 +1,4 @@
-import { SpiFlow, SpiStatus } from '@mx51/spi-client-js';
+import { SpiFlow, SpiStatus, TransactionType } from '@mx51/spi-client-js';
 // configuration types
 export const TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE = 'auto';
 export const TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE = 'eftpos';
@@ -23,6 +23,21 @@ export const SPI_PAIR_STATUS = {
   PairedConnected: SpiStatus.PairedConnected,
   PairedConnecting: SpiStatus.PairedConnecting,
   Unpaired: SpiStatus.Unpaired,
+};
+export const SPI_TRANSACTION_TYPES = {
+  AccountVerify: TransactionType.AccountVerify,
+  CashoutOnly: TransactionType.CashoutOnly,
+  GetTransaction: TransactionType.GetTransaction,
+  GetLastTransaction: TransactionType.GetLastTransaction,
+  MOTO: TransactionType.MOTO,
+  Preauth: TransactionType.Preauth,
+  Purchase: TransactionType.Purchase,
+  Refund: TransactionType.Refund,
+  Reversal: TransactionType.Reversal,
+  Settle: TransactionType.Settle,
+  SettlementEnquiry: TransactionType.SettlementEnquiry,
+  ZipPurchase: TransactionType.ZipPurchase,
+  ZipRefund: TransactionType.ZipRefund,
 };
 // pair flow drawer width 4/12 (based on design required)
 export const drawerWidth = 33.33333;
