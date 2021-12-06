@@ -270,8 +270,9 @@ export const mockSpiClient = {
   },
   _testMode: true,
   _mostRecentPongReceived: true,
-  GetTerminalStatus: () => defaultAAR,
-  SetEventBus: (instance: Any) => {},
+  GetTerminalAddress: (): string => '',
+  GetTerminalStatus: (): string => defaultAAR,
+  SetEventBus: jest.fn(),
   BatteryLevelChanged: jest.fn(),
 };
 
