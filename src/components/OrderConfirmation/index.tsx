@@ -18,6 +18,7 @@ import {
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATH_CASH_OUT, PATH_PAY_NOW, PATH_REFUND } from '../../definitions/constants/routerConfigs';
+import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import {
   orderCashoutAmountSelector,
   orderSurchargeAmountSelector,
@@ -187,6 +188,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
             )}
             {showTransactionProgressModal && !isUnknownState && (
               <TransactionProgressModal
+                terminalId={selectedTerminal}
                 transactionType={currentTerminal?.txFlow?.type ?? ''}
                 isFinished={isFinished}
                 isSuccess={successStatus === 'Success'}

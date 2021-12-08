@@ -7,7 +7,7 @@ const useStyles = makeStyles((theme: Theme) =>
       maxHeight: '100%',
       display: 'flex',
       alignItems: 'center',
-      padding: theme.spacing(6, 0, 6, 0),
+      padding: theme.spacing(6, 0),
       '& > div': {
         background: theme.palette.common.white,
         border: `1px solid ${theme.palette.secondary.main}`,

@@ -536,6 +536,14 @@ class SpiService {
   initTxSettlementEnquiry(instanceId: string, posRefId: string) {
     return this.readTerminalInstance(instanceId).spiClient.InitiateSettlementEnquiry(posRefId);
   }
+
+  signatureForApprove(instanceId: string) {
+    return this.readTerminalInstance(instanceId).spiClient.AcceptSignature(true);
+  }
+
+  signatureForDecline(instanceId: string) {
+    return this.readTerminalInstance(instanceId).spiClient.AcceptSignature(false);
+  }
 }
 
 const spiService = new SpiService();

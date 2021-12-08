@@ -1,7 +1,7 @@
 import { cleanup } from '@testing-library/react';
 import spiService from '../../../services/spiService';
 import { mockPosRefId, mockSpiClient, mockTerminalInstanceId } from '../../tests/common';
-import { settlement, settlementEnquiry } from './terminalHelpers';
+import { approveSignature, declineSignature, settlement, settlementEnquiry } from './terminalHelpers';
 
 describe('Test terminalHelpers()', () => {
   afterEach(cleanup);
@@ -40,5 +40,41 @@ describe('Test terminalHelpers()', () => {
     // Assert
     expect(spiService.initTxSettlementEnquiry).toBeDefined();
     expect(spiService.initTxSettlementEnquiry).toBeCalledTimes(1);
+  });
+
+  test('should approveSignature() be defined when calling signatureForApprove() function', () => {
+    // Arrange
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        AcceptSignature: jest.fn(),
+      },
+    });
+    spiService.signatureForApprove = jest.fn();
+
+    // Act
+    approveSignature(mockTerminalInstanceId);
+
+    // Assert
+    expect(spiService.signatureForApprove).toBeDefined();
+    expect(spiService.signatureForApprove).toBeCalledTimes(1);
+  });
+
+  test('should declineSignature() be defined when calling signatureForDecline() function', () => {
+    // Arrange
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        AcceptSignature: jest.fn(),
+      },
+    });
+    spiService.signatureForDecline = jest.fn();
+
+    // Act
+    declineSignature(mockTerminalInstanceId);
+
+    // Assert
+    expect(spiService.signatureForDecline).toBeDefined();
+    expect(spiService.signatureForDecline).toBeCalledTimes(1);
   });
 });

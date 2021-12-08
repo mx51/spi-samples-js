@@ -11,6 +11,10 @@ const useStyles = makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(2),
       paddingRight: theme.spacing(2),
     },
+    alignTop: {
+      alignItems: 'unset',
+      padding: theme.spacing(6, 2),
+    },
     roots: {
       display: 'flex',
       flexDirection: 'column',

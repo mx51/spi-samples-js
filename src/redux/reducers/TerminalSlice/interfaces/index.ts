@@ -67,7 +67,11 @@ export interface ITxFlow {
       hostResponseText: string;
     };
   };
-  signatureRequiredMessage: string | null;
+  signatureRequiredMessage: {
+    posRefId: string | undefined;
+    requestId: string | undefined;
+    receiptToSign: string | undefined;
+  } | null;
   request: {
     id: string;
     eventName: string;

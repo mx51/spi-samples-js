@@ -95,7 +95,7 @@ function mockTxFlow(): ITxFlow {
     id: 'string',
     type: 'string',
     displayMessage: 'string',
-    amountCents: 0,
+    amountCents: 100,
     awaitingSignatureCheck: true,
     finished: true,
     success: 'string',
@@ -109,7 +109,11 @@ function mockTxFlow(): ITxFlow {
         hostResponseText: 'string',
       },
     },
-    signatureRequiredMessage: 'string',
+    signatureRequiredMessage: {
+      posRefId: 'string',
+      requestId: 'string',
+      receiptToSign: 'string',
+    },
     request: {
       id: 'string',
       eventName: 'string',

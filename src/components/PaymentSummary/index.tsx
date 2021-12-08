@@ -14,6 +14,7 @@ import {
   isTerminalTxFlowSuccess,
   terminalInstance,
   terminalTransactionTypeObject,
+  terminalTxAmount,
   terminalTxFlowFinishedTracker,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
@@ -26,6 +27,7 @@ function PaymentSummary(): React.ReactElement {
   const dispatch = useDispatch();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const amountCents = useSelector(terminalTxAmount(selectedTerminal));
   const subtotalAmount = useSelector(productSubTotalSelector);
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
@@ -36,7 +38,8 @@ function PaymentSummary(): React.ReactElement {
   };
 
   return (
-    <Box className={classes.root}>
+    <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
+      {/* Note: change Icon name */}
       <Box flexGrow="2" className={classes.roots}>
         {isTxFlowFinished && isTxFlowSuccess && (
           <>
@@ -60,32 +63,35 @@ function PaymentSummary(): React.ReactElement {
           {currentTerminal?.deviceAddress} S/N {currentTerminal?.serialNumber}
         </Typography>
         <Box className={classes.paper} component={Paper}>
-          {currencyFormat((currentTerminal?.txFlow?.request?.data.purchaseAmount ?? 0) / 100)}
+          {currencyFormat((amountCents || (currentTerminal?.txFlow?.request.data.purchaseAmount ?? 0)) / 100)}
         </Box>
-        <Typography className={classes.orderSummery}>Order Summary</Typography>
-        <Divider variant="middle" />
-        <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
-        <OrderLineItem
-          disabled
-          label="Surcharge"
-          amount={currentTerminal?.txFlow?.request?.data.surchargeAmount ?? 0}
-          onAdd={() => 10}
-          viewOnly
-        />
-        <OrderLineItem
-          disabled
-          label="Cashout"
-          amount={currentTerminal?.txFlow?.request?.data.cashAmount ?? 0}
-          onAdd={() => 0}
-          viewOnly
-        />
-        <OrderLineItem
-          disabled
-          label="Tip"
-          amount={currentTerminal?.txFlow?.request?.data.tipAmount ?? 0}
-          onAdd={() => 0}
-          viewOnly
-        />
+        {typePath === PATH_PURCHASE ? (
+          <>
+            <Typography className={classes.orderSummery}>Order Summary</Typography>
+            <Divider variant="middle" />
+            <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+            <OrderLineItem
+              disabled
+              label="Surcharge"
+              amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
+              viewOnly
+            />
+            <OrderLineItem
+              disabled
+              label="Cashout"
+              amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
+              viewOnly
+            />
+            <OrderLineItem
+              disabled
+              label="Tip"
+              amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
+              viewOnly
+            />
+          </>
+        ) : (
+          <br />
+        )}
         <Grid container spacing={1}>
           {typePath !== PATH_PURCHASE && (
             <Grid item xs={6}>
