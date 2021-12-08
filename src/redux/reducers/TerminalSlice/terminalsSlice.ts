@@ -223,7 +223,7 @@ const terminalsSlice = createSlice({
         id: detail.Id,
         type: detail.Type,
         displayMessage: detail.DisplayMessage,
-        amountCents: 0,
+        amountCents: detail.AmountCents,
         awaitingSignatureCheck: detail.AwaitingSignatureCheck,
         finished: detail.Finished,
         success: detail.Success,
@@ -237,7 +237,11 @@ const terminalsSlice = createSlice({
             hostResponseText: detail?.Response?.Data.host_response_text,
           },
         },
-        signatureRequiredMessage: detail.SignatureRequiredMessage,
+        signatureRequiredMessage: {
+          posRefId: detail.SignatureRequiredMessage?.PosRefId,
+          requestId: detail.SignatureRequiredMessage?.RequestId,
+          receiptToSign: detail.SignatureRequiredMessage?._receiptToSign,
+        },
         request: {
           id: detail.Request.Id,
           eventName: detail.Request.EventName,

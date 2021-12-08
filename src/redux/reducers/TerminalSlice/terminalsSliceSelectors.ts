@@ -70,6 +70,9 @@ export const terminalTxFlowReceipt = (
 ): ((state: RootState) => ITerminalReceiptFormatProps | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.receipt);
 
+export const terminalTxAmount = (instanceId: string): ((state: RootState) => number | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.amountCents);
+
 export const terminalTxFlowSuccessTracker = (instanceId: string): ((state: RootState) => string | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.success);
 
@@ -81,3 +84,8 @@ export const isTerminalTxFlowSuccess = (instanceId: string): ((state: RootState)
 
 export const terminalTxFlowFinishedTracker = (instanceId: string): ((state: RootState) => boolean | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.finished);
+
+export const terminalTxFlowAwaitingSignatureTracker = (
+  instanceId: string
+): ((state: RootState) => boolean | undefined) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.awaitingSignatureCheck);

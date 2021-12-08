@@ -22,6 +22,8 @@ const PairForm: React.FC = () => {
   const pairFormValues = useAppSelector(selectPairFormValues);
   const pairBtnDisabled = useAppSelector(isPairDisabled);
 
+  const handlePair = () => handlePairClick(dispatch, pairFormValues);
+
   return (
     <Grid container direction="column" className={classes.formContainer}>
       <form autoComplete="off" className={classes.pairForm}>
@@ -32,7 +34,7 @@ const PairForm: React.FC = () => {
           color="primary"
           disabled={pairBtnDisabled || terminalUnpaired}
           data-test-id="pairBtn"
-          onClick={() => handlePairClick(dispatch, pairFormValues)}
+          onClick={handlePair}
           variant="contained"
         >
           Pair

@@ -3,28 +3,28 @@
 exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] = `
 <div>
   <div
-    class="MuiBox-root MuiBox-root-11 makeStyles-root-1"
+    class="MuiBox-root MuiBox-root-12 makeStyles-root-1 false"
   >
     <div
-      class="MuiBox-root MuiBox-root-12 makeStyles-roots-2"
+      class="MuiBox-root MuiBox-root-13 makeStyles-roots-3"
     >
       <p
-        class="MuiTypography-root makeStyles-heading-5 MuiTypography-body1"
+        class="MuiTypography-root makeStyles-heading-6 MuiTypography-body1"
       >
         Terminal:
       </p>
       <p
-        class="MuiTypography-root makeStyles-subheading-6 MuiTypography-body1"
+        class="MuiTypography-root makeStyles-subheading-7 MuiTypography-body1"
       >
          S/N 
       </p>
       <div
-        class="MuiPaper-root MuiBox-root MuiBox-root-13 makeStyles-paper-7 MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root MuiBox-root MuiBox-root-14 makeStyles-paper-8 MuiPaper-elevation1 MuiPaper-rounded"
       >
         $0.00
       </div>
       <p
-        class="MuiTypography-root makeStyles-orderSummery-8 MuiTypography-body1"
+        class="MuiTypography-root makeStyles-orderSummery-9 MuiTypography-body1"
       >
         Order Summary
       </p>
@@ -38,13 +38,13 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-14 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-15 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Subtotal
           </span>
         </div>
         <p
-          class="MuiTypography-root makeStyles-price-15 MuiTypography-body1"
+          class="MuiTypography-root makeStyles-price-16 MuiTypography-body1"
         >
           $0.00
         </p>
@@ -56,7 +56,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-17 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-18 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Surcharge
           </span>
@@ -74,7 +74,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-17 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-18 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Cashout
           </span>
@@ -92,7 +92,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-17 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-18 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Tip
           </span>
@@ -111,7 +111,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
         >
           <a
             aria-disabled="false"
-            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-10 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-11 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
             data-test-id="newOrderBtn"
             href="/"
             role="button"
