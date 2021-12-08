@@ -11,11 +11,11 @@ export const PATH_CASH_OUT = '/cashout';
 export const PATH_ORDER_FINISHED = '/order-finished';
 
 // link names
-export const LINK_FLEET_SETTINGS = 'Fleet settings';
-export const LINK_PAIR = 'Pairing';
-export const LINK_PAY_AT_TABLE = 'Pay at Table';
-export const LINK_PRE_AUTH = 'Preauthorisation';
-export const LINK_PURCHASE = 'Purchase';
-export const LINK_REFUND = 'Refund';
-export const LINK_CASH_OUT = 'Cashout';
-export const LINK_TERMINALS = 'Terminals List';
+export const TEXT_FLEET_SETTINGS = 'Fleet settings';
+export const TEXT_PAIR = 'Pairing';
+export const TEXT_PAY_AT_TABLE = 'Pay at Table';
+export const TEXT_PRE_AUTH = 'Preauthorisation';
+export const TEXT_PURCHASE = 'Purchase';
+export const TEXT_REFUND = 'Refund';
+export const TEXT_CASHOUT = 'Cashout';
+export const TEXT_TERMINALS = 'Terminals List';

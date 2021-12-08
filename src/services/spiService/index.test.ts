@@ -39,15 +39,6 @@ describe('Test SpiService functionalities', () => {
     expect(spiService.handleTerminalPairFailure).toHaveBeenCalled();
   });
 
-  test('test function getTerminalAddress()', () => {
-    // Act
-    const mockGetTerminalAddress = jest.spyOn(spiService, 'getTerminalAddress');
-    spiService.getTerminalAddress(mockTerminalInstanceId);
-
-    // Assert
-    expect(mockGetTerminalAddress).toHaveBeenCalled();
-  });
-
   test('test function getCurrentTxFlow()', () => {
     // Act
     spiService.readTerminalInstance = jest.fn().mockReturnValue({
@@ -109,18 +100,20 @@ describe('Test SpiService functionalities', () => {
     expect(mockGetCurrentStatus).toBeDefined();
   });
 
-  test('should get auto address value from getTerminalAddress()', async () => {
+  test('should get auto address value from getTerminalAddress()', () => {
+    // Arrange
+    const mockAddress = 'address string';
     // Act
     spiService.readTerminalInstance = jest.fn().mockReturnValue({
       spiClient: mockSpiClient,
     });
 
-    await spiService.getTerminalAddress(mockTerminalInstanceId);
-    const mockGetTerminalAddress = jest.spyOn(spiService, 'getTerminalAddress');
+    spiService.getTerminalAddress = jest.fn().mockReturnValue(mockAddress);
+    const addressString = spiService.getTerminalAddress(mockTerminalInstanceId);
 
     // Assert
-    expect(mockGetTerminalAddress).toBeDefined();
     expect(spiService.getTerminalAddress).toBeCalled();
+    expect(addressString).toEqual(mockAddress);
   });
 
   test('test function updateTerminalStorage()', () => {

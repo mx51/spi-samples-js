@@ -1,5 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS, SPI_TRANSACTION_TYPES } from '../../../definitions/constants/commonConfigs';
+import {
+  PATH_CASH_OUT,
+  PATH_PURCHASE,
+  PATH_REFUND,
+  TEXT_CASHOUT,
+  TEXT_PURCHASE,
+  TEXT_REFUND,
+} from '../../../definitions/constants/routerConfigs';
+import { TxFlowState } from '../../../definitions/constants/terminalConfigs';
 import { RootState } from '../../store';
 import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState } from './interfaces';
 
@@ -30,6 +39,29 @@ export const isTerminalUnpaired = (instanceId: string): ((state: RootState) => b
 export const terminalPosRefId = (instanceId: string): ((state: RootState) => string | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.request?.data?.posRefId);
 
+export const terminalTransactionTypeObject = (
+  instanceId: string
+): ((state: RootState) => { typePath: string; typeTitle: string }) =>
+  createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => {
+    switch (terminal?.txFlow?.type) {
+      case SPI_TRANSACTION_TYPES.CashoutOnly:
+        return {
+          typePath: PATH_CASH_OUT,
+          typeTitle: TEXT_CASHOUT,
+        };
+      case SPI_TRANSACTION_TYPES.Refund:
+        return {
+          typePath: PATH_REFUND,
+          typeTitle: TEXT_REFUND,
+        };
+      default:
+        return {
+          typePath: PATH_PURCHASE,
+          typeTitle: TEXT_PURCHASE,
+        };
+    }
+  });
+
 export const terminalTxFlowReceiptContent = (instanceId: string): ((state: RootState) => string | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.receipt?.merchantReceipt);
 
@@ -40,6 +72,12 @@ export const terminalTxFlowReceipt = (
 
 export const terminalTxFlowSuccessTracker = (instanceId: string): ((state: RootState) => string | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.success);
+
+export const isTerminalTxFlowSuccess = (instanceId: string): ((state: RootState) => boolean) =>
+  createSelector(
+    terminalInstance(instanceId),
+    (terminal: ITerminalProps) => terminal?.txFlow?.success === TxFlowState.Success
+  );
 
 export const terminalTxFlowFinishedTracker = (instanceId: string): ((state: RootState) => boolean | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.finished);

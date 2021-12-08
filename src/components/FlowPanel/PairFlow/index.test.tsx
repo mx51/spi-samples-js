@@ -49,7 +49,7 @@ describe('Test <FlowPanel />', () => {
     expect(mockContainer.innerHTML.includes(EFTPOS)).toBe(true);
   });
 
-  test('show pairing flow messages', () => {
+  test('should show pairing flow messages', () => {
     // Arrange
     const mockPairingFlowMessages = [
       'Requesting to Pair...',
@@ -70,7 +70,7 @@ describe('Test <FlowPanel />', () => {
     }
   });
 
-  test('show display pairingFlow flow message', () => {
+  test('should show display pairingFlow flow message', () => {
     // Arrange
     const flowMessage = 'Requesting to Pair...';
 
@@ -84,7 +84,7 @@ describe('Test <FlowPanel />', () => {
     expect(newMockContainer.innerHTML.includes(flowMessage)).toBeTruthy();
   });
 
-  test('show display pos version value', () => {
+  test('should show display pos version value', () => {
     // Arrange
     const mockPosVersion = 'v1.1.1';
 
@@ -98,7 +98,7 @@ describe('Test <FlowPanel />', () => {
     expect(newMockContainer.innerHTML.includes(mockPosVersion)).toBeTruthy();
   });
 
-  test('show display plugin version value', () => {
+  test('should show display plugin version value', () => {
     // Arrange
     const mockPluginVersion = 'v2.2.2';
 
@@ -112,7 +112,7 @@ describe('Test <FlowPanel />', () => {
     expect(newMockContainer.innerHTML.includes(mockPluginVersion)).toBeTruthy();
   });
 
-  test('show display spi version value', () => {
+  test('should show display spi version value', () => {
     // Arrange
     const mockPluginVersion = 'v2.2.3';
     const mockText = 'POS: - Spi: v2.2.3';
@@ -131,7 +131,7 @@ describe('Test <FlowPanel />', () => {
     expect(newMockContainer.innerHTML.includes(mockText)).toBeTruthy();
   });
 
-  test('show display plugin version value', () => {
+  test('should show display plugin version value', () => {
     // Arrange
     const mockPosVersion = '1.1.3';
     const mockText = 'POS: v1.1.3 Spi: -';
@@ -149,7 +149,7 @@ describe('Test <FlowPanel />', () => {
     expect(newMockContainer.innerHTML.includes(mockText)).toBeTruthy();
   });
 
-  test('display scheme message during calling getReceiptSchemes()', () => {
+  test('should display scheme message during calling getReceiptSchemes()', () => {
     // Arrange
     const mockSchemes = [{ scheme_name: 'test', settle_by_acquirer: 'test', total_count: '1', total_value: '1' }];
     const expectedSchemeText = 'Scheme Name: test, Settle By Acquirer: test, Total Count: 1, Total Value: 1';
@@ -161,7 +161,7 @@ describe('Test <FlowPanel />', () => {
     expect(result.trim()).toBe(expectedSchemeText);
   });
 
-  test('display empty string ("") message when schemes is set as [] during calling getReceiptSchemes()', () => {
+  test('should display empty string ("") message when schemes is set as [] during calling getReceiptSchemes()', () => {
     // Arrange
     const mockSchemes: [] = [];
     const expectedSchemeText = '';

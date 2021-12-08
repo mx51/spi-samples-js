@@ -3,7 +3,8 @@ import { Button, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import { Link as LinkRouter } from 'react-router-dom';
-import { PATH_ORDER_FINISHED } from '../../definitions/constants/routerConfigs';
+import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs';
+import { PATH_ORDER_FINISHED, TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import useStyles from './index.styles';
 
 import { TransactionProgressModalProps } from './interfaces';
@@ -15,6 +16,10 @@ function TransactionProgressModal({
   onCancelTransaction,
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
+
+  const modalTitle =
+    transactionType === SPI_TRANSACTION_TYPES.CashoutOnly ? TEXT_CASHOUT.toUpperCase() : transactionType.toUpperCase();
+
   return (
     <Dialog aria-labelledby="spiModalTitle" open>
       <DialogContent className={classes.transactionProgressModalContnent}>
@@ -30,7 +35,7 @@ function TransactionProgressModal({
             <Typography variant="body2" className={classes.modalHeading}>
               {transactionType.toUpperCase()}
             </Typography>
-            <Typography variant="body2" className={classes.modalSublHeading}>
+            <Typography variant="body2" className={classes.modalSubHeading}>
               In progress
             </Typography>
           </>
@@ -45,9 +50,9 @@ function TransactionProgressModal({
               height="56"
             />
             <Typography variant="body2" className={classes.modalHeading}>
-              {transactionType.toUpperCase()}
+              {modalTitle}
             </Typography>
-            <Typography variant="body2" className={classes.modalSublHeading}>
+            <Typography variant="body2" className={classes.modalSubHeading}>
               Approved
             </Typography>
           </>
@@ -62,9 +67,9 @@ function TransactionProgressModal({
               height="56"
             />
             <Typography variant="body2" className={classes.modalHeading}>
-              {transactionType.toUpperCase()}
+              {modalTitle}
             </Typography>
-            <Typography variant="body2" className={classes.modalSublHeading}>
+            <Typography variant="body2" className={classes.modalSubHeading}>
               Declined
             </Typography>
           </>

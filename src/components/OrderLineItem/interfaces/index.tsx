@@ -1,7 +1,7 @@
 export interface IOrderLineItemProps {
   label: string;
   amount: number;
-  onAdd: () => void;
+  onAdd?: () => void;
   disabled: boolean;
   viewOnly: boolean;
 }

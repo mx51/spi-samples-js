@@ -7,7 +7,9 @@ import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../definitions/constants/commonConfigs';
+import { TEXT_REFUND } from '../../definitions/constants/routerConfigs';
 import { defaultAAR, defaultLocalIP } from '../../definitions/constants/spiConfigs';
+import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import { IPairFormParams } from '../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../redux/reducers/TerminalSlice/interfaces';
 import ReduxProvider from '../../redux/ReduxProvider';
@@ -268,9 +270,53 @@ export const mockSpiClient = {
   },
   _testMode: true,
   _mostRecentPongReceived: true,
-  GetTerminalStatus: () => defaultAAR,
-  SetEventBus: (instance: Any) => {},
+  GetTerminalAddress: (): string => '',
+  GetTerminalStatus: (): string => defaultAAR,
+  SetEventBus: jest.fn(),
   BatteryLevelChanged: jest.fn(),
+};
+
+export const mockRefundTxFlow = {
+  posRefId: 'string',
+  id: 'string',
+  type: TEXT_REFUND,
+  displayMessage: 'string',
+  amountCents: 100,
+  awaitingSignatureCheck: false,
+  finished: true,
+  success: TxFlowState.Success,
+  response: {
+    data: {
+      rrn: 'string',
+      schemeAppName: 'string',
+      schemeName: 'string',
+      merchantReceipt: 'string',
+      transactionType: 'string',
+      hostResponseText: 'string',
+    },
+  },
+  signatureRequiredMessage: 'string',
+  request: {
+    id: 'string',
+    eventName: 'string',
+    data: {
+      posRefId: 'string',
+      purchaseAmount: 100,
+      tipAmount: 0,
+      cashAmount: 0,
+      promptForCashout: false,
+      surchargeAmount: 10,
+      promptForCustomerCopy: false,
+      printForSignatureRequiredTransactions: false,
+      printMerchantCopy: false,
+      customerReceiptHeader: '',
+      customerReceiptFooter: '',
+      merchantReceiptHeader: '',
+      merchantReceiptFooter: '',
+    },
+    posId: '',
+    decryptedJson: '',
+  },
 };
 
 export const mockTerminalInstance: ITerminal = {

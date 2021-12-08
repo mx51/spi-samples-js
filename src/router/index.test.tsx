@@ -56,7 +56,7 @@ describe('Test AppRoutes', () => {
     }
   });
 
-  test('Test lazy loading route', async () => {
+  test('should be able to lazy load route', async () => {
     // Arrange
     (Purchase as Any).mockImplementation(() => <div>Purchase Page</div>);
 

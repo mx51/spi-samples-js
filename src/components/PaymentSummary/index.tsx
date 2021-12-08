@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Divider, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
 import { PATH_PURCHASE } from '../../definitions/constants/routerConfigs';
@@ -10,8 +10,12 @@ import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/produ
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
-import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
-
+import {
+  isTerminalTxFlowSuccess,
+  terminalInstance,
+  terminalTransactionTypeObject,
+  terminalTxFlowFinishedTracker,
+} from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
 import OrderSubTotal from '../OrderSubTotal';
@@ -23,8 +27,9 @@ function PaymentSummary(): React.ReactElement {
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const subtotalAmount = useSelector(productSubTotalSelector);
-  const isFinished = currentTerminal?.txFlow?.finished;
-  const isSuccess = currentTerminal?.txFlow?.success === 'Success';
+  const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
+  const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
+  const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
@@ -34,19 +39,19 @@ function PaymentSummary(): React.ReactElement {
     <Box className={classes.root}>
       {/* Note: change Icon name */}
       <Box flexGrow="2" className={classes.roots}>
-        {isFinished && isSuccess && (
+        {isTxFlowFinished && isTxFlowSuccess && (
           <>
             <ConnectedIcon className={classes.connectedIcon} />
             <Typography variant="h5" component="h1">
-              Purchase Approved
+              {typeTitle} Approved
             </Typography>
           </>
         )}
-        {isFinished && !isSuccess && (
+        {isTxFlowFinished && !isTxFlowSuccess && (
           <>
             <UnpairedIcon className={classes.unpairedIcon} />
             <Typography variant="h5" component="h1">
-              Purchase Declined
+              {typeTitle} Declined
             </Typography>
           </>
         )}
@@ -62,37 +67,48 @@ function PaymentSummary(): React.ReactElement {
         <Divider variant="middle" />
         <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
         <OrderLineItem
-          disabled={false}
+          disabled
           label="Surcharge"
           amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
-          onAdd={() => 10}
           viewOnly
         />
         <OrderLineItem
-          disabled={1 > 0}
+          disabled
           label="Cashout"
           amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
-          onAdd={() => 0}
           viewOnly
         />
-        <OrderLineItem
-          disabled={2 > 0}
-          label="Tip"
-          amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
-          onAdd={() => 0}
-          viewOnly
-        />
-        <Button
-          variant="contained"
-          color="primary"
-          size="large"
-          classes={{ root: classes.newOrderBtn }}
-          component={LinkRouter}
-          to={PATH_PURCHASE}
-          onClick={clearAllProductsAction}
-        >
-          New Order
-        </Button>
+        <OrderLineItem disabled label="Tip" amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0} viewOnly />
+        <Grid container spacing={1}>
+          {typePath !== PATH_PURCHASE && (
+            <Grid item xs={6}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                classes={{ root: classes.actionBtn }}
+                component={LinkRouter}
+                to={typePath}
+              >
+                {typeTitle}
+              </Button>
+            </Grid>
+          )}
+          <Grid item xs={typePath !== PATH_PURCHASE ? 6 : 12}>
+            <Button
+              data-test-id="newOrderBtn"
+              variant="contained"
+              color="primary"
+              size="large"
+              classes={{ root: classes.actionBtn }}
+              component={LinkRouter}
+              to={PATH_PURCHASE}
+              onClick={clearAllProductsAction}
+            >
+              New Order
+            </Button>
+          </Grid>
+        </Grid>
       </Box>
     </Box>
   );

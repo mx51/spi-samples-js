@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 'normal',
     },
 
-    newOrderBtn: {
+    actionBtn: {
       padding: theme.spacing(2),
       borderRadius: 0,
       backgroundColor: theme.palette.error.dark,
@@ -71,6 +71,7 @@ const useStyles = makeStyles((theme: Theme) =>
         background: alpha(theme.palette.error.dark, 0.75),
         color: theme.palette.common.white,
       },
+      width: '100%',
     },
   })
 );

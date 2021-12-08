@@ -29,3 +29,8 @@ export function initiateCashoutOnlyTx(instanceId: string, purchaseAmount: number
   const posRefId = `cashout-${new Date().toISOString()}`;
   spiService.initiateCashoutOnlyTxTransaction(instanceId, posRefId, purchaseAmount, surchargeAmount);
 }
+
+export function initiateRefundTx(instanceId: string, refundAmount: number): void {
+  const posRefId = `refund-${new Date().toISOString()}`;
+  spiService.initiateRefundTxTransaction(instanceId, posRefId, refundAmount);
+}

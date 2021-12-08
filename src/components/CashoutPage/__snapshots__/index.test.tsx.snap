@@ -180,14 +180,6 @@ exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
                   />
                 </div>
               </div>
-              <p
-                class="MuiTypography-root makeStyles-label-21 MuiTypography-body1"
-              >
-                Select payment method
-              </p>
-              <hr
-                class="MuiDivider-root"
-              />
               <button
                 class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-23 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
                 disabled=""
