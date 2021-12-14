@@ -47,9 +47,6 @@ const useStyles = makeStyles((theme: Theme) =>
         borderColor: theme.palette.text.hint,
       },
     },
-    warningIcon: {
-      color: theme.palette.warning.main,
-    },
     closeButton: {
       position: 'absolute',
       right: theme.spacing(1),
