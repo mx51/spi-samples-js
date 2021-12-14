@@ -48,7 +48,7 @@ function TransactionProgressModal({
           </DialogTitle>
           <DialogContent>
             <Box className={classes.signatureFlow}>
-              <IconWarning className={classes.warningIcon} />
+              <IconWarning />
               <Typography variant="h6">Confirm customer signature</Typography>
               <Typography variant="body2">
                 Does the customer&#39;s signature match the signature on the card?
