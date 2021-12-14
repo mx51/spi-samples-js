@@ -34,3 +34,6 @@ export function initiateRefundTx(instanceId: string, refundAmount: number): void
   const posRefId = `refund-${new Date().toISOString()}`;
   spiService.initiateRefundTxTransaction(instanceId, posRefId, refundAmount);
 }
+export function cancelTransaction(instanceId: string): void {
+  spiService.spiCancelTransaction(instanceId);
+}

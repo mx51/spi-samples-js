@@ -3,8 +3,8 @@ import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
 import { PATH_PURCHASE } from '../../definitions/constants/routerConfigs';
-import { ReactComponent as ConnectedIcon } from '../../images/ConnectedIcon.svg';
-import { ReactComponent as UnpairedIcon } from '../../images/UnpairedIcon.svg';
+import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
+import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 
 import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
@@ -37,11 +37,10 @@ function PaymentSummary(): React.ReactElement {
 
   return (
     <Box className={classes.root}>
-      {/* Note: change Icon name */}
       <Box flexGrow="2" className={classes.roots}>
         {isTxFlowFinished && isTxFlowSuccess && (
           <>
-            <ConnectedIcon className={classes.connectedIcon} />
+            <SuccessIcon className={classes.successIcon} />
             <Typography variant="h5" component="h1">
               {typeTitle} Approved
             </Typography>
@@ -49,7 +48,7 @@ function PaymentSummary(): React.ReactElement {
         )}
         {isTxFlowFinished && !isTxFlowSuccess && (
           <>
-            <UnpairedIcon className={classes.unpairedIcon} />
+            <FailedIcon className={classes.failedIcon} />
             <Typography variant="h5" component="h1">
               {typeTitle} Declined
             </Typography>
@@ -69,16 +68,24 @@ function PaymentSummary(): React.ReactElement {
         <OrderLineItem
           disabled
           label="Surcharge"
+          onAdd={() => 0}
           amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
           viewOnly
         />
         <OrderLineItem
           disabled
           label="Cashout"
+          onAdd={() => 0}
           amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
           viewOnly
         />
-        <OrderLineItem disabled label="Tip" amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0} viewOnly />
+        <OrderLineItem
+          disabled
+          label="Tip"
+          onAdd={() => 0}
+          amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
+          viewOnly
+        />
         <Grid container spacing={1}>
           {typePath !== PATH_PURCHASE && (
             <Grid item xs={6}>

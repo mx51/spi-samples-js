@@ -6,10 +6,15 @@ import { updatePairingStatus } from '../../redux/reducers/TerminalSlice/terminal
 import { setLocalStorage } from '../../utils/common/spi/common';
 import {
   defaultMockPairFormParams,
+  mockCashoutAmount,
   mockPosRefId,
+  mockPromptForCashout,
+  mockPurchaseAmount,
   mockSpiClient,
+  mockSurchargeAmount,
   mockTerminalInstance,
   mockTerminalInstanceId,
+  mockTipAmount,
 } from '../../utils/tests/common';
 
 describe('Test SpiService functionalities', () => {
@@ -319,5 +324,54 @@ describe('Test SpiService functionalities', () => {
 
     // Assert
     expect(mockInitTxSettlementEnquiry).toHaveBeenCalled();
+  });
+
+  test('test function initiatePurchaseTransaction()', () => {
+    // Arrange
+    const mockInitTxPurchase = jest.spyOn(spiService, 'initiatePurchaseTransaction');
+
+    // Act
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        InitiatePurchaseTxV2: jest.fn(),
+      },
+    });
+
+    spiService.initiatePurchaseTransaction(
+      mockTerminalInstanceId,
+      mockPosRefId,
+      mockPurchaseAmount,
+      mockTipAmount,
+      mockCashoutAmount,
+      mockPromptForCashout,
+      mockSurchargeAmount
+    );
+
+    // Assert
+    expect(mockInitTxPurchase).toHaveBeenCalled();
+  });
+
+  test('test function initiateMotoPurchaseTransaction()', () => {
+    // Arrange
+    const mockInitTxMoto = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
+
+    // Act
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        InitiateMotoPurchaseTx: jest.fn(),
+      },
+    });
+
+    spiService.initiateMotoPurchaseTransaction(
+      mockTerminalInstanceId,
+      mockPosRefId,
+      mockPurchaseAmount,
+      mockSurchargeAmount
+    );
+
+    // Assert
+    expect(mockInitTxMoto).toHaveBeenCalled();
   });
 });

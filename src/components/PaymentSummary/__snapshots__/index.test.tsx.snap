@@ -132,3 +132,337 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
   </div>
 </div>
 `;
+
+exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] = `
+<div>
+  <div
+    class="MuiBox-root MuiBox-root-130 makeStyles-root-110"
+  >
+    <div
+      class="MuiBox-root MuiBox-root-131 makeStyles-roots-111"
+    >
+      <svg
+        class="makeStyles-failedIcon-113"
+      >
+        FailedIcon.svg
+      </svg>
+      <h1
+        class="MuiTypography-root MuiTypography-h5"
+      >
+        Refund
+         Declined
+      </h1>
+      <p
+        class="MuiTypography-root makeStyles-heading-114 MuiTypography-body1"
+      >
+        Terminal:
+        123
+      </p>
+      <p
+        class="MuiTypography-root makeStyles-subheading-115 MuiTypography-body1"
+      >
+        192.168.1.10
+         S/N 
+        123-123-123
+      </p>
+      <div
+        class="MuiPaper-root MuiBox-root MuiBox-root-132 makeStyles-paper-116 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        $5.50
+      </div>
+      <p
+        class="MuiTypography-root makeStyles-orderSummery-117 MuiTypography-body1"
+      >
+        Order Summary
+      </p>
+      <hr
+        class="MuiDivider-root MuiDivider-middle"
+      />
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-123 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Subtotal
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root makeStyles-price-124 MuiTypography-body1"
+        >
+          $0.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-126 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Surcharge
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          $1.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-126 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Cashout
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          $2.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-126 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Tip
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          $1.50
+        </p>
+      </li>
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6"
+        >
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-119 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            href="/refund"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Refund
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6"
+        >
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-119 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            data-test-id="newOrderBtn"
+            href="/"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              New Order
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] = `
+<div>
+  <div
+    class="MuiBox-root MuiBox-root-107 makeStyles-root-87"
+  >
+    <div
+      class="MuiBox-root MuiBox-root-108 makeStyles-roots-88"
+    >
+      <svg
+        class="makeStyles-successIcon-89"
+      >
+        SuccessIcon.svg
+      </svg>
+      <h1
+        class="MuiTypography-root MuiTypography-h5"
+      >
+        Refund
+         Approved
+      </h1>
+      <p
+        class="MuiTypography-root makeStyles-heading-91 MuiTypography-body1"
+      >
+        Terminal:
+        123
+      </p>
+      <p
+        class="MuiTypography-root makeStyles-subheading-92 MuiTypography-body1"
+      >
+        192.168.1.10
+         S/N 
+        123-123-123
+      </p>
+      <div
+        class="MuiPaper-root MuiBox-root MuiBox-root-109 makeStyles-paper-93 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        $5.50
+      </div>
+      <p
+        class="MuiTypography-root makeStyles-orderSummery-94 MuiTypography-body1"
+      >
+        Order Summary
+      </p>
+      <hr
+        class="MuiDivider-root MuiDivider-middle"
+      />
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-100 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Subtotal
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root makeStyles-price-101 MuiTypography-body1"
+        >
+          $0.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-103 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Surcharge
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          $1.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-103 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Cashout
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          $2.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-103 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Tip
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1"
+        >
+          $1.50
+        </p>
+      </li>
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6"
+        >
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-96 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            href="/refund"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Refund
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-6"
+        >
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-96 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            data-test-id="newOrderBtn"
+            href="/"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              New Order
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

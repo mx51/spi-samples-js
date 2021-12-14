@@ -4,9 +4,9 @@ import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
 import { SPI_PAIR_FLOW, SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
 import { PATH_PURCHASE } from '../../../../definitions/constants/routerConfigs';
-import { ReactComponent as ConnectedIcon } from '../../../../images/ConnectedIcon.svg';
+import { ReactComponent as FailedIcon } from '../../../../images/FailedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
-import { ReactComponent as UnpairedIcon } from '../../../../images/UnpairedIcon.svg';
+import { ReactComponent as SuccessIcon } from '../../../../images/SuccessIcon.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { handleCancelPairClick, handleUnPairClick } from '../../../../utils/common/pair/pairStatusHelpers';
@@ -39,7 +39,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
   if (status === SPI_PAIR_STATUS.PairedConnected && pairFormValues.serialNumber !== '') {
     return {
       statusTitle: SPI_PAIR_STATUS.PairedConnected,
-      statusIcon: <ConnectedIcon className={classes.connectedIcon} />,
+      statusIcon: <SuccessIcon className={classes.successIcon} />,
       statusText: SPI_PAIR_FLOW.Transaction,
       button: (
         <Box>
@@ -61,7 +61,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
 
   return {
     statusTitle: SPI_PAIR_STATUS.Unpaired,
-    statusIcon: <UnpairedIcon className={classes.unpairedIcon} />,
+    statusIcon: <FailedIcon className={classes.failedIcon} />,
     statusText: SPI_PAIR_FLOW.Idle,
     button: null,
   };

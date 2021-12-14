@@ -40,9 +40,9 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
               class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
             >
               <svg
-                class="makeStyles-unpairedIcon-9"
+                class="makeStyles-failedIcon-9"
               >
-                UnpairedIcon.svg
+                FailedIcon.svg
               </svg>
             </p>
             <div
