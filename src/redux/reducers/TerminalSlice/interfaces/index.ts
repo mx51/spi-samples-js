@@ -67,7 +67,11 @@ export interface ITxFlow {
       hostResponseText: string;
     };
   };
-  signatureRequiredMessage: string | null;
+  signatureRequiredMessage: {
+    posRefId: string | undefined;
+    requestId: string | undefined;
+    receiptToSign: string | undefined;
+  } | null;
   request: {
     id: string;
     eventName: string;
@@ -164,6 +168,7 @@ export interface IUpdateTxFlowAction {
 }
 
 export interface ITxFlowRawProps {
+  AmountCents: number;
   PosRefId: string;
   Id: string;
   Type: string;
@@ -181,7 +186,11 @@ export interface ITxFlowRawProps {
       host_response_text: string;
     };
   };
-  SignatureRequiredMessage: string | null;
+  SignatureRequiredMessage: {
+    PosRefId: string;
+    RequestId: string;
+    _receiptToSign: string;
+  } | null;
   Request: {
     Id: string;
     EventName: string;

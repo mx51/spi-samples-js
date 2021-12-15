@@ -11,7 +11,7 @@ import { TEXT_REFUND } from '../../definitions/constants/routerConfigs';
 import { defaultAAR, defaultLocalIP } from '../../definitions/constants/spiConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import { IPairFormParams } from '../../redux/reducers/PairFormSlice/interfaces';
-import { ITerminalState } from '../../redux/reducers/TerminalSlice/interfaces';
+import { ITerminalState, ITxFlow } from '../../redux/reducers/TerminalSlice/interfaces';
 import ReduxProvider from '../../redux/ReduxProvider';
 import { store } from '../../redux/store';
 import { ITerminal } from '../../services/interfaces';
@@ -281,6 +281,53 @@ export const mockSpiClient = {
   BatteryLevelChanged: jest.fn(),
 };
 
+export const mockTxFlow: ITxFlow = {
+  posRefId: 'string',
+  id: 'string',
+  type: 'string',
+  displayMessage: 'string',
+  amountCents: 100,
+  awaitingSignatureCheck: true,
+  finished: true,
+  success: 'string',
+  response: {
+    data: {
+      rrn: 'string',
+      schemeAppName: 'string',
+      schemeName: 'string',
+      merchantReceipt: 'string',
+      transactionType: 'string',
+      hostResponseText: 'string',
+    },
+  },
+  signatureRequiredMessage: {
+    posRefId: 'string',
+    requestId: 'string',
+    receiptToSign: 'string',
+  },
+  request: {
+    id: 'string',
+    eventName: 'string',
+    data: {
+      posRefId: 'string',
+      purchaseAmount: 0,
+      tipAmount: 0,
+      cashAmount: 0,
+      promptForCashout: false,
+      surchargeAmount: 0,
+      promptForCustomerCopy: false,
+      printForSignatureRequiredTransactions: false,
+      printMerchantCopy: false,
+      customerReceiptHeader: '',
+      customerReceiptFooter: '',
+      merchantReceiptHeader: '',
+      merchantReceiptFooter: '',
+    },
+    posId: '',
+    decryptedJson: '',
+  },
+};
+
 export const mockRefundTxFlow = {
   posRefId: 'string',
   id: 'string',
@@ -300,7 +347,11 @@ export const mockRefundTxFlow = {
       hostResponseText: 'string',
     },
   },
-  signatureRequiredMessage: 'string',
+  signatureRequiredMessage: {
+    PosRefId: 'string',
+    RequestId: 'string',
+    _receiptToSign: 'string',
+  },
   request: {
     id: 'string',
     eventName: 'string',

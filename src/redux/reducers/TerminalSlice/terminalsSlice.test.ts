@@ -91,6 +91,7 @@ function mockPreviousState(): ITerminalState {
 
 function mockTxFlowRawProps(): ITxFlowRawProps {
   return {
+    AmountCents: 100,
     PosRefId: 'string',
     Id: 'string',
     Type: 'string',
@@ -108,7 +109,11 @@ function mockTxFlowRawProps(): ITxFlowRawProps {
         host_response_text: 'string',
       },
     },
-    SignatureRequiredMessage: 'string',
+    SignatureRequiredMessage: {
+      PosRefId: 'string',
+      RequestId: 'string',
+      _receiptToSign: 'string',
+    },
     Request: {
       Id: 'string',
       EventName: 'string',
@@ -132,7 +137,7 @@ function mockTxFlow(): ITxFlow {
     id: 'string',
     type: 'string',
     displayMessage: 'string',
-    amountCents: 0,
+    amountCents: 100,
     awaitingSignatureCheck: true,
     finished: true,
     success: 'string',
@@ -146,7 +151,11 @@ function mockTxFlow(): ITxFlow {
         hostResponseText: 'string',
       },
     },
-    signatureRequiredMessage: 'string',
+    signatureRequiredMessage: {
+      posRefId: 'string',
+      requestId: 'string',
+      receiptToSign: 'string',
+    },
     request: {
       id: 'string',
       eventName: 'string',

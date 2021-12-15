@@ -19,7 +19,7 @@ export default makeStyles((theme: Theme) =>
       maxHeight: '100%',
       display: 'flex',
       alignItems: 'center',
-      padding: theme.spacing(12, 0, 6, 0),
+      padding: theme.spacing(12, 0, 6),
     },
     flowBox: {
       background: theme.palette.common.white,

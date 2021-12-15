@@ -2,8 +2,13 @@ import React from 'react';
 import { cleanup } from '@testing-library/react';
 import TransactionProgressModal from '.';
 import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs';
-import { TEXT_CASHOUT, TEXT_PURCHASE } from '../../definitions/constants/routerConfigs';
-import mockWithRedux from '../../utils/tests/common';
+import { TEXT_CASHOUT, TEXT_PURCHASE, TEXT_REFUND } from '../../definitions/constants/routerConfigs';
+import { TxFlowState } from '../../definitions/constants/terminalConfigs';
+import mockWithRedux, {
+  defaultMockPairFormParams,
+  defaultMockTerminals,
+  mockTerminalInstanceId,
+} from '../../utils/tests/common';
 
 describe('Test <TransactionProgressModal />', () => {
   afterEach(cleanup);
@@ -14,6 +19,7 @@ describe('Test <TransactionProgressModal />', () => {
 
     const container = mockWithRedux(
       <TransactionProgressModal
+        terminalId={mockTerminalInstanceId}
         transactionType={transactionType}
         isFinished={isFinished}
         isSuccess={isSuccess}
@@ -50,5 +56,55 @@ describe('Test <TransactionProgressModal />', () => {
     transactionProgressModalSetup(SPI_TRANSACTION_TYPES.CashoutOnly, true, true);
     // Assert
     expect(document.body.innerHTML.includes(TEXT_CASHOUT.toUpperCase())).toBeTruthy();
+  });
+
+  test('should show "REFUND" as modal title when transactionType value is returned as "Refund"', () => {
+    // Arrange
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, true);
+    // Assert
+    expect(document.body.innerHTML.includes(TEXT_REFUND.toUpperCase())).toBeTruthy();
+  });
+
+  test('should show signature flow with yes and no buttons', () => {
+    // Arrange
+    const modalTitle = 'Confirm customer signature';
+    const customStore = {
+      getState: () => ({
+        common: { showFlowPanel: false },
+        pairForm: defaultMockPairFormParams,
+        terminals: {
+          ...defaultMockTerminals,
+          [mockTerminalInstanceId]: {
+            ...defaultMockTerminals[mockTerminalInstanceId],
+            txFlow: {
+              awaitingSignatureCheck: true,
+              finished: false,
+              success: TxFlowState.Unknown,
+            },
+          },
+        },
+      }),
+      subscribe: jest.fn(),
+      dispatch: jest.fn(),
+    };
+    mockWithRedux(
+      <TransactionProgressModal
+        terminalId={mockTerminalInstanceId}
+        transactionType={SPI_TRANSACTION_TYPES.Refund}
+        isFinished={false}
+        isSuccess
+        onDone={jest.fn()}
+        onCancelTransaction={jest.fn()}
+      />,
+      customStore
+    );
+
+    const approveSignatureDOM = document.body.querySelector('[data-test-id="approveSignature"]') as Element;
+    const declineSignatureDOM = document.body.querySelector('[data-test-id="declineSignature"]') as Element;
+
+    // Assert
+    expect(approveSignatureDOM.innerHTML.includes('Yes')).toBeTruthy();
+    expect(declineSignatureDOM.innerHTML.includes('No')).toBeTruthy();
+    expect(document.body.innerHTML.includes(modalTitle)).toBeTruthy();
   });
 });

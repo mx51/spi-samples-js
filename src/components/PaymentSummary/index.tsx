@@ -36,7 +36,7 @@ function PaymentSummary(): React.ReactElement {
   };
 
   return (
-    <Box className={classes.root}>
+    <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
       <Box flexGrow="2" className={classes.roots}>
         {isTxFlowFinished && isTxFlowSuccess && (
           <>
@@ -62,30 +62,33 @@ function PaymentSummary(): React.ReactElement {
         <Box className={classes.paper} component={Paper}>
           {currencyFormat((currentTerminal?.txFlow?.request.data.purchaseAmount ?? 0) / 100)}
         </Box>
-        <Typography className={classes.orderSummery}>Order Summary</Typography>
-        <Divider variant="middle" />
-        <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
-        <OrderLineItem
-          disabled
-          label="Surcharge"
-          onAdd={() => 0}
-          amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
-          viewOnly
-        />
-        <OrderLineItem
-          disabled
-          label="Cashout"
-          onAdd={() => 0}
-          amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
-          viewOnly
-        />
-        <OrderLineItem
-          disabled
-          label="Tip"
-          onAdd={() => 0}
-          amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
-          viewOnly
-        />
+        {typePath === PATH_PURCHASE ? (
+          <>
+            <Typography className={classes.orderSummery}>Order Summary</Typography>
+            <Divider variant="middle" />
+            <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+            <OrderLineItem
+              disabled
+              label="Surcharge"
+              amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
+              viewOnly
+            />
+            <OrderLineItem
+              disabled
+              label="Cashout"
+              amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
+              viewOnly
+            />
+            <OrderLineItem
+              disabled
+              label="Tip"
+              amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
+              viewOnly
+            />
+          </>
+        ) : (
+          <br />
+        )}
         <Grid container spacing={1}>
           {typePath !== PATH_PURCHASE && (
             <Grid item xs={6}>
