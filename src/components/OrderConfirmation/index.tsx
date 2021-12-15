@@ -18,7 +18,6 @@ import {
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
 import { PATH_CASH_OUT, PATH_PAY_NOW, PATH_REFUND } from '../../definitions/constants/routerConfigs';
-import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import {
   orderCashoutAmountSelector,
   orderSurchargeAmountSelector,
@@ -29,6 +28,7 @@ import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
+import { updateTxFlow } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import {
   pairedConnectedTerminalList,
   terminalInstance,
@@ -40,9 +40,12 @@ import {
   initiateCashoutOnlyTx,
   initiateRefundTx,
   cancelTransaction,
+  setTerminalToIdle,
 } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
+import UnknownTransactionModal from '../UnknownTransactionModal';
+
 import useStyles from './index.styles';
 import { IOrderConfirmation } from './interfaces';
 
@@ -51,12 +54,17 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
 
   const classes = useStyles();
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
-  const subtotalAmount: number = useSelector(productSubTotalSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const terminals = useSelector(pairedConnectedTerminalList);
+  const [subtotalAmount, setSubtotalAmount] = useState<number>(useSelector(productSubTotalSelector));
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+
+  const isFinished = currentTerminal?.txFlow?.finished ?? false;
+  const successStatus = currentTerminal?.txFlow?.success;
+
+  const isUnknownState = isFinished && successStatus === 'Unknown';
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
@@ -65,6 +73,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
+  const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
 
   function selectTerminal(terminalId: string) {
     dispatch(updateSelectedTerminal(terminalId));
@@ -72,6 +81,19 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
 
   function isDisabled() {
     return !selectedTerminal || totalAmount <= 0;
+  }
+
+  function updateUnknownTerminalState(success: string) {
+    setTerminalToIdle(selectedTerminal);
+    setShowUnknownTransactionModal(false);
+    if (currentTerminal?.txFlow != null) {
+      dispatch(
+        updateTxFlow({
+          id: selectedTerminal,
+          txFlow: { ...currentTerminal?.txFlow, finished: true, success },
+        })
+      );
+    }
   }
 
   return (
@@ -87,12 +109,13 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
           open={displayKeypad}
           title="Override Purchase amount"
           subtitle="Enter purchase amount"
-          defaultAmount={totalAmount}
+          defaultAmount={subtotalAmount + tipAmount + surchargeAmount + cashoutAmount}
           onClose={() => {
             setDisplayKeypad(false);
           }}
           onAmountChange={(amount) => {
             setTotalAmount(amount);
+            setSubtotalAmount(amount);
             setDisplayKeypad(false);
             clearAllProductsAction();
           }}
@@ -152,12 +175,21 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 <Divider />
               </>
             )}
-            {showTransactionProgressModal && (
+            {showUnknownTransactionModal && isUnknownState && (
+              <UnknownTransactionModal
+                onSuccessTransaction={() => {
+                  updateUnknownTerminalState('Success');
+                }}
+                onFailedTransaction={() => {
+                  updateUnknownTerminalState('Failed');
+                }}
+              />
+            )}
+            {showTransactionProgressModal && !isUnknownState && (
               <TransactionProgressModal
-                terminalId={selectedTerminal}
                 transactionType={currentTerminal?.txFlow?.type ?? ''}
-                isFinished={currentTerminal?.txFlow?.finished ?? false}
-                isSuccess={currentTerminal?.txFlow?.success === TxFlowState.Success}
+                isFinished={isFinished}
+                isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {
                   cancelTransaction(selectedTerminal);
                   setShowTransactionProgressModal(false);
@@ -199,7 +231,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                   classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                   onClick={() => {
                     setShowTransactionProgressModal(true);
-                    initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
+                    initiateMotoPurchase(selectedTerminal, totalAmount, surchargeAmount);
                   }}
                 >
                   Moto

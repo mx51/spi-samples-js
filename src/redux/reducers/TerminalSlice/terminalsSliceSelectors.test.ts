@@ -6,30 +6,19 @@ import {
   mockDefaultProducts,
   mockTerminalInstanceId,
   defaultMockSelectedTerminals,
-  mockTxFlow,
 } from '../../../utils/tests/common';
 import {
   terminalList,
   terminalInstance,
   isTerminalUnpaired,
   pairedConnectedTerminalList,
-  terminalTxAmount,
-  terminalTxFlowSuccessTracker,
-  terminalTxFlowFinishedTracker,
-  terminalTxFlowAwaitingSignatureTracker,
 } from './terminalsSliceSelectors';
 
 const mockStoreState = {
   common: defaultMockCommonState,
   pairForm: defaultMockPairFormParams,
   products: mockDefaultProducts,
-  terminals: {
-    ...defaultMockTerminals,
-    [mockTerminalInstanceId]: {
-      ...defaultMockTerminals[mockTerminalInstanceId],
-      txFlow: mockTxFlow,
-    },
-  },
+  terminals: defaultMockTerminals,
   selectedTerminal: defaultMockSelectedTerminals,
 };
 
@@ -51,63 +40,12 @@ describe('Test terminals slice selectors', () => {
 
   test('Test isTerminalUnpaired', () => {
     // Act
-    const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+    const actualResult = (isTerminalUnpaired(mockTerminalInstanceId) as Any).resultFunc(
+      terminalInstance(mockTerminalInstanceId)
     );
-    const actualResult = (isTerminalUnpaired(mockTerminalInstanceId) as Any).resultFunc(currentTerminalInstance);
 
     // Assert
     expect(actualResult).toBeFalsy();
-  });
-
-  test('Test terminalTxAmount', () => {
-    // Act
-    const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
-    );
-    const actualResult = (terminalTxAmount(mockTerminalInstanceId) as Any).resultFunc(currentTerminalInstance);
-
-    // Assert
-    expect(actualResult).toEqual(100);
-  });
-
-  test('Test terminalTxFlowSuccessTracker', () => {
-    // Act
-    const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
-    );
-    const actualResult = (terminalTxFlowSuccessTracker(mockTerminalInstanceId) as Any).resultFunc(
-      currentTerminalInstance
-    );
-
-    // Assert
-    expect(actualResult).toEqual('string');
-  });
-
-  test('Test terminalTxFlowFinishedTracker', () => {
-    // Act
-    const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
-    );
-    const actualResult = (terminalTxFlowFinishedTracker(mockTerminalInstanceId) as Any).resultFunc(
-      currentTerminalInstance
-    );
-
-    // Assert
-    expect(actualResult).toEqual(true);
-  });
-
-  test('Test terminalTxFlowAwaitingSignatureTracker', () => {
-    // Act
-    const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
-    );
-    const actualResult = (terminalTxFlowAwaitingSignatureTracker(mockTerminalInstanceId) as Any).resultFunc(
-      currentTerminalInstance
-    );
-
-    // Assert
-    expect(actualResult).toEqual(true);
   });
 
   test('should return terminal which are paired connected', () => {

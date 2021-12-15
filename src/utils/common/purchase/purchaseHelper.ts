@@ -37,3 +37,6 @@ export function initiateRefundTx(instanceId: string, refundAmount: number): void
 export function cancelTransaction(instanceId: string): void {
   spiService.spiCancelTransaction(instanceId);
 }
+export function setTerminalToIdle(instanceId: string): void {
+  spiService.spiSetTerminalToIdle(instanceId);
+}

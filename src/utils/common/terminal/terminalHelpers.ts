@@ -7,11 +7,3 @@ export function settlement(instanceId: string, posRefId: string): void {
 export function settlementEnquiry(instanceId: string, posRefId: string): void {
   spiService.initTxSettlementEnquiry(instanceId, posRefId);
 }
-
-export function approveSignature(instanceId: string): void {
-  spiService.signatureForApprove(instanceId);
-}
-
-export function declineSignature(instanceId: string): void {
-  spiService.signatureForDecline(instanceId);
-}

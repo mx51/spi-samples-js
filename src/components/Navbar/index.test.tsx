@@ -2,17 +2,9 @@ import React from 'react';
 import { cleanup, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Navbar from '.';
-import { toggleFlowPanel } from '../../redux/reducers/CommonSlice/commonSlice';
 import { IPairFormParams } from '../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../redux/reducers/TerminalSlice/interfaces';
 import mockWithRedux, { defaultMockPairFormParams, defaultMockTerminals } from '../../utils/tests/common';
-
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useLocation: () => ({
-    pathname: '/refund',
-  }),
-}));
 
 function setupContainer(
   pairForm: IPairFormParams = defaultMockPairFormParams,
@@ -55,28 +47,5 @@ describe('Test <Navbar />', () => {
 
     // Assert
     expect(document.body).toHaveTextContent(/Sample POS/i);
-  });
-
-  test('should be able to toggle flow panel', () => {
-    // Arrange
-    const dispatch = jest.fn();
-    const developerModeSwitchDOM = mockContainer.querySelector('[name="developerModeSwitch"]');
-
-    // Act
-    fireEvent.click(developerModeSwitchDOM);
-    dispatch(toggleFlowPanel(true));
-
-    // Assert
-    expect(dispatch).toHaveBeenCalled();
-    expect(developerModeSwitchDOM).toBeChecked();
-  });
-
-  test('should developer mode button disabled on refund page', () => {
-    // Arrange
-    const disabledClass = 'Mui-disabled';
-    const developerModeSwitchDOM = mockContainer.querySelector('[data-test-id="developerModeSwitch"]');
-
-    // Assert
-    expect(developerModeSwitchDOM.outerHTML.includes(disabledClass)).toBe(true);
   });
 });

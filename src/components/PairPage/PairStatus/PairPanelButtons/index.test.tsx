@@ -1,3 +1,4 @@
+import React from 'react';
 import { cleanup } from '@testing-library/react';
 import PairPanelButtons from '.';
 import { SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';

@@ -4,16 +4,17 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     modalHeading: {
       fontWeight: 500,
+      fontSize: '1.5rem',
+      padding: '1rem',
+      color: theme.palette.text.primary,
+    },
+    modalSublHeading: {
+      fontWeight: 500,
       fontSize: '1.125rem',
       color: theme.palette.text.secondary,
     },
-    modalSubHeading: {
-      fontWeight: 500,
-      fontSize: '1.5rem',
-      color: theme.palette.text.primary,
-    },
     modalBtn: {
-      marginTop: '2rem',
+      margin: theme.spacing(3, 1, 1, 1),
     },
     transactionProgressModalContnent: {
       width: '27.5rem',

@@ -55,8 +55,7 @@
           "_posVersion",
           "_secrets",
           "_serialNumber",
-          "_spiPreauth",
-          "_receiptToSign"
+          "_spiPreauth"
         ]
       }
     ]
