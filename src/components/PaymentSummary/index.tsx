@@ -37,7 +37,6 @@ function PaymentSummary(): React.ReactElement {
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
-      {/* Note: change Icon name */}
       <Box flexGrow="2" className={classes.roots}>
         {isTxFlowFinished && isTxFlowSuccess && (
           <>

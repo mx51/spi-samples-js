@@ -38,7 +38,6 @@ describe('Test purchaseHelper()', () => {
     expect(spiService.initiatePurchaseTransaction).toBeDefined();
     expect(spiService.initiatePurchaseTransaction).toBeCalledTimes(1);
   });
-
   test('should initiateMotoPurchase() be defined when calling initiateMotoPurchaseTransaction() function', () => {
     // Arrange
     spiService.readTerminalInstance = jest.fn().mockReturnValue({
