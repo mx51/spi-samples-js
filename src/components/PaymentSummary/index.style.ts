@@ -19,13 +19,13 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flexDirection: 'column',
     },
-    connectedIcon: {
+    successIcon: {
       color: theme.palette.success.main,
       margin: theme.spacing(1),
       marginLeft: 'auto',
       marginRight: 'auto',
     },
-    unpairedIcon: {
+    failedIcon: {
       color: theme.palette.error.main,
       margin: theme.spacing(1),
       marginLeft: 'auto',

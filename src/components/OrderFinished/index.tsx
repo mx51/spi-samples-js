@@ -32,7 +32,6 @@ function OrderFinished(): React.ReactElement {
           <FlowPanel>
             <PurchaseFlow />
           </FlowPanel>
-          {/* <Order disablePayNow /> */}
         </Grid>
       </Grid>
     </Layout>

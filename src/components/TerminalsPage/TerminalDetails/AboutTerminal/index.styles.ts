@@ -43,13 +43,13 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
       wordBreak: 'break-word',
     },
-    unpairedIcon: {
+    failedIcon: {
       color: theme.palette.error.main,
     },
     reconnectIcon: {
       color: theme.palette.warning.main,
     },
-    connectedIcon: {
+    successIcon: {
       color: theme.palette.success.main,
     },
   })

@@ -27,7 +27,6 @@ describe('Test <TransactionProgressModal />', () => {
         onCancelTransaction={cancelFn}
       />
     );
-
     return container;
   }
 

@@ -39,6 +39,7 @@ import {
   initiateMotoPurchase,
   initiateCashoutOnlyTx,
   initiateRefundTx,
+  cancelTransaction,
 } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
@@ -104,7 +105,11 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
               <Box flex="1">
                 <Typography className={classes.payLabel}>{title}</Typography>
               </Box>
-              <Button className={classes.orderTotalBtn} onClick={() => setDisplayKeypad(true)}>
+              <Button
+                data-testid="orderTotalButton"
+                className={classes.orderTotalBtn}
+                onClick={() => setDisplayKeypad(true)}
+              >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
                     {currencyFormat(totalAmount / 100)}
@@ -123,10 +128,9 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
               <Box>
                 <List>
                   {terminals.map((terminal) => (
-                    <ListItem key={terminal.id} dense disableGutters>
+                    <ListItem key={terminal.id} dense disableGutters onClick={() => selectTerminal(terminal.id)}>
                       <ListItemIcon>
                         <Radio
-                          onClick={() => selectTerminal(terminal.id)}
                           className={classes.radioBtn}
                           checked={terminal.id === selectedTerminal}
                           value={terminal.id}
@@ -155,6 +159,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 isFinished={currentTerminal?.txFlow?.finished ?? false}
                 isSuccess={currentTerminal?.txFlow?.success === TxFlowState.Success}
                 onCancelTransaction={() => {
+                  cancelTransaction(selectedTerminal);
                   setShowTransactionProgressModal(false);
                 }}
                 onDone={() => {

@@ -17,6 +17,11 @@ import { store } from '../../redux/store';
 import { ITerminal } from '../../services/interfaces';
 
 export const mockPosRefId = 'mock-pos-ref-id-01';
+export const mockPurchaseAmount = 100;
+export const mockTipAmount = 1;
+export const mockCashoutAmount = 1;
+export const mockSurchargeAmount = 0;
+export const mockPromptForCashout = false;
 export const mockSerialNumber = '222-222-222';
 export const mockTerminalInstanceId = '123-123-123';
 export const mockReceiptContent = `

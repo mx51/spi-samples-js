@@ -420,6 +420,11 @@ class SpiService {
     this.removeUnpairedTerminalLocalStorage(instanceId);
   }
 
+  spiCancelTransaction(instanceId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    spi.CancelTransaction();
+  }
+
   initiatePurchaseTransaction(
     instanceId: string,
     posRefId: string,

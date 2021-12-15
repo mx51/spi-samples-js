@@ -119,6 +119,7 @@ exports[`Test <RefundPage /> should match RefundPage snapshot test 1`] = `
                 </div>
                 <button
                   class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-18"
+                  data-testid="orderTotalButton"
                   tabindex="0"
                   type="button"
                 >

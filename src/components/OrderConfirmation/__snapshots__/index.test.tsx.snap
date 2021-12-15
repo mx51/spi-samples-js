@@ -1,0 +1,159 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot test 1`] = `
+<div>
+  <div
+    class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+  >
+    <div
+      class="MuiGrid-root makeStyles-gridStyles-2 MuiGrid-item MuiGrid-grid-xs-7"
+    >
+      <div
+        class="MuiBox-root MuiBox-root-13 makeStyles-root-1"
+      >
+        <div
+          class="MuiBox-root MuiBox-root-14"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-15"
+          >
+            <p
+              class="MuiTypography-root makeStyles-payLabel-3 MuiTypography-body1"
+            >
+              title
+            </p>
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-5"
+            data-testid="orderTotalButton"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              <div
+                class="MuiPaper-root MuiBox-root MuiBox-root-16 makeStyles-paper-4 MuiPaper-elevation1 MuiPaper-rounded"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-17 makeStyles-orderTotalInputField-7"
+                >
+                  $5.00
+                </div>
+                <div
+                  class="MuiBox-root MuiBox-root-18"
+                >
+                  <span
+                    aria-hidden="true"
+                    class="material-icons MuiIcon-root"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="MuiSvgIcon-root"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                      />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+        <p
+          class="MuiTypography-root makeStyles-label-8 MuiTypography-body1"
+        >
+          Select terminal
+        </p>
+        <hr
+          class="MuiDivider-root"
+        />
+        <div
+          aria-label="terminalList"
+          class="MuiFormGroup-root makeStyles-radioGroup-6"
+          role="radiogroup"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-19"
+          >
+            <ul
+              class="MuiList-root MuiList-padding"
+            >
+              <li
+                class="MuiListItem-root MuiListItem-dense"
+              >
+                <div
+                  class="MuiListItemIcon-root"
+                >
+                  <span
+                    aria-disabled="false"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-20 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-11 MuiIconButton-colorSecondary"
+                  >
+                    <span
+                      class="MuiIconButton-label"
+                    >
+                      <input
+                        class="PrivateSwitchBase-input-23"
+                        name="terminal"
+                        type="radio"
+                        value="123324343"
+                      />
+                      <div
+                        class="PrivateRadioButtonIcon-root-24"
+                      >
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                          />
+                        </svg>
+                        <svg
+                          aria-hidden="true"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-25"
+                          focusable="false"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                          />
+                        </svg>
+                      </div>
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
+                  </span>
+                </div>
+                <div
+                  class="MuiListItemText-root MuiListItemText-dense MuiListItemText-multiline"
+                >
+                  <span
+                    class="MuiTypography-root MuiListItemText-primary MuiTypography-body2 MuiTypography-displayBlock"
+                  >
+                    posId123
+                  </span>
+                  <p
+                    class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
+                  >
+                    deviceAddress S/N serialNumber
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

@@ -230,7 +230,7 @@ const terminalsSlice = createSlice({
         response: {
           data: {
             rrn: detail?.Response?.Data.rrn,
-            schemeAppName: detail?.Response?.Data.scheme_app_name as string,
+            schemeAppName: detail?.Response?.Data.scheme_app_name,
             schemeName: detail?.Response?.Data.scheme_name,
             merchantReceipt: detail?.Response?.Data.merchant_receipt,
             transactionType: detail?.Response?.Data.transaction_Type,
