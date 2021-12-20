@@ -336,12 +336,12 @@ class SpiService {
           success: detail.Success,
           response: {
             data: {
-              rrn: detail?.Response?.Data.rrn,
-              schemeAppName: detail?.Response?.Data.scheme_app_name as string,
-              schemeName: detail?.Response?.Data.scheme_name,
-              merchantReceipt: detail?.Response?.Data.merchant_receipt,
-              transactionType: detail?.Response?.Data.transaction_Type,
-              hostResponseText: detail?.Response?.Data.host_response_text,
+              rrn: detail?.Response?.Data?.rrn,
+              schemeAppName: detail?.Response?.Data?.scheme_app_name,
+              schemeName: detail?.Response?.Data?.scheme_name,
+              merchantReceipt: detail?.Response?.Data?.merchant_receipt,
+              transactionType: detail?.Response?.Data?.transaction_Type,
+              hostResponseText: detail?.Response?.Data?.host_response_text,
             },
           },
           signatureRequiredMessage: detail.SignatureRequiredMessage,

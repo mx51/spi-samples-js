@@ -60,7 +60,7 @@ function PaymentSummary(): React.ReactElement {
           {currentTerminal?.deviceAddress} S/N {currentTerminal?.serialNumber}
         </Typography>
         <Box className={classes.paper} component={Paper}>
-          {currencyFormat((currentTerminal?.txFlow?.request.data.purchaseAmount ?? 0) / 100)}
+          {currencyFormat((currentTerminal?.txFlow?.request?.data?.purchaseAmount ?? 0) / 100)}
         </Box>
         {typePath === PATH_PURCHASE ? (
           <>

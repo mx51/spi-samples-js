@@ -3,32 +3,47 @@ import { fireEvent, screen, cleanup, waitFor } from '@testing-library/react';
 import * as redux from 'react-redux';
 import OrderConfirmation from '.';
 import { PATH_PAY_NOW } from '../../definitions/constants/routerConfigs';
+import { TxFlowState } from '../../definitions/constants/terminalConfigs';
+import { store } from '../../redux/store';
 import spiService from '../../services/spiService';
-import mockWithRedux from '../../utils/tests/common';
+import mockWithRedux, {
+  defaultMockPairFormParams,
+  mockReceiptResponse,
+  mockRefundTxFlow,
+  mockTerminalInstanceId,
+  pairedMockTerminals,
+} from '../../utils/tests/common';
 
 describe('Test <OrderConfirmation />', () => {
   let dispatch: Any;
+  let customStore: Any;
 
   beforeEach(() => {
-    const spyDispatch = jest.spyOn(redux, 'useDispatch');
     dispatch = jest.fn();
+    const spyDispatch = jest.spyOn(redux, 'useDispatch');
     spyDispatch.mockReturnValue(dispatch);
-    const spySelector = jest.spyOn(redux, 'useSelector');
-    spySelector.mockReturnValue([
-      {
-        id: '123324343',
-        deviceAddress: 'deviceAddress',
-        posId: 'posId123',
-        serialNumber: 'serialNumber',
-      },
-    ]);
+    customStore = {
+      ...store,
+      getState: () => ({
+        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
+        pairForm: defaultMockPairFormParams,
+        terminals: pairedMockTerminals,
+        products: {
+          surchargeAmount: 100,
+          tipAmount: 100,
+          cashoutAmount: 100,
+          products: [],
+        },
+        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+      }),
+    };
   });
 
   afterEach(cleanup);
 
   test('should match OrderConfirmationPage snapshot test', () => {
     // Arrange
-    const container = mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />);
+    const container = mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />, customStore);
 
     // Assert
     expect(container).toMatchSnapshot();
@@ -36,26 +51,26 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should clearAllProducts on amount override ', () => {
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />);
-    fireEvent.click(screen.getByText(/posId123/i));
+    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />, customStore);
+    fireEvent.click(screen.getByText(/test/i));
 
     // Assert
     expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({
-      payload: '123324343',
+      payload: '123-123-123',
       type: 'selectedTerminal/updateSelectedTerminal',
     });
   });
 
   test('should select a terminal from list', () => {
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />);
-    fireEvent.click(screen.getByText(/posId123/i));
+    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />, customStore);
+    fireEvent.click(screen.getByText(/test/i));
 
     // Assert
     expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({
-      payload: '123324343',
+      payload: '123-123-123',
       type: 'selectedTerminal/updateSelectedTerminal',
     });
   });
@@ -65,7 +80,7 @@ describe('Test <OrderConfirmation />', () => {
     initiatePurchaseTransaction.mockReturnValue();
 
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />);
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />, customStore);
     fireEvent.click(screen.getByText(/card/i));
 
     // Assert
@@ -77,7 +92,7 @@ describe('Test <OrderConfirmation />', () => {
     initiateMotoPurchaseTransaction.mockReturnValue();
 
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />);
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />, customStore);
     fireEvent.click(screen.getByText(/moto/i));
 
     // Assert
@@ -88,11 +103,41 @@ describe('Test <OrderConfirmation />', () => {
     const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
     initiateMotoPurchaseTransaction.mockReturnValue();
 
+    const customStore2 = (mockTerminals: Any) => ({
+      ...store,
+      getState: () => ({
+        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
+        terminals: mockTerminals,
+        products: {
+          surchargeAmount: 100,
+          tipAmount: 100,
+          cashoutAmount: 100,
+          products: [],
+        },
+        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+      }),
+    });
+    const mockTerminals = {
+      [mockTerminalInstanceId]: {
+        ...pairedMockTerminals[mockTerminalInstanceId],
+        receipt: mockReceiptResponse,
+        txFlow: {
+          ...mockRefundTxFlow,
+          finished: false,
+          success: TxFlowState.Unknown,
+        },
+      },
+    };
+
     const spiCancelTransaction = jest.spyOn(spiService, 'spiCancelTransaction');
     spiCancelTransaction.mockReturnValue();
 
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />,
+      customStore2(mockTerminals)
+    );
+
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />);
     fireEvent.click(screen.getByText(/moto/i));
 
     fireEvent.click(screen.getByText(/cancel/i));
@@ -109,7 +154,7 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={600} />);
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={600} />, customStore);
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByText(/5/i));
     fireEvent.click(screen.getByText(/ok/i));
@@ -128,7 +173,7 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />);
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />, customStore);
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByLabelText(/close button/i));
 

@@ -93,19 +93,20 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
                 >
                   <span
                     aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-20 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-11 MuiIconButton-colorSecondary"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-20 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-11 PrivateSwitchBase-checked-21 Mui-checked MuiIconButton-colorSecondary"
                   >
                     <span
                       class="MuiIconButton-label"
                     >
                       <input
+                        checked=""
                         class="PrivateSwitchBase-input-23"
                         name="terminal"
                         type="radio"
-                        value="123324343"
+                        value="123-123-123"
                       />
                       <div
-                        class="PrivateRadioButtonIcon-root-24"
+                        class="PrivateRadioButtonIcon-root-24 PrivateRadioButtonIcon-checked-26"
                       >
                         <svg
                           aria-hidden="true"
@@ -140,12 +141,12 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
                   <span
                     class="MuiTypography-root MuiListItemText-primary MuiTypography-body2 MuiTypography-displayBlock"
                   >
-                    posId123
+                    test
                   </span>
                   <p
                     class="MuiTypography-root MuiListItemText-secondary MuiTypography-body2 MuiTypography-colorTextSecondary MuiTypography-displayBlock"
                   >
-                    deviceAddress S/N serialNumber
+                    192.168.1.10 S/N 123-123-123
                   </p>
                 </div>
               </li>

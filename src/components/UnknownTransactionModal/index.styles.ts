@@ -5,7 +5,7 @@ const useStyles = makeStyles((theme: Theme) =>
     modalHeading: {
       fontWeight: 500,
       fontSize: '1.5rem',
-      padding: '1rem',
+      padding: theme.spacing(1),
       color: theme.palette.text.primary,
     },
     modalSublHeading: {
@@ -14,19 +14,18 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.secondary,
     },
     modalBtn: {
-      margin: theme.spacing(3, 1, 1, 1),
+      margin: theme.spacing(3, 1, 1),
     },
     transactionProgressModalContnent: {
-      width: '27.5rem',
-      height: '19.6rem',
       textAlign: 'center',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+      padding: theme.spacing(5),
     },
     modalImage: {
-      margin: '1rem',
+      margin: theme.spacing(1),
     },
   })
 );

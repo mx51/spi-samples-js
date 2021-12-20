@@ -33,6 +33,7 @@ import { updateTxFlow } from '../../redux/reducers/TerminalSlice/terminalsSlice'
 import {
   pairedConnectedTerminalList,
   terminalInstance,
+  terminalTxFlowFinishedTracker,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import {
@@ -61,11 +62,11 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const [subtotalAmount, setSubtotalAmount] = useState<number>(useSelector(productSubTotalSelector));
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
 
-  const isFinished = currentTerminal?.txFlow?.finished ?? false;
   const successStatus = currentTerminal?.txFlow?.success;
 
-  const isUnknownState = isFinished && successStatus === 'Unknown';
+  const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
@@ -97,6 +98,10 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
     }
   }
 
+  function getTotalAmount(): number {
+    return subtotalAmount + tipAmount + surchargeAmount + cashoutAmount;
+  }
+
   return (
     <>
       <Drawer
@@ -110,7 +115,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
           open={displayKeypad}
           title="Override Purchase amount"
           subtitle="Enter purchase amount"
-          defaultAmount={subtotalAmount + tipAmount + surchargeAmount + cashoutAmount}
+          defaultAmount={getTotalAmount()}
           onClose={() => {
             setDisplayKeypad(false);
           }}
