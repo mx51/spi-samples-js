@@ -1,7 +1,7 @@
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import { mockReceiptRawResponse, mockReceiptResponse } from '../../../utils/tests/common';
-import { IPairingFlow, IUpdateDeviceAddressAction, ITerminalState, ITxFlow, ITxFlowRawProps } from './interfaces';
+import { IPairingFlow, IUpdateDeviceAddressAction, ITerminalState, ITxFlow } from './interfaces';
 import reducer, {
   addTerminal,
   clearTransaction,
@@ -85,48 +85,6 @@ function mockPreviousState(): ITerminalState {
       terminalStatus: '',
       txFlow: null,
       txMessage: null,
-    },
-  };
-}
-
-function mockTxFlowRawProps(): ITxFlowRawProps {
-  return {
-    AmountCents: 100,
-    PosRefId: 'string',
-    Id: 'string',
-    Type: 'string',
-    DisplayMessage: 'string',
-    AwaitingSignatureCheck: true,
-    Finished: true,
-    Success: 'string',
-    Response: {
-      Data: {
-        rrn: 'string',
-        scheme_app_name: 'string',
-        scheme_name: 'string',
-        merchant_receipt: 'string',
-        transaction_Type: 'string',
-        host_response_text: 'string',
-      },
-    },
-    SignatureRequiredMessage: {
-      PosRefId: 'string',
-      RequestId: 'string',
-      _receiptToSign: 'string',
-    },
-    Request: {
-      Id: 'string',
-      EventName: 'string',
-      Data: {
-        pos_ref_id: 'string',
-        purchase_amount: 0,
-        tip_amount: 0,
-        cash_amount: 0,
-        prompt_for_cashout: false,
-        surcharge_amount: 0,
-      },
-      posId: 'string',
-      decryptedJson: 'string',
     },
   };
 }
@@ -575,7 +533,7 @@ test('should handle updateTxFlow', () => {
   // Act
   const updateTxFlowAction = {
     id: mockTerminalInstanceId,
-    txFlow: mockTxFlowRawProps(),
+    txFlow: mockTxFlow(),
   };
 
   // Assert
@@ -594,7 +552,7 @@ test('should handle updateTxFlow for empty state', () => {
   // Act
   const updateTxFlowAction = {
     id: mockTerminalInstanceId,
-    txFlow: mockTxFlowRawProps(),
+    txFlow: mockTxFlow(),
   };
 
   // Assert

@@ -9,7 +9,7 @@ import {
   mockSurchargeAmount,
   mockTipAmount,
 } from '../../tests/common';
-import { initiateMotoPurchase, initiatePurchase } from './purchaseHelper';
+import { initiateMotoPurchase, initiatePurchase, setTerminalToIdle } from './purchaseHelper';
 
 describe('Test purchaseHelper()', () => {
   afterEach(cleanup);
@@ -54,5 +54,23 @@ describe('Test purchaseHelper()', () => {
     // Assert
     expect(spiService.initiateMotoPurchaseTransaction).toBeDefined();
     expect(spiService.initiateMotoPurchaseTransaction).toBeCalledTimes(1);
+  });
+
+  test('should setTerminalToIdle() be defined when calling spiSetTerminalToIdle() function', () => {
+    // Arrange
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        spiSetTerminalToIdle: jest.fn(),
+      },
+    });
+    spiService.spiSetTerminalToIdle = jest.fn();
+
+    // Act
+    setTerminalToIdle(mockPosRefId);
+
+    // Assert
+    expect(spiService.spiSetTerminalToIdle).toBeDefined();
+    expect(spiService.spiSetTerminalToIdle).toBeCalledTimes(1);
   });
 });

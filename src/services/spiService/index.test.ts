@@ -374,4 +374,40 @@ describe('Test SpiService functionalities', () => {
     // Assert
     expect(mockInitTxMoto).toHaveBeenCalled();
   });
+
+  test('test function spiCancelTransaction()', () => {
+    // Arrange
+    const mockCancelTransaction = jest.spyOn(spiService, 'spiCancelTransaction');
+
+    // Act
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        CancelTransaction: jest.fn(),
+      },
+    });
+
+    spiService.spiCancelTransaction(mockTerminalInstanceId);
+
+    // Assert
+    expect(mockCancelTransaction).toHaveBeenCalled();
+  });
+
+  test('test function spiSetTerminalToIdle()', () => {
+    // Arrange
+    const mockSetTerminalIdle = jest.spyOn(spiService, 'spiSetTerminalToIdle');
+
+    // Act
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: {
+        ...mockSpiClient,
+        AckFlowEndedAndBackToIdle: jest.fn(),
+      },
+    });
+
+    spiService.spiSetTerminalToIdle(mockTerminalInstanceId);
+
+    // Assert
+    expect(mockSetTerminalIdle).toHaveBeenCalled();
+  });
 });

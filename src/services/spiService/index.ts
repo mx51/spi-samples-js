@@ -325,10 +325,53 @@ class SpiService {
             })
           );
 
+        const txFlowDetails = {
+          posRefId: detail.PosRefId,
+          id: detail.Id,
+          type: detail.Type,
+          displayMessage: detail.DisplayMessage,
+          amountCents: 0,
+          awaitingSignatureCheck: detail.AwaitingSignatureCheck,
+          finished: detail.Finished,
+          success: detail.Success,
+          response: {
+            data: {
+              rrn: detail?.Response?.Data?.rrn,
+              schemeAppName: detail?.Response?.Data?.scheme_app_name,
+              schemeName: detail?.Response?.Data?.scheme_name,
+              merchantReceipt: detail?.Response?.Data?.merchant_receipt,
+              transactionType: detail?.Response?.Data?.transaction_Type,
+              hostResponseText: detail?.Response?.Data?.host_response_text,
+            },
+          },
+          signatureRequiredMessage: detail.SignatureRequiredMessage,
+          request: {
+            id: detail.Request.Id,
+            eventName: detail.Request.EventName,
+            data: {
+              posRefId: detail.Request.Data.pos_ref_id,
+              purchaseAmount: detail.Request.Data.purchase_amount,
+              tipAmount: detail.Request.Data.tip_amount,
+              cashAmount: detail.Request.Data.cash_amount,
+              promptForCashout: detail.Request.Data.prompt_for_cashout,
+              surchargeAmount: detail.Request.Data.surcharge_amount,
+              promptForCustomerCopy: false,
+              printForSignatureRequiredTransactions: false,
+              printMerchantCopy: false,
+              customerReceiptHeader: '',
+              customerReceiptFooter: '',
+              merchantReceiptHeader: '',
+              merchantReceiptFooter: '',
+            },
+            posId: '',
+            decryptedJson: '',
+          },
+        };
+
         this.dispatchAction(
           updateTxFlow({
             id: instanceId,
-            txFlow: detail,
+            txFlow: txFlowDetails,
           })
         );
       });
@@ -420,9 +463,16 @@ class SpiService {
     this.removeUnpairedTerminalLocalStorage(instanceId);
   }
 
+  // * Purchase related operations *
+
   spiCancelTransaction(instanceId: string) {
     const spi = this.readTerminalInstance(instanceId).spiClient;
     spi.CancelTransaction();
+  }
+
+  spiSetTerminalToIdle(instanceId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    spi.AckFlowEndedAndBackToIdle();
   }
 
   initiatePurchaseTransaction(
