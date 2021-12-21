@@ -31,15 +31,6 @@ export interface ITerminal {
   terminal?: ITerminalProps | null;
 }
 
-export interface ITerminalConfig {
-  acquirerCode: string;
-  autoAddress: boolean;
-  deviceAddress: string;
-  posId: string;
-  secureWebSocket: boolean;
-  serialNumber: string;
-  testMode: boolean;
-}
 export interface ISettings {
   eftposReceipt: boolean;
   sigFlow: boolean;
@@ -96,12 +87,12 @@ export interface ITxFlow {
   };
 }
 export interface IPairingFlow {
-  Message: string;
-  AwaitingCheckFromEftpos: boolean;
-  AwaitingCheckFromPos: boolean;
-  ConfirmationCode: string;
-  Finished: boolean;
-  Successful: boolean;
+  message: string;
+  awaitingCheckFromEftpos: boolean;
+  awaitingCheckFromPos: boolean;
+  confirmationCode: string;
+  finished: boolean;
+  successful: boolean;
 }
 export interface ISecrets {
   encKey: string;
@@ -118,14 +109,28 @@ export interface ITxMessage {
 // Types for Actions
 export interface IAddTerminalAction {
   id: string;
-  pairFormValues: {
+  terminalConfigs: {
     acquirerCode: string;
     autoAddress: boolean;
     deviceAddress: string;
     posId: string;
+    secureWebSocket: boolean;
     serialNumber: string;
-    secrets: ISecrets | null;
     testMode: boolean;
+    pluginVersion: string;
+    merchantId: string;
+    terminalId: string;
+    batteryLevel: string;
+    flow: null;
+    id: string;
+    pairingFlow: null;
+    posVersion: string;
+    secrets: ISecrets | null;
+    settings: null;
+    status: string;
+    terminalStatus: string;
+    txFlow: null;
+    txMessage: null;
   };
 }
 export interface IUpdateDeviceAddressAction {
@@ -190,39 +195,7 @@ export interface IUpdateTxMessage {
 
 export interface IUpdateTerminalReceipt {
   id: string;
-  responseData: ITerminalReceiptRawProps;
-}
-
-export interface ITerminalReceiptRawProps {
-  accumulated_settle_by_acquirer_count: string;
-  accumulated_settle_by_acquirer_value: string;
-  accumulated_total_count: string;
-  accumulated_total_value: string;
-  bank_date: string;
-  bank_time: string;
-  error_detail: string;
-  error_reason: string;
-  host_response_code: string;
-  host_response_text: string;
-  merchant_acquirer: string;
-  merchant_address: string;
-  merchant_city: string;
-  merchant_country: string;
-  merchant_name: string;
-  merchant_postcode: string;
-  merchant_receipt: string;
-  merchant_receipt_printed: boolean;
-  schemes: Array<IReceiptSchemes>;
-  settlement_period_end_date: string;
-  settlement_period_end_time: string;
-  settlement_period_start_date: string;
-  settlement_period_start_time: string;
-  settlement_triggered_date: string;
-  settlement_triggered_time: string;
-  stan: string;
-  success: boolean;
-  terminal_id: string;
-  transaction_range: string;
+  receipt: ITerminalReceiptFormatProps;
 }
 
 export interface ITerminalReceiptFormatProps {

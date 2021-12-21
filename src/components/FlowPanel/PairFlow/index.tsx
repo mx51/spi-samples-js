@@ -43,12 +43,12 @@ export default function PairFlow({ terminal }: ITerminal): React.ReactElement {
   const pairFlowInformation = (pairingFlow: IPairingFlow) => `
 ### PAIRING PROCESS UPDATE ###
 
-# ${pairingFlow.Message}
-# Finished? ${pairingFlow.Finished}
-# Successful? ${pairingFlow.Successful}
-# Confirmation Code: ${pairingFlow.ConfirmationCode}
-# Waiting Confirm from Eftpos? ${pairingFlow.AwaitingCheckFromEftpos}
-# Waiting Confirm from POS? ${pairingFlow.AwaitingCheckFromPos}
+# ${pairingFlow?.message}
+# Finished? ${pairingFlow?.finished}
+# Successful? ${pairingFlow?.successful}
+# Confirmation Code: ${pairingFlow?.confirmationCode}
+# Waiting Confirm from Eftpos? ${pairingFlow?.awaitingCheckFromEftpos}
+# Waiting Confirm from POS? ${pairingFlow?.awaitingCheckFromPos}
   `;
 
   const receiptInformation = (txFlowReceipt: ITerminalReceiptFormatProps) =>

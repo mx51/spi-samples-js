@@ -1,6 +1,6 @@
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
-import { mockReceiptRawResponse, mockReceiptResponse } from '../../../utils/tests/common';
+import { mockReceiptResponse } from '../../../utils/tests/common';
 import { IPairingFlow, IUpdateDeviceAddressAction, ITerminalState, ITxFlow } from './interfaces';
 import reducer, {
   addTerminal,
@@ -24,18 +24,18 @@ const mockTerminalInstanceId = '222-222-222';
 
 function mockPairingFlow(): IPairingFlow {
   const pairingFlow = {
-    Finished: true,
-    Message: 'Requesting to pair ..',
-    AwaitingCheckFromEftpos: false,
-    AwaitingCheckFromPos: false,
-    ConfirmationCode: '',
-    Successful: false,
+    finished: true,
+    message: 'Requesting to pair ..',
+    awaitingCheckFromEftpos: false,
+    awaitingCheckFromPos: false,
+    confirmationCode: '',
+    successful: false,
   };
 
   return pairingFlow;
 }
 
-function mockTerminalConfigurations() {
+function mockDefaultTerminalConfigurations() {
   return {
     acquirerCode: 'string',
     autoAddress: false,
@@ -45,7 +45,7 @@ function mockTerminalConfigurations() {
     secureWebSocket: true,
     serialNumber: mockTerminalInstanceId,
     testMode: true,
-    pairingFlow: mockPairingFlow(),
+    pairingFlow: null,
     pluginVersion: '-',
     merchantId: '-',
     terminalId: '-',
@@ -142,23 +142,14 @@ function mockTxFlow(): ITxFlow {
 test('should handle a initial add terminal state', () => {
   // Arrange
   const previousState = {};
-  const pairFormValues = {
-    acquirerCode: 'test',
-    autoAddress: false,
-    deviceAddress: defaultLocalIP,
-    posId: 'test',
-    secrets: null,
-    serialNumber: mockTerminalInstanceId,
-    testMode: false,
-  };
   const expectedState = {
-    acquirerCode: 'test',
+    acquirerCode: 'string',
     autoAddress: false,
     deviceAddress: defaultLocalIP,
-    posId: 'test',
+    posId: 'string',
     secureWebSocket: true,
     serialNumber: mockTerminalInstanceId,
-    testMode: false,
+    testMode: true,
     pluginVersion: '-',
     merchantId: '-',
     terminalId: '-',
@@ -178,7 +169,7 @@ test('should handle a initial add terminal state', () => {
   // Act
   const addTerminalAction = {
     id: mockTerminalInstanceId,
-    pairFormValues,
+    terminalConfigs: mockDefaultTerminalConfigurations(),
   };
 
   // Assert
@@ -193,7 +184,7 @@ test('should handle when terminal is added', () => {
   // Act
   const addTerminalAction = {
     id: mockTerminalInstanceId,
-    pairFormValues: mockTerminalConfigurations(),
+    terminalConfigs: mockDefaultTerminalConfigurations(),
   };
 
   // Assert
@@ -243,12 +234,12 @@ test('should handle updateDeviceAddress for empty state', () => {
 test('should handle updatePairingFlow', () => {
   // Arrange
   const mockPairingFlowResponse = {
-    Message: 'Connecting...',
-    AwaitingCheckFromEftpos: false,
-    AwaitingCheckFromPos: false,
-    ConfirmationCode: '',
-    Finished: false,
-    Successful: false,
+    message: 'Connecting...',
+    awaitingCheckFromEftpos: false,
+    awaitingCheckFromPos: false,
+    confirmationCode: '',
+    finished: false,
+    successful: false,
   };
 
   // Act
@@ -269,12 +260,12 @@ test('should handle updatePairingFlow', () => {
 test('should handle updatePairingFlow when empty state & unpaired', () => {
   // Arrange
   const mockPairingFlowResponse = {
-    Message: 'Connecting...',
-    AwaitingCheckFromEftpos: false,
-    AwaitingCheckFromPos: false,
-    ConfirmationCode: '',
-    Finished: false,
-    Successful: false,
+    message: 'Connecting...',
+    awaitingCheckFromEftpos: false,
+    awaitingCheckFromPos: false,
+    confirmationCode: '',
+    finished: false,
+    successful: false,
   };
   const previousState = {};
 
@@ -295,12 +286,12 @@ test('should handle updatePairingFlow when empty state & unpaired', () => {
 test('should handle updatePairingFlow when empty state & unpaired', () => {
   // Arrange
   const mockPairingFlowResponse = {
-    Message: 'Connecting...',
-    AwaitingCheckFromEftpos: false,
-    AwaitingCheckFromPos: false,
-    ConfirmationCode: '',
-    Finished: true,
-    Successful: false,
+    message: 'Connecting...',
+    awaitingCheckFromEftpos: false,
+    awaitingCheckFromPos: false,
+    confirmationCode: '',
+    finished: true,
+    successful: false,
   };
   const previousState = {};
 
@@ -406,43 +397,47 @@ test('should handle updateTerminal', () => {
   const updateTerminalAction = {
     id: mockTerminalInstanceId,
     spiClient: {
-      _acquirerCode: 'test',
-      _autoAddressResolutionEnabled: false,
-      _eftposAddress: defaultLocalIP,
-      _posId: 'test',
-      _forceSecureWebSockets: true,
-      _serialNumber: mockTerminalInstanceId,
-      _inTestMode: true,
-      CurrentFlow: null,
-      CurrentPairingFlowState: null,
-      _posVersion: '1.3.4',
-      _secrets: {
+      acquirerCode: 'test',
+      autoAddress: false,
+      deviceAddress: defaultLocalIP,
+      posId: 'test',
+      secureWebSocket: true,
+      serialNumber: mockTerminalInstanceId,
+      testMode: true,
+      flow: null,
+      id: mockTerminalInstanceId,
+      pairingFlow: null,
+      posVersion: '1.3.4',
+      secrets: {
         encKey: 'string',
         hmacKey: 'string',
       },
-      _currentStatus: 'Idle',
-      CurrentTxFlowState: null,
+      settings: null, // not available during pair terminal stage
+      status: 'Idle',
+      terminalStatus: null,
+      txFlow: null,
+      txMessage: null,
     },
   };
 
   const expectedResponse = {
-    acquirerCode: updateTerminalAction.spiClient._acquirerCode,
-    autoAddress: updateTerminalAction.spiClient._autoAddressResolutionEnabled,
-    deviceAddress: updateTerminalAction.spiClient._eftposAddress,
-    posId: updateTerminalAction.spiClient._posId,
-    secureWebSocket: updateTerminalAction.spiClient._forceSecureWebSockets,
-    serialNumber: updateTerminalAction.spiClient._serialNumber,
-    testMode: updateTerminalAction.spiClient._inTestMode,
-    flow: updateTerminalAction.spiClient.CurrentFlow,
-    id: updateTerminalAction.spiClient._serialNumber,
-    pairingFlow: updateTerminalAction.spiClient.CurrentPairingFlowState,
-    posVersion: updateTerminalAction.spiClient._posVersion,
-    secrets: updateTerminalAction.spiClient._secrets,
-    settings: null, // not available during pair terminal stage
-    status: updateTerminalAction.spiClient._currentStatus,
-    terminalStatus: updateTerminalAction.spiClient.CurrentFlow,
-    txFlow: updateTerminalAction.spiClient.CurrentTxFlowState,
-    txMessage: null,
+    acquirerCode: updateTerminalAction.spiClient.acquirerCode,
+    autoAddress: updateTerminalAction.spiClient.autoAddress,
+    deviceAddress: updateTerminalAction.spiClient.deviceAddress,
+    posId: updateTerminalAction.spiClient.posId,
+    secureWebSocket: updateTerminalAction.spiClient.secureWebSocket,
+    serialNumber: updateTerminalAction.spiClient.serialNumber,
+    testMode: updateTerminalAction.spiClient.testMode,
+    flow: updateTerminalAction.spiClient.flow,
+    id: updateTerminalAction.spiClient.id,
+    pairingFlow: updateTerminalAction.spiClient.pairingFlow,
+    posVersion: updateTerminalAction.spiClient.posVersion,
+    secrets: updateTerminalAction.spiClient.secrets,
+    settings: updateTerminalAction.spiClient.settings,
+    status: updateTerminalAction.spiClient.status,
+    terminalStatus: updateTerminalAction.spiClient.terminalStatus,
+    txFlow: updateTerminalAction.spiClient.txFlow,
+    txMessage: updateTerminalAction.spiClient.txMessage,
   };
 
   // Assert
@@ -705,7 +700,7 @@ test('should handle updateTxFlowSettlementResponse', () => {
   // Arrange
   const updateTxFlowSettlementResponseAction = {
     id: mockTerminalInstanceId,
-    responseData: mockReceiptRawResponse,
+    receipt: mockReceiptResponse,
   };
 
   // Assert
@@ -722,7 +717,7 @@ test('should handle updateTxFlowSettlementResponse for empty state', () => {
   const previousState = {};
   const updateTxFlowSettlementResponseAction = {
     id: mockTerminalInstanceId,
-    responseData: mockReceiptRawResponse,
+    receipt: mockReceiptResponse,
   };
 
   // Assert

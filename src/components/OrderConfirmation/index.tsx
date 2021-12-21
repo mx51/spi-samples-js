@@ -17,7 +17,14 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
-import { PATH_CASH_OUT, PATH_PAY_NOW, PATH_REFUND } from '../../definitions/constants/routerConfigs';
+import {
+  PATH_CASH_OUT,
+  PATH_REFUND,
+  TEXT_PURCHASE,
+  TEXT_REFUND,
+  TEXT_CASHOUT,
+  PATH_PAY_NOW,
+} from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import {
   orderCashoutAmountSelector,
@@ -49,7 +56,7 @@ import TransactionProgressModal from '../TransactionProgressModal';
 import UnknownTransactionModal from '../UnknownTransactionModal';
 
 import useStyles from './index.styles';
-import { IOrderConfirmation } from './interfaces';
+import { IOrderConfirmation, ITitleStrategy } from './interfaces';
 
 function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmation): React.ReactElement {
   const dispatch = useDispatch();
@@ -98,8 +105,14 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
     }
   }
 
-  function getTotalAmount(): number {
-    return subtotalAmount + tipAmount + surchargeAmount + cashoutAmount;
+  const titleStrategy: ITitleStrategy = {
+    Pay: `Override ${TEXT_PURCHASE} Amount`,
+    [TEXT_CASHOUT]: TEXT_CASHOUT,
+    [TEXT_REFUND]: TEXT_REFUND,
+  };
+
+  function getTitleForKeypad(): string {
+    return title in titleStrategy ? (titleStrategy as unknown as Record<string, keyof ITitleStrategy>)[title] : title;
   }
 
   return (
@@ -113,9 +126,9 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
       >
         <KeyPad
           open={displayKeypad}
-          title="Override Purchase amount"
-          subtitle="Enter purchase amount"
-          defaultAmount={getTotalAmount()}
+          title={getTitleForKeypad()}
+          subtitle={`Enter ${getTitleForKeypad().toLowerCase()} amount`}
+          defaultAmount={totalAmount}
           onClose={() => {
             setDisplayKeypad(false);
           }}

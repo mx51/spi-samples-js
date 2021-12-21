@@ -69,7 +69,7 @@ describe('Test <TabPanel />', () => {
     expect(container.innerHTML.includes('Test Panel Two')).toBeTruthy();
   });
 
-  test('should display receipt loading status message when txFlow Finished is false and success is Unknown', () => {
+  test('should display receipt loading status message when txFlow finished is false and success is Unknown', () => {
     // Arrange
     const customizedStore = {
       getState: () => ({
@@ -111,7 +111,7 @@ describe('Test <TabPanel />', () => {
     expect(newMockContainer.innerHTML.includes('Settle Initiated. Will be updated with Progress.')).toBe(true);
   });
 
-  test('should display receipt with error when txFlow Finished is false and success is Failed', () => {
+  test('should display receipt with error when txFlow finished is false and success is Failed', () => {
     // Arrange
     const customizedStore = {
       getState: () => ({
@@ -154,7 +154,7 @@ describe('Test <TabPanel />', () => {
     expect(newMockContainer.innerHTML.includes('Could not initiate settle:')).toBe(true);
   });
 
-  test('should display receipt content when txFlow Finished is true and success is Success', () => {
+  test('should display receipt content when txFlow finished is true and success is Success', () => {
     // Arrange
     const customizedStore = {
       getState: () => ({
