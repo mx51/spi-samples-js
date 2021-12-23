@@ -209,22 +209,31 @@ class SpiService {
 
       // SPI Paring Flow State Change Listener
       instance.addEventListener(spiEvents.spiPairingFlowStateChanged, ({ detail }: Any) => {
+        const pairingFlow = {
+          message: detail?.Message,
+          awaitingCheckFromEftpos: detail?.AwaitingCheckFromEftpos,
+          awaitingCheckFromPos: detail?.AwaitingCheckFromPos,
+          confirmationCode: detail?.ConfirmationCode,
+          finished: detail?.Finished,
+          successful: detail?.Successful,
+        };
+
         this.dispatchAction(
           updatePairingFlow({
             id: instanceId,
-            pairingFlow: detail,
+            pairingFlow,
           })
         );
 
-        if (detail?.ConfirmationCode && detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos)
+        if (detail?.confirmationCode && detail?.awaitingCheckFromEftpos && detail?.awaitingCheckFromPos)
           this.dispatchAction(setConfirmPairingFlow(true)); // turn on "show confirm pairing flow message in flow panel"
 
-        if (detail?.ConfirmationCode && !detail.AwaitingCheckFromEftpos && detail.AwaitingCheckFromPos) {
+        if (detail?.confirmationCode && !detail?.awaitingCheckFromEftpos && detail?.awaitingCheckFromPos) {
           instance.spi.PairingConfirmCode();
         }
 
-        if (detail.Message === 'Pairing Failed') {
-          this.handleTerminalPairFailure(instanceId, detail.Message);
+        if (detail?.message === 'Pairing Failed') {
+          this.handleTerminalPairFailure(instanceId, detail?.message);
           this.removeTerminalInstance(instanceId);
         }
 
@@ -261,6 +270,27 @@ class SpiService {
 
       // SPI Terminal Configuration Response Function (always get called when browser gets refreshed)
       instance.spiClient.TerminalConfigurationResponse = ({ Data }: Any) => {
+        const { spiClient } = instance;
+        const terminalConfigurations = {
+          acquirerCode: spiClient?._acquirerCode,
+          autoAddress: spiClient?._autoAddressResolutionEnabled,
+          deviceAddress: spiClient?._eftposAddress,
+          posId: spiClient?._posId,
+          secureWebSocket: spiClient?._forceSecureWebSockets,
+          serialNumber: spiClient?._serialNumber,
+          testMode: spiClient?._inTestMode,
+          flow: spiClient?.CurrentFlow,
+          id: spiClient?._serialNumber,
+          pairingFlow: spiClient?.CurrentPairingFlowState,
+          posVersion: spiClient?._posVersion,
+          secrets: spiClient?._secrets,
+          settings: null, // not available during pair terminal stage
+          status: spiClient?._currentStatus,
+          terminalStatus: spiClient?.CurrentFlow,
+          txFlow: spiClient?.CurrentTxFlowState,
+          txMessage: null, // not available during pair terminal stage
+        };
+
         // after terminal paired and when page refreshed, update terminal status
         if (instance.spiClient._currentStatus === SPI_PAIR_STATUS.PairedConnected) {
           this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.PairedConnected }));
@@ -273,7 +303,7 @@ class SpiService {
         this.dispatchAction(
           updateTerminal({
             id: instanceId,
-            spiClient: instance.spiClient,
+            spiClient: terminalConfigurations,
           })
         );
 
@@ -312,7 +342,39 @@ class SpiService {
       instance.addEventListener(spiEvents.spiTxFlowStateChanged, (event: Any) => {
         const { detail } = event;
 
-        if (detail.Finished) {
+        const receipt = {
+          accumulatedSettleByAcquirerCount: detail?.Response?.Data?.accumulated_settle_by_acquirer_count,
+          accumulatedSettleByAcquirerValue: detail?.Response?.Data?.accumulated_settle_by_acquirer_value,
+          accumulatedTotalCount: detail?.Response?.Data?.accumulated_total_count,
+          accumulatedTotalValue: detail?.Response?.Data?.accumulated_total_value,
+          bankDate: detail?.Response?.Data?.bank_date,
+          bankTime: detail?.Response?.Data?.bank_time,
+          errorDetail: detail?.Response?.Data?.error_detail,
+          errorReason: detail?.Response?.Data?.error_reason,
+          hostResponseCode: detail?.Response?.Data?.host_response_code,
+          hostResponseText: detail?.Response?.Data?.host_response_text,
+          merchantAcquirer: detail?.Response?.Data?.merchant_acquirer,
+          merchantAddress: detail?.Response?.Data?.merchant_address,
+          merchantCity: detail?.Response?.Data?.merchant_city,
+          merchantCountry: detail?.Response?.Data?.merchant_country,
+          merchantName: detail?.Response?.Data?.merchant_name,
+          merchantPostcode: detail?.Response?.Data?.merchant_postcode,
+          merchantReceipt: detail?.Response?.Data?.merchant_receipt,
+          merchantReceiptPrinted: detail?.Response?.Data?.merchant_receipt_printed,
+          schemes: detail?.Response?.Data?.schemes,
+          settlementPeriodEndDate: detail?.Response?.Data?.settlement_period_end_date,
+          settlementPeriodEndTime: detail?.Response?.Data?.settlement_period_end_time,
+          settlementPeriodStartDate: detail?.Response?.Data?.settlement_period_start_date,
+          settlementPeriodStartTime: detail?.Response?.Data?.settlement_period_start_time,
+          settlementTriggeredDate: detail?.Response?.Data?.settlement_triggered_date,
+          settlementTriggeredTime: detail?.Response?.Data?.settlement_triggered_time,
+          stan: detail?.Response?.Data?.stan,
+          success: detail?.Response?.Data?.success,
+          terminalId: detail?.Response?.Data?.terminal_id,
+          transactionRange: detail?.Response?.Data?.transaction_range,
+        };
+
+        if (detail?.Finished) {
           instance.spiClient.AckFlowEndedAndBackToIdle();
         }
 
@@ -321,19 +383,19 @@ class SpiService {
           this.dispatchAction(
             updateTxFlowSettlementResponse({
               id: instanceId,
-              responseData: detail.Response.Data,
+              receipt,
             })
           );
 
         const txFlowDetails = {
-          posRefId: detail.PosRefId,
-          id: detail.Id,
-          type: detail.Type,
-          displayMessage: detail.DisplayMessage,
-          amountCents: 0,
-          awaitingSignatureCheck: detail.AwaitingSignatureCheck,
-          finished: detail.Finished,
-          success: detail.Success,
+          posRefId: detail?.PosRefId,
+          id: detail?.Id,
+          type: detail?.Type,
+          displayMessage: detail?.DisplayMessage,
+          amountCents: detail?.AmountCents,
+          awaitingSignatureCheck: detail?.AwaitingSignatureCheck,
+          finished: detail?.Finished,
+          success: detail?.Success,
           response: {
             data: {
               rrn: detail?.Response?.Data?.rrn,
@@ -344,17 +406,17 @@ class SpiService {
               hostResponseText: detail?.Response?.Data?.host_response_text,
             },
           },
-          signatureRequiredMessage: detail.SignatureRequiredMessage,
+          signatureRequiredMessage: detail?.SignatureRequiredMessage,
           request: {
-            id: detail.Request.Id,
-            eventName: detail.Request.EventName,
+            id: detail?.Request.Id,
+            eventName: detail?.Request?.EventName,
             data: {
-              posRefId: detail.Request.Data.pos_ref_id,
-              purchaseAmount: detail.Request.Data.purchase_amount,
-              tipAmount: detail.Request.Data.tip_amount,
-              cashAmount: detail.Request.Data.cash_amount,
-              promptForCashout: detail.Request.Data.prompt_for_cashout,
-              surchargeAmount: detail.Request.Data.surcharge_amount,
+              posRefId: detail?.Request?.Data?.pos_ref_id,
+              purchaseAmount: detail?.Request?.Data?.purchase_amount,
+              tipAmount: detail?.Request?.Data?.tip_amount,
+              cashAmount: detail?.Request?.Data?.cash_amount,
+              promptForCashout: detail?.Request?.Data?.prompt_for_cashout,
+              surchargeAmount: detail?.Request?.Data?.surcharge_amount,
               promptForCustomerCopy: false,
               printForSignatureRequiredTransactions: false,
               printMerchantCopy: false,
@@ -382,10 +444,10 @@ class SpiService {
             id: instanceId,
             txMessage: {
               decryptedJson: '',
-              displayMessageCode: Data.display_message_code,
-              displayMessageText: Data.display_message_text,
+              displayMessageCode: Data?.display_message_code,
+              displayMessageText: Data?.display_message_text,
               posCounter: '',
-              posRefId: Data.pos_ref_id,
+              posRefId: Data?.pos_ref_id,
             },
           })
         );

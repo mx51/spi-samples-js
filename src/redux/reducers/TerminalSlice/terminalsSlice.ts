@@ -26,30 +26,7 @@ const terminalsSlice = createSlice({
   initialState,
   reducers: {
     addTerminal(state: ITerminalState, action: PayloadAction<IAddTerminalAction>) {
-      const { id, pairFormValues } = action.payload;
-      const terminalConfigs = {
-        acquirerCode: pairFormValues.acquirerCode,
-        autoAddress: pairFormValues.autoAddress,
-        deviceAddress: pairFormValues.deviceAddress,
-        posId: pairFormValues.posId,
-        secureWebSocket: true,
-        serialNumber: pairFormValues.serialNumber,
-        testMode: pairFormValues.testMode,
-        pluginVersion: '-',
-        merchantId: '-',
-        terminalId: '-',
-        batteryLevel: '-',
-        flow: null,
-        id: '',
-        pairingFlow: null,
-        posVersion: '',
-        secrets: pairFormValues.secrets,
-        settings: null, // not available during pair terminal stage
-        status: SPI_PAIR_STATUS.Unpaired,
-        terminalStatus: '',
-        txFlow: null,
-        txMessage: null, // not available during pair terminal stage
-      };
+      const { id, terminalConfigs } = action.payload;
 
       state[id] = terminalConfigs;
     },
@@ -66,6 +43,7 @@ const terminalsSlice = createSlice({
 
     removeTerminal(state: ITerminalState, action: PayloadAction<IRemoveTerminalAction>) {
       const { id } = action.payload;
+
       delete state[id];
     },
 
@@ -81,18 +59,10 @@ const terminalsSlice = createSlice({
       const { id, pairingFlow } = action.payload;
       const currentState = state[id] || {};
 
-      currentState.pairingFlow = {
-        Message: pairingFlow.Message,
-        AwaitingCheckFromEftpos: pairingFlow.AwaitingCheckFromEftpos,
-        AwaitingCheckFromPos: pairingFlow.AwaitingCheckFromPos,
-        ConfirmationCode: pairingFlow.ConfirmationCode,
-        Finished: pairingFlow.Finished,
-        Successful: pairingFlow.Successful,
-      };
-
       // can also dispatch updatePairingStatus from spiService when below condition is true
-      if (pairingFlow.Finished && !pairingFlow.Successful) currentState.status = SpiStatus.Unpaired;
+      if (pairingFlow?.finished && !pairingFlow?.successful) currentState.status = SpiStatus.Unpaired;
 
+      currentState.pairingFlow = pairingFlow;
       state[id] = currentState;
     },
 
@@ -118,27 +88,7 @@ const terminalsSlice = createSlice({
     updateTerminal(state: ITerminalState, action: PayloadAction<Any>) {
       const { id, spiClient } = action.payload;
 
-      const response = {
-        acquirerCode: spiClient._acquirerCode,
-        autoAddress: spiClient._autoAddressResolutionEnabled,
-        deviceAddress: spiClient._eftposAddress,
-        posId: spiClient._posId,
-        secureWebSocket: spiClient._forceSecureWebSockets,
-        serialNumber: spiClient._serialNumber,
-        testMode: spiClient._inTestMode,
-        flow: spiClient.CurrentFlow,
-        id: spiClient._serialNumber,
-        pairingFlow: spiClient.CurrentPairingFlowState,
-        posVersion: spiClient._posVersion,
-        secrets: spiClient._secrets,
-        settings: null, // not available during pair terminal stage
-        status: spiClient._currentStatus,
-        terminalStatus: spiClient.CurrentFlow,
-        txFlow: spiClient.CurrentTxFlowState,
-        txMessage: null, // not available during pair terminal stage
-      };
-
-      state[id] = response;
+      state[id] = spiClient;
     },
 
     updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<IConfigurations>) {
@@ -178,46 +128,17 @@ const terminalsSlice = createSlice({
     },
 
     updateTxFlowSettlementResponse(state: ITerminalState, action: PayloadAction<IUpdateTerminalReceipt>) {
-      const { id, responseData } = action.payload;
+      const { id, receipt } = action.payload;
       const currentState = state[id] || {};
-      currentState.receipt = {
-        accumulatedSettleByAcquirerCount: responseData?.accumulated_settle_by_acquirer_count,
-        accumulatedSettleByAcquirerValue: responseData?.accumulated_settle_by_acquirer_value,
-        accumulatedTotalCount: responseData?.accumulated_total_count,
-        accumulatedTotalValue: responseData?.accumulated_total_value,
-        bankDate: responseData?.bank_date,
-        bankTime: responseData?.bank_time,
-        errorDetail: responseData?.error_detail,
-        errorReason: responseData?.error_reason,
-        hostResponseCode: responseData?.host_response_code,
-        hostResponseText: responseData?.host_response_text,
-        merchantAcquirer: responseData?.merchant_acquirer,
-        merchantAddress: responseData?.merchant_address,
-        merchantCity: responseData?.merchant_city,
-        merchantCountry: responseData?.merchant_country,
-        merchantName: responseData?.merchant_name,
-        merchantPostcode: responseData?.merchant_postcode,
-        merchantReceipt: responseData?.merchant_receipt,
-        merchantReceiptPrinted: responseData?.merchant_receipt_printed,
-        schemes: responseData?.schemes,
-        settlementPeriodEndDate: responseData?.settlement_period_end_date,
-        settlementPeriodEndTime: responseData?.settlement_period_end_time,
-        settlementPeriodStartDate: responseData?.settlement_period_start_date,
-        settlementPeriodStartTime: responseData?.settlement_period_start_time,
-        settlementTriggeredDate: responseData?.settlement_triggered_date,
-        settlementTriggeredTime: responseData?.settlement_triggered_time,
-        stan: responseData?.stan,
-        success: responseData?.success,
-        terminalId: responseData?.terminal_id,
-        transactionRange: responseData?.transaction_range,
-      };
 
+      currentState.receipt = receipt;
       state[id] = currentState;
     },
 
     updateTxFlow(state: ITerminalState, action: PayloadAction<IUpdateTxFlowAction>) {
       const { id, txFlow } = action.payload;
       const currentState = state[id] || {};
+
       currentState.txFlow = txFlow;
       state[id] = currentState;
     },

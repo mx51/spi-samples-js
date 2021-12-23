@@ -7,7 +7,31 @@ import spiService from '../../../services/spiService';
 // pair terminal
 async function handlePairClick(dispatch: AppDispatch, pairFormValues: IPairFormValues): Promise<void> {
   const instanceId = pairFormValues.serialNumber;
-  dispatch(addTerminal({ id: instanceId, pairFormValues }));
+  const terminalConfigs = {
+    acquirerCode: pairFormValues?.acquirerCode,
+    autoAddress: pairFormValues?.autoAddress,
+    deviceAddress: pairFormValues?.deviceAddress,
+    posId: pairFormValues?.posId,
+    secureWebSocket: true,
+    serialNumber: instanceId,
+    testMode: pairFormValues?.testMode,
+    pluginVersion: '-',
+    merchantId: '-',
+    terminalId: '-',
+    batteryLevel: '-',
+    flow: null,
+    id: instanceId,
+    pairingFlow: null,
+    posVersion: '',
+    secrets: pairFormValues?.secrets,
+    settings: null, // not available during pair terminal stage
+    status: SPI_PAIR_STATUS.Unpaired,
+    terminalStatus: '',
+    txFlow: null,
+    txMessage: null, // not available during pair terminal stage
+  };
+
+  dispatch(addTerminal({ id: instanceId, terminalConfigs }));
   // start pairing
   spiService.spiTerminalPair(instanceId, pairFormValues);
   // update terminal connection status when starting to pair a terminal

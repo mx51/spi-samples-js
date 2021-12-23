@@ -2,11 +2,11 @@ import React from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
-import { PATH_PURCHASE } from '../../definitions/constants/routerConfigs';
+import { PATH_PURCHASE, TEXT_PURCHASE } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 
-import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+import { orderTotalSelector, productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -14,6 +14,7 @@ import {
   isTerminalTxFlowSuccess,
   terminalInstance,
   terminalTransactionTypeObject,
+  terminalTxAmount,
   terminalTxFlowFinishedTracker,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
@@ -29,7 +30,9 @@ function PaymentSummary(): React.ReactElement {
   const subtotalAmount = useSelector(productSubTotalSelector);
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
+  const transactionAmount = useSelector(terminalTxAmount(selectedTerminal));
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
+  const originalTotalAmount: number = useSelector(orderTotalSelector);
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
@@ -60,7 +63,7 @@ function PaymentSummary(): React.ReactElement {
           {currentTerminal?.deviceAddress} S/N {currentTerminal?.serialNumber}
         </Typography>
         <Box className={classes.paper} component={Paper}>
-          {currencyFormat((currentTerminal?.txFlow?.request?.data?.purchaseAmount ?? 0) / 100)}
+          {currencyFormat((typeTitle !== TEXT_PURCHASE ? transactionAmount ?? 0 : originalTotalAmount ?? 0) / 100)}
         </Box>
         {typePath === PATH_PURCHASE ? (
           <>
@@ -70,19 +73,19 @@ function PaymentSummary(): React.ReactElement {
             <OrderLineItem
               disabled
               label="Surcharge"
-              amount={currentTerminal?.txFlow?.request.data.surchargeAmount ?? 0}
+              amount={currentTerminal?.txFlow?.request?.data?.surchargeAmount ?? 0}
               viewOnly
             />
             <OrderLineItem
               disabled
               label="Cashout"
-              amount={currentTerminal?.txFlow?.request.data.cashAmount ?? 0}
+              amount={currentTerminal?.txFlow?.request?.data?.cashAmount ?? 0}
               viewOnly
             />
             <OrderLineItem
               disabled
               label="Tip"
-              amount={currentTerminal?.txFlow?.request.data.tipAmount ?? 0}
+              amount={currentTerminal?.txFlow?.request?.data?.tipAmount ?? 0}
               viewOnly
             />
           </>

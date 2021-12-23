@@ -14,7 +14,6 @@ export default function PurchaseFlow(): React.ReactElement {
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const awaitingSignatureCheck = useSelector(terminalTxFlowAwaitingSignatureTracker(selectedTerminal));
-
   const statusInformation = (spi: ITerminalProps) =>
     awaitingSignatureCheck
       ? `
