@@ -127,6 +127,16 @@ export const handleAddressTypeSelectorOnChange = (
       value: event.target.value as string,
     })
   );
+
+  dispatch(
+    updatePairFormParams({
+      key: 'deviceAddress',
+      value: {
+        value: '',
+        isValid: true,
+      },
+    })
+  ); // reset the device address field value when address type change detected
 };
 
 export const handleAddressTypeSelectorOnBlur = (

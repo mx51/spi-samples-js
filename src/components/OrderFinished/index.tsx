@@ -19,7 +19,7 @@ function OrderFinished(): React.ReactElement {
 
   return (
     <Layout>
-      <Grid container spacing={2}>
+      <Grid container>
         <Grid item xs={5}>
           <PaymentSummary />
         </Grid>

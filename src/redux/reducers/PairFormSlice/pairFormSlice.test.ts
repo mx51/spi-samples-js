@@ -5,7 +5,6 @@ import {
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { defaultAAR, defaultLocalIP } from '../../../definitions/constants/spiConfigs';
-import { isHttps } from '../../../utils/common/pair/pairFormHelpers';
 import {
   customMockPairFormParamsState,
   defaultMockPairFormParams,
@@ -104,9 +103,7 @@ describe('Test pairFormSlice', () => {
     // Act
     const mockInitialState = {
       acquirerCode: '',
-      addressType: isHttps()
-        ? TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE
-        : TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
+      addressType: TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
       deviceAddress: defaultLocalIP,
       posId: '',
       serialNumber: '',

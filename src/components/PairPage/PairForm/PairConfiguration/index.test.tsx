@@ -7,6 +7,9 @@ import PairConfiguration from '.';
 import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_VALUE,
+  TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
+  TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
+  TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../../definitions/constants/spiConfigs';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
@@ -111,7 +114,7 @@ describe('Test <PairConfiguration />', () => {
     expect(handlePaymentProviderFieldOnChange).toHaveBeenCalledTimes(1);
   });
 
-  test('should SPI provider field disabled when payment provider is not "Other"', async () => {
+  test('should payment provider field disabled when payment provider is not "Other"', async () => {
     // Arrange
     const filedDisabledClass = 'Mui-disabled';
     const paymentProviderFieldDOM = mockContainer.querySelector('[data-test-id="paymentProviderField"] input');
@@ -128,7 +131,7 @@ describe('Test <PairConfiguration />', () => {
   test('should eftpos address field be enabled when eftpos address type is eftpos', async () => {
     // Arrange
     const eftposAddressText = 'EFTPOS address';
-    const configurationTypeSelectorDOM = mockContainer.querySelector('[data-test-id="configurationTypeSelector"]');
+    const configurationTypeSelectorDOM = mockContainer.querySelector('[data-test-id="configurationSelector"]');
     const eftposAddressFieldDOM = mockContainer.querySelector('[data-test-id="eftposAddressField"] input');
     const testModeCheckboxDOM = mockContainer.querySelector('[data-test-id="testModeCheckbox"]');
 
@@ -142,11 +145,40 @@ describe('Test <PairConfiguration />', () => {
     expect(testModeCheckboxDOM.innerHTML.includes('checked')).toBeTruthy();
   });
 
+  test('should show the error hint message icon when eftpos address input is invalid', async () => {
+    // Arrange
+    const invalidEftposAddress = 'word-test';
+    const eftposAddressFieldDOM = mockContainer.querySelector('[data-test-id="eftposAddressField"] input');
+
+    // Act
+    fireEvent.change(eftposAddressFieldDOM, { target: { value: invalidEftposAddress } });
+    fireEvent.blur(eftposAddressFieldDOM);
+
+    // Assert
+    expect(mockContainer.innerHTML.includes(TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD)).toBeTruthy();
+  });
+
+  test('should test mode be disabled when user selected eftpos address', async () => {
+    // Arrange
+    const checkboxClassName = 'Mui-checked';
+    const testModeCheckboxDOM = mockContainer.querySelector('[data-test-id="testModeCheckbox"] input');
+
+    // Act
+    fireEvent.mouseDown((await screen.findAllByText(/^EFTPOS address/i))[0]);
+    fireEvent.click((await screen.findAllByText(/^EFTPOS address/i))[0]);
+    fireEvent.mouseDown((await screen.findAllByText(/^EFTPOS address/i))[0]);
+    fireEvent.click((await screen.findAllByText(/^Auto address/i))[0]);
+    fireEvent.blur((await screen.findAllByText(/^Auto address/i))[0]);
+
+    // Assert
+    expect(testModeCheckboxDOM.outerHTML.includes(checkboxClassName)).toBeFalsy();
+  });
+
   test('should eftpos address field be disabled when eftpos address type is auto', async () => {
     // Arrange
     const handleAddressTypeSelectorOnBlur = jest.fn();
     const autoAddressText = 'Auto address';
-    const configurationTypeSelectorDOM = mockContainer.querySelector('[data-test-id="configurationTypeSelector"]');
+    const configurationTypeSelectorDOM = mockContainer.querySelector('[data-test-id="configurationSelector"]');
     const eftposAddressFieldDOM = mockContainer.querySelector('[data-test-id="eftposAddressField"] input');
 
     // Act
@@ -170,6 +202,12 @@ describe('Test <PairConfiguration />', () => {
 
     // Assert
     expect(document.body.innerHTML.includes(checkboxClassName)).toBeTruthy();
+
+    // Act
+    fireEvent.click(testModeCheckboxDOM, { target: { checked: true } });
+
+    // Assert
+    expect(document.body.innerHTML.includes(checkboxClassName)).toBeFalsy();
   });
 
   test('should eftpos address reflects changes after user started typing', () => {
@@ -235,5 +273,31 @@ describe('Test <PairConfiguration />', () => {
     expect(serialNumberFieldDOM.value).toBe('123-4');
     expect(serialNumberFormatter).toHaveBeenCalled();
     expect(handleSerialNumberFieldOnChange).toHaveBeenCalled();
+  });
+
+  test('should show the error hint message icon when payment provider input is invalid', () => {
+    // Arrange
+    const invalidPaymentProvider = '123-45';
+    const paymentProviderFieldDOM = mockContainer.querySelector('[data-test-id="paymentProviderField"] input');
+
+    // Act
+    fireEvent.change(paymentProviderFieldDOM, { target: { value: invalidPaymentProvider } });
+    fireEvent.blur(paymentProviderFieldDOM);
+
+    // Assert
+    expect(mockContainer.innerHTML.includes(TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD)).toBeTruthy();
+  });
+
+  test('should show the error hint message icon when payment provider input is invalid', () => {
+    // Arrange
+    const invalidPosId = '';
+    const posIdFieldDOM = mockContainer.querySelector('[data-test-id="posIdField"] input');
+
+    // Act
+    fireEvent.change(posIdFieldDOM, { target: { value: invalidPosId } });
+    fireEvent.blur(posIdFieldDOM);
+
+    // Assert
+    expect(mockContainer.innerHTML.includes(TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD)).toBeTruthy();
   });
 });
