@@ -1,4 +1,4 @@
-export const currentVersion = '2.8.3';
+export const currentVersion = '2.9.1';
 export const defaultApikey = 'BurgerPosDeviceAPIKey';
 export const defaultAAR = 'https://mx51.aar.mock.link';
 export const defaultPosName = 'mx51';
