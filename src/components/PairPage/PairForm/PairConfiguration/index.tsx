@@ -41,6 +41,7 @@ import {
   handleSerialNumberFieldOnChange,
   handlePosIdFieldOnBlur,
   handlePosIdFieldOnChange,
+  isHttps,
 } from '../../../../utils/common/pair/pairFormHelpers';
 import {
   eftposAddressValidator,
@@ -135,8 +136,12 @@ export default function PairConfiguration(): React.ReactElement {
                 }
                 value={addressType}
               >
-                <MenuItem value={TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE}>Auto address</MenuItem>
-                <MenuItem value={TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE}>EFTPOS address</MenuItem>
+                <MenuItem value={TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE} disabled={!isHttps()}>
+                  Auto address
+                </MenuItem>
+                <MenuItem value={TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE} disabled={isHttps()}>
+                  EFTPOS address
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
