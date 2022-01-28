@@ -139,7 +139,7 @@ class SpiService {
       instance.spiClient.SetPosInfo(defaultPosName, currentVersion);
       instance.spiClient.SetAcquirerCode(acquirerCode);
       instance.spiClient.SetDeviceApiKey(defaultApikey);
-      instance.spiClient._inTestMode = testMode;
+      instance.spiClient.SetTestMode(testMode);
 
       // setup terminal id in localStorage
       this.updateTerminalStorage(instanceId, 'id', serialNumber);
@@ -232,8 +232,8 @@ class SpiService {
           instance.spi.PairingConfirmCode();
         }
 
-        if (detail?.message === 'Pairing Failed') {
-          this.handleTerminalPairFailure(instanceId, detail?.message);
+        if (detail?.Message === 'Pairing Failed') {
+          this.handleTerminalPairFailure(instanceId, detail?.Message);
           this.removeTerminalInstance(instanceId);
         }
 
