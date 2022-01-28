@@ -7,6 +7,7 @@ export const TEXT_FORM_DEFAULT_OPTION = 'Payment provider';
 export const TEXT_FORM_DEFAULT_VALUE = '(Other) Please specify';
 export const TEXT_FORM_MODAL_CODE_TILL = 'till';
 export const TEXT_FORM_MODAL_CODE_WESTPAC = 'wbc';
+export const TEXT_FORM_MODAL_CODE_GKO = 'gko';
 // form validations
 export const TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD = 'Please enter an API Key.';
 export const TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD = 'Please enter a POS ID.';

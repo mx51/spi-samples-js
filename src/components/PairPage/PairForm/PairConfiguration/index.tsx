@@ -13,6 +13,7 @@ import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_OPTION,
   TEXT_FORM_DEFAULT_VALUE,
+  TEXT_FORM_MODAL_CODE_GKO,
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
   TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
@@ -91,6 +92,7 @@ export default function PairConfiguration(): React.ReactElement {
                 </MenuItem>
                 <MenuItem value={TEXT_FORM_MODAL_CODE_TILL}>Till Payments</MenuItem>
                 <MenuItem value={TEXT_FORM_MODAL_CODE_WESTPAC}>Westpac</MenuItem>
+                <MenuItem value={TEXT_FORM_MODAL_CODE_GKO}>Gecko</MenuItem>
                 <MenuItem value={TEXT_FORM_DEFAULT_VALUE}>Other</MenuItem>
               </Select>
             </FormControl>
