@@ -101,6 +101,10 @@ class Spi {
         code: 'til',
         name: 'Till Payments',
       },
+      {
+        code: 'gko',
+        name: 'Gecko Payments',
+      },
     ];
     localStorage.setItem('tenants', JSON.stringify(tenants.Data.length ? tenants.Data : defaultTenantList));
   }
