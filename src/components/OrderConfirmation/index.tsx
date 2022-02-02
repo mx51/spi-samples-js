@@ -82,6 +82,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
+  const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
+
   const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
 
   function selectTerminal(terminalId: string) {
@@ -198,13 +200,15 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
               <UnknownTransactionModal
                 onSuccessTransaction={() => {
                   updateUnknownTerminalState('Success');
+                  setToShowUnknownTransaction(true);
                 }}
                 onFailedTransaction={() => {
                   updateUnknownTerminalState('Failed');
+                  setToShowUnknownTransaction(true);
                 }}
               />
             )}
-            {showTransactionProgressModal && !isUnknownState && (
+            {showTransactionProgressModal && (!isUnknownState || toShowUnknownTransaction) && (
               <TransactionProgressModal
                 terminalId={selectedTerminal}
                 transactionType={currentTerminal?.txFlow?.type ?? ''}
@@ -212,6 +216,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {
                   cancelTransaction(selectedTerminal);
+                }}
+                onRetryTransaction={() => {
                   setShowTransactionProgressModal(false);
                 }}
                 onDone={() => {
