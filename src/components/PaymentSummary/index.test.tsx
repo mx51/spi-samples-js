@@ -32,6 +32,7 @@ describe('Test <PaymentSummary />', () => {
         pairForm: defaultMockPairFormParams,
         terminals: mockTerminals,
         products: {
+          keypadAmount: 0,
           surchargeAmount: 100,
           tipAmount: 100,
           cashoutAmount: 100,

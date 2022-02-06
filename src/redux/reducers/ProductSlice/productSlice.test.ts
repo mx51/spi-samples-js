@@ -9,6 +9,7 @@ import reducer, {
 
 test('should handle add product', () => {
   const previousState: IProductState = {
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
@@ -16,6 +17,7 @@ test('should handle add product', () => {
   };
   const action = { product: { id: 1, name: 'Latte', price: 360, image: 'Latte.jpeg' } };
   expect(reducer(previousState, addProduct(action))).toEqual({
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
@@ -32,6 +34,7 @@ test('should handle add product', () => {
 
 test('should handle clear products', () => {
   const previousState: IProductState = {
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
@@ -51,6 +54,7 @@ test('should handle clear products', () => {
     ],
   };
   expect(reducer(previousState, clearAllProducts())).toEqual({
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
@@ -60,12 +64,14 @@ test('should handle clear products', () => {
 
 test('should add surcharge amount', () => {
   const previousState: IProductState = {
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
     products: [],
   };
   expect(reducer(previousState, addSurchargeAmount(105))).toEqual({
+    keypadAmount: 0,
     surchargeAmount: 105,
     tipAmount: 0,
     cashoutAmount: 0,
@@ -75,12 +81,14 @@ test('should add surcharge amount', () => {
 
 test('should add cashout amount', () => {
   const previousState: IProductState = {
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
     products: [],
   };
   expect(reducer(previousState, addCashoutAmount(105))).toEqual({
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 105,
@@ -90,12 +98,14 @@ test('should add cashout amount', () => {
 
 test('should add tip amount', () => {
   const previousState: IProductState = {
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
     products: [],
   };
   expect(reducer(previousState, addTipAmount(105))).toEqual({
+    keypadAmount: 0,
     surchargeAmount: 0,
     tipAmount: 105,
     cashoutAmount: 0,

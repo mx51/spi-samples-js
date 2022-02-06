@@ -12,6 +12,7 @@ describe('Test CommonSelectors', () => {
       common: { showFlowPanel: false },
       pairForm: defaultMockPairFormParams,
       products: {
+        keypadAmount: 0,
         tipAmount: 0,
         cashoutAmount: 0,
         surchargeAmount: 0,

@@ -46,7 +46,7 @@ export default function PairFlow({ terminal }: ITerminal): React.ReactElement {
 # ${pairingFlow?.message}
 # Finished? ${pairingFlow?.finished}
 # Successful? ${pairingFlow?.successful}
-# Confirmation Code: ${pairingFlow?.confirmationCode}
+# Confirmation Code: ${pairingFlow?.confirmationCode || '-'}
 # Waiting Confirm from Eftpos? ${pairingFlow?.awaitingCheckFromEftpos}
 # Waiting Confirm from POS? ${pairingFlow?.awaitingCheckFromPos}
   `;

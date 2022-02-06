@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, screen, cleanup, waitFor } from '@testing-library/react';
 import * as redux from 'react-redux';
 import OrderConfirmation from '.';
-import { PATH_PAY_NOW } from '../../definitions/constants/routerConfigs';
+import { PATH_CASH_OUT, PATH_PAY_NOW, PATH_REFUND } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import { store } from '../../redux/store';
 import spiService from '../../services/spiService';
@@ -29,6 +29,7 @@ describe('Test <OrderConfirmation />', () => {
         pairForm: defaultMockPairFormParams,
         terminals: pairedMockTerminals,
         products: {
+          keypadAmount: 0,
           surchargeAmount: 100,
           tipAmount: 100,
           cashoutAmount: 100,
@@ -76,6 +77,7 @@ describe('Test <OrderConfirmation />', () => {
   });
 
   test('should initiate purchase on clicking Card button', () => {
+    // Arrange
     const initiatePurchaseTransaction = jest.spyOn(spiService, 'initiatePurchaseTransaction');
     initiatePurchaseTransaction.mockReturnValue();
 
@@ -100,6 +102,7 @@ describe('Test <OrderConfirmation />', () => {
   });
 
   test('should cancel moto purchase on clicking Cancel button', () => {
+    // Arrange
     const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
     initiateMotoPurchaseTransaction.mockReturnValue();
 
@@ -109,6 +112,7 @@ describe('Test <OrderConfirmation />', () => {
         common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
         terminals: mockTerminals,
         products: {
+          keypadAmount: 0,
           surchargeAmount: 100,
           tipAmount: 100,
           cashoutAmount: 100,
@@ -147,6 +151,7 @@ describe('Test <OrderConfirmation />', () => {
   });
 
   test('should clearAll products when total amount is changed', () => {
+    // Arrange
     const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
     initiateMotoPurchaseTransaction.mockReturnValue();
 
@@ -160,12 +165,14 @@ describe('Test <OrderConfirmation />', () => {
     fireEvent.click(screen.getByText(/ok/i));
 
     // Assert
-    expect(dispatch.mock.calls[0][0]).toEqual({
+    expect(dispatch.mock.calls[1][0]).toEqual({
       payload: undefined,
       type: 'product/clearAllProducts',
     });
   });
+
   test('should close the keypad', async () => {
+    // Arrange
     const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
     initiateMotoPurchaseTransaction.mockReturnValue();
 
@@ -181,5 +188,33 @@ describe('Test <OrderConfirmation />', () => {
     await waitFor(() => {
       expect(screen.queryByLabelText(/close button/i)).not.toBeInTheDocument();
     });
+  });
+
+  test('should show cashout button when pathname is cashout', () => {
+    // Arrange
+    const initiateCashoutOnlyTxTransaction = jest.spyOn(spiService, 'initiateCashoutOnlyTxTransaction');
+    initiateCashoutOnlyTxTransaction.mockReturnValue();
+
+    // Act
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_CASH_OUT} currentAmount={500} />, customStore);
+    const cashoutButton = screen.queryByText(/Cashout/i);
+    fireEvent.click(cashoutButton as Element);
+
+    // Assert
+    expect(cashoutButton).toBeInTheDocument();
+  });
+
+  test('should show refund button when pathname is refund', () => {
+    // Arrange
+    const initiateRefundTxTransaction = jest.spyOn(spiService, 'initiateRefundTxTransaction');
+    initiateRefundTxTransaction.mockReturnValue();
+
+    // Act
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_REFUND} currentAmount={500} />, customStore);
+    const refundButton = screen.queryByText(/Refund/i);
+    fireEvent.click(refundButton as Element);
+
+    // Assert
+    expect(refundButton).toBeInTheDocument();
   });
 });

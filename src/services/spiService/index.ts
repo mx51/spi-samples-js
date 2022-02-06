@@ -249,6 +249,8 @@ class SpiService {
           `%cspiSecretsChanged: ${JSON.stringify(instance.spiClient._secrets)}`,
           `color: ${FIELD_PRESSED_COLOR}`
         );
+
+        if (!instance.spiClient._secrets) this.removeTerminalInstance(instanceId);
       });
 
       // SPI Status Change Listener

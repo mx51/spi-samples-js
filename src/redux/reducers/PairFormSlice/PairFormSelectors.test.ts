@@ -41,6 +41,7 @@ describe('Test PairFormSelectors', () => {
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
       products: {
+        keypadAmount: 0,
         tipAmount: 0,
         cashoutAmount: 0,
         surchargeAmount: 0,
@@ -70,6 +71,7 @@ describe('Test PairFormSelectors', () => {
       },
       terminals: {},
       products: {
+        keypadAmount: 0,
         tipAmount: 0,
         cashoutAmount: 0,
         surchargeAmount: 0,
