@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     modalBtn: {
-      marginTop: '2rem',
+      margin: theme.spacing(2, 0, 0, 3),
     },
     transactionProgressModalContent: {
       width: '27.5rem',
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     modalImage: {
-      margin: '1rem',
+      margin: theme.spacing(1),
     },
   })
 );

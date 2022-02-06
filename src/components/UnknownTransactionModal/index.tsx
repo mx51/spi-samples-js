@@ -2,8 +2,6 @@ import React from 'react';
 import { Box, Button, Typography } from '@material-ui/core';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import { Link as LinkRouter } from 'react-router-dom';
-import { PATH_ORDER_FINISHED } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as WarningIcon } from '../../images/WarningIcon.svg';
 import useStyles from './index.styles';
 
@@ -14,6 +12,7 @@ function UnknownTransactionModal({
   onSuccessTransaction,
 }: UnknownTransactionModalProps): React.ReactElement {
   const classes = useStyles();
+
   return (
     <Dialog aria-labelledby="spiModalTitle" open>
       <DialogContent className={classes.transactionProgressModalContnent}>
@@ -27,24 +26,10 @@ function UnknownTransactionModal({
           </Typography>
         </>
         <Box display="flex" justifyContent="space-evenly">
-          <Button
-            color="primary"
-            variant="outlined"
-            className={classes.modalBtn}
-            component={LinkRouter}
-            to={PATH_ORDER_FINISHED}
-            onClick={onSuccessTransaction}
-          >
+          <Button color="primary" variant="outlined" className={classes.modalBtn} onClick={onSuccessTransaction}>
             Yes
           </Button>
-          <Button
-            color="primary"
-            variant="outlined"
-            className={classes.modalBtn}
-            component={LinkRouter}
-            to={PATH_ORDER_FINISHED}
-            onClick={onFailedTransaction}
-          >
+          <Button color="primary" variant="outlined" className={classes.modalBtn} onClick={onFailedTransaction}>
             No
           </Button>
         </Box>
