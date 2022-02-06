@@ -22,11 +22,6 @@ const Terminals: React.FC = () => {
               Terminals list
             </Typography>
           </Box>
-          {/* <Box className={classes.manageFleetSetting}>
-            <Link href={PATH_FLEET_SETTINGS} className={classes.manageFleetSettingLink}>
-              Manage fleet settings
-            </Link>
-          </Box> */}
           <Box>
             <Button variant="contained" color="primary" component={LinkRouter} to={PATH_PAIR}>
               + Pair terminal

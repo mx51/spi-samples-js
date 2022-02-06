@@ -34,16 +34,6 @@ export default {
       path: PATH_CASH_OUT,
       icon: <IconCashout />,
     },
-    // {
-    //   name: TEXT_PRE_AUTH,
-    //   path: PATH_PRE_AUTH,
-    //   icon: <IconPreAuthorisation />,
-    // },
-    // {
-    //   name: TEXT_PAY_AT_TABLE,
-    //   path: PATH_PAY_AT_TABLE,
-    //   icon: <IconPayAtTable />,
-    // },
   ],
   terminals: [
     {
@@ -56,10 +46,5 @@ export default {
       path: PATH_PAIR,
       icon: <IconPairing />,
     },
-    // {
-    //   name: TEXT_FLEET_SETTINGS,
-    //   path: PATH_FLEET_SETTINGS,
-    //   icon: <IconFleetSettings />,
-    // },
   ],
 };
