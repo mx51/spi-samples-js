@@ -64,6 +64,9 @@ describe('Test <Order />', () => {
     fireEvent.click(getAllByLabelText(/add amount/i)[0]);
     expect(getByText(/enter surcharge amount/i)).toBeVisible();
 
+    fireEvent.click(getAllByLabelText(/add amount/i)[1]);
+    expect(getByText(/enter cashout amount/i)).toBeVisible();
+
     fireEvent.click(getByLabelText(/close button/i));
     expect(dispatch.mock.calls.length).toBe(0);
   });

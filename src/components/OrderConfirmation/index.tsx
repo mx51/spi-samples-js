@@ -32,7 +32,7 @@ import {
   orderTipAmountSelector,
   productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
-import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
+import { addKeypadAmount, clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -135,6 +135,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
             setDisplayKeypad(false);
           }}
           onAmountChange={(amount) => {
+            dispatch(addKeypadAmount(amount));
             setTotalAmount(amount);
             setSubtotalAmount(amount);
             setDisplayKeypad(false);

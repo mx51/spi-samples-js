@@ -11,6 +11,7 @@ test('should return product quantity for list', () => {
     pair: { status: '' },
     terminals: {},
     products: {
+      keypadAmount: 0,
       surchargeAmount: 100,
       tipAmount: 100,
       cashoutAmount: 100,
@@ -31,6 +32,7 @@ test('should return product quantity for duplicate product', () => {
     pair: { status: '' },
     terminals: {},
     products: {
+      keypadAmount: 0,
       surchargeAmount: 100,
       tipAmount: 100,
       cashoutAmount: 100,
@@ -49,11 +51,27 @@ test('should return product quantity for duplicate product', () => {
   ]);
 });
 
+test('should return keypad amount as subtotal amount', () => {
+  const state = {
+    pair: { status: '' },
+    terminals: {},
+    products: {
+      keypadAmount: 500,
+      surchargeAmount: 100,
+      tipAmount: 120,
+      cashoutAmount: 110,
+      products: [],
+    },
+  };
+  expect(productSubTotalSelector(state)).toEqual(500);
+});
+
 test('should add all the price and display subtotal', () => {
   const state = {
     pair: { status: '' },
     terminals: {},
     products: {
+      keypadAmount: 0,
       surchargeAmount: 100,
       tipAmount: 100,
       cashoutAmount: 100,
@@ -74,6 +92,7 @@ test('should get surcharge amount', () => {
     pair: { status: '' },
     terminals: {},
     products: {
+      keypadAmount: 0,
       surchargeAmount: 155,
       tipAmount: 125,
       cashoutAmount: 0,
@@ -88,6 +107,7 @@ test('should get tip amount', () => {
     pair: { status: '' },
     terminals: {},
     products: {
+      keypadAmount: 0,
       surchargeAmount: 155,
       tipAmount: 125,
       cashoutAmount: 0,
@@ -102,6 +122,7 @@ test('should get cashout amount', () => {
     pair: { status: '' },
     terminals: {},
     products: {
+      keypadAmount: 0,
       surchargeAmount: 155,
       tipAmount: 0,
       cashoutAmount: 125,

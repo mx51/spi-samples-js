@@ -4,6 +4,8 @@ import { IProductSelector, IProductSelectorMap, IProductState } from './interfac
 
 const products = (state: ISamplePosState) => state.products;
 
+export const orderKeypadAmountSelector = createSelector(products, (state: IProductState): number => state.keypadAmount);
+
 export const productsSelector = createSelector(products, (state: IProductState): Array<IProductSelector> => {
   const productMap: IProductSelectorMap = {};
 
@@ -19,8 +21,10 @@ export const productsSelector = createSelector(products, (state: IProductState):
 });
 
 export const productSubTotalSelector = createSelector(
+  orderKeypadAmountSelector,
   productsSelector,
-  (productSelect: Array<IProductSelector>): number => {
+  (subtotalAmount, productSelect: Array<IProductSelector>): number => {
+    if (subtotalAmount > 0) return subtotalAmount;
     const subTotal = productSelect.reduce((prev, current) => prev + current.quantity * current.product.price, 0);
     return subTotal;
   }

@@ -1,4 +1,5 @@
 export interface IProductState {
+  keypadAmount: number;
   surchargeAmount: number;
   tipAmount: number;
   cashoutAmount: number;
