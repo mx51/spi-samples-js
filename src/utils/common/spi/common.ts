@@ -10,7 +10,7 @@ function removeItemFromLocalStorage(name: string): Any {
   return window.localStorage.removeItem(name);
 }
 
-function getTxFlow(detail: Any) {
+function getTxFlow(detail: Any): Any {
   const txFlowDetails = {
     posRefId: detail?.PosRefId,
     id: detail?.Id,

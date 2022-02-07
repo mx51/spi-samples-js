@@ -1,7 +1,7 @@
 import React from 'react';
-import { Box, Button, Container, Typography, Link } from '@material-ui/core';
+import { Box, Button, Container, Typography } from '@material-ui/core';
 import { Link as LinkRouter } from 'react-router-dom';
-import { PATH_FLEET_SETTINGS, PATH_PAIR } from '../../definitions/constants/routerConfigs';
+import { PATH_PAIR } from '../../definitions/constants/routerConfigs';
 import { useAppSelector } from '../../redux/hooks';
 import Layout from '../Layout';
 import NoTerminalPage from '../NoTerminalPage';
@@ -21,11 +21,6 @@ const Terminals: React.FC = () => {
             <Typography variant="h6" component="h1">
               Terminals list
             </Typography>
-          </Box>
-          <Box className={classes.manageFleetSetting}>
-            <Link href={PATH_FLEET_SETTINGS} className={classes.manageFleetSettingLink}>
-              Manage fleet settings
-            </Link>
           </Box>
           <Box>
             <Button variant="contained" color="primary" component={LinkRouter} to={PATH_PAIR}>
