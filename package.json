@@ -1,6 +1,6 @@
 {
   "name": "spi-samples-js",
-  "version": "2.9.1",
+  "version": "2.9.2",
   "description": "Point of service samples which integrate with mx51 spi module",
   "main": "index.html",
   "author": "mx51",
