@@ -165,7 +165,7 @@ describe('Test <OrderConfirmation />', () => {
     fireEvent.click(screen.getByText(/ok/i));
 
     // Assert
-    expect(dispatch.mock.calls[1][0]).toEqual({
+    expect(dispatch.mock.calls[0][0]).toEqual({
       payload: undefined,
       type: 'product/clearAllProducts',
     });

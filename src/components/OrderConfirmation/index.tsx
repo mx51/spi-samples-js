@@ -135,11 +135,11 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
             setDisplayKeypad(false);
           }}
           onAmountChange={(amount) => {
-            dispatch(addKeypadAmount(amount));
             setTotalAmount(amount);
             setSubtotalAmount(amount);
             setDisplayKeypad(false);
             clearAllProductsAction();
+            dispatch(addKeypadAmount(amount));
           }}
         />
       </Drawer>

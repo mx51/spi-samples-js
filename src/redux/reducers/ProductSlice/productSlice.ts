@@ -23,6 +23,7 @@ const productSlice = createSlice({
       state.surchargeAmount = 0;
       state.tipAmount = 0;
       state.cashoutAmount = 0;
+      state.keypadAmount = 0;
     },
     addSurchargeAmount(state: IProductState, action: PayloadAction<number>) {
       state.surchargeAmount = action.payload;

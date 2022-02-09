@@ -144,7 +144,12 @@ function TransactionProgressModal({
               >
                 Done
               </Button>
-              <Button color="primary" variant="outlined" onClick={onRetryTransaction} className={classes.modalBtn}>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={onRetryTransaction}
+                className={`${classes.modalBtn} ${classes.btnWithLeftMargin}`}
+              >
                 Retry
               </Button>
             </Box>
