@@ -14,7 +14,10 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.text.primary,
     },
     modalBtn: {
-      margin: theme.spacing(2, 0, 0, 3),
+      margin: theme.spacing(2, 0, 0, 0),
+    },
+    btnWithLeftMargin: {
+      marginLeft: theme.spacing(3),
     },
     transactionProgressModalContent: {
       width: '27.5rem',
