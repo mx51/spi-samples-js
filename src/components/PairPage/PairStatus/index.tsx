@@ -53,9 +53,22 @@ function PairStatus(): React.ReactElement {
           </Box>
         </Box>
 
-        {panelInformationList.map(({ title, content }) => (
-          <PairPanelInformation key={title} title={title} content={content} />
-        ))}
+        {(terminal?.status === SPI_PAIR_STATUS.PairedConnected ||
+          terminal?.status === SPI_PAIR_STATUS.Unpaired ||
+          terminal === undefined) &&
+          panelInformationList.map(({ title, content }) => (
+            <PairPanelInformation key={title} title={title} content={content} />
+          ))}
+        {terminal?.pairingFlow?.message === 'Confirm that the following Code is showing on the Terminal' && (
+          <Box display="flex" flexDirection="column" marginLeft={2}>
+            <Typography variant="h5" className={classes.pairingCode}>
+              Pairing code: {terminal?.pairingFlow?.confirmationCode}
+            </Typography>
+            <Typography variant="inherit" className={classes.statusText}>
+              Confirm pairing code on terminal
+            </Typography>
+          </Box>
+        )}
       </Grid>
       <Grid container alignItems="center" justifyContent="flex-end" className={classes.statusButtonBox}>
         {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).button}
