@@ -14,6 +14,7 @@ import { useHistory } from 'react-router-dom';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
+import { getTitleFromStatus } from '../../../utils/common/pair/pairStatusHelpers';
 import useStyles from './index.styles';
 import { ITerminalList } from './interfaces';
 
@@ -59,7 +60,11 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
             >
               <TableCell scope="row">{terminal.posId}</TableCell>
               <TableCell>
-                <Chip size="small" label={terminal.status} className={chipStyles(terminal.status)} />
+                <Chip
+                  size="small"
+                  label={getTitleFromStatus(terminal.status)}
+                  className={chipStyles(terminal.status)}
+                />
               </TableCell>
               <TableCell>{terminal.deviceAddress}</TableCell>
               <TableCell>{terminal.serialNumber}</TableCell>
