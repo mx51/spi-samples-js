@@ -44,7 +44,7 @@ describe('Test PairPanelButtons', () => {
 
     // Assert
     expect(panelButton.statusTitle).toEqual('Unpaired');
-    expect(panelButton.statusText).toEqual('Idle');
+    expect(panelButton.statusText).toEqual('-');
     expect(panelButton.button as Any).toBeNull();
   });
 

@@ -2,7 +2,7 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import { SPI_PAIR_FLOW, SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
 import { PATH_PURCHASE } from '../../../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../../../images/FailedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
@@ -66,7 +66,7 @@ export default function PairPanelButtons(status: string, message: string | null)
   return {
     statusTitle: SPI_PAIR_STATUS.Unpaired,
     statusIcon: <FailedIcon className={classes.failedIcon} />,
-    statusText: SPI_PAIR_FLOW.Idle,
+    statusText: '-',
     button: null,
   };
 }
