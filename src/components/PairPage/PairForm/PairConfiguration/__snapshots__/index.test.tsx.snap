@@ -295,6 +295,7 @@ exports[`Test <PairConfiguration /> should match PairConfiguration snapshot test
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd MuiOutlinedInput-inputAdornedEnd MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+            maxlength="16"
             required=""
             type="text"
             value=""

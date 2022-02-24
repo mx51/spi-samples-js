@@ -212,6 +212,10 @@ export default function PairConfiguration(): React.ReactElement {
             InputProps={{
               endAdornment: <ErrorInputAdornment isValid={!posId.isValid} />,
             }}
+            // eslint-disable-next-line react/jsx-no-duplicate-props
+            inputProps={{
+              maxLength: 16,
+            }}
             label="POS ID"
             margin="dense"
             onBlur={(event: IFormEventValue) =>
