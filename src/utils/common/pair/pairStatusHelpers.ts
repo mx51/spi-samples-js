@@ -54,4 +54,14 @@ function handleUnPairClick(dispatch: AppDispatch, instanceId: string): void {
   dispatch(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
 }
 
-export { handleCancelPairClick, handlePairClick, handleUnPairClick };
+function getTitleFromStatus(status: string): string {
+  if (status === SPI_PAIR_STATUS.PairedConnecting) {
+    return 'Connecting';
+  }
+  if (status === SPI_PAIR_STATUS.PairedConnected) {
+    return 'Connected';
+  }
+  return 'Unpaired';
+}
+
+export { handleCancelPairClick, handlePairClick, handleUnPairClick, getTitleFromStatus };
