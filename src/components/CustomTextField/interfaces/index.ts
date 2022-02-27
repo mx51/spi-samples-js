@@ -10,6 +10,7 @@ type InputProps = {
 
 type TInputProps = {
   maxLength?: number;
+  pattern?: string;
 };
 
 export interface ICustomTextField {

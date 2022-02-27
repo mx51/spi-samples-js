@@ -22,6 +22,7 @@
   "plugins": ["react", "@typescript-eslint", "import"],
   "rules": {
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
+    "react/jsx-no-duplicate-props": [1, { "ignoreCase": false }],
     "import/order": [
       "error",
       {

@@ -228,7 +228,12 @@ export const handlePosIdFieldOnChange = (
   dispatch: Any,
   event: IFormEventValue,
   updatePairFormParams: IUpdatePairFormParams
-): void => {
+): boolean => {
+  const pattern = /[^a-zA-Z0-9]/;
+  if (event.target.value !== '' && pattern.test(event.target.value as string)) {
+    return false;
+  }
+
   dispatch(
     updatePairFormParams({
       key: 'posId',
@@ -238,6 +243,7 @@ export const handlePosIdFieldOnChange = (
       },
     })
   );
+  return true;
 };
 
 export const handlePosIdFieldOnBlur = (

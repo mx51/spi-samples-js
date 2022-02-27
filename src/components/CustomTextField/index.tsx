@@ -28,7 +28,6 @@ function CustomTextField({
       fullWidth={fullWidth}
       helperText={helperText}
       InputProps={InputProps}
-      // eslint-disable-next-line react/jsx-no-duplicate-props
       inputProps={inputProps}
       label={label}
       margin={margin}
