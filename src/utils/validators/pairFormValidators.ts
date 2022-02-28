@@ -34,6 +34,10 @@ function serialNumberValidator(value: string): boolean {
   return valueWithoutDash.length > 0 && valueWithoutDash.length === 9;
 }
 
+function postIdValidator(value: string): boolean {
+  return !!value.match(numberCharactersRegex) && value.length <= 16;
+}
+
 export {
   eftposAddressValidator,
   eftposIPAddressValidator,
@@ -41,4 +45,5 @@ export {
   paymentProviderValidator,
   serialNumberValidator,
   fieldRequiredValidator,
+  postIdValidator,
 };

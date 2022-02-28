@@ -28,7 +28,7 @@ import {
   selectPairFormSerialNumber,
 } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
-import { terminalInstance } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { terminalInstance, terminalList } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
   handlePaymentProviderFieldOnChange,
   handlePaymentProviderSelectorOnChange,
@@ -49,6 +49,7 @@ import {
   fieldRequiredValidator,
   paymentProviderValidator,
   serialNumberValidator,
+  postIdValidator,
 } from '../../../../utils/validators/pairFormValidators';
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
@@ -63,6 +64,7 @@ export default function PairConfiguration(): React.ReactElement {
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));
+  const terminals = useAppSelector(terminalList);
 
   return (
     <>
@@ -212,15 +214,14 @@ export default function PairConfiguration(): React.ReactElement {
             InputProps={{
               endAdornment: <ErrorInputAdornment isValid={!posId.isValid} />,
             }}
-            inputProps={{
-              maxLength: 16,
-            }}
             label="POS ID"
             margin="dense"
             onBlur={(event: IFormEventValue) =>
-              handlePosIdFieldOnBlur(dispatch, event, fieldRequiredValidator, updatePairFormParams)
+              handlePosIdFieldOnBlur(dispatch, event, postIdValidator, terminals, updatePairFormParams)
             }
-            onChange={(event: IFormEventValue) => handlePosIdFieldOnChange(dispatch, event, updatePairFormParams)}
+            onChange={(event: IFormEventValue) =>
+              handlePosIdFieldOnChange(dispatch, event, postIdValidator, terminals, updatePairFormParams)
+            }
             required
             value={posId.value}
             variant="outlined"

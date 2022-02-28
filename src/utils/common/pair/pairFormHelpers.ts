@@ -6,6 +6,7 @@ import {
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
+import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
@@ -227,37 +228,40 @@ export const handleSerialNumberFieldOnBlur = (
 export const handlePosIdFieldOnChange = (
   dispatch: Any,
   event: IFormEventValue,
+  fieldRequiredValidator: (value: string) => boolean,
+  terminals: ITerminalState,
   updatePairFormParams: IUpdatePairFormParams
-): boolean => {
-  const pattern = /[^a-zA-Z0-9]/;
-  if (event.target.value !== '' && pattern.test(event.target.value as string)) {
-    return false;
-  }
+): void => {
+  const posId = event.target.value as string;
+  const duplicatePosId = Object.values(terminals).filter((terminal) => terminal.posId === posId).length > 0;
 
   dispatch(
     updatePairFormParams({
       key: 'posId',
       value: {
-        value: event.target.value as string,
-        isValid: true,
+        value: posId,
+        isValid: !duplicatePosId && fieldRequiredValidator(event.target.value as string),
       },
     })
   );
-  return true;
 };
 
 export const handlePosIdFieldOnBlur = (
   dispatch: Any,
   event: IFormEventValue,
   fieldRequiredValidator: (value: string) => boolean,
+  terminals: ITerminalState,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
+  const posId = event.target.value as string;
+  const duplicatePosId = Object.values(terminals).filter((terminal) => terminal.posId === posId).length > 0;
+
   dispatch(
     updatePairFormParams({
       key: 'posId',
       value: {
         value: event.target.value as string,
-        isValid: fieldRequiredValidator(event.target.value as string),
+        isValid: !duplicatePosId && fieldRequiredValidator(event.target.value as string),
       },
     })
   );
