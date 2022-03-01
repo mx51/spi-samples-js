@@ -228,19 +228,16 @@ export const handleSerialNumberFieldOnBlur = (
 export const handlePosIdFieldOnChange = (
   dispatch: Any,
   event: IFormEventValue,
-  fieldRequiredValidator: (value: string) => boolean,
+  fieldRequiredValidator: (value: string, terminals: ITerminalState) => string,
   terminals: ITerminalState,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
-  const posId = event.target.value as string;
-  const duplicatePosId = Object.values(terminals).filter((terminal) => terminal.posId === posId).length > 0;
-
   dispatch(
     updatePairFormParams({
       key: 'posId',
       value: {
-        value: posId,
-        isValid: !duplicatePosId && fieldRequiredValidator(event.target.value as string),
+        value: event.target.value as string,
+        isValid: fieldRequiredValidator(event.target.value as string, terminals) === '',
       },
     })
   );
@@ -249,19 +246,16 @@ export const handlePosIdFieldOnChange = (
 export const handlePosIdFieldOnBlur = (
   dispatch: Any,
   event: IFormEventValue,
-  fieldRequiredValidator: (value: string) => boolean,
+  fieldRequiredValidator: (value: string, terminals: ITerminalState) => string,
   terminals: ITerminalState,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
-  const posId = event.target.value as string;
-  const duplicatePosId = Object.values(terminals).filter((terminal) => terminal.posId === posId).length > 0;
-
   dispatch(
     updatePairFormParams({
       key: 'posId',
       value: {
         value: event.target.value as string,
-        isValid: !duplicatePosId && fieldRequiredValidator(event.target.value as string),
+        isValid: fieldRequiredValidator(event.target.value as string, terminals) === '',
       },
     })
   );

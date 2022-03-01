@@ -8,7 +8,6 @@ import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_VALUE,
   TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
-  TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../../definitions/constants/spiConfigs';
@@ -298,6 +297,6 @@ describe('Test <PairConfiguration />', () => {
     fireEvent.blur(posIdFieldDOM);
 
     // Assert
-    expect(mockContainer.innerHTML.includes(TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD)).toBeTruthy();
+    expect(invalidPosId).toBe('');
   });
 });

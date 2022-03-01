@@ -17,7 +17,6 @@ import {
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
   TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
-  TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
@@ -210,7 +209,7 @@ export default function PairConfiguration(): React.ReactElement {
             disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
             error={!posId.isValid}
             fullWidth
-            helperText={!posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
+            helperText={!posId.isValid ? postIdValidator(posId.value, terminals) : ''}
             InputProps={{
               endAdornment: <ErrorInputAdornment isValid={!posId.isValid} />,
             }}

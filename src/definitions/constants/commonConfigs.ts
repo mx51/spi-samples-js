@@ -10,8 +10,6 @@ export const TEXT_FORM_MODAL_CODE_WESTPAC = 'wbc';
 export const TEXT_FORM_MODAL_CODE_GKO = 'gko';
 // form validations
 export const TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD = 'Please enter an API Key.';
-export const TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD =
-  'Please enter a valid POS ID (max 16 character long including numbers or alphabets)';
 export const TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD = 'Please enter a supported provider.';
 export const TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD = 'Please enter a 9 digits Serial number.';
 export const TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD = 'Please enter a valid EFTPOS address.';
