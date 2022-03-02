@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
       borderTopRightRadius: theme.spacing(0.5),
       display: 'flex',
       width: '100%',
+      height: 'calc(100vh - 10rem)',
       flexGrow: 1,
       padding: theme.spacing(1.5),
     },

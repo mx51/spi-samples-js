@@ -118,6 +118,6 @@ describe('Test <PairStatus />', () => {
     const mockContainer = setupContainer(pairFormParams);
 
     // Assert
-    expect(mockContainer.innerHTML.includes(pairButtonId)).toBeFalsy();
+    expect(mockContainer.innerHTML.includes(pairButtonId)).toBeTruthy();
   });
 });

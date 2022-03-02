@@ -8,10 +8,16 @@ import { ReactComponent as FailedIcon } from '../../../../images/FailedIcon.svg'
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../../../images/SuccessIcon.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
-import { selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import {
+  isPairDisabled,
+  selectPairFormSerialNumber,
+  selectPairFormValues,
+} from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
+import { isTerminalUnpaired } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
   getTitleFromStatus,
   handleCancelPairClick,
+  handlePairClick,
   handleUnPairClick,
 } from '../../../../utils/common/pair/pairStatusHelpers';
 import useStyles from '../index.styles';
@@ -21,6 +27,11 @@ export default function PairPanelButtons(status: string, message: string | null)
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const pairFormValues = useAppSelector(selectPairFormValues);
+  const pairBtnDisabled = useAppSelector(isPairDisabled);
+  const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
+  const terminalUnpaired = useAppSelector(isTerminalUnpaired(pairFormSerialNumber));
+
+  const handlePair = () => handlePairClick(dispatch, pairFormValues);
 
   if (status === SPI_PAIR_STATUS.PairedConnecting) {
     return {
@@ -67,6 +78,17 @@ export default function PairPanelButtons(status: string, message: string | null)
     statusTitle: SPI_PAIR_STATUS.Unpaired,
     statusIcon: <FailedIcon className={classes.failedIcon} />,
     statusText: '-',
-    button: null,
+    button: (
+      <Button
+        className={classes.pairBtn}
+        color="primary"
+        disabled={pairBtnDisabled || terminalUnpaired}
+        data-test-id="pairBtn"
+        onClick={handlePair}
+        variant="contained"
+      >
+        Pair
+      </Button>
+    ),
   };
 }

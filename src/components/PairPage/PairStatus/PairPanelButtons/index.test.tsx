@@ -45,7 +45,7 @@ describe('Test PairPanelButtons', () => {
     // Assert
     expect(panelButton.statusTitle).toEqual('Unpaired');
     expect(panelButton.statusText).toEqual('-');
-    expect(panelButton.button as Any).toBeNull();
+    expect((panelButton.button as Any).props.onClick).toBeDefined();
   });
 
   test('should show Pairing button when status is connecting', () => {
