@@ -6,6 +6,7 @@ import {
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
 import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
+import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
@@ -227,6 +228,8 @@ export const handleSerialNumberFieldOnBlur = (
 export const handlePosIdFieldOnChange = (
   dispatch: Any,
   event: IFormEventValue,
+  fieldRequiredValidator: (value: string, terminals: ITerminalState) => string,
+  terminals: ITerminalState,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
   dispatch(
@@ -234,7 +237,7 @@ export const handlePosIdFieldOnChange = (
       key: 'posId',
       value: {
         value: event.target.value as string,
-        isValid: true,
+        isValid: fieldRequiredValidator(event.target.value as string, terminals) === '',
       },
     })
   );
@@ -243,7 +246,8 @@ export const handlePosIdFieldOnChange = (
 export const handlePosIdFieldOnBlur = (
   dispatch: Any,
   event: IFormEventValue,
-  fieldRequiredValidator: (value: string) => boolean,
+  fieldRequiredValidator: (value: string, terminals: ITerminalState) => string,
+  terminals: ITerminalState,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
   dispatch(
@@ -251,7 +255,7 @@ export const handlePosIdFieldOnBlur = (
       key: 'posId',
       value: {
         value: event.target.value as string,
-        isValid: fieldRequiredValidator(event.target.value as string),
+        isValid: fieldRequiredValidator(event.target.value as string, terminals) === '',
       },
     })
   );
