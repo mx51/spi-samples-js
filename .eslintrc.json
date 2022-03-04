@@ -57,7 +57,8 @@
           "_secrets",
           "_serialNumber",
           "_spiPreauth",
-          "_receiptToSign"
+          "_receiptToSign",
+          "_tenantCode"
         ]
       }
     ]

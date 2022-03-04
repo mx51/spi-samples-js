@@ -274,7 +274,7 @@ class SpiService {
       instance.spiClient.TerminalConfigurationResponse = ({ Data }: Any) => {
         const { spiClient } = instance;
         const terminalConfigurations = {
-          acquirerCode: spiClient?._acquirerCode,
+          acquirerCode: spiClient?._tenantCode,
           autoAddress: spiClient?._autoAddressResolutionEnabled,
           deviceAddress: spiClient?._eftposAddress,
           posId: spiClient?._posId,
