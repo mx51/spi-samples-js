@@ -8,6 +8,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     flowBox: {
       background: theme.palette.common.white,
+      height: '100%',
     },
     flowToggle: {
       zIndex: 2,
