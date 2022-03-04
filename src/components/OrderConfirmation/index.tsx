@@ -32,7 +32,7 @@ import {
   orderTipAmountSelector,
   productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
-import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
+import { addKeypadAmount, clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -82,6 +82,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
   const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
+  const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
+
   const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
 
   function selectTerminal(terminalId: string) {
@@ -137,6 +139,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
             setSubtotalAmount(amount);
             setDisplayKeypad(false);
             clearAllProductsAction();
+            dispatch(addKeypadAmount(amount));
           }}
         />
       </Drawer>
@@ -198,13 +201,15 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
               <UnknownTransactionModal
                 onSuccessTransaction={() => {
                   updateUnknownTerminalState('Success');
+                  setToShowUnknownTransaction(true);
                 }}
                 onFailedTransaction={() => {
                   updateUnknownTerminalState('Failed');
+                  setToShowUnknownTransaction(true);
                 }}
               />
             )}
-            {showTransactionProgressModal && !isUnknownState && (
+            {showTransactionProgressModal && (!isUnknownState || toShowUnknownTransaction) && (
               <TransactionProgressModal
                 terminalId={selectedTerminal}
                 transactionType={currentTerminal?.txFlow?.type ?? ''}
@@ -212,6 +217,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {
                   cancelTransaction(selectedTerminal);
+                }}
+                onRetryTransaction={() => {
                   setShowTransactionProgressModal(false);
                 }}
                 onDone={() => {

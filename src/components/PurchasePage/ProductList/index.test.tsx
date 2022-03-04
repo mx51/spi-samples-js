@@ -34,8 +34,12 @@ describe('Test <ProductList />', () => {
     );
 
     fireEvent.click(getByText(/Mocha/i));
-    expect(dispatch.mock.calls.length).toBe(1);
+    expect(dispatch.mock.calls.length).toBe(2);
     expect(dispatch.mock.calls[0][0]).toEqual({
+      payload: 0,
+      type: 'product/addKeypadAmount',
+    });
+    expect(dispatch.mock.calls[1][0]).toEqual({
       payload: { product: { id: 1, image: 'images/product/mocha.png', name: 'Mocha', price: 420 } },
       type: 'product/addProduct',
     });

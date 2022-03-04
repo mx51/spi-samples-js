@@ -41,24 +41,42 @@ function PairStatus(): React.ReactElement {
       <Grid container direction="column" className={classes.statusPanel}>
         <Box display="flex" alignItems="center" className={classes.statusBox}>
           <Typography align="right">
-            {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).statusIcon}
+            {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired, null).statusIcon}
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
             <Typography variant="h5" className={classes.statusTitle}>
-              {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).statusTitle}
+              {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired, null).statusTitle}
             </Typography>
             <Typography variant="inherit" className={classes.statusText}>
-              {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).statusText}
+              {
+                PairPanelButtons(
+                  terminal?.status || SPI_PAIR_STATUS.Unpaired,
+                  terminal?.pairingFlow?.message || SPI_PAIR_STATUS.Unpaired
+                ).statusText
+              }
             </Typography>
           </Box>
         </Box>
 
-        {panelInformationList.map(({ title, content }) => (
-          <PairPanelInformation key={title} title={title} content={content} />
-        ))}
+        {(terminal?.status === SPI_PAIR_STATUS.PairedConnected ||
+          terminal?.status === SPI_PAIR_STATUS.Unpaired ||
+          !terminal) &&
+          panelInformationList.map(({ title, content }) => (
+            <PairPanelInformation key={title} title={title} content={content} />
+          ))}
+        {terminal?.pairingFlow?.message === 'Confirm that the following Code is showing on the Terminal' && (
+          <Box display="flex" flexDirection="column" marginLeft={2}>
+            <Typography variant="h5" className={classes.pairingCode}>
+              Pairing code: {terminal?.pairingFlow?.confirmationCode}
+            </Typography>
+            <Typography variant="inherit" className={classes.statusText}>
+              Confirm pairing code on terminal
+            </Typography>
+          </Box>
+        )}
       </Grid>
       <Grid container alignItems="center" justifyContent="flex-end" className={classes.statusButtonBox}>
-        {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired).button}
+        {PairPanelButtons(terminal?.status || SPI_PAIR_STATUS.Unpaired, null).button}
       </Grid>
     </Grid>
   );

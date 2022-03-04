@@ -46,6 +46,13 @@ const useStyles = makeStyles((theme: Theme) =>
       fontWeight: 500,
       wordBreak: 'break-word',
     },
+    pairingCode: {
+      fontSize: '1.125rem',
+      fontWeight: 500,
+      wordBreak: 'break-word',
+      letterSpacing: '0.02rem',
+      paddingTop: '1rem',
+    },
     statusText: {
       fontSize: '0.875rem',
       fontWeight: 400,

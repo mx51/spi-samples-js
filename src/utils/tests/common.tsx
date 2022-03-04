@@ -114,6 +114,7 @@ export const customMockPairFormParamsState = (
 });
 
 export const mockDefaultProducts = {
+  keypadAmount: 0,
   surchargeAmount: 100,
   tipAmount: 100,
   cashoutAmount: 100,

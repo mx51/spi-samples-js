@@ -23,6 +23,7 @@ function TransactionProgressModal({
   isFinished,
   isSuccess,
   onCancelTransaction,
+  onRetryTransaction,
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
   const awaitingSignatureCheck = useAppSelector(terminalTxFlowAwaitingSignatureTracker(terminalId));
@@ -115,11 +116,13 @@ function TransactionProgressModal({
               </Typography>
             </>
           )}
-          {!isFinished ? (
+          {!isFinished && (
             <Button color="primary" variant="outlined" onClick={onCancelTransaction} className={classes.modalBtn}>
               Cancel transaction
             </Button>
-          ) : (
+          )}
+
+          {isFinished && isSuccess && (
             <Button
               color="primary"
               variant="contained"
@@ -129,6 +132,27 @@ function TransactionProgressModal({
             >
               Done
             </Button>
+          )}
+          {isFinished && !isSuccess && (
+            <Box display="flex" justifyContent="space-evenly">
+              <Button
+                color="primary"
+                variant="contained"
+                component={LinkRouter}
+                to={PATH_ORDER_FINISHED}
+                className={classes.modalBtn}
+              >
+                Done
+              </Button>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={onRetryTransaction}
+                className={`${classes.modalBtn} ${classes.btnWithLeftMargin}`}
+              >
+                Retry
+              </Button>
+            </Box>
           )}
         </DialogContent>
       )}

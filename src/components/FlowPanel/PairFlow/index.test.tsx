@@ -41,7 +41,7 @@ describe('Test <FlowPanel />', () => {
 
   afterEach(cleanup);
 
-  test('should show not paring flow params', () => {
+  test('should show IP address as eftpos address', () => {
     // Arrange
     const EFTPOS = defaultLocalIP;
 
@@ -55,7 +55,7 @@ describe('Test <FlowPanel />', () => {
       'Requesting to Pair...',
       'Finished? false',
       'Successful? false',
-      'Confirmation Code',
+      'Confirmation Code: -',
       'Waiting Confirm from Eftpos? false',
       'Waiting Confirm from POS? false',
     ];

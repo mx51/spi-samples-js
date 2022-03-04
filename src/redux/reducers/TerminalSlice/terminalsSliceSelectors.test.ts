@@ -115,6 +115,7 @@ describe('Test terminals slice selectors', () => {
       common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
       pair: { status: '' },
       products: {
+        keypadAmount: 0,
         surchargeAmount: 0,
         tipAmount: 0,
         cashoutAmount: 0,

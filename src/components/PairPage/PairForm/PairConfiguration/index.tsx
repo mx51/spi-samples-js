@@ -17,7 +17,6 @@ import {
   TEXT_FORM_MODAL_CODE_TILL,
   TEXT_FORM_MODAL_CODE_WESTPAC,
   TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
-  TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
   TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
@@ -28,7 +27,7 @@ import {
   selectPairFormSerialNumber,
 } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
-import { terminalInstance } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { terminalInstance, terminalList } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
   handlePaymentProviderFieldOnChange,
   handlePaymentProviderSelectorOnChange,
@@ -42,12 +41,14 @@ import {
   handleSerialNumberFieldOnChange,
   handlePosIdFieldOnBlur,
   handlePosIdFieldOnChange,
+  isHttps,
 } from '../../../../utils/common/pair/pairFormHelpers';
 import {
   eftposAddressValidator,
   fieldRequiredValidator,
   paymentProviderValidator,
   serialNumberValidator,
+  postIdValidator,
 } from '../../../../utils/validators/pairFormValidators';
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
@@ -62,6 +63,7 @@ export default function PairConfiguration(): React.ReactElement {
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));
+  const terminals = useAppSelector(terminalList);
 
   return (
     <>
@@ -137,8 +139,12 @@ export default function PairConfiguration(): React.ReactElement {
                 }
                 value={addressType}
               >
-                <MenuItem value={TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE}>Auto address</MenuItem>
-                <MenuItem value={TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE}>EFTPOS address</MenuItem>
+                <MenuItem value={TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE} disabled={!isHttps()}>
+                  Auto address
+                </MenuItem>
+                <MenuItem value={TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE} disabled={isHttps()}>
+                  EFTPOS address
+                </MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -203,16 +209,18 @@ export default function PairConfiguration(): React.ReactElement {
             disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
             error={!posId.isValid}
             fullWidth
-            helperText={!posId.isValid ? TEXT_FORM_VALIDATION_POS_ID_TEXTFIELD : ''}
+            helperText={!posId.isValid ? postIdValidator(posId.value, terminals) : ''}
             InputProps={{
               endAdornment: <ErrorInputAdornment isValid={!posId.isValid} />,
             }}
             label="POS ID"
             margin="dense"
             onBlur={(event: IFormEventValue) =>
-              handlePosIdFieldOnBlur(dispatch, event, fieldRequiredValidator, updatePairFormParams)
+              handlePosIdFieldOnBlur(dispatch, event, postIdValidator, terminals, updatePairFormParams)
             }
-            onChange={(event: IFormEventValue) => handlePosIdFieldOnChange(dispatch, event, updatePairFormParams)}
+            onChange={(event: IFormEventValue) =>
+              handlePosIdFieldOnChange(dispatch, event, postIdValidator, terminals, updatePairFormParams)
+            }
             required
             value={posId.value}
             variant="outlined"

@@ -10,6 +10,7 @@ function CustomTextField({
   helperText,
   dataTestId,
   InputProps,
+  inputProps,
   label,
   margin,
   onBlur,
@@ -27,6 +28,7 @@ function CustomTextField({
       fullWidth={fullWidth}
       helperText={helperText}
       InputProps={InputProps}
+      inputProps={inputProps}
       label={label}
       margin={margin}
       onBlur={onBlur}

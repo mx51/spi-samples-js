@@ -6,6 +6,7 @@ import { PATH_PAY_NOW, PATH_PURCHASE, TEXT_CASHOUT } from '../../../definitions/
 import { IProductSelector } from '../../../redux/reducers/ProductSlice/interfaces';
 import {
   orderCashoutAmountSelector,
+  orderKeypadAmountSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
   orderTotalSelector,
@@ -39,6 +40,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
+  const orderKeypadAmount: number = useSelector(orderKeypadAmountSelector);
 
   const [keypadType, setKeypadType] = useState<string>('');
   const totalAmount: number = useSelector(orderTotalSelector);
@@ -73,6 +75,8 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   };
 
   const getSubtitle = () => `Enter ${getTitle().toLowerCase()} amount`;
+  const formattedAmount = (amount: number) => (orderKeypadAmount > 0 ? 0 : amount);
+  // when keypad amount user typed is larger than 0, order summary subtotal, cashout, surcharge and tip amount will be set to 0.
 
   const classes = useStyles();
   return (
@@ -126,32 +130,32 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
         </Box>
         <Divider />
         <List>
-          <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+          <OrderSubTotal label="Subtotal" amount={formattedAmount(subtotalAmount)} />
           <OrderLineItem
             disabled={false}
             label="Surcharge"
-            amount={surchargeAmount}
+            amount={formattedAmount(surchargeAmount)}
             onAdd={() => requestAmount(SURCHARGE_AMOUNT)}
             viewOnly={disablePayNow}
           />
           <OrderLineItem
             disabled={tipAmount > 0}
             label="Cashout"
-            amount={cashoutAmount}
+            amount={formattedAmount(cashoutAmount)}
             onAdd={() => requestAmount(CASHOUT_AMOUNT)}
             viewOnly={disablePayNow}
           />
           <OrderLineItem
             disabled={cashoutAmount > 0}
             label="Tip"
-            amount={tipAmount}
+            amount={formattedAmount(tipAmount)}
             onAdd={() => requestAmount(TIP_AMOUNT)}
             viewOnly={disablePayNow}
           />
           <Divider variant="middle" />
           <ListItem>
             <ListItemText primary="Total" classes={{ primary: classes.total }} />
-            <Typography className={classes.totalPrice}>{currencyFormat(totalAmount / 100)}</Typography>
+            <Typography className={classes.totalPrice}>{currencyFormat(formattedAmount(totalAmount / 100))}</Typography>
           </ListItem>
         </List>
         {!disablePayNow ? (

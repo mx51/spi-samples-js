@@ -16,6 +16,7 @@ describe('Test <TransactionProgressModal />', () => {
   function transactionProgressModalSetup(transactionType: string, isFinished: boolean, isSuccess: boolean) {
     const cancelFn = jest.fn();
     const doneFn = jest.fn();
+    const retryFn = jest.fn();
 
     const container = mockWithRedux(
       <TransactionProgressModal
@@ -25,6 +26,7 @@ describe('Test <TransactionProgressModal />', () => {
         isSuccess={isSuccess}
         onDone={doneFn}
         onCancelTransaction={cancelFn}
+        onRetryTransaction={retryFn}
       />
     );
     return container;
@@ -95,6 +97,7 @@ describe('Test <TransactionProgressModal />', () => {
         isSuccess
         onDone={jest.fn()}
         onCancelTransaction={jest.fn()}
+        onRetryTransaction={jest.fn()}
       />,
       customStore
     );

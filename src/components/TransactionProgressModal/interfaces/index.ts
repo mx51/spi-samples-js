@@ -5,4 +5,5 @@ export interface TransactionProgressModalProps {
   isSuccess: boolean;
   onCancelTransaction: () => void;
   onDone: () => void;
+  onRetryTransaction: () => void;
 }

@@ -2,6 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { IAddProductAction, IProductState } from './interfaces';
 
 const initialState: IProductState = {
+  keypadAmount: 0,
   tipAmount: 0,
   cashoutAmount: 0,
   surchargeAmount: 0,
@@ -22,6 +23,7 @@ const productSlice = createSlice({
       state.surchargeAmount = 0;
       state.tipAmount = 0;
       state.cashoutAmount = 0;
+      state.keypadAmount = 0;
     },
     addSurchargeAmount(state: IProductState, action: PayloadAction<number>) {
       state.surchargeAmount = action.payload;
@@ -32,10 +34,13 @@ const productSlice = createSlice({
     addCashoutAmount(state: IProductState, action: PayloadAction<number>) {
       state.cashoutAmount = action.payload;
     },
+    addKeypadAmount(state: IProductState, action: PayloadAction<number>) {
+      state.keypadAmount = action.payload;
+    },
   },
 });
 
-export const { addProduct, clearAllProducts, addCashoutAmount, addSurchargeAmount, addTipAmount } =
+export const { addProduct, clearAllProducts, addCashoutAmount, addSurchargeAmount, addTipAmount, addKeypadAmount } =
   productSlice.actions;
 
 export default productSlice.reducer;

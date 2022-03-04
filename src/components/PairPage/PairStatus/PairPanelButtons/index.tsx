@@ -2,27 +2,31 @@ import React from 'react';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import { Link } from 'react-router-dom';
-import { SPI_PAIR_FLOW, SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
 import { PATH_PURCHASE } from '../../../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../../../images/FailedIcon.svg';
 import { ReactComponent as ReconnectingIcon } from '../../../../images/ReconnectingIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../../../images/SuccessIcon.svg';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { selectPairFormValues } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
-import { handleCancelPairClick, handleUnPairClick } from '../../../../utils/common/pair/pairStatusHelpers';
+import {
+  getTitleFromStatus,
+  handleCancelPairClick,
+  handleUnPairClick,
+} from '../../../../utils/common/pair/pairStatusHelpers';
 import useStyles from '../index.styles';
 import { PairPanelButtonsInterface } from '../interfaces';
 
-export default function PairPanelButtons(status: string): PairPanelButtonsInterface {
+export default function PairPanelButtons(status: string, message: string | null): PairPanelButtonsInterface {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const pairFormValues = useAppSelector(selectPairFormValues);
 
   if (status === SPI_PAIR_STATUS.PairedConnecting) {
     return {
-      statusTitle: SPI_PAIR_STATUS.PairedConnecting,
+      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnecting),
       statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
-      statusText: SPI_PAIR_FLOW.Pairing,
+      statusText: message ?? SPI_PAIR_STATUS.PairedConnecting,
       button: (
         <Button
           className={classes.cancelPairingBtn}
@@ -38,9 +42,9 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
 
   if (status === SPI_PAIR_STATUS.PairedConnected && pairFormValues.serialNumber !== '') {
     return {
-      statusTitle: SPI_PAIR_STATUS.PairedConnected,
+      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnected),
       statusIcon: <SuccessIcon className={classes.successIcon} />,
-      statusText: SPI_PAIR_FLOW.Transaction,
+      statusText: 'Ready',
       button: (
         <Box>
           <Button
@@ -62,7 +66,7 @@ export default function PairPanelButtons(status: string): PairPanelButtonsInterf
   return {
     statusTitle: SPI_PAIR_STATUS.Unpaired,
     statusIcon: <FailedIcon className={classes.failedIcon} />,
-    statusText: SPI_PAIR_FLOW.Idle,
+    statusText: '-',
     button: null,
   };
 }

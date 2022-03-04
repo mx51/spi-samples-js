@@ -40,25 +40,25 @@ describe('Test PairPanelButtons', () => {
 
   test('should show Pair button when status is disconnected', () => {
     // Act
-    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.Unpaired);
+    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.Unpaired, null);
 
     // Assert
     expect(panelButton.statusTitle).toEqual('Unpaired');
-    expect(panelButton.statusText).toEqual('Idle');
+    expect(panelButton.statusText).toEqual('-');
     expect(panelButton.button as Any).toBeNull();
   });
 
   test('should show Pairing button when status is connecting', () => {
     // Act
-    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.PairedConnecting);
+    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.PairedConnecting, null);
     const handleCancelPairClick = jest.fn();
 
     // Act
     handleCancelPairClick();
 
     // Assert
-    expect(panelButton.statusTitle).toEqual('PairedConnecting');
-    expect(panelButton.statusText).toEqual('Pairing');
+    expect(panelButton.statusTitle).toEqual('Connecting');
+    expect(panelButton.statusText).toEqual('PairedConnecting');
     expect((panelButton.button as Any).props.onClick).toBeDefined();
     expect(handleCancelPairClick).toHaveBeenCalledTimes(1);
   });
@@ -68,11 +68,11 @@ describe('Test PairPanelButtons', () => {
     const handleUnPairClick = jest.fn();
 
     // Act
-    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.PairedConnected);
+    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.PairedConnected, null);
 
     // Assert
-    expect(panelButton.statusTitle).toEqual('PairedConnected');
-    expect(panelButton.statusText).toEqual('Transaction');
+    expect(panelButton.statusTitle).toEqual('Connected');
+    expect(panelButton.statusText).toEqual('Ready');
     expect((panelButton.button as Any).props.children[0].props.onClick).toBeDefined();
     expect(handleUnPairClick).toBeDefined();
   });
