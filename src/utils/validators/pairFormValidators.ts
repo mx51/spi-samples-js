@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-escape */
-import { TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE } from '../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS, TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE } from '../../definitions/constants/commonConfigs';
 import { ITerminalState } from '../../redux/reducers/TerminalSlice/interfaces';
 
 export const eftposIPAddressRegex = /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\:[0-9]{1,5})?$/;
@@ -39,7 +39,7 @@ function postIdValidator(value: string, terminals: ITerminalState): string {
   if (value === '') return 'POS Id is required';
   if (!value.match(numberCharactersRegex)) return 'POS Id must contain only alphanumeric characters';
   if (value.length > 16) return 'POS Id must be less than 16 characters long';
-  if (Object.values(terminals).filter((t) => t.posId === value).length > 0)
+  if (Object.values(terminals).filter((t) => t.posId === value && t.status !== SPI_PAIR_STATUS.Unpaired).length > 0)
     return 'POS ID must be unique, please choose another';
   return '';
 }
