@@ -143,6 +143,7 @@ export const defaultMockTerminals = {
     secrets: null,
     settings: null, // not available during pair terminal stage
     status: SPI_PAIR_STATUS.Unpaired,
+    reconnecting: false,
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage
@@ -172,6 +173,7 @@ export const pairedMockTerminals = {
     },
     settings: null, // not available during pair terminal stage
     status: SPI_PAIR_STATUS.PairedConnected,
+    reconnecting: false,
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage

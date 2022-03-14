@@ -62,7 +62,7 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
               <TableCell>
                 <Chip
                   size="small"
-                  label={getTitleFromStatus(terminal.status)}
+                  label={getTitleFromStatus(terminal.status, terminal.reconnecting)}
                   className={chipStyles(terminal.status)}
                 />
               </TableCell>

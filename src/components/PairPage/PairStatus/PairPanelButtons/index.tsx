@@ -17,14 +17,35 @@ import {
 import useStyles from '../index.styles';
 import { PairPanelButtonsInterface } from '../interfaces';
 
-export default function PairPanelButtons(status: string, message: string | null): PairPanelButtonsInterface {
+export default function PairPanelButtons(
+  status: string,
+  message: string | null,
+  reconnecting: boolean
+): PairPanelButtonsInterface {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   const pairFormValues = useAppSelector(selectPairFormValues);
 
+  if (status === SPI_PAIR_STATUS.PairedConnecting && reconnecting) {
+    return {
+      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnecting, reconnecting),
+      statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
+      statusText: '-',
+      button: (
+        <Button
+          className={classes.cancelPairingBtn}
+          data-test-id="cancelPairBtn"
+          onClick={() => handleCancelPairClick(dispatch, pairFormValues.serialNumber)}
+          variant="outlined"
+        >
+          Cancel Pairing
+        </Button>
+      ),
+    };
+  }
   if (status === SPI_PAIR_STATUS.PairedConnecting) {
     return {
-      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnecting),
+      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnecting, false),
       statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
       statusText: message ?? SPI_PAIR_STATUS.PairedConnecting,
       button: (
@@ -39,10 +60,9 @@ export default function PairPanelButtons(status: string, message: string | null)
       ),
     };
   }
-
   if (status === SPI_PAIR_STATUS.PairedConnected && pairFormValues.serialNumber !== '') {
     return {
-      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnected),
+      statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnected, false),
       statusIcon: <SuccessIcon className={classes.successIcon} />,
       statusText: 'Ready',
       button: (
