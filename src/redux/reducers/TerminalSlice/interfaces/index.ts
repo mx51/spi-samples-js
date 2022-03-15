@@ -18,6 +18,7 @@ export interface ITerminalProps {
   secrets: ISecrets | null;
   settings: ISettings | null;
   status: string;
+  reconnecting: boolean;
   terminalStatus: string | null;
   txFlow: ITxFlow | null;
   txMessage: ITxMessage | null;

@@ -28,7 +28,7 @@ const terminalsSlice = createSlice({
     addTerminal(state: ITerminalState, action: PayloadAction<IAddTerminalAction>) {
       const { id, terminalConfigs } = action.payload;
 
-      state[id] = terminalConfigs;
+      state[id] = { ...terminalConfigs, reconnecting: false };
     },
 
     clearTransaction(state: ITerminalState, action: PayloadAction<IClearTransactionAction>) {
@@ -69,6 +69,16 @@ const terminalsSlice = createSlice({
     updatePairingStatus(state: ITerminalState, action: PayloadAction<IUpdatePairingStatusAction>) {
       const { id, status } = action.payload;
       const currentState = state[id] || {};
+
+      if (
+        currentState.status &&
+        currentState.status === SPI_PAIR_STATUS.PairedConnected &&
+        status === SPI_PAIR_STATUS.PairedConnecting
+      ) {
+        currentState.reconnecting = true;
+      } else {
+        currentState.reconnecting = false;
+      }
 
       if (!currentState.status) {
         currentState.status = SPI_PAIR_STATUS.PairedConnecting;

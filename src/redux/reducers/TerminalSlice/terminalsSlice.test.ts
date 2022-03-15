@@ -55,6 +55,7 @@ function mockDefaultTerminalConfigurations() {
     secrets: null,
     settings: null, // not available during pair terminal stage
     status: SPI_PAIR_STATUS.Unpaired,
+    reconnecting: false,
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage
@@ -82,6 +83,7 @@ function mockPreviousState(): ITerminalState {
       secrets: null,
       settings: null,
       status: SPI_PAIR_STATUS.Unpaired,
+      reconnecting: false,
       terminalStatus: '',
       txFlow: null,
       txMessage: null,
@@ -161,6 +163,7 @@ test('should handle a initial add terminal state', () => {
     secrets: null,
     settings: null, // not available during pair terminal stage
     status: SPI_PAIR_STATUS.Unpaired,
+    reconnecting: false,
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage
@@ -344,6 +347,7 @@ test('should show PairedConnecting as status if no status value setup in updateP
   expect(reducer(previousState as Any, updatePairingStatus(updatePairingStatusAction))).toEqual({
     [mockTerminalInstanceId]: {
       status: SPI_PAIR_STATUS.PairedConnecting,
+      reconnecting: false,
     },
   });
 });
