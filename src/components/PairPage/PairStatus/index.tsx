@@ -67,6 +67,7 @@ function PairStatus(): React.ReactElement {
 
         {(terminal?.status === SPI_PAIR_STATUS.PairedConnected ||
           terminal?.status === SPI_PAIR_STATUS.Unpaired ||
+          terminal?.reconnecting ||
           !terminal) &&
           panelInformationList.map(({ title, content }) => (
             <PairPanelInformation key={title} title={title} content={content} />
