@@ -77,9 +77,6 @@ function PairStatus(): React.ReactElement {
             <Typography variant="h5" className={classes.pairingCode}>
               Pairing code: {terminal?.pairingFlow?.confirmationCode}
             </Typography>
-            <Typography variant="inherit" className={classes.statusText}>
-              Confirm pairing code on terminal
-            </Typography>
           </Box>
         )}
       </Grid>
