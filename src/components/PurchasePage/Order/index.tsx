@@ -163,7 +163,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
             variant="contained"
             color="primary"
             size="large"
-            disabled={!isTerminalPaired}
+            disabled={!isTerminalPaired || subtotalAmount === 0}
             classes={{ root: classes.payNowBtn, label: classes.actionBtnLabel }}
             component={LinkRouter}
             to={PATH_PAY_NOW}
