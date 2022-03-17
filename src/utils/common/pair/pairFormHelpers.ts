@@ -5,8 +5,10 @@ import {
   TEXT_FORM_DEFAULT_OPTION,
   TEXT_FORM_DEFAULT_VALUE,
 } from '../../../definitions/constants/commonConfigs';
+
 import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
+import { serialNumberValidatorOnBlur, serialNumberValidatorOnChange } from '../../validators/pairFormValidators';
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
@@ -192,6 +194,7 @@ export const handleDeviceAddressFieldOnBlur = (
 export const handleSerialNumberFieldOnChange = (
   dispatch: Any,
   event: IFormEventValue,
+  serialNumberValidator: (value: string) => string,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
   const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
@@ -201,7 +204,7 @@ export const handleSerialNumberFieldOnChange = (
       key: 'serialNumber',
       value: {
         value: serialNumberFormatter(currentSerialNumber),
-        isValid: true,
+        isValid: serialNumberValidatorOnChange(event.target.value as string) === '',
       },
     })
   );
@@ -210,7 +213,7 @@ export const handleSerialNumberFieldOnChange = (
 export const handleSerialNumberFieldOnBlur = (
   dispatch: Any,
   event: IFormEventValue,
-  serialNumberValidator: (value: string) => boolean,
+  serialNumberValidator: (value: string) => string,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
   dispatch(
@@ -218,7 +221,7 @@ export const handleSerialNumberFieldOnBlur = (
       key: 'serialNumber',
       value: {
         value: event.target.value as string,
-        isValid: serialNumberValidator(event.target.value as string),
+        isValid: serialNumberValidatorOnBlur(event.target.value as string) === '',
       },
     })
   );
