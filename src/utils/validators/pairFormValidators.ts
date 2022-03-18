@@ -5,6 +5,7 @@ import { ITerminalState } from '../../redux/reducers/TerminalSlice/interfaces';
 export const eftposIPAddressRegex = /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\:[0-9]{1,5})?$/;
 export const eftposAutoAddressRegex = /^[a-zA-Z0-9\.-]+$/;
 export const numberCharactersRegex = /^[a-zA-Z0-9]+$/;
+export const serialNumberRegex = /^[0-9.-]*$/;
 
 function eftposAddressValidator(addressType: string, value: string): boolean {
   const eftposRegex =
@@ -29,10 +30,15 @@ function paymentProviderValidator(value: string): boolean {
   return fieldRequiredValidator(value) && numberCharactersValidator(value);
 }
 
-function serialNumberValidator(value: string): boolean {
+function serialNumberValidatorOnBlur(value: string): string {
   const valueWithoutDash = value.replaceAll('-', '');
-
-  return valueWithoutDash.length > 0 && valueWithoutDash.length === 9;
+  if (!value.match(serialNumberRegex)) return 'Sorry, the serial number should only contain numbers. Please try again.';
+  if (valueWithoutDash.length < 9) return 'Please enter a 9 digits Serial number.';
+  return '';
+}
+function serialNumberValidatorOnChange(value: string): string {
+  if (!value.match(serialNumberRegex)) return 'Sorry, the serial number should only contain numbers. Please try again.';
+  return '';
 }
 
 function postIdValidator(value: string, terminals: ITerminalState): string {
@@ -49,7 +55,8 @@ export {
   eftposIPAddressValidator,
   numberCharactersValidator,
   paymentProviderValidator,
-  serialNumberValidator,
+  serialNumberValidatorOnBlur,
+  serialNumberValidatorOnChange,
   fieldRequiredValidator,
   postIdValidator,
 };

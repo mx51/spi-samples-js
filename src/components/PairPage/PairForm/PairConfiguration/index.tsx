@@ -18,7 +18,6 @@ import {
   TEXT_FORM_MODAL_CODE_WESTPAC,
   TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
-  TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import {
@@ -47,8 +46,9 @@ import {
   eftposAddressValidator,
   fieldRequiredValidator,
   paymentProviderValidator,
-  serialNumberValidator,
   postIdValidator,
+  serialNumberValidatorOnBlur,
+  serialNumberValidatorOnChange,
 } from '../../../../utils/validators/pairFormValidators';
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
@@ -186,17 +186,21 @@ export default function PairConfiguration(): React.ReactElement {
             disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
             error={!serialNumber.isValid}
             fullWidth
-            helperText={!serialNumber.isValid ? TEXT_FORM_VALIDATION_SERIAL_NUMBER_TEXTFIELD : ''}
+            helperText={
+              !serialNumber.isValid
+                ? serialNumberValidatorOnChange(serialNumber.value) || serialNumberValidatorOnBlur(serialNumber.value)
+                : ''
+            }
             InputProps={{
               endAdornment: <ErrorInputAdornment isValid={!serialNumber.isValid} />,
             }}
             label="Serial number"
             margin="dense"
             onBlur={(event: IFormEventValue) =>
-              handleSerialNumberFieldOnBlur(dispatch, event, serialNumberValidator, updatePairFormParams)
+              handleSerialNumberFieldOnBlur(dispatch, event, serialNumberValidatorOnBlur, updatePairFormParams)
             }
             onChange={(event: IFormEventValue) =>
-              handleSerialNumberFieldOnChange(dispatch, event, updatePairFormParams)
+              handleSerialNumberFieldOnChange(dispatch, event, serialNumberValidatorOnChange, updatePairFormParams)
             }
             required
             value={serialNumber.value}
