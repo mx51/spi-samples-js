@@ -17,6 +17,7 @@ import {
   terminalTxFlowSuccessTracker,
   terminalTxFlowFinishedTracker,
   terminalTxFlowAwaitingSignatureTracker,
+  terminalTxTotalAmount,
 } from './terminalsSliceSelectors';
 
 const mockStoreState = {
@@ -221,5 +222,16 @@ describe('Test terminals slice selectors', () => {
         posVersion: '',
       },
     ]);
+  });
+
+  test('Test terminalTxTotalAmount', () => {
+    // Act
+    const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
+      terminalList(mockStoreState)
+    );
+    const actualResult = (terminalTxTotalAmount(mockTerminalInstanceId) as Any).resultFunc(currentTerminalInstance);
+
+    // Assert
+    expect(actualResult).toEqual(0);
   });
 });

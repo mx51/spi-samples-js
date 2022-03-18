@@ -76,4 +76,12 @@ describe('Test PairPanelButtons', () => {
     expect((panelButton.button as Any).props.children[0].props.onClick).toBeDefined();
     expect(handleUnPairClick).toBeDefined();
   });
+
+  test('should show "Reconnecting" status text when status is pair connecting and terminal has already paired', () => {
+    // Act
+    const panelButton = PairPanelButtons(SPI_PAIR_STATUS.PairedConnecting, null, true);
+
+    // Assert
+    expect(panelButton.statusTitle).toEqual('Reconnecting');
+  });
 });

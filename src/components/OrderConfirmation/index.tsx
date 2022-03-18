@@ -253,7 +253,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                   variant="contained"
                   color="primary"
                   size="large"
-                  disabled={isDisabled()}
+                  disabled={isDisabled() || tipAmount > 0}
                   focusRipple
                   classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                   onClick={() => {

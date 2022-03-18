@@ -49,16 +49,6 @@ export interface ITxFlow {
   awaitingSignatureCheck: boolean;
   finished: boolean;
   success: string;
-  response: {
-    data: {
-      rrn: string;
-      schemeAppName: string;
-      schemeName: string;
-      merchantReceipt: string;
-      transactionType: string;
-      hostResponseText: string;
-    };
-  };
   signatureRequiredMessage: {
     posRefId: string | undefined;
     requestId: string | undefined;
@@ -70,10 +60,10 @@ export interface ITxFlow {
     data: {
       posRefId: string;
       purchaseAmount: number;
-      tipAmount: number;
       cashAmount: number;
-      promptForCashout: boolean;
       surchargeAmount: number;
+      tipAmount: number;
+      promptForCashout: boolean;
       promptForCustomerCopy: boolean;
       printForSignatureRequiredTransactions: boolean;
       printMerchantCopy: boolean;
@@ -82,9 +72,22 @@ export interface ITxFlow {
       merchantReceiptHeader: string;
       merchantReceiptFooter: string;
     };
-
     posId: string;
     decryptedJson: string;
+  };
+  response: {
+    data: {
+      rrn: string;
+      schemeAppName: string;
+      schemeName: string;
+      merchantReceipt: string;
+      transactionType: string;
+      hostResponseText: string;
+      purchaseAmount: number;
+      cashAmount: number;
+      surchargeAmount: number;
+      tipAmount: number;
+    };
   };
 }
 export interface IPairingFlow {

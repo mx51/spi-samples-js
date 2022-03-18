@@ -46,7 +46,7 @@ function postIdValidator(value: string, terminals: ITerminalState): string {
   if (!value.match(numberCharactersRegex)) return 'POS Id must contain only alphanumeric characters';
   if (value.length > 16) return 'POS Id must be less than 16 characters long';
   if (Object.values(terminals).filter((t) => t.posId === value && t.status !== SPI_PAIR_STATUS.Unpaired).length > 0)
-    return 'POS ID must be unique, please choose another';
+    return 'POS Id must be unique, please choose another';
   return '';
 }
 
