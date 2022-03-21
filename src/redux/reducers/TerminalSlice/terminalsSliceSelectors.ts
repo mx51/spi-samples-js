@@ -89,3 +89,13 @@ export const terminalTxFlowAwaitingSignatureTracker = (
   instanceId: string
 ): ((state: RootState) => boolean | undefined) =>
   createSelector(terminalInstance(instanceId), (terminal: ITerminalProps) => terminal?.txFlow?.awaitingSignatureCheck);
+
+export const terminalTxTotalAmount = (instanceId: string): ((state: RootState) => number) =>
+  createSelector(
+    terminalInstance(instanceId),
+    (terminal: ITerminalProps) =>
+      (terminal?.txFlow?.response?.data?.purchaseAmount as number) +
+        (terminal?.txFlow?.response?.data?.cashAmount as number) +
+        (terminal?.txFlow?.response?.data?.surchargeAmount as number) +
+        (terminal?.txFlow?.response?.data?.tipAmount as number) || 0
+  );

@@ -6,12 +6,14 @@ import {
   isTerminalTxFlowSuccess,
   terminalInstance,
   terminalTxFlowAwaitingSignatureTracker,
+  terminalTxTotalAmount,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 
 export default function PurchaseFlow(): React.ReactElement {
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const totalAmount = useSelector(terminalTxTotalAmount(selectedTerminal));
   const isSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const awaitingSignatureCheck = useSelector(terminalTxFlowAwaitingSignatureTracker(selectedTerminal));
   const statusInformation = (spi: ITerminalProps) =>
@@ -27,10 +29,10 @@ export default function PurchaseFlow(): React.ReactElement {
 
 # ----------- Customer Receipt -----------
 
-# PURCHASE: ${currencyFormat((spi?.txFlow?.request?.data?.purchaseAmount ?? 0) / 100)}
-# TIP: ${currencyFormat((spi?.txFlow?.request?.data?.tipAmount ?? 0) / 100)}
-# SURCHARGE: ${currencyFormat((spi?.txFlow?.request?.data?.surchargeAmount ?? 0) / 100)}
-# CASHOUT: ${currencyFormat((spi?.txFlow?.request?.data?.cashAmount ?? 0) / 100)}
+# PURCHASE: ${currencyFormat((spi?.txFlow?.response?.data?.purchaseAmount ?? 0) / 100)}
+# TIP: ${currencyFormat((spi?.txFlow?.response?.data?.tipAmount ?? 0) / 100)}
+# SURCHARGE: ${currencyFormat((spi?.txFlow?.response?.data?.surchargeAmount ?? 0) / 100)}
+# CASHOUT: ${currencyFormat((spi?.txFlow?.response?.data?.cashAmount ?? 0) / 100)}
 
 `
       : `
@@ -40,7 +42,7 @@ export default function PurchaseFlow(): React.ReactElement {
 # Request Id: ${spi?.txFlow?.signatureRequiredMessage?.requestId}
 # PosRefId: ${spi?.txFlow?.posRefId}
 # Type: ${spi?.txFlow?.type}
-# Request Amount: ${currencyFormat((spi?.txFlow?.amountCents ?? 0) / 100)}
+# Request Amount: ${currencyFormat(totalAmount / 100)}
 # Waiting For Signature: ${spi?.txFlow?.awaitingSignatureCheck}
 # Finished: ${spi?.txFlow?.finished}
 # Success: ${spi?.txFlow?.success}

@@ -301,6 +301,10 @@ export const mockTxFlow: ITxFlow = {
       merchantReceipt: 'string',
       transactionType: 'string',
       hostResponseText: 'string',
+      purchaseAmount: 0,
+      surchargeAmount: 0,
+      cashAmount: 0,
+      tipAmount: 0,
     },
   },
   signatureRequiredMessage: {
@@ -348,6 +352,10 @@ export const mockRefundTxFlow = {
       merchantReceipt: 'string',
       transactionType: 'string',
       hostResponseText: 'string',
+      purchaseAmount: 0,
+      surchargeAmount: 0,
+      cashAmount: 0,
+      tipAmount: 0,
     },
   },
   signatureRequiredMessage: {

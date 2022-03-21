@@ -31,8 +31,8 @@ describe('Test <OrderConfirmation />', () => {
         products: {
           keypadAmount: 0,
           surchargeAmount: 100,
-          tipAmount: 100,
-          cashoutAmount: 100,
+          tipAmount: 0,
+          cashoutAmount: 1000,
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
@@ -114,7 +114,7 @@ describe('Test <OrderConfirmation />', () => {
         products: {
           keypadAmount: 0,
           surchargeAmount: 100,
-          tipAmount: 100,
+          tipAmount: 0,
           cashoutAmount: 100,
           products: [],
         },
@@ -148,6 +148,50 @@ describe('Test <OrderConfirmation />', () => {
 
     // Assert
     expect(spiCancelTransaction.mock.calls.length).toBe(1);
+  });
+
+  test('should disable Moto button when tip amount is larger than 0', () => {
+    // Arrange
+    const initiateRefundTxTransaction = jest.spyOn(spiService, 'initiateRefundTxTransaction');
+    initiateRefundTxTransaction.mockReturnValue();
+
+    const customStore2 = (mockTerminals: Any) => ({
+      ...store,
+      getState: () => ({
+        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
+        terminals: mockTerminals,
+        products: {
+          keypadAmount: 0,
+          surchargeAmount: 100,
+          tipAmount: 100,
+          cashoutAmount: 0,
+          products: [],
+        },
+        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+      }),
+    });
+    const mockTerminals = {
+      [mockTerminalInstanceId]: {
+        ...pairedMockTerminals[mockTerminalInstanceId],
+        receipt: mockReceiptResponse,
+        txFlow: {
+          ...mockRefundTxFlow,
+          finished: false,
+          success: TxFlowState.Unknown,
+        },
+      },
+    };
+
+    // Act
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />,
+      customStore2(mockTerminals)
+    );
+    const motoButton = screen.getByText(/Moto/i).closest('button');
+
+    // Assert
+    expect(motoButton).toHaveAttribute('disabled');
+    expect(motoButton).toBeDisabled();
   });
 
   test('should clearAll products when total amount is changed', () => {

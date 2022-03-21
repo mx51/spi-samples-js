@@ -20,19 +20,9 @@ function getTxFlow(detail: Any): Any {
     awaitingSignatureCheck: detail?.AwaitingSignatureCheck,
     finished: detail?.Finished,
     success: detail?.Success,
-    response: {
-      data: {
-        rrn: detail?.Response?.Data?.rrn,
-        schemeAppName: detail?.Response?.Data?.scheme_app_name,
-        schemeName: detail?.Response?.Data?.scheme_name,
-        merchantReceipt: detail?.Response?.Data?.merchant_receipt,
-        transactionType: detail?.Response?.Data?.transaction_Type,
-        hostResponseText: detail?.Response?.Data?.host_response_text,
-      },
-    },
     signatureRequiredMessage: detail?.SignatureRequiredMessage,
     request: {
-      id: detail?.Request.Id,
+      id: detail?.Request?.Id,
       eventName: detail?.Request?.EventName,
       data: {
         posRefId: detail?.Request?.Data?.pos_ref_id,
@@ -51,6 +41,20 @@ function getTxFlow(detail: Any): Any {
       },
       posId: '',
       decryptedJson: '',
+    },
+    response: {
+      data: {
+        rrn: detail?.Response?.Data?.rrn,
+        schemeAppName: detail?.Response?.Data?.scheme_app_name,
+        schemeName: detail?.Response?.Data?.scheme_name,
+        merchantReceipt: detail?.Response?.Data?.merchant_receipt,
+        transactionType: detail?.Response?.Data?.transaction_type,
+        hostResponseText: detail?.Response?.Data?.host_response_text,
+        purchaseAmount: detail?.Response?.Data?.purchase_amount || 0,
+        surchargeAmount: detail?.Response?.Data?.surcharge_amount || 0,
+        cashAmount: detail?.Response?.Data?.cash_amount || 0,
+        tipAmount: detail?.Response?.Data?.tip_amount || 0,
+      },
     },
   };
   return txFlowDetails;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as LinkRouter } from 'react-router-dom';
+import { Link as LinkRouter, useHistory } from 'react-router-dom';
 import { PATH_PURCHASE, TEXT_PURCHASE } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 
-import { orderTotalSelector, productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -16,6 +16,7 @@ import {
   terminalTransactionTypeObject,
   terminalTxAmount,
   terminalTxFlowFinishedTracker,
+  terminalTxTotalAmount,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
@@ -25,6 +26,9 @@ import useStyles from './index.style';
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const {
+    location: { pathname },
+  } = useHistory();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const subtotalAmount = useSelector(productSubTotalSelector);
@@ -32,10 +36,17 @@ function PaymentSummary(): React.ReactElement {
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const transactionAmount = useSelector(terminalTxAmount(selectedTerminal));
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
-  const originalTotalAmount: number = useSelector(orderTotalSelector);
+  const originalTotalAmount: number = useSelector(terminalTxTotalAmount(selectedTerminal));
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
+  };
+
+  const amountSummaryInformation = (type: string) => {
+    const returns =
+      pathname === '/order-finished' ? currentTerminal?.txFlow?.response?.data : currentTerminal?.txFlow?.request?.data;
+    if (returns) return (returns as Any)[type];
+    return 0;
   };
 
   return (
@@ -70,24 +81,9 @@ function PaymentSummary(): React.ReactElement {
             <Typography className={classes.orderSummery}>Order Summary</Typography>
             <Divider variant="middle" />
             <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
-            <OrderLineItem
-              disabled
-              label="Surcharge"
-              amount={currentTerminal?.txFlow?.request?.data?.surchargeAmount ?? 0}
-              viewOnly
-            />
-            <OrderLineItem
-              disabled
-              label="Cashout"
-              amount={currentTerminal?.txFlow?.request?.data?.cashAmount ?? 0}
-              viewOnly
-            />
-            <OrderLineItem
-              disabled
-              label="Tip"
-              amount={currentTerminal?.txFlow?.request?.data?.tipAmount ?? 0}
-              viewOnly
-            />
+            <OrderLineItem disabled label="Surcharge" amount={amountSummaryInformation('surchargeAmount')} viewOnly />
+            <OrderLineItem disabled label="Cashout" amount={amountSummaryInformation('cashAmount')} viewOnly />
+            <OrderLineItem disabled label="Tip" amount={amountSummaryInformation('tipAmount')} viewOnly />
           </>
         ) : (
           <br />
