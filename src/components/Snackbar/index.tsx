@@ -6,7 +6,7 @@ import { readTerminalPairError } from '../../redux/reducers/PairFormSlice/pairFo
 import { ISnackbar } from './interfaces';
 
 export default function SnackbarWrapper({
-  duration = 6000,
+  duration = 10000,
   horizontal = 'center',
   vertical = 'bottom',
 }: ISnackbar): React.ReactElement {

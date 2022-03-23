@@ -39,7 +39,11 @@ export const pairFormSlice = createSlice({
   initialState,
   reducers: {
     readTerminalPairError(state: IPairFormParams, action: PayloadAction<ITerminalPairError>) {
-      const error = action.payload;
+      const error = {
+        ...action.payload,
+        message:
+          'Sorry, we were unable to pair with the EFTPOS terminal. Please check the Serial Number and Payment Provider have been entered correctly and try again',
+      };
       state.error = error;
     },
     resetPairForm: () => initialState,

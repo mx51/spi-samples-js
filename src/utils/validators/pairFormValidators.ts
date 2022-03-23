@@ -6,6 +6,7 @@ export const eftposIPAddressRegex = /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{
 export const eftposAutoAddressRegex = /^[a-zA-Z0-9\.-]+$/;
 export const numberCharactersRegex = /^[a-zA-Z0-9]+$/;
 export const serialNumberRegex = /^[0-9.-]*$/;
+export const charactersRegex = /^[a-zA-Z]+$/;
 
 function eftposAddressValidator(addressType: string, value: string): boolean {
   const eftposRegex =
@@ -25,9 +26,12 @@ function fieldRequiredValidator(value: string): boolean {
 function numberCharactersValidator(value: string): boolean {
   return !!value.match(numberCharactersRegex);
 }
+function charactersValidator(value: string): boolean {
+  return !!value.match(charactersRegex);
+}
 
 function paymentProviderValidator(value: string): boolean {
-  return fieldRequiredValidator(value) && numberCharactersValidator(value);
+  return charactersValidator(value);
 }
 
 function serialNumberValidatorOnBlur(value: string): string {
@@ -59,4 +63,5 @@ export {
   serialNumberValidatorOnChange,
   fieldRequiredValidator,
   postIdValidator,
+  charactersValidator,
 };
