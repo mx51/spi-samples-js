@@ -116,7 +116,7 @@ export default function PairConfiguration(): React.ReactElement {
                 handlePaymentProviderFieldOnBlur(dispatch, event, paymentProviderValidator, updatePairFormParams)
               }
               onChange={(event: IFormEventValue) =>
-                handlePaymentProviderFieldOnChange(dispatch, event, updatePairFormParams)
+                handlePaymentProviderFieldOnChange(dispatch, event, paymentProviderValidator, updatePairFormParams)
               }
               value={acquirerCode.value}
               variant="outlined"

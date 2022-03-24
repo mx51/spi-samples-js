@@ -86,6 +86,7 @@ export const handlePaymentProviderSelectorOnChange = (
 export const handlePaymentProviderFieldOnChange = (
   dispatch: Any,
   event: IFormEventValue,
+  paymentProviderValidator: (value: string) => boolean,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
   dispatch(
@@ -94,7 +95,7 @@ export const handlePaymentProviderFieldOnChange = (
       value: {
         value: event.target.value as string,
         option: TEXT_FORM_DEFAULT_VALUE,
-        isValid: true,
+        isValid: paymentProviderValidator(event.target.value as string),
       },
     })
   );

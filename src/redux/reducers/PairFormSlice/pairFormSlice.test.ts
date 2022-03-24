@@ -119,7 +119,8 @@ describe('Test pairFormSlice', () => {
     // Arrange
     const mockErrorState = {
       isShown: true,
-      message: 'Mock error message ..',
+      message:
+        'Sorry, we were unable to pair with the EFTPOS terminal. Please check the Serial Number and Payment Provider have been entered correctly and try again',
     };
     const currentMockPairFormState = {
       ...defaultMockPairFormParams,
