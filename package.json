@@ -6,6 +6,9 @@
   "author": "mx51",
   "license": "Apache-2.0",
   "homepage": "https://github.com/mx51/spi-samples-js",
+  "engines": {
+    "node": "13.x"
+  },
   "browserslist": [
     "ie 11",
     "Firefox ESR",
