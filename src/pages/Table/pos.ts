@@ -650,9 +650,7 @@ class TablePos extends Pos {
     });
   }
 
-  billPaymentFlowEnded(message: any) {
-    const billPaymentFlowEndedResponse = new BillPaymentFlowEndedResponse(message);
-
+  billPaymentFlowEnded(billPaymentFlowEndedResponse: any) {
     if (!this.billsStore[billPaymentFlowEndedResponse.BillId]) {
       // We cannot find this bill.
       this._flowMsg.Info(`Incorrect Bill Id!`);
@@ -709,10 +707,8 @@ class TablePos extends Pos {
       this._flowMsg.Info(`# No Open Tables.`);
     }
 
-    const openTableListJson = JSON.stringify(openTableList);
-
     return Object.assign(new GetOpenTablesResponse(), {
-      TableData: openTableListJson,
+      TableData: openTableList,
     });
   }
 
