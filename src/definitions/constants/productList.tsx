@@ -45,8 +45,8 @@ const products: Array<IProduct> = [
   },
   {
     id: 8,
-    name: 'Production Test Item',
-    price: 1,
+    name: 'Espresso',
+    price: 350,
     image: 'images/product/testItem.png',
   },
 ];

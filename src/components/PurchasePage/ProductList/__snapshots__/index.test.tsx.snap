@@ -347,13 +347,13 @@ exports[`Test <ProductList /> snapshot for ProductList component 1`] = `
         >
           <div
             class="MuiCardMedia-root makeStyles-productText-3"
-            title="Production Test Item"
+            title="Espresso"
           >
             <div
               class="MuiBox-root MuiBox-root-21 makeStyles-productImage-5"
             >
               <img
-                alt="Production Test Item"
+                alt="Espresso"
                 src="images/product/testItem.png"
               />
             </div>
@@ -364,12 +364,12 @@ exports[`Test <ProductList /> snapshot for ProductList component 1`] = `
             <h2
               class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
             >
-              Production Test Item
+              Espresso
             </h2>
             <p
               class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
             >
-              $0.01
+              $3.50
             </p>
           </div>
           <span
