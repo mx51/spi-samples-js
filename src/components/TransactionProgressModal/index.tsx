@@ -39,7 +39,7 @@ function TransactionProgressModal({
   };
 
   return (
-    <Dialog aria-labelledby="spiModalTitle" open>
+    <Dialog aria-labelledby="spiModalTitle" open disableRestoreFocus>
       {awaitingSignatureCheck ? (
         <>
           <DialogTitle>
