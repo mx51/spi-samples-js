@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "0.1.0",
+  "version": "2.9.2",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.1",
@@ -25,7 +25,7 @@
     "web-vitals": "^1.0.1"
   },
   "scripts": {
-    "start": "PORT=3131 react-scripts start",
+    "dev": "PORT=3131 react-scripts start",
     "build": "react-scripts build",
     "test": "tsc && react-scripts test --watchAll=false",
     "test:deploy": "npm test -- --reporters=jest-junit --reporters=default --coverage --coverageReporters=cobertura --coverageReporters=html",
