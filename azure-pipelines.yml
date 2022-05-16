@@ -72,7 +72,7 @@ stages:
             displayName: 'Pipeline failure build stage alert'
             condition: failed()
 
-  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/feature/sample-pos-two'), startsWith(variables['build.sourceBranch'], 'refs/tags/v'))  }}:
+  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/feature/sample-pos-two'), startsWith(variables['build.sourceBranch'], 'refs/tags/'))  }}:
       - stage: deploy_dev
         displayName: 'Stage: Deploy (DEV)'
         jobs:
@@ -106,7 +106,7 @@ stages:
                       displayName: 'Pipeline failure deploy stage alert (dev)'
                       condition: failed()
 
-  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/v') }}:
+  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
       - stage: deploy_live
         displayName: 'Stage: Deploy (Production)'
         dependsOn: [build, deploy_dev]
