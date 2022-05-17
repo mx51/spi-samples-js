@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -7,18 +7,18 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
+import { Spi as SpiClient } from '@mx51/spi-client-js';
+
 import {
   SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_OPTION,
   TEXT_FORM_DEFAULT_VALUE,
-  TEXT_FORM_MODAL_CODE_GKO,
-  TEXT_FORM_MODAL_CODE_TILL,
-  TEXT_FORM_MODAL_CODE_WESTPAC,
   TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD,
   TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
 } from '../../../../definitions/constants/commonConfigs';
+import { defaultApikey, defaultPosName } from '../../../../definitions/constants/spiConfigs';
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import {
   pairForm,
@@ -64,6 +64,13 @@ export default function PairConfiguration(): React.ReactElement {
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));
   const terminals = useAppSelector(terminalList);
+  const [tenantList, setTenantList] = useState<TenantList>([]);
+
+  useEffect(() => {
+    SpiClient.GetAvailableTenants(posId ?? defaultPosName, defaultApikey, 'AU').then((response: TenantListResponse) => {
+      setTenantList(response.Data);
+    });
+  }, []);
 
   return (
     <>
@@ -91,9 +98,11 @@ export default function PairConfiguration(): React.ReactElement {
                 <MenuItem value={TEXT_FORM_DEFAULT_OPTION} disabled>
                   Payment provider
                 </MenuItem>
-                <MenuItem value={TEXT_FORM_MODAL_CODE_TILL}>Till Payments</MenuItem>
-                <MenuItem value={TEXT_FORM_MODAL_CODE_WESTPAC}>Westpac</MenuItem>
-                <MenuItem value={TEXT_FORM_MODAL_CODE_GKO}>Gecko</MenuItem>
+                {tenantList.map((tenant: Tenant) => (
+                  <MenuItem key={tenant.code} value={tenant.code}>
+                    {tenant.name}
+                  </MenuItem>
+                ))}
                 <MenuItem value={TEXT_FORM_DEFAULT_VALUE}>Other</MenuItem>
               </Select>
             </FormControl>
