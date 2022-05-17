@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "2.9.2",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.1",
