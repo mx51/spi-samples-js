@@ -107,6 +107,7 @@ stages:
                       displayName: 'Pipeline failure deploy stage alert (dev)'
                       condition: failed()
 
+  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
       - stage: deploy_live
         displayName: 'Stage: Deploy (Production)'
         dependsOn: [build, deploy_dev]
