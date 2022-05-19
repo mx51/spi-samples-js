@@ -243,9 +243,11 @@ export default function PairConfiguration(): React.ReactElement {
           <FormControlLabel
             control={
               <Checkbox
-                checked={testMode}
+                checked={testMode && acquirerCode.value.toLowerCase() !== 'gko'}
                 color="primary"
-                disabled={terminal?.status === SPI_PAIR_STATUS.PairedConnecting}
+                disabled={
+                  terminal?.status === SPI_PAIR_STATUS.PairedConnecting || acquirerCode.value.toLowerCase() === 'gko'
+                }
                 data-test-id="testModeCheckbox"
                 name="testMode"
                 onChange={(event: IFormEventCheckbox) =>
