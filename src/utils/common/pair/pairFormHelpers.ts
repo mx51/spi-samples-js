@@ -66,7 +66,13 @@ export const handlePaymentProviderSelectorOnChange = (
           option: event.target.value as string,
           isValid: fieldRequiredValidator(event.target.value as string),
         },
-      })
+      }),
+      dispatch(
+        updatePairFormParams({
+          key: 'testMode',
+          value: event.target.value !== 'gko',
+        })
+      )
     );
   } else {
     dispatch(
@@ -77,6 +83,10 @@ export const handlePaymentProviderSelectorOnChange = (
           option: event.target.value as string,
           isValid: false,
         },
+      }),
+      updatePairFormParams({
+        key: 'testMode',
+        value: false,
       })
     );
   }
