@@ -83,10 +83,6 @@ export const handlePaymentProviderSelectorOnChange = (
           option: event.target.value as string,
           isValid: false,
         },
-      }),
-      updatePairFormParams({
-        key: 'testMode',
-        value: false,
       })
     );
   }
@@ -107,6 +103,12 @@ export const handlePaymentProviderFieldOnChange = (
         option: TEXT_FORM_DEFAULT_VALUE,
         isValid: paymentProviderValidator(event.target.value as string),
       },
+    })
+  );
+  dispatch(
+    updatePairFormParams({
+      key: 'testMode',
+      value: event.target.value !== 'gko',
     })
   );
 };
