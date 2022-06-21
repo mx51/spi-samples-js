@@ -258,7 +258,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                   classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                   onClick={() => {
                     setShowTransactionProgressModal(true);
-                    initiateMotoPurchase(selectedTerminal, totalAmount, surchargeAmount);
+                    initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
                   }}
                 >
                   Moto
