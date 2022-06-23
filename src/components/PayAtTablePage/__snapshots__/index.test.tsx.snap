@@ -48,44 +48,6 @@ exports[`Test <PayAtTablePage /> should match PayAtTablePage snapshot test 1`] =
                 PrimaryLogoIcon.svg
               </svg>
             </div>
-            <div
-              class="MuiBox-root MuiBox-root-9"
-            >
-              <p
-                class="MuiTypography-root makeStyles-developerModeText-6 MuiTypography-body1"
-              >
-                Developer mode
-              </p>
-              <span
-                class="MuiSwitch-root"
-              >
-                <span
-                  aria-disabled="false"
-                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-10 MuiSwitch-switchBase MuiSwitch-colorSecondary"
-                  data-test-id="developerModeSwitch"
-                >
-                  <span
-                    class="MuiIconButton-label"
-                  >
-                    <input
-                      class="PrivateSwitchBase-input-13 MuiSwitch-input"
-                      name="developerModeSwitch"
-                      type="checkbox"
-                      value=""
-                    />
-                    <span
-                      class="MuiSwitch-thumb"
-                    />
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
-                </span>
-                <span
-                  class="MuiSwitch-track"
-                />
-              </span>
-            </div>
           </div>
         </div>
       </header>

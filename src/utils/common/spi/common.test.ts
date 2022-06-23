@@ -1,4 +1,11 @@
-import { getLocalStorage, setLocalStorage, removeItemFromLocalStorage, getTxFlow } from './common';
+import {
+  getLocalStorage,
+  getTxFlow,
+  isShownTerminalDetails,
+  removeItemFromLocalStorage,
+  setLocalStorage,
+  showDeveloperMode,
+} from './common';
 
 describe('Test spi common functions', () => {
   test('should be able to setLocalStorage and getLocalStorage', () => {
@@ -110,5 +117,49 @@ describe('Test spi common functions', () => {
 
     // Assert
     expect(getTxFlow(mockInput.detail)).toMatchObject(mockResult);
+  });
+
+  test('test isShownTerminalDetails (fail case)', () => {
+    // Arrange
+    const result = isShownTerminalDetails('/test');
+
+    // Assert
+    expect(result).toBeFalsy();
+  });
+
+  test('test isShownTerminalDetails (pass case)', () => {
+    // Arrange
+    const mockTerminals = {
+      '123-123-123': {},
+    };
+
+    // Act
+    setLocalStorage('terminals', JSON.stringify(mockTerminals));
+    const result = isShownTerminalDetails('/terminals/123-123-123');
+
+    // Assert
+    expect(result).toBeTruthy();
+  });
+
+  test('test showDeveloperMode (fil case)', () => {
+    // Arrange
+    const result = showDeveloperMode('/test');
+
+    // Assert
+    expect(result).toBeFalsy();
+  });
+
+  test('test showDeveloperMode (pass case)', () => {
+    // Arrange
+    const mockTerminals = {
+      '123-123-123': {},
+    };
+
+    // Act
+    setLocalStorage('terminals', JSON.stringify(mockTerminals));
+    const result = showDeveloperMode('/terminals/123-123-123');
+
+    // Assert
+    expect(result).toBeTruthy();
   });
 });
