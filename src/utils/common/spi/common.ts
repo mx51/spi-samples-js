@@ -1,4 +1,4 @@
-import { PATH_PAIR } from '../../../definitions/constants/routerConfigs';
+import { PATH_ORDER_FINISHED, PATH_PAIR } from '../../../definitions/constants/routerConfigs';
 
 function getLocalStorage(name: string): Any {
   return window.localStorage.getItem(name);
@@ -20,7 +20,7 @@ function isShownTerminalDetails(pathname: string): boolean {
 }
 
 function showDeveloperMode(pathname: string): boolean {
-  return pathname === PATH_PAIR || isShownTerminalDetails(pathname);
+  return pathname === PATH_PAIR || pathname === PATH_ORDER_FINISHED || isShownTerminalDetails(pathname);
 }
 
 function getTxFlow(detail: Any): Any {
