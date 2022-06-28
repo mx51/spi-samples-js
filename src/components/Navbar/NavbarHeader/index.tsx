@@ -5,13 +5,6 @@ import Switch from '@material-ui/core/Switch';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import MenuIcon from '@material-ui/icons/Menu';
-import { useLocation } from 'react-router-dom';
-import {
-  PATH_ORDER_FINISHED,
-  PATH_PAIR,
-  PATH_PURCHASE,
-  PATH_TERMINALS,
-} from '../../../definitions/constants/routerConfigs';
 import { useAppDispatch, useAppSelector } from '../../../redux/hooks';
 import { toggleFlowPanel } from '../../../redux/reducers/CommonSlice/commonSlice';
 import { selectedShowFlowPanel } from '../../../redux/reducers/CommonSlice/commonSliceSelectors';
@@ -22,13 +15,6 @@ function NavbarHeader({ handleToggleDrawer, icon, isDevelopModeShown }: INavbarH
   const classes = useStyles();
   const showFlowPanel = useAppSelector(selectedShowFlowPanel);
   const dispatch = useAppDispatch();
-  const { pathname } = useLocation();
-
-  const isDeveloperModeEnabled =
-    pathname === PATH_PURCHASE ||
-    pathname === PATH_PAIR ||
-    pathname.includes(PATH_TERMINALS) ||
-    pathname.includes(PATH_ORDER_FINISHED);
 
   const handleFlowPanelSwitch = () => {
     dispatch(toggleFlowPanel(!showFlowPanel));
@@ -59,7 +45,6 @@ function NavbarHeader({ handleToggleDrawer, icon, isDevelopModeShown }: INavbarH
               checked={showFlowPanel}
               name="developerModeSwitch"
               onChange={handleFlowPanelSwitch}
-              disabled={!isDeveloperModeEnabled}
             />
           </Box>
         )}

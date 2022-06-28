@@ -10,7 +10,7 @@ import mockWithRedux, { defaultMockPairFormParams, defaultMockTerminals } from '
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({
-    pathname: '/refund',
+    pathname: '/pair',
   }),
 }));
 
@@ -71,12 +71,12 @@ describe('Test <Navbar />', () => {
     expect(developerModeSwitchDOM).toBeChecked();
   });
 
-  test('should developer mode button disabled on refund page', () => {
+  test('should developer mode button disabled on by default', () => {
     // Arrange
     const disabledClass = 'Mui-disabled';
     const developerModeSwitchDOM = mockContainer.querySelector('[data-test-id="developerModeSwitch"]');
 
     // Assert
-    expect(developerModeSwitchDOM.outerHTML.includes(disabledClass)).toBe(true);
+    expect(developerModeSwitchDOM.outerHTML.includes(disabledClass)).toBe(false);
   });
 });

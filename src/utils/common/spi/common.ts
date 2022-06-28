@@ -1,3 +1,5 @@
+import { PATH_ORDER_FINISHED, PATH_PAIR } from '../../../definitions/constants/routerConfigs';
+
 function getLocalStorage(name: string): Any {
   return window.localStorage.getItem(name);
 }
@@ -8,6 +10,17 @@ function setLocalStorage(name: string, value: Any): Any {
 
 function removeItemFromLocalStorage(name: string): Any {
   return window.localStorage.removeItem(name);
+}
+
+function isShownTerminalDetails(pathname: string): boolean {
+  const pathNameArray = pathname?.split('/');
+  const currentTerminals = JSON.parse(getLocalStorage('terminals') || '{}');
+
+  return !!currentTerminals[pathNameArray[pathNameArray.length - 1]];
+}
+
+function showDeveloperMode(pathname: string): boolean {
+  return pathname === PATH_PAIR || pathname === PATH_ORDER_FINISHED || isShownTerminalDetails(pathname);
 }
 
 function getTxFlow(detail: Any): Any {
@@ -60,4 +73,11 @@ function getTxFlow(detail: Any): Any {
   return txFlowDetails;
 }
 
-export { getLocalStorage, setLocalStorage, removeItemFromLocalStorage, getTxFlow };
+export {
+  getLocalStorage,
+  getTxFlow,
+  isShownTerminalDetails,
+  removeItemFromLocalStorage,
+  setLocalStorage,
+  showDeveloperMode,
+};

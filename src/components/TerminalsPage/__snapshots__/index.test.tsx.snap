@@ -48,44 +48,6 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
                 PrimaryLogoIcon.svg
               </svg>
             </div>
-            <div
-              class="MuiBox-root MuiBox-root-12"
-            >
-              <p
-                class="MuiTypography-root makeStyles-developerModeText-9 MuiTypography-body1"
-              >
-                Developer mode
-              </p>
-              <span
-                class="MuiSwitch-root"
-              >
-                <span
-                  aria-disabled="false"
-                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-13 MuiSwitch-switchBase MuiSwitch-colorSecondary"
-                  data-test-id="developerModeSwitch"
-                >
-                  <span
-                    class="MuiIconButton-label"
-                  >
-                    <input
-                      class="PrivateSwitchBase-input-16 MuiSwitch-input"
-                      name="developerModeSwitch"
-                      type="checkbox"
-                      value=""
-                    />
-                    <span
-                      class="MuiSwitch-thumb"
-                    />
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
-                </span>
-                <span
-                  class="MuiSwitch-track"
-                />
-              </span>
-            </div>
           </div>
         </div>
       </header>
@@ -94,10 +56,10 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
       class="MuiContainer-root makeStyles-root-1 MuiContainer-maxWidthMd"
     >
       <div
-        class="MuiBox-root MuiBox-root-17"
+        class="MuiBox-root MuiBox-root-12"
       >
         <div
-          class="MuiBox-root MuiBox-root-18"
+          class="MuiBox-root MuiBox-root-13"
         >
           <h1
             class="MuiTypography-root MuiTypography-h6"
@@ -106,7 +68,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
           </h1>
         </div>
         <div
-          class="MuiBox-root MuiBox-root-19"
+          class="MuiBox-root MuiBox-root-14"
         >
           <a
             aria-disabled="false"
@@ -127,7 +89,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
         </div>
       </div>
       <div
-        class="MuiPaper-root MuiTableContainer-root makeStyles-table-20 MuiPaper-elevation0 MuiPaper-rounded"
+        class="MuiPaper-root MuiTableContainer-root makeStyles-table-15 MuiPaper-elevation0 MuiPaper-rounded"
       >
         <table
           class="MuiTable-root"
@@ -168,7 +130,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
             class="MuiTableBody-root"
           >
             <tr
-              class="MuiTableRow-root makeStyles-unclickable-25"
+              class="MuiTableRow-root makeStyles-unclickable-20"
               id="terminal_123-123-123"
             >
               <td
@@ -181,7 +143,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
                 class="MuiTableCell-root MuiTableCell-body"
               >
                 <div
-                  class="MuiChip-root makeStyles-chipUnpaired-23 MuiChip-sizeSmall"
+                  class="MuiChip-root makeStyles-chipUnpaired-18 MuiChip-sizeSmall"
                 >
                   <span
                     class="MuiChip-label MuiChip-labelSmall"
