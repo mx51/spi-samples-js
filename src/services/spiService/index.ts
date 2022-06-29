@@ -257,6 +257,8 @@ class SpiService {
       instance.addEventListener(spiEvents.spiStatusChanged, ({ detail: status }: Any) => {
         if (status === SPI_PAIR_STATUS.PairedConnected) instance.spiClient.AckFlowEndedAndBackToIdle();
 
+        if (status === SPI_PAIR_STATUS.Unpaired) this.removeTerminalInstance(instanceId);
+
         this.dispatchAction(
           updatePairingStatus({
             id: instanceId,
