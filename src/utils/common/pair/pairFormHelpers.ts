@@ -163,7 +163,7 @@ export const handleAddressTypeSelectorOnBlur = (
   dispatch(
     updatePairFormParams({
       key: 'testMode',
-      value: !checkedValue,
+      value: checkedValue,
     })
   );
 };
