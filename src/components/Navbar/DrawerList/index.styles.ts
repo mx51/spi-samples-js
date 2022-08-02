@@ -4,6 +4,9 @@ import { TEXT_LIGHT_COLOR } from '../../../definitions/constants/themeStylesConf
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     list: {
+      display: 'flex',
+      flexDirection: 'column',
+      height: '100%',
       width: 256,
     },
     title: {
@@ -18,6 +21,10 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(2),
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1),
+      display: 'flex',
+      flexDirection: 'column',
+      flexGrow: 100,
+      justifyContent: 'space-between',
     },
   })
 );
