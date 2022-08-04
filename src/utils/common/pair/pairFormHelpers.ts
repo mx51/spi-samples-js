@@ -8,24 +8,11 @@ import {
 
 import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
-import { serialNumberValidatorOnBlur, serialNumberValidatorOnChange } from '../../validators/pairFormValidators';
+import { serialNumberValidatorOnBlur, serialNumberValidatorOnChange } from '../../validators/validators';
+import { serialNumberFormatter } from '../helpers';
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
-}
-
-export function serialNumberFormatter(currentSerialNumber: string): string {
-  let formatSerialNumber = currentSerialNumber.replaceAll('-', '');
-
-  if (formatSerialNumber.length > 3 && formatSerialNumber.length <= 6)
-    formatSerialNumber = `${formatSerialNumber.slice(0, 3)}-${formatSerialNumber.slice(3)}`;
-  else if (currentSerialNumber.length > 6)
-    formatSerialNumber = `${formatSerialNumber.slice(0, 3)}-${formatSerialNumber.slice(
-      3,
-      6
-    )}-${formatSerialNumber.slice(6)}`;
-
-  return formatSerialNumber;
 }
 
 export const initialSpiFormData = {
