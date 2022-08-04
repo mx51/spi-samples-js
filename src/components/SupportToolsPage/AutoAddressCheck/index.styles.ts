@@ -17,7 +17,7 @@ export default makeStyles((theme: Theme) =>
       fontWeight: 600,
       marginBottom: '0.8rem',
     },
-    tenantSelecter: {
+    selecter: {
       '&:hover .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.info.main,
       },

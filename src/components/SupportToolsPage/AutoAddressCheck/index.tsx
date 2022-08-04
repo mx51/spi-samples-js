@@ -1,6 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, FormControl, InputLabel, MenuItem, Select } from '@material-ui/core';
+import {
+  Typography,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
+} from '@material-ui/core';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
+import { serialNumberFormatter } from '../../../utils/common/helpers';
+import { isSerialNumberValid, serialNumberValidatorOnChange } from '../../../utils/validators/validators';
 import CustomTextField from '../../CustomTextField';
 import useStyles from './index.styles';
 import { IFormEventValue } from './interfaces';
@@ -111,12 +122,12 @@ async function fetchIp(
 }
 
 function AutoAddressCheck() {
-  const [serialNumber, setSerialNumber] = useState('');
+  const [serialNumber, setSerialNumber] = useState({ isValid: true, value: '' });
   const [fqdn, setFqdn] = useState('');
   const [ip, setIp] = useState('');
   const [timeStampFqdn, setTimeStampFqdn] = useState('');
   const [timeStampIp, setTimeStampIp] = useState('');
-  const [selectedTenantCode, setSelectedTenantCode] = useState('next');
+  const [selectedTenantCode, setSelectedTenantCode] = useState('');
   const [tenantList, setTenantList] = useState(JSON.parse(window.localStorage.getItem('tenants') || '[]'));
   const [otherTenantCode, setOtherTenantCode] = useState(
     !tenantList.find((tenant: Tenant) => tenant.code === selectedTenantCode) ? selectedTenantCode : ''
@@ -160,7 +171,7 @@ function AutoAddressCheck() {
 
     const sn = serialNumberFromUrl === null ? '' : serialNumberFromUrl;
     const tm = testModeFromUrl === 'true';
-    setSerialNumber(sn);
+    setSerialNumber({ ...serialNumber, value: sn });
     setTestMode(tm);
 
     if (sn !== '' && tenantFromUrl) {
@@ -182,14 +193,30 @@ function AutoAddressCheck() {
   //   };
   // }
 
+  const onOtherTextChange = (event: IFormEventValue) => {
+    setSelectedTenantCode('other');
+    setOtherTenantCode(event.target.value as string);
+  };
+
+  const onSerialNumberChange = (event: IFormEventValue) => {
+    const value = serialNumberFormatter(event.target.value as string);
+    const isValid = isSerialNumberValid(value);
+    setSerialNumber({ isValid, value });
+  };
+
+  const onTestModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setTestMode(event.target.checked);
+  };
+
+  const helperText = serialNumber.isValid ? '' : serialNumberValidatorOnChange(serialNumber.value);
+
   return (
-    <div className="w-100 p-3">
+    <div>
       <Typography className={classes.subHeader}>L2 Support and/or Merchants to test auto address</Typography>
-      <FormControl variant="outlined" margin="dense" fullWidth data-test-id="supportTenantForm" onChange={(e) => {}}>
-        <InputLabel data-test-id="supportTenantFormLabel">Tenant</InputLabel>
+      <FormControl variant="outlined" margin="dense" fullWidth data-test-id="supportTenantForm">
+        <InputLabel data-test-id="supportTenantFormLabel">Select a tenant</InputLabel>
         <Select
-          className={classes.tenantSelecter}
-          labelId="demo-simple-select-label"
+          className={classes.selecter}
           data-test-id="supportTenantSelectorLabel"
           value={selectedTenantCode}
           onChange={(e: IFormEventValue) => setSelectedTenantCode(e.target.value as string)}
@@ -204,24 +231,32 @@ function AutoAddressCheck() {
       </FormControl>
       {selectedTenantCode === 'other' && (
         <CustomTextField
-          dataTestId="posIdField"
-          // error={!posId.isValid}
+          dataTestId="tenantField"
           fullWidth
-          helperText="test"
-          label="POS ID"
+          label="Other"
           margin="dense"
-          // onBlur={(event: IFormEventValue) =>
-          //   handlePosIdFieldOnBlur(dispatch, event, postIdValidator, terminals, updatePairFormParams)
-          // }
-          onChange={(event: IFormEventValue) => {
-            setSelectedTenantCode('other');
-            setOtherTenantCode(event.target.value as string);
-          }}
-          required
+          onBlur={onOtherTextChange}
+          onChange={onOtherTextChange}
           value={otherTenantCode}
           variant="outlined"
         />
       )}
+      <CustomTextField
+        dataTestId="serialNumberField"
+        fullWidth
+        label="Serial Number"
+        margin="dense"
+        error={!serialNumber.isValid}
+        helperText={helperText}
+        onChange={onSerialNumberChange}
+        onBlur={onSerialNumberChange}
+        required
+        value={serialNumber.value}
+        variant="outlined"
+      />
+      <FormGroup>
+        <FormControlLabel control={<Checkbox checked={testMode} onChange={onTestModeChange} />} label="Test" />
+      </FormGroup>
     </div>
   );
 }
