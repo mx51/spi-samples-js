@@ -6,7 +6,7 @@ import {
   postIdValidator,
   serialNumberValidatorOnBlur,
   serialNumberValidatorOnChange,
-} from './pairFormValidators';
+} from './validators';
 
 describe('Test pairFormValidators functions', () => {
   test('should return true when eftpos address is valid (positive case)', () => {
