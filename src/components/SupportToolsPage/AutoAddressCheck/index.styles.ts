@@ -17,10 +17,10 @@ export default makeStyles((theme: Theme) =>
       fontWeight: 600,
       marginBottom: '0.8rem',
     },
-    selecter: {
-      '&:hover .MuiOutlinedInput-notchedOutline': {
-        borderColor: theme.palette.info.main,
-      },
+    resolveBtn: {
+      fontWeight: 300,
+      marginBottom: theme.spacing(0.5),
+      textTransform: 'none',
     },
   })
 );

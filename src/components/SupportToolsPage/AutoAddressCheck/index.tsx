@@ -8,6 +8,14 @@ import {
   Checkbox,
   FormControlLabel,
   FormGroup,
+  Button,
+  Grid,
+  Paper,
+  TableContainer,
+  Table,
+  TableRow,
+  TableCell,
+  TableBody,
 } from '@material-ui/core';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
 import { serialNumberFormatter } from '../../../utils/common/helpers';
@@ -197,15 +205,18 @@ function AutoAddressCheck() {
     setSelectedTenantCode('other');
     setOtherTenantCode(event.target.value as string);
   };
-
   const onSerialNumberChange = (event: IFormEventValue) => {
     const value = serialNumberFormatter(event.target.value as string);
     const isValid = isSerialNumberValid(value);
     setSerialNumber({ isValid, value });
   };
-
   const onTestModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTestMode(event.target.checked);
+  };
+  const onTenantChange = (e: IFormEventValue) => setSelectedTenantCode(e.target.value as string);
+  const onResolveBtnClick = () => {
+    const tenant = selectedTenantCode !== 'other' ? selectedTenantCode : otherTenantCode;
+    fetchResponse(serialNumber.value, tenant, testMode);
   };
 
   const helperText = serialNumber.isValid ? '' : serialNumberValidatorOnChange(serialNumber.value);
@@ -213,25 +224,24 @@ function AutoAddressCheck() {
   return (
     <div>
       <Typography className={classes.subHeader}>L2 Support and/or Merchants to test auto address</Typography>
-      <FormControl variant="outlined" margin="dense" fullWidth data-test-id="supportTenantForm">
-        <InputLabel data-test-id="supportTenantFormLabel">Select a tenant</InputLabel>
+      <FormControl variant="outlined" margin="dense" fullWidth data-test-id="autoAddressTenantForm">
+        <InputLabel data-test-id="autoAddressTenantFormLabel">Tenant</InputLabel>
         <Select
-          className={classes.selecter}
-          data-test-id="supportTenantSelectorLabel"
+          data-test-id="autoAddressTenantSelectorLabel"
+          label="Tenant"
+          labelId="autoAddressTenantDropDownLabel"
           value={selectedTenantCode}
-          onChange={(e: IFormEventValue) => setSelectedTenantCode(e.target.value as string)}
+          onChange={onTenantChange}
         >
           {tenantList.map((tenant: Tenant) => (
-            <MenuItem key={tenant.code} value={tenant.code}>
-              {tenant.name}
-            </MenuItem>
+            <MenuItem value={tenant.code}>{tenant.name}</MenuItem>
           ))}
           <MenuItem value="other">Other</MenuItem>
         </Select>
       </FormControl>
       {selectedTenantCode === 'other' && (
         <CustomTextField
-          dataTestId="tenantField"
+          dataTestId="autoAddressTenantField"
           fullWidth
           label="Other"
           margin="dense"
@@ -242,7 +252,7 @@ function AutoAddressCheck() {
         />
       )}
       <CustomTextField
-        dataTestId="serialNumberField"
+        dataTestId="autoAddressSerialNumberField"
         fullWidth
         label="Serial Number"
         margin="dense"
@@ -255,8 +265,151 @@ function AutoAddressCheck() {
         variant="outlined"
       />
       <FormGroup>
-        <FormControlLabel control={<Checkbox checked={testMode} onChange={onTestModeChange} />} label="Test" />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={testMode}
+              onChange={onTestModeChange}
+              data-test-id="autoAddressCheckbox"
+              color="primary"
+              name="testMode"
+            />
+          }
+          label="Test mode"
+        />
       </FormGroup>
+      <Button
+        className={classes.resolveBtn}
+        color="primary"
+        data-test-id="autoAddressResolveButton"
+        onClick={onResolveBtnClick}
+        variant="contained"
+      >
+        Resolve
+      </Button>
+      {result === 'success' && (
+        <div>
+          <Typography variant="h6">Result</Typography>
+          <Grid container direction="row" spacing={1}>
+            <Grid container item direction="column" xs={12}>
+              <Typography>Device Address API</Typography>
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        Environment
+                      </TableCell>
+                      <TableCell align="right">{testMode ? 'Sandbox' : 'Production'}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        IP
+                      </TableCell>
+                      <TableCell align="right">
+                        <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
+                          {ip}
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        FQDN
+                      </TableCell>
+                      <TableCell align="right">
+                        <a href={`https://${fqdn}`} target="_blank" rel="noopener noreferrer">
+                          {fqdn}
+                        </a>
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        Last Updated Fqdn
+                      </TableCell>
+                      <TableCell align="right">{timeStampFqdn}</TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        Last Updated IP
+                      </TableCell>
+                      <TableCell align="right">{timeStampIp}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+            <Grid container item direction="column" xs={12}>
+              <Typography>Google API</Typography>
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        FQDN
+                      </TableCell>
+                      <TableCell align="right">
+                        {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}
+                      </TableCell>
+                    </TableRow>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        IP
+                      </TableCell>
+                      <TableCell align="right">
+                        {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+            <Grid container item direction="column" xs={12}>
+              <Typography>Web Socket Connection</Typography>
+              <TableContainer component={Paper}>
+                <Table aria-label="simple table">
+                  <TableBody>
+                    <TableRow>
+                      <TableCell component="th" scope="row">
+                        FQDN
+                      </TableCell>
+                      <TableCell align="right">{webSocketConnectionFqdn}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Grid>
+          </Grid>
+        </div>
+      )}
+      {result === 'error' && (
+        <div>
+          <Typography variant="h6">Result</Typography>
+          <TableContainer component={Paper}>
+            <Table aria-label="simple table">
+              <TableBody>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Request ID
+                  </TableCell>
+                  <TableCell align="right">{errorResponse.request_id}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Error Code
+                  </TableCell>
+                  <TableCell align="right">{errorResponse.error_code}</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell component="th" scope="row">
+                    Error Description
+                  </TableCell>
+                  <TableCell align="right">{errorResponse.error}</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </div>
+      )}
     </div>
   );
 }

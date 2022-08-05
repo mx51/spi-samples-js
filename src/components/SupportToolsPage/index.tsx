@@ -11,7 +11,7 @@ const SupportToolsPage: React.FC = () => {
     <Layout>
       <Container maxWidth="md" className={classes.root}>
         <Grid container>
-          <Grid item xs={8} className={classes.root}>
+          <Grid item xs={8}>
             <Typography variant="h6" component="h1">
               Support Tools
             </Typography>
