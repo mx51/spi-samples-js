@@ -23,6 +23,7 @@ import { isSerialNumberValid, serialNumberValidatorOnChange } from '../../../uti
 import CustomTextField from '../../CustomTextField';
 import useStyles from './index.styles';
 import { IFormEventValue } from './interfaces';
+import Result from './Result';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 async function getTenantsList(setTenantList: Function) {
@@ -287,129 +288,17 @@ function AutoAddressCheck() {
       >
         Resolve
       </Button>
-      {result === 'success' && (
-        <div>
-          <Typography variant="h6">Result</Typography>
-          <Grid container direction="row" spacing={1}>
-            <Grid container item direction="column" xs={12}>
-              <Typography>Device Address API</Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        Environment
-                      </TableCell>
-                      <TableCell align="right">{testMode ? 'Sandbox' : 'Production'}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        IP
-                      </TableCell>
-                      <TableCell align="right">
-                        <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
-                          {ip}
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        FQDN
-                      </TableCell>
-                      <TableCell align="right">
-                        <a href={`https://${fqdn}`} target="_blank" rel="noopener noreferrer">
-                          {fqdn}
-                        </a>
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        Last Updated Fqdn
-                      </TableCell>
-                      <TableCell align="right">{timeStampFqdn}</TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        Last Updated IP
-                      </TableCell>
-                      <TableCell align="right">{timeStampIp}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-            <Grid container item direction="column" xs={12}>
-              <Typography>Google API</Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        FQDN
-                      </TableCell>
-                      <TableCell align="right">
-                        {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}
-                      </TableCell>
-                    </TableRow>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        IP
-                      </TableCell>
-                      <TableCell align="right">
-                        {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}
-                      </TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-            <Grid container item direction="column" xs={12}>
-              <Typography>Web Socket Connection</Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
-                  <TableBody>
-                    <TableRow>
-                      <TableCell component="th" scope="row">
-                        FQDN
-                      </TableCell>
-                      <TableCell align="right">{webSocketConnectionFqdn}</TableCell>
-                    </TableRow>
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Grid>
-          </Grid>
-        </div>
-      )}
-      {result === 'error' && (
-        <div>
-          <Typography variant="h6">Result</Typography>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
-              <TableBody>
-                <TableRow>
-                  <TableCell component="th" scope="row">
-                    Request ID
-                  </TableCell>
-                  <TableCell align="right">{errorResponse.request_id}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">
-                    Error Code
-                  </TableCell>
-                  <TableCell align="right">{errorResponse.error_code}</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell component="th" scope="row">
-                    Error Description
-                  </TableCell>
-                  <TableCell align="right">{errorResponse.error}</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </div>
-      )}
+      <Result
+        fqdn={fqdn}
+        ip={ip}
+        timeStampFqdn={timeStampFqdn}
+        testMode={testMode}
+        result={result}
+        errorResponse={errorResponse}
+        googleDns={googleDns}
+        webSocketConnectionFqdn={webSocketConnectionFqdn}
+        timeStampIp={timeStampIp}
+      />
     </div>
   );
 }
