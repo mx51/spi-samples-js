@@ -2,22 +2,37 @@ import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    toolContainer: {
+      backgroundColor: theme.palette.common.white,
+      borderRadius: theme.spacing(0.5),
+      border: `1px solid ${theme.palette.secondary.main}`,
+      marginTop: theme.spacing(1),
       padding: theme.spacing(3),
+      width: '80%',
     },
-    subHeader: {
-      textAlign: 'center',
-      marginTop: '2rem',
-      backgroundColor: '#ececfa',
-      color: '#004830',
-      margin: 0,
-      padding: '1.3rem',
+    title: {
+      fontWeight: 500,
+      fontSize: '1.5rem',
+    },
+    h2: {
+      fontWeight: 500,
+      fontSize: '1.25rem',
+    },
+    divider: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+    },
+    infoText: {
       fontSize: '1rem',
-      letterSpacing: '0.1rem',
-      fontWeight: 600,
-      marginBottom: '0.8rem',
+      color: theme.palette.text.hint,
+      opacity: 0.6,
+      marginLeft: 12,
+      marginBottom: theme.spacing(2),
     },
-    resolveBtn: {
+    testMode: {
+      marginBottom: theme.spacing(2),
+    },
+    submitBtn: {
       fontWeight: 300,
       marginBottom: theme.spacing(0.5),
       textTransform: 'none',

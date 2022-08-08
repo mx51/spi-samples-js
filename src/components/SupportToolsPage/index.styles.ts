@@ -4,10 +4,8 @@ export default makeStyles((theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3),
-    },
-    title: {
-      marginRight: theme.spacing(2),
-      fontSize: '1rem',
+      display: 'flex',
+      justifyContent: 'center',
     },
   })
 );

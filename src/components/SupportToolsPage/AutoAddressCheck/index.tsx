@@ -9,13 +9,9 @@ import {
   FormControlLabel,
   FormGroup,
   Button,
+  Box,
+  Divider,
   Grid,
-  Paper,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
 } from '@material-ui/core';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
 import { serialNumberFormatter } from '../../../utils/common/helpers';
@@ -130,7 +126,7 @@ async function fetchIp(
   }
 }
 
-function AutoAddressCheck() {
+function AutoAddressCheck(): React.ReactElement {
   const [serialNumber, setSerialNumber] = useState({ isValid: true, value: '' });
   const [fqdn, setFqdn] = useState('');
   const [ip, setIp] = useState('');
@@ -215,7 +211,7 @@ function AutoAddressCheck() {
     setTestMode(event.target.checked);
   };
   const onTenantChange = (e: IFormEventValue) => setSelectedTenantCode(e.target.value as string);
-  const onResolveBtnClick = () => {
+  const onSubmitBtnClick = () => {
     const tenant = selectedTenantCode !== 'other' ? selectedTenantCode : otherTenantCode;
     fetchResponse(serialNumber.value, tenant, testMode);
   };
@@ -223,71 +219,86 @@ function AutoAddressCheck() {
   const helperText = serialNumber.isValid ? '' : serialNumberValidatorOnChange(serialNumber.value);
 
   return (
-    <div>
-      <Typography className={classes.subHeader}>L2 Support and/or Merchants to test auto address</Typography>
-      <FormControl variant="outlined" margin="dense" fullWidth data-test-id="autoAddressTenantForm">
-        <InputLabel data-test-id="autoAddressTenantFormLabel">Tenant</InputLabel>
-        <Select
-          data-test-id="autoAddressTenantSelectorLabel"
-          label="Tenant"
-          labelId="autoAddressTenantDropDownLabel"
-          value={selectedTenantCode}
-          onChange={onTenantChange}
-        >
-          {tenantList.map((tenant: Tenant) => (
-            <MenuItem value={tenant.code}>{tenant.name}</MenuItem>
-          ))}
-          <MenuItem value="other">Other</MenuItem>
-        </Select>
-      </FormControl>
-      {selectedTenantCode === 'other' && (
-        <CustomTextField
-          dataTestId="autoAddressTenantField"
-          fullWidth
-          label="Other"
-          margin="dense"
-          onBlur={onOtherTextChange}
-          onChange={onOtherTextChange}
-          value={otherTenantCode}
-          variant="outlined"
-        />
-      )}
-      <CustomTextField
-        dataTestId="autoAddressSerialNumberField"
-        fullWidth
-        label="Serial Number"
-        margin="dense"
-        error={!serialNumber.isValid}
-        helperText={helperText}
-        onChange={onSerialNumberChange}
-        onBlur={onSerialNumberChange}
-        required
-        value={serialNumber.value}
-        variant="outlined"
-      />
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={testMode}
-              onChange={onTestModeChange}
-              data-test-id="autoAddressCheckbox"
-              color="primary"
-              name="testMode"
+    <Box className={classes.toolContainer}>
+      <Typography component="h1" className={classes.title}>
+        Auto address check
+      </Typography>
+      <Typography>This support tool can be used by Merchants or L2 support users to test Auto address</Typography>
+      <Divider className={classes.divider} />
+      <Grid container spacing={4}>
+        <Grid item xs={4}>
+          <Typography component="h2" className={classes.h2}>
+            Test Auto address
+          </Typography>
+        </Grid>
+        <Grid item xs={7}>
+          <FormControl variant="outlined" margin="dense" fullWidth data-test-id="autoAddressTenantForm">
+            <InputLabel data-test-id="autoAddressTenantFormLabel">Tenant</InputLabel>
+            <Select
+              data-test-id="autoAddressTenantSelectorLabel"
+              label="Tenant"
+              labelId="autoAddressTenantDropDownLabel"
+              value={selectedTenantCode}
+              onChange={onTenantChange}
+            >
+              {tenantList.map((tenant: Tenant) => (
+                <MenuItem value={tenant.code}>{tenant.name}</MenuItem>
+              ))}
+              <MenuItem value="other">Other</MenuItem>
+            </Select>
+          </FormControl>
+          <Typography className={classes.infoText}>Select the tenant for the Auto address test</Typography>
+          {selectedTenantCode === 'other' && (
+            <CustomTextField
+              dataTestId="autoAddressTenantField"
+              fullWidth
+              label="Other"
+              margin="dense"
+              onBlur={onOtherTextChange}
+              onChange={onOtherTextChange}
+              value={otherTenantCode}
+              variant="outlined"
             />
-          }
-          label="Test mode"
-        />
-      </FormGroup>
-      <Button
-        className={classes.resolveBtn}
-        color="primary"
-        data-test-id="autoAddressResolveButton"
-        onClick={onResolveBtnClick}
-        variant="contained"
-      >
-        Resolve
-      </Button>
+          )}
+          <CustomTextField
+            dataTestId="autoAddressSerialNumberField"
+            fullWidth
+            label="Serial Number"
+            margin="dense"
+            error={!serialNumber.isValid}
+            helperText={helperText}
+            onChange={onSerialNumberChange}
+            onBlur={onSerialNumberChange}
+            required
+            value={serialNumber.value}
+            variant="outlined"
+          />
+          <Typography className={classes.infoText}>Enter terminal serial number</Typography>
+          <FormGroup className={classes.testMode}>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={testMode}
+                  onChange={onTestModeChange}
+                  data-test-id="autoAddressCheckbox"
+                  color="primary"
+                  name="testMode"
+                />
+              }
+              label="Test mode"
+            />
+          </FormGroup>
+          <Button
+            className={classes.submitBtn}
+            color="primary"
+            data-test-id="autoAddressSubmitButton"
+            onClick={onSubmitBtnClick}
+            variant="contained"
+          >
+            Test Auto address
+          </Button>
+        </Grid>
+      </Grid>
       <Result
         fqdn={fqdn}
         ip={ip}
@@ -299,7 +310,7 @@ function AutoAddressCheck() {
         webSocketConnectionFqdn={webSocketConnectionFqdn}
         timeStampIp={timeStampIp}
       />
-    </div>
+    </Box>
   );
 }
 
