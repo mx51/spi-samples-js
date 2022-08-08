@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography, Grid, Paper, TableContainer, Table, TableRow, TableCell, TableBody } from '@material-ui/core';
+import { Typography, Grid, TableContainer, Table, TableRow, TableCell, TableBody, Divider } from '@material-ui/core';
 import useStyles from './index.styles';
 
 interface Props {
@@ -35,26 +35,29 @@ function Result({
 
   return (
     <>
+      {result && <Divider className={classes.divider} />}
       {result === 'success' && (
         <div>
-          <Typography variant="h6">Result</Typography>
+          <Typography component="h1" className={classes.h1}>
+            Auto address test results
+          </Typography>
           <Grid container direction="row" spacing={1}>
             <Grid container item direction="column" xs={12}>
               <Typography>Device Address API</Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+              <TableContainer>
+                <Table className={classes.table}>
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
                         Environment
                       </TableCell>
-                      <TableCell align="right">{testMode ? 'Sandbox' : 'Production'}</TableCell>
+                      <TableCell>{testMode ? 'Sandbox' : 'Production'}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
                         IP
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
                           {ip}
                         </a>
@@ -64,7 +67,7 @@ function Result({
                       <TableCell component="th" scope="row">
                         FQDN
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         <a href={`https://${fqdn}`} target="_blank" rel="noopener noreferrer">
                           {fqdn}
                         </a>
@@ -74,13 +77,13 @@ function Result({
                       <TableCell component="th" scope="row">
                         Last Updated Fqdn
                       </TableCell>
-                      <TableCell align="right">{timeStampFqdn}</TableCell>
+                      <TableCell>{timeStampFqdn}</TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
                         Last Updated IP
                       </TableCell>
-                      <TableCell align="right">{timeStampIp}</TableCell>
+                      <TableCell>{timeStampIp}</TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
@@ -88,14 +91,14 @@ function Result({
             </Grid>
             <Grid container item direction="column" xs={12}>
               <Typography>Google API</Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+              <TableContainer>
+                <Table className={classes.table}>
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
                         FQDN
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}
                       </TableCell>
                     </TableRow>
@@ -103,7 +106,7 @@ function Result({
                       <TableCell component="th" scope="row">
                         IP
                       </TableCell>
-                      <TableCell align="right">
+                      <TableCell>
                         {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}
                       </TableCell>
                     </TableRow>
@@ -113,8 +116,8 @@ function Result({
             </Grid>
             <Grid container item direction="column" xs={12}>
               <Typography>Web Socket Connection</Typography>
-              <TableContainer component={Paper}>
-                <Table aria-label="simple table">
+              <TableContainer>
+                <Table className={classes.table}>
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
@@ -132,8 +135,8 @@ function Result({
       {result === 'error' && (
         <div>
           <Typography variant="h6">Error</Typography>
-          <TableContainer component={Paper}>
-            <Table aria-label="simple table">
+          <TableContainer>
+            <Table>
               <TableBody>
                 <TableRow>
                   <TableCell component="th" scope="row">

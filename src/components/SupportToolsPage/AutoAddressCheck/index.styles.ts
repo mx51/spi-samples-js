@@ -10,7 +10,7 @@ export default makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
       width: '80%',
     },
-    title: {
+    h1: {
       fontWeight: 500,
       fontSize: '1.5rem',
     },
@@ -36,6 +36,11 @@ export default makeStyles((theme: Theme) =>
       fontWeight: 300,
       marginBottom: theme.spacing(0.5),
       textTransform: 'none',
+    },
+    table: {
+      '& .MuiTableCell-root': {
+        borderBottom: 'none',
+      },
     },
   })
 );

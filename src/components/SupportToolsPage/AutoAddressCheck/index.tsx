@@ -220,7 +220,7 @@ function AutoAddressCheck(): React.ReactElement {
 
   return (
     <Box className={classes.toolContainer}>
-      <Typography component="h1" className={classes.title}>
+      <Typography component="h1" className={classes.h1}>
         Auto address check
       </Typography>
       <Typography>This support tool can be used by Merchants or L2 support users to test Auto address</Typography>
