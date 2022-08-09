@@ -18,7 +18,7 @@ import { serialNumberFormatter } from '../../../utils/common/helpers';
 import { isSerialNumberValid, serialNumberValidatorOnChange } from '../../../utils/validators/validators';
 import CustomTextField from '../../CustomTextField';
 import useStyles from './index.styles';
-import { IFormEventValue } from './interfaces';
+import { ErrorResponse, GoogleDns, IFormEventValue } from './interfaces';
 import Result from './Result';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
@@ -40,15 +40,17 @@ async function getTenantsList(setTenantList: Function) {
   setTenantList(tenantList);
 }
 
-function webSocketFqdn(webFqdn: any, sn: string, tm: boolean, setWebSocketConnectionFqdn: any) {
+function webSocketFqdn(webFqdn: string, sn: string, tm: boolean, setWebSocketConnectionFqdn: (arg0: string) => void) {
   const socket = new WebSocket(`wss://${webFqdn}`, 'spi.2.9.0');
 
-  socket.onopen = (e: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  socket.onopen = (e) => {
     socket.send('success');
     setWebSocketConnectionFqdn('Successfully connected to webSocket');
   };
 
-  socket.onerror = (error: any) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  socket.onerror = (error) => {
     setWebSocketConnectionFqdn('Error in connecting to webSocket');
   };
 }
@@ -57,12 +59,12 @@ async function fetchFqdn(
   sn: string,
   tenant: string,
   tm: boolean,
-  setFqdn: any,
-  setTimeStampFqdn: any,
-  setResult: any,
-  setErrorResponse: any,
-  setGoogleDns: any,
-  setWebSocketConnectionFqdn: any
+  setFqdn: (arg0: string) => void,
+  setTimeStampFqdn: (arg0: string) => void,
+  setResult: (arg0: string) => void,
+  setErrorResponse: (arg0: ErrorResponse) => void,
+  setGoogleDns: (arg0: GoogleDns) => void,
+  setWebSocketConnectionFqdn: (arg0: string) => void
 ) {
   const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.${tenant}.mspenv.io/v1/${sn}/fqdn`, {
     headers: {
@@ -90,14 +92,13 @@ async function fetchFqdn(
         const data = await dnsResponse.json();
         if (dnsResponse.ok && data.Answer) {
           setGoogleDns(data);
-          console.log(data);
         } else {
-          setGoogleDns('Error in Google Api');
+          setGoogleDns({ Answer: [{ data: 'Error in Google Api', name: '' }] });
         }
       }
     }
   } catch (err) {
-    console.log(err);
+    // console.log(err);
   }
 }
 
@@ -105,10 +106,10 @@ async function fetchIp(
   sn: string,
   tenant: string,
   tm: boolean,
-  setIp: any,
-  setTimeStampIp: any,
-  setResult: any,
-  setErrorResponse: any
+  setIp: (arg0: string) => void,
+  setTimeStampIp: (arg0: string) => void,
+  setResult: (arg0: string) => void,
+  setErrorResponse: (arg0: ErrorResponse) => void
 ) {
   const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.${tenant}.mspenv.io/v1/${sn}/ip`, {
     headers: {

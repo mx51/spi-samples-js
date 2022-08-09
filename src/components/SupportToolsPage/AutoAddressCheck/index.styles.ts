@@ -44,11 +44,6 @@ export default makeStyles((theme: Theme) =>
         paddingLeft: 0,
       },
     },
-    cell: {
-      // '& .MuiTableCell-root': {
-      //   width: 300,
-      // }
-    },
     tableTitle: {
       fontSize: '1.25rem',
     },

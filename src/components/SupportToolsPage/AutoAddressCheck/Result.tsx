@@ -1,16 +1,7 @@
 import React from 'react';
-import {
-  Typography,
-  Grid,
-  TableContainer,
-  Table,
-  TableRow,
-  TableCell,
-  TableBody,
-  Divider,
-  Link,
-} from '@material-ui/core';
+import { Typography, TableContainer, Table, TableRow, TableCell, TableBody, Divider } from '@material-ui/core';
 import useStyles from './index.styles';
+import { ErrorResponse, GoogleDns } from './interfaces';
 
 interface Props {
   fqdn: string;
@@ -20,14 +11,8 @@ interface Props {
   result: string;
   webSocketConnectionFqdn: string;
   timeStampIp: string;
-  errorResponse: {
-    request_id: string;
-    error_code: number;
-    error: string;
-  };
-  googleDns: {
-    Answer: { name: string; data: string }[];
-  };
+  errorResponse: ErrorResponse;
+  googleDns: GoogleDns;
 }
 
 function Result({
@@ -119,13 +104,11 @@ function Result({
             <Table className={classes.table}>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" className={classes.cell}>
+                  <TableCell component="th" scope="row">
                     <Typography className={classes.tableKeyText}>FQDN</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className={classes.tableValueText}>
-                      {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}
-                    </Typography>
+                    <Typography className={classes.tableValueText}>{googleDns.Answer[0].name}</Typography>
                   </TableCell>
                 </TableRow>
                 <TableRow>
@@ -133,9 +116,7 @@ function Result({
                     <Typography className={classes.tableKeyText}>IP</Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography className={classes.tableValueText}>
-                      {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}
-                    </Typography>
+                    <Typography className={classes.tableValueText}>{googleDns.Answer[0].data}</Typography>
                   </TableCell>
                 </TableRow>
               </TableBody>
@@ -147,7 +128,7 @@ function Result({
             <Table className={classes.table}>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" className={classes.cell}>
+                  <TableCell component="th" scope="row">
                     <Typography className={classes.tableKeyText}>FQDN</Typography>
                   </TableCell>
                   <TableCell>
@@ -169,7 +150,7 @@ function Result({
             <Table className={classes.table}>
               <TableBody>
                 <TableRow>
-                  <TableCell component="th" scope="row" className={classes.cell}>
+                  <TableCell component="th" scope="row">
                     <Typography className={classes.tableKeyText}>Request ID</Typography>
                   </TableCell>
                   <TableCell>
