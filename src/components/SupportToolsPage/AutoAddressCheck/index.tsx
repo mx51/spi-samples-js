@@ -213,6 +213,7 @@ function AutoAddressCheck(): React.ReactElement {
   };
   const onTestModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setTestMode(event.target.checked);
+    setResult('');
   };
   const onTenantChange = (e: IFormEventValue) => setSelectedTenantCode(e.target.value as string);
   const onSubmitBtnClick = () => {
