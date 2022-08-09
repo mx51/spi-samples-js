@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Typography, Grid, TableContainer, Table, TableRow, TableCell, TableBody, Divider } from '@material-ui/core';
 import useStyles from './index.styles';
 
@@ -38,7 +38,7 @@ function Result({
       {result && <Divider className={classes.divider} />}
       {result === 'success' && (
         <div>
-          <Typography component="h1" className={classes.h1}>
+          <Typography component="h1" className={`${classes.h1} ${classes.resultTitle}`}>
             Auto address test results
           </Typography>
           <Grid container direction="row" spacing={1}>
@@ -49,45 +49,64 @@ function Result({
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        Environment
+                        <Typography className={classes.tableKeyText}>Environment</Typography>
                       </TableCell>
-                      <TableCell>{testMode ? 'Sandbox' : 'Production'}</TableCell>
+                      <TableCell>
+                        <Typography className={classes.tableValueText}>
+                          {testMode ? 'Sandbox' : 'Production'}
+                        </Typography>
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        IP
+                        <Typography className={classes.tableKeyText}>IP</Typography>
                       </TableCell>
                       <TableCell>
-                        <a href={`http://${ip}`} target="_blank" rel="noopener noreferrer">
+                        <a
+                          className={classes.tableValueLink}
+                          href={`http://${ip}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {ip}
                         </a>
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        FQDN
+                        <Typography className={classes.tableKeyText}>FDQN</Typography>
                       </TableCell>
                       <TableCell>
-                        <a href={`https://${fqdn}`} target="_blank" rel="noopener noreferrer">
+                        <a
+                          className={classes.tableValueLink}
+                          href={`https://${fqdn}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
                           {fqdn}
                         </a>
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        Last Updated Fqdn
+                        <Typography className={classes.tableKeyText}>Last Updated Fqdn</Typography>
                       </TableCell>
-                      <TableCell>{timeStampFqdn}</TableCell>
+                      <TableCell>
+                        <Typography className={classes.tableValueText}>{timeStampFqdn}</Typography>
+                      </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        Last Updated IP
+                        <Typography className={classes.tableKeyText}>Last Updated IP</Typography>
                       </TableCell>
-                      <TableCell>{timeStampIp}</TableCell>
+                      <TableCell>
+                        <Typography className={classes.tableValueText}>{timeStampIp}</Typography>
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
+              <Divider className={classes.divider} />
             </Grid>
             <Grid container item direction="column" xs={12}>
               <Typography>Google API</Typography>
@@ -96,23 +115,28 @@ function Result({
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        FQDN
+                        <Typography className={classes.tableKeyText}>FQDN</Typography>
                       </TableCell>
                       <TableCell>
-                        {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}
+                        <Typography className={classes.tableValueText}>
+                          {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].name : googleDns}
+                        </Typography>
                       </TableCell>
                     </TableRow>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        IP
+                        <Typography className={classes.tableKeyText}>IP</Typography>
                       </TableCell>
                       <TableCell>
-                        {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}
+                        <Typography className={classes.tableValueText}>
+                          {googleDns.Answer && googleDns.Answer.length > 0 ? googleDns.Answer[0].data : googleDns}
+                        </Typography>
                       </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>
               </TableContainer>
+              <Divider className={classes.divider} />
             </Grid>
             <Grid container item direction="column" xs={12}>
               <Typography>Web Socket Connection</Typography>
@@ -121,9 +145,11 @@ function Result({
                   <TableBody>
                     <TableRow>
                       <TableCell component="th" scope="row">
-                        FQDN
+                        <Typography className={classes.tableKeyText}>FQDN</Typography>
                       </TableCell>
-                      <TableCell align="right">{webSocketConnectionFqdn}</TableCell>
+                      <TableCell>
+                        <Typography className={classes.tableValueText}>{webSocketConnectionFqdn}</Typography>
+                      </TableCell>
                     </TableRow>
                   </TableBody>
                 </Table>

@@ -69,31 +69,35 @@ async function fetchFqdn(
       'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
     },
   });
-  let fqdn;
-  if (response.ok) {
-    const data = await response.json();
-    fqdn = data.fqdn;
-    setFqdn(data.fqdn);
-    setTimeStampFqdn(data.last_updated);
-    setResult('success');
-    webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
-  } else {
-    const data = await response.json();
-    setErrorResponse(data);
-    setResult('error');
-  }
+  try {
+    let fqdn;
+    if (response.ok) {
+      const data = await response.json();
+      fqdn = data.fqdn;
+      setFqdn(data.fqdn);
+      setTimeStampFqdn(data.last_updated);
+      setResult('success');
+      webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
+    } else {
+      const data = await response.json();
+      setErrorResponse(data);
+      setResult('error');
+    }
 
-  if (response.ok) {
-    const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
-    if (dnsResponse.ok) {
-      const data = await dnsResponse.json();
-      if (dnsResponse.ok && data.Answer) {
-        setGoogleDns(data);
-        console.log(data);
-      } else {
-        setGoogleDns('Error in Google Api');
+    if (response.ok) {
+      const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
+      if (dnsResponse.ok) {
+        const data = await dnsResponse.json();
+        if (dnsResponse.ok && data.Answer) {
+          setGoogleDns(data);
+          console.log(data);
+        } else {
+          setGoogleDns('Error in Google Api');
+        }
       }
     }
+  } catch (err) {
+    console.log(err);
   }
 }
 
@@ -242,7 +246,9 @@ function AutoAddressCheck(): React.ReactElement {
               onChange={onTenantChange}
             >
               {tenantList.map((tenant: Tenant) => (
-                <MenuItem value={tenant.code}>{tenant.name}</MenuItem>
+                <MenuItem key={tenant.code} value={tenant.code}>
+                  {tenant.name}
+                </MenuItem>
               ))}
               <MenuItem value="other">Other</MenuItem>
             </Select>

@@ -1,4 +1,5 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { FONT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
 
 export default makeStyles((theme: Theme) =>
   createStyles({
@@ -24,7 +25,7 @@ export default makeStyles((theme: Theme) =>
     },
     infoText: {
       fontSize: '1rem',
-      color: theme.palette.text.hint,
+      color: FONT_COLOR,
       opacity: 0.6,
       marginLeft: 12,
       marginBottom: theme.spacing(2),
@@ -41,6 +42,20 @@ export default makeStyles((theme: Theme) =>
       '& .MuiTableCell-root': {
         borderBottom: 'none',
       },
+    },
+    tableKeyText: {
+      fontSize: '1rem',
+    },
+    tableValueText: {
+      color: FONT_COLOR,
+      fontSize: '1rem',
+    },
+    tableValueLink: {
+      color: theme.palette.info.main,
+      fontSize: '1rem',
+    },
+    resultTitle: {
+      marginBottom: theme.spacing(3),
     },
   })
 );
