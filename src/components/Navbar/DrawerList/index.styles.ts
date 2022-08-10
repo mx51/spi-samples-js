@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginRight: theme.spacing(1),
       display: 'flex',
       flexDirection: 'column',
-      flexGrow: 100,
+      flexGrow: 1,
       justifyContent: 'space-between',
     },
   })
