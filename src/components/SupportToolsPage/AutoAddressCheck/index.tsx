@@ -40,7 +40,7 @@ async function getTenantsList(setTenantList: Function) {
   setTenantList(tenantList);
 }
 
-function webSocketFqdn(webFqdn: string, sn: string, tm: boolean, setWebSocketConnectionFqdn: (arg0: string) => void) {
+function webSocketFqdn(webFqdn: string, sn: string, tm: boolean, setWebSocketConnectionFqdn: (value: string) => void) {
   const socket = new WebSocket(`wss://${webFqdn}`, 'spi.2.9.0');
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -59,46 +59,42 @@ async function fetchFqdn(
   sn: string,
   tenant: string,
   tm: boolean,
-  setFqdn: (arg0: string) => void,
-  setTimeStampFqdn: (arg0: string) => void,
-  setResult: (arg0: string) => void,
-  setErrorResponse: (arg0: ErrorResponse) => void,
-  setGoogleDns: (arg0: GoogleDns) => void,
-  setWebSocketConnectionFqdn: (arg0: string) => void
+  setFqdn: (value: string) => void,
+  setTimeStampFqdn: (value: string) => void,
+  setResult: (value: string) => void,
+  setErrorResponse: (value: ErrorResponse) => void,
+  setGoogleDns: (value: GoogleDns) => void,
+  setWebSocketConnectionFqdn: (value: string) => void
 ) {
   const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.${tenant}.mspenv.io/v1/${sn}/fqdn`, {
     headers: {
       'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
     },
   });
-  try {
-    let fqdn;
-    if (response.ok) {
-      const data = await response.json();
-      fqdn = data.fqdn;
-      setFqdn(data.fqdn);
-      setTimeStampFqdn(data.last_updated);
-      setResult('success');
-      webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
-    } else {
-      const data = await response.json();
-      setErrorResponse(data);
-      setResult('error');
-    }
+  let fqdn;
+  if (response.ok) {
+    const data = await response.json();
+    fqdn = data.fqdn;
+    setFqdn(data.fqdn);
+    setTimeStampFqdn(data.last_updated);
+    setResult('success');
+    webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
+  } else {
+    const data = await response.json();
+    setErrorResponse(data);
+    setResult('error');
+  }
 
-    if (response.ok) {
-      const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
-      if (dnsResponse.ok) {
-        const data = await dnsResponse.json();
-        if (dnsResponse.ok && data.Answer) {
-          setGoogleDns(data);
-        } else {
-          setGoogleDns({ Answer: [{ data: 'Error in Google Api', name: '' }] });
-        }
+  if (response.ok) {
+    const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
+    if (dnsResponse.ok) {
+      const data = await dnsResponse.json();
+      if (dnsResponse.ok && data.Answer) {
+        setGoogleDns(data);
+      } else {
+        setGoogleDns({ Answer: [{ data: 'Error in Google Api', name: '' }] });
       }
     }
-  } catch (err) {
-    // console.log(err);
   }
 }
 
@@ -106,10 +102,10 @@ async function fetchIp(
   sn: string,
   tenant: string,
   tm: boolean,
-  setIp: (arg0: string) => void,
-  setTimeStampIp: (arg0: string) => void,
-  setResult: (arg0: string) => void,
-  setErrorResponse: (arg0: ErrorResponse) => void
+  setIp: (value: string) => void,
+  setTimeStampIp: (value: string) => void,
+  setResult: (value: string) => void,
+  setErrorResponse: (value: ErrorResponse) => void
 ) {
   const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.${tenant}.mspenv.io/v1/${sn}/ip`, {
     headers: {
