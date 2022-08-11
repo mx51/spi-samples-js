@@ -45,6 +45,10 @@ function serialNumberValidatorOnChange(value: string): string {
   return '';
 }
 
+function isSerialNumberValid(value: string): boolean {
+  return Boolean(value.match(serialNumberRegex));
+}
+
 function postIdValidator(value: string, terminals: ITerminalState): string {
   if (value === '') return 'POS Id is required';
   if (!value.match(numberCharactersRegex)) return 'POS Id must contain only alphanumeric characters';
@@ -59,6 +63,7 @@ export {
   eftposIPAddressValidator,
   numberCharactersValidator,
   paymentProviderValidator,
+  isSerialNumberValid,
   serialNumberValidatorOnBlur,
   serialNumberValidatorOnChange,
   fieldRequiredValidator,

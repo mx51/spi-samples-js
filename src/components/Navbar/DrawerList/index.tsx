@@ -11,17 +11,22 @@ import MenuItems from './MenuItems';
 
 function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
   const classes = useStyles();
-  const { samplePos, terminals } = menuItems;
+  const { samplePos, terminals, support } = menuItems;
 
   return (
     <Box className={classes.list} onClick={toggleDrawer} onKeyDown={toggleDrawer}>
       <NavbarHeader handleToggleDrawer={toggleDrawer} icon={<SecondaryLogoIcon />} isDevelopModeShown={false} />
       <div className={classes.menuLinks}>
-        <Typography className={classes.title}>Sample POS</Typography>
-        <MenuItems menuItems={samplePos} />
-        <Divider />
-        <Typography className={classes.title}>Terminals</Typography>
-        <MenuItems menuItems={terminals} />
+        <div>
+          <Typography className={classes.title}>Sample POS</Typography>
+          <MenuItems menuItems={samplePos} />
+          <Divider />
+          <Typography className={classes.title}>Terminals</Typography>
+          <MenuItems menuItems={terminals} />
+        </div>
+        <div>
+          <MenuItems menuItems={support} />
+        </div>
       </div>
     </Box>
   );

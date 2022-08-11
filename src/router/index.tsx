@@ -9,6 +9,7 @@ import {
   PATH_TERMINALS,
   PATH_ORDER_FINISHED,
   PATH_CASH_OUT,
+  PATH_SUPPORT,
 } from '../definitions/constants/routerConfigs';
 
 const Pair = React.lazy(() => import('../components/PairPage'));
@@ -20,6 +21,7 @@ const OrderFinished = React.lazy(() => import('../components/OrderFinished'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 const PayNow = React.lazy(() => import('../components/PayNow'));
 const Cashout = React.lazy(() => import('../components/CashoutPage'));
+const SupportTool = React.lazy(() => import('../components/SupportToolsPage'));
 
 const AppRoutes = (): React.ReactElement => (
   <Router>
@@ -33,6 +35,7 @@ const AppRoutes = (): React.ReactElement => (
         <Route exact path={PATH_PAY_NOW} component={PayNow} />
         <Route exact path={PATH_CASH_OUT} component={Cashout} />
         <Route exact path={PATH_ORDER_FINISHED} component={OrderFinished} />
+        <Route exact path={PATH_SUPPORT} component={SupportTool} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

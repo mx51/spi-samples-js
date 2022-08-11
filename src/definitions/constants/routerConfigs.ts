@@ -6,6 +6,7 @@ export const PATH_TERMINALS = '/terminals';
 export const PATH_PAY_NOW = '/paynow';
 export const PATH_CASH_OUT = '/cashout';
 export const PATH_ORDER_FINISHED = '/order-finished';
+export const PATH_SUPPORT = '/support';
 
 // link names
 export const TEXT_FLEET_SETTINGS = 'Fleet settings';
@@ -16,3 +17,4 @@ export const TEXT_PURCHASE = 'Purchase';
 export const TEXT_REFUND = 'Refund';
 export const TEXT_CASHOUT = 'Cashout';
 export const TEXT_TERMINALS = 'Terminals List';
+export const TEXT_SUPPORT = 'Support';

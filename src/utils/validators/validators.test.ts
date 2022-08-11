@@ -3,10 +3,11 @@ import { pairedMockTerminals } from '../tests/common';
 import {
   eftposAddressValidator,
   eftposIPAddressValidator,
+  isSerialNumberValid,
   postIdValidator,
   serialNumberValidatorOnBlur,
   serialNumberValidatorOnChange,
-} from './pairFormValidators';
+} from './validators';
 
 describe('Test pairFormValidators functions', () => {
   test('should return true when eftpos address is valid (positive case)', () => {
@@ -57,6 +58,22 @@ describe('Test pairFormValidators functions', () => {
 
     // Assert
     expect(characterSerialNumber).toEqual(errorMessage);
+  });
+
+  test('should return false on invalid serial number', () => {
+    // Arrange
+    const characterSerialNumber = isSerialNumberValid('testTests');
+
+    // Assert
+    expect(characterSerialNumber).toEqual(false);
+  });
+
+  test('should return true on valid serial number', () => {
+    // Arrange
+    const characterSerialNumber = isSerialNumberValid('11111');
+
+    // Assert
+    expect(characterSerialNumber).toEqual(true);
   });
 
   test('should not accept same pos id during user typing', () => {

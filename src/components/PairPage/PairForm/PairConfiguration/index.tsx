@@ -49,7 +49,7 @@ import {
   postIdValidator,
   serialNumberValidatorOnBlur,
   serialNumberValidatorOnChange,
-} from '../../../../utils/validators/pairFormValidators';
+} from '../../../../utils/validators/validators';
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
