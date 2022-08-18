@@ -13,6 +13,11 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '1.5rem',
       color: theme.palette.text.primary,
     },
+    modalDescription: {
+      color: FONT_COLOR,
+      fontSize: '1.125rem',
+      margin: theme.spacing(2),
+    },
     modalBtn: {
       margin: theme.spacing(2, 0, 0, 0),
     },

@@ -13,7 +13,12 @@ import mockWithRedux, {
 describe('Test <TransactionProgressModal />', () => {
   afterEach(cleanup);
 
-  function transactionProgressModalSetup(transactionType: string, isFinished: boolean, isSuccess: boolean) {
+  function transactionProgressModalSetup(
+    transactionType: string,
+    isFinished: boolean,
+    isSuccess: boolean,
+    transactionMsg: string
+  ) {
     const cancelFn = jest.fn();
     const doneFn = jest.fn();
     const retryFn = jest.fn();
@@ -22,6 +27,7 @@ describe('Test <TransactionProgressModal />', () => {
       <TransactionProgressModal
         terminalId={mockTerminalInstanceId}
         transactionType={transactionType}
+        transactionDesc={transactionMsg}
         isFinished={isFinished}
         isSuccess={isSuccess}
         onDone={doneFn}
@@ -34,35 +40,35 @@ describe('Test <TransactionProgressModal />', () => {
 
   test('should match TransactionProgressModalPage finished & success snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, true);
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, true, 'Purchase');
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should match TransactionProgressModalPage finished & not success snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, false);
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, false, 'Purchase');
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should match TransactionProgressModalPage pending snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup(TEXT_PURCHASE, false, true);
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, false, true, 'Purchase');
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should show "CASHOUT" as modal title when transactionType value is returned as "CashoutOnly"', () => {
     // Arrange
-    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.CashoutOnly, true, true);
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.CashoutOnly, true, true, 'Cashout');
     // Assert
     expect(document.body.innerHTML.includes(TEXT_CASHOUT.toUpperCase())).toBeTruthy();
   });
 
   test('should show "REFUND" as modal title when transactionType value is returned as "Refund"', () => {
     // Arrange
-    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, true);
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, true, 'Refund');
     // Assert
     expect(document.body.innerHTML.includes(TEXT_REFUND.toUpperCase())).toBeTruthy();
   });
@@ -93,6 +99,7 @@ describe('Test <TransactionProgressModal />', () => {
       <TransactionProgressModal
         terminalId={mockTerminalInstanceId}
         transactionType={SPI_TRANSACTION_TYPES.Refund}
+        transactionDesc="Signature desc"
         isFinished={false}
         isSuccess
         onDone={jest.fn()}
