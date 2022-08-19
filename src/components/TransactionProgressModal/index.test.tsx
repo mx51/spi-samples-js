@@ -17,7 +17,7 @@ describe('Test <TransactionProgressModal />', () => {
     transactionType: string,
     isFinished: boolean,
     isSuccess: boolean,
-    transactionMsg: string
+    transactionDesc = 'Transaction desc'
   ) {
     const cancelFn = jest.fn();
     const doneFn = jest.fn();
@@ -27,7 +27,7 @@ describe('Test <TransactionProgressModal />', () => {
       <TransactionProgressModal
         terminalId={mockTerminalInstanceId}
         transactionType={transactionType}
-        transactionDesc={transactionMsg}
+        transactionDesc={transactionDesc}
         isFinished={isFinished}
         isSuccess={isSuccess}
         onDone={doneFn}
@@ -40,37 +40,45 @@ describe('Test <TransactionProgressModal />', () => {
 
   test('should match TransactionProgressModalPage finished & success snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, true, 'Purchase');
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, true);
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should match TransactionProgressModalPage finished & not success snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, false, 'Purchase');
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, true, false);
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should match TransactionProgressModalPage pending snapshot test', () => {
     // Arrange
-    const container = transactionProgressModalSetup(TEXT_PURCHASE, false, true, 'Purchase');
+    const container = transactionProgressModalSetup(TEXT_PURCHASE, false, true);
     // Assert
     expect(container).toMatchSnapshot();
   });
 
   test('should show "CASHOUT" as modal title when transactionType value is returned as "CashoutOnly"', () => {
     // Arrange
-    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.CashoutOnly, true, true, 'Cashout');
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.CashoutOnly, true, true);
     // Assert
     expect(document.body.innerHTML.includes(TEXT_CASHOUT.toUpperCase())).toBeTruthy();
   });
 
   test('should show "REFUND" as modal title when transactionType value is returned as "Refund"', () => {
     // Arrange
-    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, true, 'Refund');
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, true);
     // Assert
     expect(document.body.innerHTML.includes(TEXT_REFUND.toUpperCase())).toBeTruthy();
+  });
+
+  test('should show modal description "Declined desc" when a transaction is declined', () => {
+    // Arrange
+    const transactionDesc = 'Declined desc';
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, false, transactionDesc);
+    // Assert
+    expect(document.body.innerHTML.includes(transactionDesc)).toBeTruthy();
   });
 
   test('should show signature flow with yes and no buttons', () => {
