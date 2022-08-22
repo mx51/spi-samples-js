@@ -13,7 +13,12 @@ import mockWithRedux, {
 describe('Test <TransactionProgressModal />', () => {
   afterEach(cleanup);
 
-  function transactionProgressModalSetup(transactionType: string, isFinished: boolean, isSuccess: boolean) {
+  function transactionProgressModalSetup(
+    transactionType: string,
+    isFinished: boolean,
+    isSuccess: boolean,
+    transactionDesc = 'Transaction desc'
+  ) {
     const cancelFn = jest.fn();
     const doneFn = jest.fn();
     const retryFn = jest.fn();
@@ -22,6 +27,7 @@ describe('Test <TransactionProgressModal />', () => {
       <TransactionProgressModal
         terminalId={mockTerminalInstanceId}
         transactionType={transactionType}
+        transactionDesc={transactionDesc}
         isFinished={isFinished}
         isSuccess={isSuccess}
         onDone={doneFn}
@@ -67,6 +73,14 @@ describe('Test <TransactionProgressModal />', () => {
     expect(document.body.innerHTML.includes(TEXT_REFUND.toUpperCase())).toBeTruthy();
   });
 
+  test('should show modal description "Declined desc" when a transaction is declined', () => {
+    // Arrange
+    const transactionDesc = 'Declined desc';
+    transactionProgressModalSetup(SPI_TRANSACTION_TYPES.Refund, true, false, transactionDesc);
+    // Assert
+    expect(document.body.innerHTML.includes(transactionDesc)).toBeTruthy();
+  });
+
   test('should show signature flow with yes and no buttons', () => {
     // Arrange
     const modalTitle = 'Confirm customer signature';
@@ -93,6 +107,7 @@ describe('Test <TransactionProgressModal />', () => {
       <TransactionProgressModal
         terminalId={mockTerminalInstanceId}
         transactionType={SPI_TRANSACTION_TYPES.Refund}
+        transactionDesc="Signature desc"
         isFinished={false}
         isSuccess
         onDone={jest.fn()}

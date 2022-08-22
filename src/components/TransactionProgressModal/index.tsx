@@ -20,6 +20,7 @@ import { TransactionProgressModalProps } from './interfaces';
 function TransactionProgressModal({
   terminalId,
   transactionType,
+  transactionDesc,
   isFinished,
   isSuccess,
   onCancelTransaction,
@@ -114,6 +115,7 @@ function TransactionProgressModal({
               <Typography variant="body2" className={classes.modalSubHeading}>
                 Declined
               </Typography>
+              <Typography className={classes.modalDescription}>{transactionDesc}</Typography>
             </>
           )}
           {!isFinished && (

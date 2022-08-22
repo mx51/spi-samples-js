@@ -41,6 +41,7 @@ import {
   pairedConnectedTerminalList,
   terminalInstance,
   terminalTxFlowFinishedTracker,
+  terminalTxFlowReceipt,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import {
@@ -70,6 +71,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
+  const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
 
   const successStatus = currentTerminal?.txFlow?.success;
 
@@ -213,6 +215,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
               <TransactionProgressModal
                 terminalId={selectedTerminal}
                 transactionType={currentTerminal?.txFlow?.type ?? ''}
+                transactionDesc={receipt?.hostResponseText ?? ''}
                 isFinished={isFinished}
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {
