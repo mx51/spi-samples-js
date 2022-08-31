@@ -6,6 +6,7 @@ describe('Calculator', () => {
     expect(calculator('0', '5')).toEqual('5');
     expect(calculator('145', '5')).toEqual('1455');
     expect(calculator('1111', '5')).toEqual('11115');
+    expect(calculator('11115', '6')).toEqual('111156');
     expect(calculator('222251', '3')).toEqual('222251');
   });
   test('adding decimal number', () => {
