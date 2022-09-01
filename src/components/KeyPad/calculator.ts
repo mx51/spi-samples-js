@@ -8,7 +8,7 @@ export default (amount: string, num: string): string => {
     default:
       if (amount === '0') return num;
       if (amount.includes('.') && amount.indexOf('.') === amount.length - 3) return amount;
-      if (!amount.includes('.') && amount.length === 4) return amount;
+      if (!amount.includes('.') && amount.length === 6) return amount;
       return amount + num;
   }
 };
