@@ -10,7 +10,7 @@ import {
 } from '../../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../../definitions/constants/terminalConfigs';
 import { RootState } from '../../store';
-import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState } from './interfaces';
+import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState, ITxMessage } from './interfaces';
 
 export const terminalList = (state: RootState): ITerminalState => state.terminals;
 
@@ -99,3 +99,6 @@ export const terminalTxTotalAmount = (instanceId: string): ((state: RootState) =
         (terminal?.txFlow?.response?.data?.surchargeAmount as number) +
         (terminal?.txFlow?.response?.data?.tipAmount as number) || 0
   );
+
+export const terminalTxMessage = (instanceId: string): ((state: RootState) => ITxMessage | null) =>
+  createSelector(terminalInstance(instanceId), (terminal) => terminal?.txMessage);
