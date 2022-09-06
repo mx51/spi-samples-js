@@ -12,7 +12,10 @@ import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs
 import { PATH_ORDER_FINISHED, TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
-import { terminalTxFlowAwaitingSignatureTracker } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import {
+  terminalTxFlowAwaitingSignatureTracker,
+  terminalTxMessage,
+} from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { approveSignature, declineSignature } from '../../utils/common/terminal/terminalHelpers';
 import useStyles from './index.styles';
 import { TransactionProgressModalProps } from './interfaces';
@@ -30,6 +33,8 @@ function TransactionProgressModal({
   const awaitingSignatureCheck = useAppSelector(terminalTxFlowAwaitingSignatureTracker(terminalId));
   const modalTitle =
     transactionType === SPI_TRANSACTION_TYPES.CashoutOnly ? TEXT_CASHOUT.toUpperCase() : transactionType.toUpperCase();
+
+  const txMessage = useAppSelector(terminalTxMessage(terminalId));
 
   const handleApprove = () => {
     approveSignature(terminalId);
@@ -79,7 +84,8 @@ function TransactionProgressModal({
                 {transactionType.toUpperCase()}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                In progress ...
+                <div> In progress </div>
+                <Typography className={classes.modalDescription}> {txMessage?.displayMessageText}</Typography>
               </Typography>
             </>
           )}
