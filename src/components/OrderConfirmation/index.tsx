@@ -110,7 +110,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   }
 
   const titleStrategy: ITitleStrategy = {
-    Pay: `Override ${TEXT_PURCHASE} Amount`,
+    Pay: `Override ${TEXT_PURCHASE}`,
     [TEXT_CASHOUT]: TEXT_CASHOUT,
     [TEXT_REFUND]: TEXT_REFUND,
   };
