@@ -562,6 +562,7 @@ test('should handle updateTxFlow for empty state', () => {
   expect(reducer(previousState, updateTxFlow(updateTxFlowAction))).toEqual({
     [mockTerminalInstanceId]: {
       txFlow: mockTxFlow(),
+      txMessage: null,
     },
   });
 });
