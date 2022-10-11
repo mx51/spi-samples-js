@@ -33,7 +33,7 @@ export interface ITerminal {
 }
 
 export interface ISettings {
-  eftposReceipt: boolean;
+  promptForCustomerCopy: boolean;
   sigFlow: boolean;
   printMerchantCopy: boolean;
   suppressMerchantPassword: boolean;
@@ -177,7 +177,7 @@ export interface IUpdateTxFlowAction {
 }
 export interface IUpdateSettingAction {
   id: string;
-  settings: ISettings;
+  settings: Partial<ISettings>;
 }
 
 export interface IConfigurations {

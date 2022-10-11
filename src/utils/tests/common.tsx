@@ -82,6 +82,7 @@ export const defaultMockPairFormParams = {
     isValid: true,
   },
   testMode: true,
+  promptForCustomerCopy: false,
 };
 
 export const customMockPairFormParamsState = (

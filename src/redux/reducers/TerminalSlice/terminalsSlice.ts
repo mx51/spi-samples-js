@@ -7,6 +7,7 @@ import {
   IClearTransactionAction,
   IConfigurations,
   IRemoveTerminalAction,
+  ISettings,
   ITerminalState,
   IUpdateDeviceAddressAction,
   IUpdatePairingFlowAction,
@@ -90,8 +91,7 @@ const terminalsSlice = createSlice({
     updateSetting(state: ITerminalState, action: PayloadAction<IUpdateSettingAction>) {
       const { id, settings } = action.payload;
       const currentState = state[id] || {};
-
-      currentState.settings = settings;
+      currentState.settings = { ...(currentState.settings as ISettings), ...settings };
       state[id] = currentState;
     },
 
