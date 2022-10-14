@@ -127,6 +127,7 @@ export const mockDefaultProducts = {
 
 export const defaultMockTerminals = {
   [mockTerminalInstanceId]: {
+    spiHardwarePrinterAvailable: (): boolean => false,
     acquirerCode: 'test',
     autoAddress: false,
     deviceAddress: defaultLocalIP,
@@ -281,6 +282,7 @@ export const mockSpiClient = {
   _mostRecentPongReceived: true,
   GetTerminalAddress: (): string => '',
   GetTerminalStatus: (): string => defaultAAR,
+  GetHardwarePrinterAvailable: (): boolean => false,
   SetEventBus: jest.fn(),
   BatteryLevelChanged: jest.fn(),
 };

@@ -19,3 +19,7 @@ export function declineSignature(instanceId: string): void {
 export function spiSetPromptForCustomerCopyOnEftpos(instanceId: string, value: boolean): void {
   spiService.spiSetPromptForCustomerCopyOnEftpos(instanceId, value);
 }
+
+export function spiHardwarePrinterAvailable(instanceId: string): boolean {
+  return spiService.spiHardwarePrinterAvailable(instanceId);
+}

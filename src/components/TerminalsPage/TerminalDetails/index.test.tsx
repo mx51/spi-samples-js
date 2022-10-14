@@ -3,6 +3,7 @@ import { cleanup, fireEvent } from '@testing-library/react';
 import TerminalDetails from '.';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { terminalInstance } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import spiService from '../../../services/spiService';
 import mockWithRedux, { mockTerminalInstanceId, pairedMockTerminals } from '../../../utils/tests/common';
 
 jest.mock('react-router-dom', () => ({
@@ -13,6 +14,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 function setupContainer(terminals: ITerminalState = pairedMockTerminals) {
+  spiService.spiHardwarePrinterAvailable = jest.fn().mockReturnValue(false);
   const customizedStore = {
     getState: () => ({
       common: {},

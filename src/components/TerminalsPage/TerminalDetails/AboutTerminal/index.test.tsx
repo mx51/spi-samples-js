@@ -16,6 +16,7 @@ describe('Test <AboutTerminal />', () => {
   let mockContainer: Any;
 
   beforeEach(() => {
+    spiService.spiHardwarePrinterAvailable = jest.fn().mockReturnValue(false);
     mockContainer = mockWithRedux(
       <AboutTerminal
         receiptToggle={{

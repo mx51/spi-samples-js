@@ -16,6 +16,7 @@ import {
   settlement,
   settlementEnquiry,
   spiSetPromptForCustomerCopyOnEftpos,
+  spiHardwarePrinterAvailable,
 } from '../../../../utils/common/terminal/terminalHelpers';
 import { IAboutTerminal } from '../interfaces';
 import useStyles from './index.styles';
@@ -104,10 +105,14 @@ export default function AboutTerminal({
           ))}
           <Grid className={classes.detailRow} container>
             <Grid item md={4} xs={12}>
-              <Typography>Print EFTPOS receipt</Typography>
+              <Typography>Print customer EFTPOS receipt</Typography>
             </Grid>
             <Grid item md={8} xs={12}>
-              <Switch checked={Boolean(promptForCustomerCopy)} onChange={onPrintReceiptToggle} />
+              <Switch
+                disabled={!spiHardwarePrinterAvailable(terminal.id)}
+                checked={Boolean(promptForCustomerCopy)}
+                onChange={onPrintReceiptToggle}
+              />
             </Grid>
           </Grid>
         </Grid>

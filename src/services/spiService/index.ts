@@ -528,6 +528,11 @@ class SpiService {
     this.updateTerminalStorage(instanceId, 'promptForCustomerCopy', value);
   }
 
+  spiHardwarePrinterAvailable(instanceId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    return Boolean(spi?.GetHardwarePrinterAvailable());
+  }
+
   initiatePurchaseTransaction(
     instanceId: string,
     posRefId: string,

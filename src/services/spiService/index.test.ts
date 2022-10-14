@@ -410,4 +410,46 @@ describe('Test SpiService functionalities', () => {
     // Assert
     expect(mockSetTerminalIdle).toHaveBeenCalled();
   });
+
+  test('hardware printer is available', () => {
+    // Arrange
+    mockSpiClient.GetHardwarePrinterAvailable = () => true;
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: mockSpiClient,
+    });
+
+    // Act
+    const result = spiService.spiHardwarePrinterAvailable(mockTerminalInstanceId);
+
+    // Assert
+    expect(result).toEqual(true);
+  });
+
+  test('hardware printer is not available', () => {
+    // Arrange
+    mockSpiClient.GetHardwarePrinterAvailable = () => false;
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: mockSpiClient,
+    });
+
+    // Act
+    const result = spiService.spiHardwarePrinterAvailable(mockTerminalInstanceId);
+
+    // Assert
+    expect(result).toEqual(false);
+  });
+
+  test('hardware printer is not available when spi instance is undefined', () => {
+    // Arrange
+    mockSpiClient.GetHardwarePrinterAvailable = () => false;
+    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+      spiClient: undefined,
+    });
+
+    // Act
+    const result = spiService.spiHardwarePrinterAvailable(mockTerminalInstanceId);
+
+    // Assert
+    expect(result).toEqual(false);
+  });
 });

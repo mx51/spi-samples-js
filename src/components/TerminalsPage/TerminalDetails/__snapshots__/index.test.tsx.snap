@@ -353,7 +353,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           <p
                             class="MuiTypography-root MuiTypography-body1"
                           >
-                            Print EFTPOS receipt
+                            Print customer EFTPOS receipt
                           </p>
                         </div>
                         <div
@@ -363,14 +363,16 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                             class="MuiSwitch-root"
                           >
                             <span
-                              aria-disabled="false"
-                              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-45 MuiSwitch-switchBase MuiSwitch-colorSecondary"
+                              aria-disabled="true"
+                              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-45 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-47 Mui-disabled Mui-disabled Mui-disabled"
+                              tabindex="-1"
                             >
                               <span
                                 class="MuiIconButton-label"
                               >
                                 <input
                                   class="PrivateSwitchBase-input-48 MuiSwitch-input"
+                                  disabled=""
                                   type="checkbox"
                                   value=""
                                 />
@@ -378,9 +380,6 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                                   class="MuiSwitch-thumb"
                                 />
                               </span>
-                              <span
-                                class="MuiTouchRipple-root"
-                              />
                             </span>
                             <span
                               class="MuiSwitch-track"
