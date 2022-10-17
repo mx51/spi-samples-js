@@ -1,7 +1,7 @@
 import React from 'react';
-import Switch from '@material-ui/core//Switch';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import { PATH_TERMINALS } from '../../../../definitions/constants/routerConfigs';
@@ -50,7 +50,7 @@ export default function AboutTerminal({
   };
 
   const promptForCustomerCopy = terminal?.settings?.promptForCustomerCopy;
-  const onPrintReceiptToggle = () => {
+  const onPromptForCustomerCopyChanged = () => {
     spiSetPromptForCustomerCopyOnEftpos(terminal.id, !promptForCustomerCopy);
   };
 
@@ -111,7 +111,7 @@ export default function AboutTerminal({
               <Switch
                 disabled={!spiHardwarePrinterAvailable(terminal.id)}
                 checked={Boolean(promptForCustomerCopy)}
-                onChange={onPrintReceiptToggle}
+                onChange={onPromptForCustomerCopyChanged}
               />
             </Grid>
           </Grid>

@@ -132,7 +132,7 @@ class SpiService {
           })
         );
       }
-      console.log(`promptForCustomerCopy ${promptForCustomerCopy}`);
+
       // save acquirerCode & posId & serialNumber & testMode into localStorage
       this.updateTerminalStorage(instanceId, 'acquirerCode', acquirerCode);
       this.updateTerminalStorage(instanceId, 'posId', posId);
@@ -164,7 +164,7 @@ class SpiService {
           this.handleTerminalPairFailure(instanceId);
         }
 
-        // setup AUTO address to show in current p air form
+        // setup AUTO address to show in current pair form
         instance.spiClient.SetEftposAddress(eftposAddress);
       }
 
