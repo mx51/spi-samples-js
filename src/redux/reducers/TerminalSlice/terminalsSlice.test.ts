@@ -570,7 +570,7 @@ test('should handle updateTxFlow for empty state', () => {
 test('should handle updateSetting', () => {
   // Arrange
   const mockSettings = {
-    eftposReceipt: true,
+    promptForCustomerCopy: true,
     sigFlow: true,
     printMerchantCopy: true,
     suppressMerchantPassword: true,
@@ -597,7 +597,7 @@ test('should handle updateSetting for empty state', () => {
   // Arrange
   const previousState = {};
   const mockSettings = {
-    eftposReceipt: true,
+    promptForCustomerCopy: true,
     sigFlow: true,
     printMerchantCopy: true,
     suppressMerchantPassword: true,

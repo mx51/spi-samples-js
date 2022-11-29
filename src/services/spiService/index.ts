@@ -12,6 +12,7 @@ import { readTerminalPairError, updatePairFormParams } from '../../redux/reducer
 import {
   updatePairingFlow,
   updatePairingStatus,
+  updateSetting,
   updateTerminal,
   updateTerminalBatteryLevel,
   updateTerminalConfigurations,
@@ -110,7 +111,16 @@ class SpiService {
         Object.keys(terminalsStorage).indexOf(instanceId) > -1 ? terminalsStorage[instanceId] : pairForm;
 
       // get current terminal settings
-      const { acquirerCode, autoAddress, deviceAddress, posId, serialNumber, testMode, secrets } = terminalFormParams;
+      const {
+        acquirerCode,
+        autoAddress,
+        deviceAddress,
+        posId,
+        serialNumber,
+        testMode,
+        secrets,
+        promptForCustomerCopy,
+      } = terminalFormParams;
 
       // create localStorage instance if no terminal instance has been found inside current local terminals storage
       if (Object.keys(terminalsStorage).indexOf(instanceId) <= -1) {
@@ -128,6 +138,7 @@ class SpiService {
       this.updateTerminalStorage(instanceId, 'posId', posId);
       this.updateTerminalStorage(instanceId, 'serialNumber', serialNumber);
       this.updateTerminalStorage(instanceId, 'testMode', testMode);
+      this.updateTerminalStorage(instanceId, 'promptForCustomerCopy', promptForCustomerCopy);
 
       if (!autoAddress) this.updateTerminalStorage(instanceId, 'deviceAddress', deviceAddress);
 
@@ -157,6 +168,7 @@ class SpiService {
         instance.spiClient.SetEftposAddress(eftposAddress);
       }
 
+      instance.spiClient.Config.PromptForCustomerCopyOnEftpos = promptForCustomerCopy;
       instance.spiClient.PrintingResponse = () => true;
       instance.currentTxFlowStateOverride = null; // without mutating spi client's tx flow object.
 
@@ -288,7 +300,14 @@ class SpiService {
           pairingFlow: spiClient?.CurrentPairingFlowState,
           posVersion: spiClient?._posVersion,
           secrets: spiClient?._secrets,
-          settings: null, // not available during pair terminal stage
+          settings: {
+            promptForCustomerCopy,
+            sigFlow: false,
+            printMerchantCopy: false,
+            suppressMerchantPassword: false,
+            receiptHeader: null,
+            receiptFooter: null,
+          },
           status: spiClient?._currentStatus,
           terminalStatus: spiClient?.CurrentFlow,
           txFlow: getTxFlow(spiClient?.CurrentTxFlowState),
@@ -496,6 +515,22 @@ class SpiService {
   spiSetTerminalToIdle(instanceId: string) {
     const spi = this.readTerminalInstance(instanceId).spiClient;
     spi.AckFlowEndedAndBackToIdle();
+  }
+
+  spiSetPromptForCustomerCopyOnEftpos(instanceId: string, value: boolean) {
+    // set in spi lib
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    spi.Config.PromptForCustomerCopyOnEftpos = value;
+    // set in redux
+    const settings = { promptForCustomerCopy: value };
+    this.dispatchAction(updateSetting({ id: instanceId, settings }));
+    // set in browser storage
+    this.updateTerminalStorage(instanceId, 'promptForCustomerCopy', value);
+  }
+
+  spiHardwarePrinterAvailable(instanceId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    return Boolean(spi?.GetHardwarePrinterAvailable());
   }
 
   initiatePurchaseTransaction(

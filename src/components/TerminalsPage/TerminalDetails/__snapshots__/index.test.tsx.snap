@@ -344,6 +344,49 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                           </p>
                         </div>
                       </div>
+                      <div
+                        class="MuiGrid-root makeStyles-detailRow-33 MuiGrid-container"
+                      >
+                        <div
+                          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+                        >
+                          <p
+                            class="MuiTypography-root MuiTypography-body1"
+                          >
+                            Print customer EFTPOS receipt
+                          </p>
+                        </div>
+                        <div
+                          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+                        >
+                          <span
+                            class="MuiSwitch-root"
+                          >
+                            <span
+                              aria-disabled="true"
+                              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-45 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-47 Mui-disabled Mui-disabled Mui-disabled"
+                              tabindex="-1"
+                            >
+                              <span
+                                class="MuiIconButton-label"
+                              >
+                                <input
+                                  class="PrivateSwitchBase-input-48 MuiSwitch-input"
+                                  disabled=""
+                                  type="checkbox"
+                                  value=""
+                                />
+                                <span
+                                  class="MuiSwitch-thumb"
+                                />
+                              </span>
+                            </span>
+                            <span
+                              class="MuiSwitch-track"
+                            />
+                          </span>
+                        </div>
+                      </div>
                     </div>
                     <div
                       class="MuiGrid-root makeStyles-sectionSpacing-34 MuiGrid-item"
@@ -457,18 +500,18 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
           </div>
         </div>
         <div
-          class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-45"
+          class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-49"
           data-test-id="flowPanel"
         >
           <div
-            class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-46 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
+            class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-50 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
             style="visibility: hidden; webkit-transform: translateX(1024px) translateX(0px); transform: translateX(1024px) translateX(0px);"
           >
             <div
-              class="MuiBox-root MuiBox-root-50 makeStyles-flowBoxWrapper-47"
+              class="MuiBox-root MuiBox-root-54 makeStyles-flowBoxWrapper-51"
             >
               <div
-                class="MuiBox-root MuiBox-root-51 makeStyles-flowBox-48"
+                class="MuiBox-root MuiBox-root-55 makeStyles-flowBox-52"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-h6"
@@ -476,7 +519,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                   Flow
                 </h1>
                 <pre
-                  class="makeStyles-flowContent-49"
+                  class="makeStyles-flowContent-53"
                 >
                   
 # ----------- STATUS -----------

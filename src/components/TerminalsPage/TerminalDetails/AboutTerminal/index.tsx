@@ -1,6 +1,7 @@
 import React from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
+import Switch from '@material-ui/core/Switch';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import { PATH_TERMINALS } from '../../../../definitions/constants/routerConfigs';
@@ -11,7 +12,12 @@ import {
 import { useAppDispatch, useAppSelector } from '../../../../redux/hooks';
 import { terminalPosRefId } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { handleUnPairClick } from '../../../../utils/common/pair/pairStatusHelpers';
-import { settlement, settlementEnquiry } from '../../../../utils/common/terminal/terminalHelpers';
+import {
+  settlement,
+  settlementEnquiry,
+  spiSetPromptForCustomerCopyOnEftpos,
+  spiHardwarePrinterAvailable,
+} from '../../../../utils/common/terminal/terminalHelpers';
 import { IAboutTerminal } from '../interfaces';
 import useStyles from './index.styles';
 import StatusBox from './StatusBox';
@@ -41,6 +47,11 @@ export default function AboutTerminal({
     });
 
     if (!receiptToggle.settlementEnquiry) settlementEnquiry(terminal.id, posRefId as string);
+  };
+
+  const promptForCustomerCopy = terminal?.settings?.promptForCustomerCopy;
+  const onPromptForCustomerCopyChanged = () => {
+    spiSetPromptForCustomerCopyOnEftpos(terminal.id, !promptForCustomerCopy);
   };
 
   return (
@@ -92,6 +103,18 @@ export default function AboutTerminal({
               </Grid>
             </Grid>
           ))}
+          <Grid className={classes.detailRow} container>
+            <Grid item md={4} xs={12}>
+              <Typography>Print customer EFTPOS receipt</Typography>
+            </Grid>
+            <Grid item md={8} xs={12}>
+              <Switch
+                disabled={!spiHardwarePrinterAvailable(terminal.id)}
+                checked={Boolean(promptForCustomerCopy)}
+                onChange={onPromptForCustomerCopyChanged}
+              />
+            </Grid>
+          </Grid>
         </Grid>
         <Grid item className={(classes.fullWidth, classes.sectionSpacing)}>
           <Typography variant="h6" component="h1">

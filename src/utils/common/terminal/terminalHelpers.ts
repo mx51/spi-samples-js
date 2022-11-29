@@ -15,3 +15,11 @@ export function approveSignature(instanceId: string): void {
 export function declineSignature(instanceId: string): void {
   spiService.signatureForDecline(instanceId);
 }
+
+export function spiSetPromptForCustomerCopyOnEftpos(instanceId: string, value: boolean): void {
+  spiService.spiSetPromptForCustomerCopyOnEftpos(instanceId, value);
+}
+
+export function spiHardwarePrinterAvailable(instanceId: string): boolean {
+  return spiService.spiHardwarePrinterAvailable(instanceId);
+}

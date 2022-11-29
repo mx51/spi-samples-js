@@ -197,6 +197,49 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           </p>
         </div>
       </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Print customer EFTPOS receipt
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <span
+            class="MuiSwitch-root"
+          >
+            <span
+              aria-disabled="true"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-14 MuiSwitch-switchBase MuiSwitch-colorSecondary PrivateSwitchBase-disabled-16 Mui-disabled Mui-disabled Mui-disabled"
+              tabindex="-1"
+            >
+              <span
+                class="MuiIconButton-label"
+              >
+                <input
+                  class="PrivateSwitchBase-input-17 MuiSwitch-input"
+                  disabled=""
+                  type="checkbox"
+                  value=""
+                />
+                <span
+                  class="MuiSwitch-thumb"
+                />
+              </span>
+            </span>
+            <span
+              class="MuiSwitch-track"
+            />
+          </span>
+        </div>
+      </div>
     </div>
     <div
       class="MuiGrid-root makeStyles-sectionSpacing-3 MuiGrid-item"
