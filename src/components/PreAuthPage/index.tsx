@@ -1,10 +1,3 @@
-import React from 'react';
-import Layout from '../Layout';
+import PreAuthPage from './PreAuthPage';
 
-const PreAuth: React.FC = () => (
-  <Layout>
-    <p>Pre Auth Page</p>
-  </Layout>
-);
-
-export default PreAuth;
+export default PreAuthPage;

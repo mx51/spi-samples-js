@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom/extend-expect';
 import { cleanup } from '@testing-library/react';
-import FlowPanel, { getReceiptSchemes } from '.';
+import FlowPanel from '.';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import { IPairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
@@ -14,6 +14,7 @@ import mockWithRedux, {
   mockTerminalsConfigs,
   pairedMockTerminals,
 } from '../../../utils/tests/common';
+import { getReceiptSchemes } from './PairFlow';
 
 function setupContainer(
   pairForm: IPairFormParams = defaultMockPairFormParams,

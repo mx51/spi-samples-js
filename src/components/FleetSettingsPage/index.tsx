@@ -1,10 +1,3 @@
-import React from 'react';
-import Layout from '../Layout';
+import FleetSettingsPage from './FleetSettingsPage';
 
-const FleetSettings: React.FC = () => (
-  <Layout>
-    <p>Fleet Settings Page</p>
-  </Layout>
-);
-
-export default FleetSettings;
+export default FleetSettingsPage;
