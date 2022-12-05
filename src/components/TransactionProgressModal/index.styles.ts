@@ -26,13 +26,16 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: theme.spacing(3),
     },
     transactionProgressModalContent: {
-      width: '27.5rem',
+      width: '100%',
       height: '19.6rem',
       textAlign: 'center',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
       justifyContent: 'center',
+      [theme.breakpoints.up('sm')]: {
+        width: '27.5rem',
+      },
     },
     signatureFlow: {
       textAlign: 'center',

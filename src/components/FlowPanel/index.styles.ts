@@ -8,11 +8,14 @@ export default makeStyles((theme: Theme) =>
       flexShrink: 0,
     },
     drawerPaper: {
-      width: `${drawerWidth}%`,
+      width: '100%',
       border: 'none',
       background: 'transparent',
       display: 'flex',
       justifyContent: 'center',
+      [theme.breakpoints.up('sm')]: {
+        width: `${drawerWidth}%`,
+      },
     },
     flowBoxWrapper: {
       height: '100%',

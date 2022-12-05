@@ -64,9 +64,12 @@ const useStyles = makeStyles((theme: Theme) =>
       color: theme.palette.primary.main,
     },
     keypadDrawerPaper: {
-      width: '33.34%',
+      width: '100%',
       backgroundColor: 'transparent',
       border: 0,
+      [theme.breakpoints.up('sm')]: {
+        width: '33.34%',
+      },
     },
   })
 );

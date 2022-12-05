@@ -148,7 +148,12 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
       <Grid container justifyContent="center">
         <Grid item xs={7} className={classes.gridStyles}>
           <Box className={classes.root} display="flex" flexDirection="column">
-            <Box display="flex" alignItems="center" justifyContent="space-between">
+            <Box
+              display="flex"
+              alignItems="center"
+              justifyContent="space-between"
+              flexWrap={{ xs: 'wrap', sm: 'nowrap' }}
+            >
               <Box flex="1">
                 <Typography className={classes.payLabel}>{title}</Typography>
               </Box>

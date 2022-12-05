@@ -66,7 +66,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
       class="MuiGrid-root makeStyles-grid-3 MuiGrid-container"
     >
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -84,7 +84,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -102,7 +102,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -120,7 +120,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -138,7 +138,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -156,7 +156,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -174,7 +174,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -192,7 +192,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -210,7 +210,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -228,7 +228,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -255,7 +255,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"
@@ -273,7 +273,7 @@ exports[`Test <KeyPad /> snapshot for KeyPad component 1`] = `
         </button>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-sm-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <button
           class="MuiButtonBase-root MuiButton-root makeStyles-keypadBtn-7 MuiButton-outlined MuiButton-outlinedPrimary MuiButton-fullWidth"

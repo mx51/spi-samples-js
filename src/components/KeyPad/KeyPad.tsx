@@ -62,7 +62,7 @@ function KeyPad({ title, subtitle, defaultAmount, onAmountChange, onClose }: IKe
       <Divider />
       <Grid container className={classes.grid}>
         {KEYS.map((num) => (
-          <Grid item sm={4} key={`keypad-${num}`}>
+          <Grid item xs={4} key={`keypad-${num}`}>
             <Button
               color="primary"
               variant="outlined"

@@ -56,7 +56,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
       class="MuiGrid-root MuiGrid-container"
     >
       <div
-        class="MuiGrid-root makeStyles-root-1 MuiGrid-item MuiGrid-grid-xs-8"
+        class="MuiGrid-root makeStyles-root-1 MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-8"
       >
         <h1
           class="MuiTypography-root MuiTypography-h6"
@@ -486,7 +486,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
         </div>
       </div>
       <div
-        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-sm-4"
       >
         <div
           class="MuiPaper-root MuiBox-root MuiBox-root-44 makeStyles-root-32 MuiPaper-elevation1 MuiPaper-rounded"

@@ -20,15 +20,15 @@ function OrderFinished(): React.ReactElement {
   return (
     <Layout>
       <Grid container>
-        <Grid item xs={5}>
+        <Grid item xs={12} sm={5}>
           <PaymentSummary />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={12} sm={3}>
           <ReceiptPanel title="Receipt" css={classes.receiptBoxWrapper}>
             <pre>{currentTerminal?.txFlow?.response?.data.merchantReceipt}</pre>
           </ReceiptPanel>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <FlowPanel>
             <PurchaseFlow />
           </FlowPanel>

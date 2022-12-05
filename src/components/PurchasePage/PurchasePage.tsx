@@ -15,14 +15,14 @@ function Purchase(): React.ReactElement {
   return (
     <Layout>
       <Grid container>
-        <Grid item xs={8} className={classes.root}>
+        <Grid item xs={12} sm={8} className={classes.root}>
           <Typography variant="h6" component="h1">
             Purchase
           </Typography>
           {!isTerminalPaired && <NoTerminalPage />}
           <ProductList />
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} sm={4}>
           <Order disablePayNow={false} />
         </Grid>
       </Grid>

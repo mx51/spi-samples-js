@@ -18,9 +18,12 @@ export default makeStyles((theme: Theme) =>
       fontWeight: 'lighter',
     },
     keypadDrawerPaper: {
-      width: '33.34%',
+      width: '100%',
       backgroundColor: 'transparent',
       border: 0,
+      [theme.breakpoints.up('sm')]: {
+        width: '33.34%',
+      },
     },
     total: {
       color: theme.palette.primary.main,
