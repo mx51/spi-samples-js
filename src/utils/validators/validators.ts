@@ -35,7 +35,7 @@ function paymentProviderValidator(value: string): boolean {
 }
 
 function serialNumberValidatorOnBlur(value: string): string {
-  const valueWithoutDash = value.replaceAll('-', '');
+  const valueWithoutDash = value.replace(/-/g, '');
   if (!value.match(serialNumberRegex)) return 'Sorry, the serial number should only contain numbers. Please try again.';
   if (valueWithoutDash.length < 9) return 'Please enter a 9 digits Serial number.';
   return '';
