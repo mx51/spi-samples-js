@@ -92,7 +92,7 @@ class RamenPos extends Pos {
       this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
       this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
 
-      this._spi.SetPosInfo('assembly', this._version);
+      this._spi.SetPosInfo('mx51', this._version);
       this._spi.SetAcquirerCode(this._tenantCode);
       this._spi.SetDeviceApiKey(this._apiKey);
 

@@ -48,7 +48,7 @@ class TablePos extends Pos {
 
   private billsStore: any;
   private tableToBillMapping: any;
-  private assemblyBillDataStore: any;
+  private mx51BillDataStore: any;
   private _isActionFlow: boolean;
 
   constructor(log: Console, receipt: Logger, flowMsg: Logger) {
@@ -77,11 +77,11 @@ class TablePos extends Pos {
     // Value = BillId
     this.tableToBillMapping = {};
 
-    // Assembly Payments Integration asks us to persist some data on their behalf
+    // mx51's Integration asks us to persist some data on their behalf
     // So that the eftpos terminal can recover state.
     // Key = BillId
-    // Value = Assembly Payments Bill Data
-    this.assemblyBillDataStore = {};
+    // Value = mx51's Bill Data
+    this.mx51BillDataStore = {};
 
     this._pat = null;
 
@@ -101,7 +101,7 @@ class TablePos extends Pos {
     this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
     this._spi.Config.PrintMerchantCopy = this._printMerchantCopy;
 
-    this._spi.SetPosInfo('assembly', this._version);
+    this._spi.SetPosInfo('mx51', this._version);
 
     document.addEventListener('StatusChanged', (e: SpiEvent) =>
       terminalStatus.onSpiStatusChanged(this._flowMsg, this.PrintStatusAndActions, e.detail)
@@ -527,7 +527,7 @@ class TablePos extends Pos {
     this._flowMsg.Info('# ----------------TABLES-------------------');
     this._flowMsg.Info(`#    Open Tables: ${Object.keys(this.tableToBillMapping).length}`);
     this._flowMsg.Info(`# Bills in Store: ${Object.keys(this.billsStore).length}`);
-    this._flowMsg.Info(`# Assembly Bills: ${Object.keys(this.assemblyBillDataStore).length}`);
+    this._flowMsg.Info(`# mx51 Bills: ${Object.keys(this.mx51BillDataStore).length}`);
     this._flowMsg.Info(`# -----------------------------------------`);
     this._flowMsg.Info(`# POS: v${this._version} Spi: v${Spi.GetVersion()}`);
   }
@@ -559,7 +559,7 @@ class TablePos extends Pos {
     }
 
     this.tableToBillMapping = JSON.parse(localStorage.getItem('tableToBillMapping') || '{}');
-    this.assemblyBillDataStore = JSON.parse(localStorage.getItem('assemblyBillDataStore') || '{}');
+    this.mx51BillDataStore = JSON.parse(localStorage.getItem('mx51BillDataStore') || '{}');
     const savedBillData = JSON.parse(localStorage.getItem('billsStore') || '{}');
 
     Object.keys(savedBillData).forEach((bill) => {
@@ -610,7 +610,7 @@ class TablePos extends Pos {
       OutstandingAmount: myBill.OutstandingAmount,
     });
 
-    const billData = this.assemblyBillDataStore[retrievedBillId];
+    const billData = this.mx51BillDataStore[retrievedBillId];
 
     response.BillData = billData;
     return response;
@@ -638,8 +638,8 @@ class TablePos extends Pos {
     // Here you can access other data that you might want to store from this payment, for example the merchant receipt.
     // billPayment.PurchaseResponse.GetMerchantReceipt();
 
-    // It is important that we persist this data on behalf of assembly.
-    this.assemblyBillDataStore[billPayment.BillId] = updatedBillData;
+    // It is important that we persist this data on behalf of mx51.
+    this.mx51BillDataStore[billPayment.BillId] = updatedBillData;
 
     this.saveBillState();
 
@@ -776,7 +776,7 @@ class TablePos extends Pos {
 
     delete this.billsStore[this.tableToBillMapping[tableId]];
     delete this.tableToBillMapping[tableId];
-    delete this.assemblyBillDataStore[bill.BillId];
+    delete this.mx51BillDataStore[bill.BillId];
     this.saveBillState();
     this._flowMsg.Info(`Closed: ${JSON.stringify(bill)}`);
   }
@@ -823,8 +823,8 @@ class TablePos extends Pos {
       });
     }
 
-    if (Object.keys(this.assemblyBillDataStore).length > 0) {
-      this._flowMsg.Info(`# Assembly Bills Data: ${JSON.stringify(this.assemblyBillDataStore)}`);
+    if (Object.keys(this.mx51BillDataStore).length > 0) {
+      this._flowMsg.Info(`# mx51 Bills Data: ${JSON.stringify(this.mx51BillDataStore)}`);
     }
   }
 
@@ -843,7 +843,7 @@ class TablePos extends Pos {
   saveBillState() {
     localStorage.setItem('tableToBillMapping', JSON.stringify(this.tableToBillMapping));
     localStorage.setItem('billsStore', JSON.stringify(this.billsStore));
-    localStorage.setItem('assemblyBillDataStore', JSON.stringify(this.assemblyBillDataStore));
+    localStorage.setItem('mx51BillDataStore', JSON.stringify(this.mx51BillDataStore));
   }
 }
 

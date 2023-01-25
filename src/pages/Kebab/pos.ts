@@ -79,7 +79,7 @@ class KebabPos extends Pos {
     this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
     this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
 
-    this._spi.SetPosInfo('assembly', this._version);
+    this._spi.SetPosInfo('mx51', this._version);
 
     document.addEventListener('StatusChanged', (e: SpiEvent) =>
       terminalStatus.onSpiStatusChanged(this._flowMsg, this.PrintStatusAndActions, e.detail)
