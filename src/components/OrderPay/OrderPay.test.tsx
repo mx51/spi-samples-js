@@ -26,6 +26,8 @@ describe('OrderPay', () => {
         openPricing={openPricing}
         setOpenPricing={setOpenPricing}
         transactionStatus={transactionStatus}
+        status=""
+        onErrorMsg={() => {}}
       />
     );
   });

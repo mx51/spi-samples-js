@@ -5,21 +5,27 @@ import Status from './Status';
 
 describe('Status', () => {
   it('should show message Paired connected', () => {
-    const component = mount(<Status status={SpiStatus.PairedConnected} isFinishedPairing spi={{}} Message="" />);
+    const component = mount(
+      <Status pairButton={false} status={SpiStatus.PairedConnected} isFinishedPairing spi={{}} Message="" />
+    );
     const msg = component.find('#alertMessage > div').text();
 
     expect(msg).toBe('Paired connected');
   });
 
   it('should show message attempting to connect when Paired connecting', () => {
-    const component = mount(<Status status={SpiStatus.PairedConnecting} isFinishedPairing spi={{}} Message="" />);
+    const component = mount(
+      <Status pairButton={false} status={SpiStatus.PairedConnecting} isFinishedPairing spi={{}} Message="" />
+    );
     const msg = component.find('#alertMessage > div').text();
 
     expect(msg).toBe('Attempting to Connect');
   });
 
   it('should show message when not connected', () => {
-    const component = mount(<Status status="Not connected" isFinishedPairing={false} spi={{}} Message="" />);
+    const component = mount(
+      <Status pairButton={false} status="Not connected" isFinishedPairing={false} spi={{}} Message="" />
+    );
     const msg = component.find('#alertMessage > div').text();
 
     expect(msg).toBe('Unpaired');
@@ -27,7 +33,13 @@ describe('Status', () => {
 
   it('should show default message when unpaired and not finished', () => {
     const component = mount(
-      <Status status={SpiStatus.Unpaired} isFinishedPairing={false} spi={{}} Message="My default message" />
+      <Status
+        pairButton={false}
+        status={SpiStatus.Unpaired}
+        isFinishedPairing={false}
+        spi={{}}
+        Message="My default message"
+      />
     );
     const msg = component.find('#alertMessage > div').text();
 
@@ -36,7 +48,13 @@ describe('Status', () => {
 
   it('should show cancel pairing button when unpaired and not finished', () => {
     const component = mount(
-      <Status status={SpiStatus.Unpaired} isFinishedPairing={false} spi={{}} Message="My default message" />
+      <Status
+        pairButton={false}
+        status={SpiStatus.Unpaired}
+        isFinishedPairing={false}
+        spi={{}}
+        Message="My default message"
+      />
     );
 
     expect(component.find('button#btnCancelPairing').exists()).toBe(true);
@@ -46,7 +64,7 @@ describe('Status', () => {
 
   it('should show pair button when unpaired and finished pairing', () => {
     const component = mount(
-      <Status status={SpiStatus.Unpaired} isFinishedPairing spi={{}} Message="My default message" />
+      <Status pairButton={false} status={SpiStatus.Unpaired} isFinishedPairing spi={{}} Message="My default message" />
     );
 
     expect(component.find('button#btnCancelPairing').exists()).toBe(false);
@@ -56,7 +74,13 @@ describe('Status', () => {
 
   it('should show unpaired button when paired and finished pairing', () => {
     const component = mount(
-      <Status status={SpiStatus.paired} isFinishedPairing spi={{}} Message="My default message" />
+      <Status
+        pairButton={false}
+        status={SpiStatus.PairedConnected}
+        isFinishedPairing
+        spi={{}}
+        Message="My default message"
+      />
     );
 
     expect(component.find('button#btnCancelPairing').exists()).toBe(false);

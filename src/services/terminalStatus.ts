@@ -158,8 +158,6 @@ function setCustomReceiptStrings(
 ) {
   flowMsg.Clear();
 
-  // eslint-disable-next-line no-param-reassign
-  spi._options = options;
   options.SetCustomerReceiptHeader(Pos.sanitizePrintText(customerReceiptHeader));
   options.SetCustomerReceiptFooter(Pos.sanitizePrintText(customerReceiptFooter));
   options.SetMerchantReceiptHeader(Pos.sanitizePrintText(merchantReceiptHeader));

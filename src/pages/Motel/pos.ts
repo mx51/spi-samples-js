@@ -39,7 +39,6 @@ class MotelPos extends Pos {
     this._receipt = receipt;
     this._flowMsg = flowMsg;
 
-    this._spi = null;
     this._spiPreauth = null;
     this._posId = 'MOTELPOS1';
     this._eftposAddress = '192.168.1.1';
@@ -49,6 +48,7 @@ class MotelPos extends Pos {
     this._rcptFromEftpos = false;
     this._sigFlowFromEftpos = false;
     this._printMerchantCopy = false;
+    this._spi = new Spi(this._posId, this._serialNumber ?? '', this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.;
 
     this.PrintStatusAndActions = this.PrintStatusAndActions.bind(this);
   }
@@ -59,12 +59,12 @@ class MotelPos extends Pos {
 
     // region Spi Setup
     // This is how you instantiate Spi.
-    this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
+    this._spi = new Spi(this._posId, this._serialNumber ?? '', this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
     this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
     this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
     this._spi.Config.PrintMerchantCopy = this._printMerchantCopy;
 
-    this._spi.SetPosInfo('assembly', this._version);
+    this._spi.SetPosInfo('assembly', this._version ?? '');
 
     document.addEventListener('StatusChanged', (e: SpiEvent) =>
       terminalStatus.onSpiStatusChanged(this._flowMsg, this.PrintStatusAndActions, e.detail)
@@ -125,7 +125,7 @@ class MotelPos extends Pos {
         if (txState.AwaitingSignatureCheck) {
           // We need to print the receipt for the customer to sign.
           this._flowMsg.Info(`# RECEIPT TO PRINT FOR SIGNATURE`);
-          this._receipt.Info(txState.SignatureRequiredMessage.GetMerchantReceipt().trim());
+          this._receipt.Info((txState.SignatureRequiredMessage as any).GetMerchantReceipt().trim());
         }
 
         if (txState.Finished) {

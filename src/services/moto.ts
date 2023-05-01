@@ -43,7 +43,7 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
   const purchaseResponse = motoResponse.PurchaseResponse;
 
   flowMsg.Info(`# WOOHOO - WE GOT MOTO-PAID!`);
-  flowMsg.Info(`# POS Reference: ${motoResponse.GetResponseValue('pos_ref_id')}`);
+  flowMsg.Info(`# POS Reference: ${purchaseResponse.GetResponseValue('pos_ref_id')}`);
   flowMsg.Info(`# Response: ${purchaseResponse.GetResponseText()}`);
   flowMsg.Info(`# RRN: ${purchaseResponse.GetRRN()}`);
   flowMsg.Info(`# Scheme: ${purchaseResponse.SchemeName}`);
