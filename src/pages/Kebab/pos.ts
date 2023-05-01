@@ -58,9 +58,9 @@ class KebabPos extends Pos {
     this._receipt = receipt;
     this._flowMsg = flowMsg;
 
-    this._spi = null;
     this._posId = 'KEBABPOS1';
     this._eftposAddress = '192.168.1.1';
+    this._spi = new Spi(this._posId, '', this._eftposAddress, this._spiSecrets);;
     this._spiSecrets = null;
     this._version = getSpiVersion();
     this._rcptFromEftpos = false;
@@ -73,13 +73,10 @@ class KebabPos extends Pos {
     this._log.info('Starting KebabPos...');
     this.LoadPersistedState();
 
-    // region Spi Setup
-    // This is how you instantiate Spi.
-    this._spi = new Spi(this._posId, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
     this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
     this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
 
-    this._spi.SetPosInfo('assembly', this._version);
+    this._spi.SetPosInfo('assembly', this._version!);
 
     document.addEventListener('StatusChanged', (e: SpiEvent) =>
       terminalStatus.onSpiStatusChanged(this._flowMsg, this.PrintStatusAndActions, e.detail)
@@ -135,13 +132,13 @@ class KebabPos extends Pos {
         if (txState.AwaitingSignatureCheck) {
           // We need to print the receipt for the customer to sign.
           this._flowMsg.Info(`# RECEIPT TO PRINT FOR SIGNATURE`);
-          this._receipt.Info(txState.SignatureRequiredMessage.GetMerchantReceipt().trim());
+          this._receipt.Info((txState.SignatureRequiredMessage as any).GetMerchantReceipt().trim());
         }
 
         if (txState.AwaitingPhoneForAuth) {
           this._flowMsg.Info(`# PHONE FOR AUTH DETAILS:`);
-          this._flowMsg.Info(`# CALL: ${txState.PhoneForAuthRequiredMessage.GetPhoneNumber()}`);
-          this._flowMsg.Info(`# QUOTE: Merchant Id: ${txState.PhoneForAuthRequiredMessage.GetMerchantId()}`);
+          this._flowMsg.Info(`# CALL: ${(txState.PhoneForAuthRequiredMessage as any).GetPhoneNumber()}`);
+          this._flowMsg.Info(`# QUOTE: Merchant Id: ${(txState.PhoneForAuthRequiredMessage as any).GetMerchantId()}`);
         }
 
         if (txState.Finished) {
@@ -342,8 +339,8 @@ class KebabPos extends Pos {
       this._spi.Config.PromptForCustomerCopyOnEftpos = Pos.getElementCheckboxValue('#rcpt_from_eftpos');
       this._spi.Config.SignatureFlowOnEftpos = Pos.getElementCheckboxValue('#sig_flow_from_eftpos');
 
-      localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
-      localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
+      localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos.toString());
+      localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos.toString());
 
       this.PrintPairingStatus();
     });

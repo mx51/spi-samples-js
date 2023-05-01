@@ -57,7 +57,6 @@ class TablePos extends Pos {
     this._receipt = receipt;
     this._flowMsg = flowMsg;
 
-    this._spi = null;
     this._posId = 'TABLEPOS1';
     this._eftposAddress = '192.168.1.1';
     this._spiSecrets = null;
@@ -66,6 +65,7 @@ class TablePos extends Pos {
     this._rcptFromEftpos = false;
     this._sigFlowFromEftpos = false;
     this._printMerchantCopy = false;
+    this._spi = new Spi(this._posId, this._serialNumber ?? '', this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
 
     // My Bills Store.
     // Key = BillId
@@ -94,14 +94,11 @@ class TablePos extends Pos {
     this._log.info('Starting TablePos...');
     this.LoadPersistedState();
 
-    // region Spi Setup
-    // This is how you instantiate Spi.
-    this._spi = new Spi(this._posId, this._serialNumber, this._eftposAddress, this._spiSecrets); // It is ok to not have the secrets yet to start with.
     this._spi.Config.PromptForCustomerCopyOnEftpos = this._rcptFromEftpos;
     this._spi.Config.SignatureFlowOnEftpos = this._sigFlowFromEftpos;
     this._spi.Config.PrintMerchantCopy = this._printMerchantCopy;
 
-    this._spi.SetPosInfo('assembly', this._version);
+    this._spi.SetPosInfo('assembly', this._version ?? '');
 
     document.addEventListener('StatusChanged', (e: SpiEvent) =>
       terminalStatus.onSpiStatusChanged(this._flowMsg, this.PrintStatusAndActions, e.detail)
@@ -268,9 +265,9 @@ class TablePos extends Pos {
             this._spi.Config.PromptForCustomerCopyOnEftpos = Pos.getElementCheckboxValue('#rcpt_from_eftpos');
             this._spi.Config.SignatureFlowOnEftpos = Pos.getElementCheckboxValue('#sig_flow_from_eftpos');
 
-            localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy);
-            localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos);
-            localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos);
+            localStorage.setItem('print_merchant_copy', this._spi.Config.PrintMerchantCopy.toString());
+            localStorage.setItem('rcpt_from_eftpos', this._spi.Config.PromptForCustomerCopyOnEftpos.toString());
+            localStorage.setItem('sig_flow_from_eftpos', this._spi.Config.SignatureFlowOnEftpos.toString());
 
             // PAT config
             this._pat.Config.PayAtTableEnabled = Pos.getElementCheckboxValue('#pat_enabled');

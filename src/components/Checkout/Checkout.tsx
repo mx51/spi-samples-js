@@ -16,7 +16,7 @@ import {
   cashout as cashoutService,
 } from '../../services';
 
-const isTransactionInquiry = (transactionType: String) =>
+const isTransactionInquiry = (transactionType: string) =>
   [TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(transactionType);
 
 function handleApproveSig(isApproved: boolean, spi: Spi, setShowSigApproval: Function) {
@@ -41,12 +41,12 @@ function handlePurchaseStatusCallback(
   setShowSigApproval: Function,
   setShowUnknownModal: Function,
   spi: Spi,
-  transactionAction: String
+  transactionAction: string
 ) {
   setStateChange({ ...event.detail });
 
-  const flowMsg = new Logger(flowEl.current);
-  const receipt = new Logger(receiptEl.current);
+  const flowMsg = new Logger(flowEl.current!);
+  const receipt = new Logger(receiptEl.current!);
 
   if (event.detail.AwaitingSignatureCheck) {
     setShowSigApproval(true);
@@ -137,7 +137,7 @@ function creditCardPay(
   setFinalTotal: Function
 ) {
   if (openPricing === true && manualAmount > 0) {
-    const flowMsg = new Logger(flowEl.current);
+    const flowMsg = new Logger(flowEl.current!);
     purchaseService.initiatePurchase(
       flowMsg,
       spi._options,
@@ -156,7 +156,7 @@ function creditCardPay(
     setFinalCashout(cashoutAmount / 100);
     setPurchaseAmount(manualAmount / 100);
   } else {
-    const flowMsg = new Logger(flowEl.current);
+    const flowMsg = new Logger(flowEl.current!);
     purchaseService.initiatePurchase(
       flowMsg,
       spi._options,
@@ -188,7 +188,7 @@ function refundPay(
   setPurchaseAmount: Function,
   setFinalTotal: Function
 ) {
-  const flowMsg = new Logger(flowEl.current);
+  const flowMsg = new Logger(flowEl.current!);
   refundService.initiateRefund(flowMsg, spi, refundAmount * 100, suppressMerchantPassword);
   setTransactionStatus(true);
   setFinalTotal(refundAmount);
@@ -210,7 +210,7 @@ function cashoutPay(
   setPurchaseAmount: Function,
   setFinalTotal: Function
 ) {
-  const flowMsg = new Logger(flowEl.current);
+  const flowMsg = new Logger(flowEl.current!);
 
   cashoutService.initiateCashout(flowMsg, console, spi, cashoutAmount * 100, surchargeAmount);
   setTransactionStatus(true);
@@ -322,7 +322,7 @@ function Checkout(props: {
   }, []);
 
   const handleTransactionUpdate = useCallback((event) => {
-    const flowMsg = new Logger(flowTransactionEl.current);
+    const flowMsg = new Logger(flowTransactionEl.current!);
     handleTransactionMessageUpdateCallback(event, flowMsg);
   }, []);
 
@@ -335,14 +335,14 @@ function Checkout(props: {
 
   useEffect(() => {
     if (transactionAction === TransactionType.GetTransaction) {
-      const flowMsg = new Logger(flowEl.current);
+      const flowMsg = new Logger(flowEl.current!);
       transactionFlowService.initiateGetTransaction(flowMsg, spi, posRefId);
     }
   }, [posRefId, spi, transactionAction]);
 
   useEffect(() => {
     if (transactionAction === TransactionType.GetLastTransaction) {
-      const flowMsg = new Logger(flowEl.current);
+      const flowMsg = new Logger(flowEl.current!);
       transactionFlowService.initiateGetLastTransaction(flowMsg, spi);
     }
   }, [spi, transactionAction]);

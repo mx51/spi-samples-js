@@ -15,7 +15,7 @@ function settlementEnquiry(
   if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    const flowMsg = new Logger(flowEl.current);
+    const flowMsg = new Logger(flowEl.current!);
     setActionType(TransactionType.SettlementEnquiry);
     if (receiptEl.current !== null) {
       const receiptMsg = new Logger(receiptEl.current);
@@ -36,7 +36,7 @@ function settlement(
   if (status !== SpiStatus.PairedConnected && SpiStatus.PairedConnecting) {
     onErrorMsg('Please pair your POS to the terminal or check your network connection');
   } else {
-    const flowMsg = new Logger(flowEl.current);
+    const flowMsg = new Logger(flowEl.current!);
     setActionType(TransactionType.Settle);
     if (receiptEl.current !== null) {
       const receiptMsg = new Logger(receiptEl.current);

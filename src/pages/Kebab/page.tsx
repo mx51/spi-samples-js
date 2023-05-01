@@ -10,10 +10,10 @@ class Page extends Component {
     const log = console;
     try {
       const receipt = new Logger(
-        document.getElementById('receipt_output'),
+        document.getElementById('receipt_output')!,
         `\n\n \\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/\\/ \n\n`
       );
-      const flowMsg = new Logger(document.getElementById('flow_msg'));
+      const flowMsg = new Logger(document.getElementById('flow_msg')!);
       const pos = new KebabPos(log, receipt, flowMsg);
       pos.Start();
     } catch (err) {

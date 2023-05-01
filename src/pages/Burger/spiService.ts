@@ -25,7 +25,7 @@ class Spi {
     this._eftposAddress = window.localStorage.getItem('eftpos_address') || '192.168.1.1';
     this._spiSecrets = null;
     this._options = null;
-    this._version = '2.9.2';
+    this._version = '2.9.6';
     this._rcptFromEftpos = window.localStorage.getItem('rcpt_from_eftpos') === 'true';
     this._sigFlowFromEftpos = window.localStorage.getItem('check-sig-eftpos') === 'true';
     this._printMerchantCopy = window.localStorage.getItem('print_merchant_copy_input') === 'true';
@@ -70,7 +70,7 @@ class Spi {
       this._options.SetCustomerReceiptFooter(window.localStorage.getItem('receipt_footer_input') || '');
       this._options.SetMerchantReceiptHeader(window.localStorage.getItem('receipt_header_input') || '');
       this._options.SetMerchantReceiptFooter(window.localStorage.getItem('receipt_footer_input') || '');
-    } catch (e) {
+    } catch (e: any) {
       this._log.info(e.Message);
       return;
     }

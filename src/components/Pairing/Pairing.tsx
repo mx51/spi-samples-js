@@ -28,7 +28,7 @@ function Pairing({
   const flowEl = useRef<HTMLDivElement>(null);
 
   const handlePairingStatusChange = useCallback((event: PairingFlowState) => {
-    const flowMsg = new Logger(flowEl.current);
+    const flowMsg = new Logger(flowEl.current!);
     const { AwaitingCheckFromPos, ConfirmationCode, Finished, Message } = event.detail;
     setTimeout(() => {
       if (flowMsg.element) {
