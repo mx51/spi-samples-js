@@ -465,7 +465,7 @@ class SpiService {
     );
   }
 
-  getCurrentStatus(instanceId: string): ITerminal {
+  getCurrentStatus(instanceId: string): string {
     return this.readTerminalInstance(instanceId).spiClient.CurrentStatus;
   }
 

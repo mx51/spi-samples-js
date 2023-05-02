@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "private": true,
   "engines": {
     "node": ">=16"
@@ -8,7 +8,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
-    "@mx51/spi-client-js": "^2.9.2",
+    "@mx51/spi-client-js": "^2.9.6",
     "@reduxjs/toolkit": "^1.6.0",
     "@testing-library/jest-dom": "^5.11.4",
     "@testing-library/react": "^11.1.0",
@@ -29,8 +29,8 @@
   },
   "scripts": {
     "dev": "PORT=3131 react-scripts start",
-    "build": "react-scripts build",
-    "test": "tsc && react-scripts test --watchAll=false",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
+    "test": "tsc && react-scripts test --watchAll=false --runInBand",
     "test:deploy": "npm test -- --reporters=jest-junit --reporters=default --coverage --coverageReporters=cobertura --coverageReporters=html",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "eject": "react-scripts eject",
