@@ -20,8 +20,8 @@ function handleActionCallback(
   actionType: string,
   spi: Spi
 ) {
-  const flowMsg = new Logger(flowEl.current);
-  const receipt = new Logger(receiptEl.current);
+  const flowMsg = new Logger(flowEl.current!);
+  const receipt = new Logger(receiptEl.current!);
 
   if (event.detail.Finished) {
     if (event.detail.Response.Data.error_reason === 'HOST_DECLINED') {
@@ -45,7 +45,7 @@ function handleActionCallback(
 
 function terminalStatus(spi: Spi, flowEl: React.RefObject<HTMLDivElement>) {
   spi.GetTerminalStatus();
-  const flowMsg = new Logger(flowEl.current);
+  const flowMsg = new Logger(flowEl.current!);
   // eslint-disable-next-line no-param-reassign
   spi.TerminalStatusResponse = (message: Message) =>
     terminalStatusService.handleTerminalStatusResponse(flowMsg, spi, message, () => {});

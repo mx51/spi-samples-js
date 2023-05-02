@@ -43,9 +43,11 @@ function handleSuccessfulTransaction(flowMsg: Logger, receipt: Logger, txStateRe
     flowMsg.Info(`# Transaction Range: ${settlementResponse.GetTransactionRange()}`);
     flowMsg.Info(`# Terminal Id: ${settlementResponse.GetTerminalId()}`);
     flowMsg.Info(`# Total TX Count: ${settlementResponse.GetTotalCount()}`);
-    flowMsg.Info(`# Total TX Value: $${(settlementResponse.GetTotalValue() / 100.0).toFixed(2)}`);
+    flowMsg.Info(`# Total TX Value: $${(Number(settlementResponse.GetTotalValue()) / 100.0).toFixed(2)}`);
     flowMsg.Info(`# By Acquirer TX Count: ${settlementResponse.GetSettleByAcquirerCount()}`);
-    flowMsg.Info(`# By Acquirer TX Value: $${(settlementResponse.GetSettleByAcquirerValue() / 100.0).toFixed(2)}`);
+    flowMsg.Info(
+      `# By Acquirer TX Value: $${(Number(settlementResponse.GetSettleByAcquirerValue()) / 100.0).toFixed(2)}`
+    );
     flowMsg.Info(`# SCHEME SETTLEMENTS:`);
 
     const schemes = settlementResponse.GetSchemeSettlementEntries();

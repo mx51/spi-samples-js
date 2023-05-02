@@ -24,7 +24,7 @@ function Reversal({ spi }: Props) {
     }
   }
   const handleReversal = useCallback((event) => {
-    const flowMsg = new Logger(flowEl.current);
+    const flowMsg = new Logger(flowEl.current!);
     handleReversalTransaction(event, flowMsg);
   }, []);
 
@@ -55,7 +55,7 @@ function Reversal({ spi }: Props) {
             <button
               type="button"
               className="btn btn-primary rounded-0 btn-block btn-lg mb-2"
-              onClick={() => reversalService.initiateReversal(new Logger(flowEl.current), spi, posRefId)}
+              onClick={() => reversalService.initiateReversal(new Logger(flowEl.current!), spi, posRefId)}
             >
               Reversal
             </button>
