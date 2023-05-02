@@ -67,9 +67,11 @@ export default function PairConfiguration(): React.ReactElement {
   const [tenantList, setTenantList] = useState<TenantList>([]);
 
   useEffect(() => {
-    SpiClient.GetAvailableTenants(posId ?? defaultPosName, defaultApikey, 'AU').then((response: TenantListResponse) => {
-      setTenantList(response.Data);
-    });
+    SpiClient.GetAvailableTenants(posId.value ?? defaultPosName, defaultApikey, 'AU').then(
+      (response: TenantListResponse) => {
+        setTenantList(response.Data);
+      }
+    );
   }, []);
 
   return (
