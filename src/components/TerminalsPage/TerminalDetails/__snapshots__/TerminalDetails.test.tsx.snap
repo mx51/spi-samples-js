@@ -85,23 +85,6 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                 class="MuiTouchRipple-root"
               />
             </button>
-            <button
-              aria-selected="false"
-              class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
-              id="payAtTableTab"
-              role="tab"
-              tabindex="-1"
-              type="button"
-            >
-              <span
-                class="MuiTab-wrapper"
-              >
-                Pay at Table
-              </span>
-              <span
-                class="MuiTouchRipple-root"
-              />
-            </button>
           </div>
           <span
             class="PrivateTabIndicator-root-11 PrivateTabIndicator-colorSecondary-13 MuiTabs-indicator"
