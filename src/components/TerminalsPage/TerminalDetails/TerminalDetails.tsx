@@ -43,7 +43,7 @@ export default function TerminalDetails(): React.ReactElement {
             value={tabIndex}
           >
             <Tab id="aboutTerminalTab" label="About this terminal" />
-            <Tab id="payAtTableTab" label="Pay at Table" />
+            {/* <Tab id="payAtTableTab" label="Pay at Table" /> */}
           </Tabs>
 
           <TabPanel
