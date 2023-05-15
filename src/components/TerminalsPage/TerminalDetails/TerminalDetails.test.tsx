@@ -82,20 +82,20 @@ describe('Test <TerminalDetails />', () => {
     expect(containerWrapper.innerHTML.includes(mockTitle)).toBeTruthy();
   });
 
-  // test('should be toggle-able when clicks different tab', () => {
-  //   // Arrange
-  //   const payAtTableClickedDOM =
-  //     '<button class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected" tabindex="0" type="button" role="tab" aria-selected="true" id="payAtTableTab"><span class="MuiTab-wrapper">Pay at Table</span><span class="MuiTouchRipple-root"></span></button>';
-  //   const tabActiveProof = 'aria-selected="true"';
+  test.skip('should be toggle-able when clicks different tab', () => {
+    // Arrange
+    const payAtTableClickedDOM =
+      '<button class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected" tabindex="0" type="button" role="tab" aria-selected="true" id="payAtTableTab"><span class="MuiTab-wrapper">Pay at Table</span><span class="MuiTouchRipple-root"></span></button>';
+    const tabActiveProof = 'aria-selected="true"';
 
-  //   const terminalDetailsTabsDOM = mockContainer.querySelector('#terminalDetailsTabs');
-  //   const payAtTableTabDOM = mockContainer.querySelector('#payAtTableTab');
+    const terminalDetailsTabsDOM = mockContainer.querySelector('#terminalDetailsTabs');
+    const payAtTableTabDOM = mockContainer.querySelector('#payAtTableTab');
 
-  //   // Act
-  //   fireEvent.change(terminalDetailsTabsDOM);
-  //   fireEvent.click(payAtTableTabDOM);
+    // Act
+    fireEvent.change(terminalDetailsTabsDOM);
+    fireEvent.click(payAtTableTabDOM);
 
-  //   // Assert
-  //   expect(payAtTableClickedDOM.includes(tabActiveProof)).toBe(true);
-  // });
+    // Assert
+    expect(payAtTableClickedDOM.includes(tabActiveProof)).toBe(true);
+  });
 });
