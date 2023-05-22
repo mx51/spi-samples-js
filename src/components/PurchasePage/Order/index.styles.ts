@@ -72,5 +72,12 @@ export default makeStyles((theme: Theme) =>
       flexGrow: 1,
       overflowY: 'auto',
     },
+    checkbox: {
+      paddingLeft: theme.spacing(3),
+      color: theme.palette.primary.main,
+    },
+    checkboxLabel: {
+      fontSize: '0.875rem',
+    },
   })
 );

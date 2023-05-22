@@ -42,10 +42,16 @@ export const orderCashoutAmountSelector = createSelector(
   (state: IProductState): number => state.cashoutAmount
 );
 
+export const orderPromptForCashoutSelector = createSelector(
+  products,
+  (state: IProductState): boolean => state.promptForCashout
+);
+
 export const orderTotalSelector = createSelector(
   productSubTotalSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
   orderCashoutAmountSelector,
+  orderPromptForCashoutSelector,
   (subtotal, surcharge, tip, cashout): number => subtotal + surcharge + tip + cashout
 );

@@ -3,6 +3,7 @@ export interface IProductState {
   surchargeAmount: number;
   tipAmount: number;
   cashoutAmount: number;
+  promptForCashout: boolean;
   products: Array<IProduct>;
 }
 
