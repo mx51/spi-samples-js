@@ -3,10 +3,10 @@
 exports[`Test <Order /> snapshot for Order component 1`] = `
 <div>
   <div
-    class="MuiPaper-root MuiBox-root MuiBox-root-15 makeStyles-root-1 MuiPaper-elevation1 MuiPaper-rounded"
+    class="MuiPaper-root MuiBox-root MuiBox-root-16 makeStyles-root-1 MuiPaper-elevation1 MuiPaper-rounded"
   >
     <div
-      class="MuiBox-root MuiBox-root-16 makeStyles-heading-2"
+      class="MuiBox-root MuiBox-root-17 makeStyles-heading-2"
     >
       <h1
         class="MuiTypography-root MuiTypography-h6"
@@ -14,7 +14,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
         Order
       </h1>
       <div
-        class="MuiBox-root MuiBox-root-17"
+        class="MuiBox-root MuiBox-root-18"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-clear-3"
@@ -36,7 +36,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
       class="MuiDivider-root"
     />
     <div
-      class="MuiBox-root MuiBox-root-18 makeStyles-orderList-12"
+      class="MuiBox-root MuiBox-root-19 makeStyles-orderList-12"
     >
       <ul
         class="MuiList-root MuiList-padding"
@@ -55,13 +55,13 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-19 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-20 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Subtotal
           </span>
         </div>
         <p
-          class="MuiTypography-root makeStyles-price-20 MuiTypography-body1"
+          class="MuiTypography-root makeStyles-price-21 MuiTypography-body1"
         >
           $0.00
         </p>
@@ -73,7 +73,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-21 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-22 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Surcharge
           </span>
@@ -81,7 +81,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
         <span
           aria-disabled="false"
           aria-label="Add Amount"
-          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-25"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-26"
           role="button"
           tabindex="0"
         >
@@ -111,7 +111,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-21 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-22 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Cashout
           </span>
@@ -119,7 +119,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
         <span
           aria-disabled="false"
           aria-label="Add Amount"
-          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-25"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-26"
           role="button"
           tabindex="0"
         >
@@ -147,13 +147,13 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
       >
         <span
           aria-disabled="false"
-          class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-26 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+          class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-27 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-15 MuiIconButton-colorPrimary"
         >
           <span
             class="MuiIconButton-label"
           >
             <input
-              class="PrivateSwitchBase-input-29"
+              class="PrivateSwitchBase-input-30"
               data-indeterminate="false"
               name="Prompt for Cashout"
               type="checkbox"
@@ -191,7 +191,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
           class="MuiListItemText-root"
         >
           <span
-            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-21 MuiTypography-body1 MuiTypography-displayBlock"
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-22 MuiTypography-body1 MuiTypography-displayBlock"
           >
             Tip
           </span>
@@ -199,7 +199,7 @@ exports[`Test <Order /> snapshot for Order component 1`] = `
         <span
           aria-disabled="false"
           aria-label="Add Amount"
-          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-25"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-26"
           role="button"
           tabindex="0"
         >

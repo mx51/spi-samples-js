@@ -154,19 +154,28 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
             viewOnly={disablePayNow}
           />
           <OrderLineItem
-            disabled={tipAmount > 0}
+            disabled={tipAmount > 0 || promptForCashout}
             label="Cashout"
             amount={formattedAmount(cashoutAmount)}
             onAdd={() => requestAmount(CASHOUT_AMOUNT)}
             viewOnly={disablePayNow}
           />
-          <FormControlLabel
-            className={classes.checkbox}
-            checked={promptForCashout}
-            onChange={() => dispatch(togglePromptForCashout())}
-            control={<Checkbox color="primary" disabled={tipAmount > 0} name="Prompt for Cashout" />}
-            label={<Typography className={classes.checkboxLabel}>Prompt terminal for cashout</Typography>}
-          />
+          {tipAmount === 0 && cashoutAmount === 0 && (
+            <FormControlLabel
+              className={classes.checkbox}
+              checked={promptForCashout}
+              onChange={() => dispatch(togglePromptForCashout())}
+              control={
+                <Checkbox
+                  className={classes.checkboxBase}
+                  color="primary"
+                  disabled={tipAmount > 0}
+                  name="Prompt for Cashout"
+                />
+              }
+              label={<Typography className={classes.checkboxLabel}>Prompt terminal for cashout</Typography>}
+            />
+          )}
           <OrderLineItem
             disabled={cashoutAmount > 0 || promptForCashout}
             label="Tip"
