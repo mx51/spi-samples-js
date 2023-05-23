@@ -65,7 +65,7 @@ function getTxFlow(detail: Any): Any {
         hostResponseText: detail?.Response?.Data?.host_response_text,
         purchaseAmount: detail?.Response?.Data?.purchase_amount || 0,
         surchargeAmount: detail?.Response?.Data?.surcharge_amount || 0,
-        cashAmount: detail?.Response?.Data?.cash_amount || 0,
+        bankCashAmount: detail?.Response?.Data?.bank_cash_amount || 0,
         tipAmount: detail?.Response?.Data?.tip_amount || 0,
       },
     },
