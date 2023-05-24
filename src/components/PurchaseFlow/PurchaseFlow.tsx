@@ -32,7 +32,7 @@ export default function PurchaseFlow(): React.ReactElement {
 # PURCHASE: ${currencyFormat((spi?.txFlow?.response?.data?.purchaseAmount ?? 0) / 100)}
 # TIP: ${currencyFormat((spi?.txFlow?.response?.data?.tipAmount ?? 0) / 100)}
 # SURCHARGE: ${currencyFormat((spi?.txFlow?.response?.data?.surchargeAmount ?? 0) / 100)}
-# CASHOUT: ${currencyFormat((spi?.txFlow?.response?.data?.cashAmount ?? 0) / 100)}
+# CASHOUT: ${currencyFormat((spi?.txFlow?.response?.data?.bankCashAmount ?? 0) / 100)}
 
 `
       : `

@@ -83,10 +83,14 @@ function TransactionProgressModal({
               <Typography variant="body2" className={classes.modalHeading}>
                 {transactionType.toUpperCase()}
               </Typography>
-              <Typography variant="body2" className={classes.modalSubHeading}>
-                <span>In progress</span>
-                <span className={classes.modalDescription}>{txMessage?.displayMessageText}</span>
-              </Typography>
+              <div>
+                <Typography variant="body2" className={classes.modalSubHeading}>
+                  In progress
+                </Typography>
+                <Typography variant="body2" className={classes.modalDescription}>
+                  {txMessage?.displayMessageText}
+                </Typography>
+              </div>
             </>
           )}
           {isFinished && isSuccess && (

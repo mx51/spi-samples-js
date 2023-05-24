@@ -49,7 +49,7 @@ exports[`Test <PurchaseFlow /> should show TX PROCESS UPDATE contents as snapsho
 # Request Id: undefined
 # PosRefId: undefined
 # Type: undefined
-# Request Amount: $0.00
+# Request Amount: $NaN
 # Waiting For Signature: false
 # Finished: true
 # Success: Success

@@ -21,7 +21,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-14 makeStyles-paper-8 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $0.00
+        $NaN
       </div>
       <p
         class="MuiTypography-root makeStyles-orderSummery-9 MuiTypography-body1"

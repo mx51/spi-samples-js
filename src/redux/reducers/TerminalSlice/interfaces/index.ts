@@ -84,7 +84,7 @@ export interface ITxFlow {
       transactionType: string;
       hostResponseText: string;
       purchaseAmount: number;
-      cashAmount: number;
+      bankCashAmount: number;
       surchargeAmount: number;
       tipAmount: number;
     };
