@@ -18,7 +18,6 @@ import { PATH_PAY_NOW, PATH_PURCHASE, TEXT_CASHOUT } from '../../../definitions/
 import { IProductSelector } from '../../../redux/reducers/ProductSlice/interfaces';
 import {
   orderCashoutAmountSelector,
-  orderKeypadAmountSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
   orderTotalSelector,
@@ -54,7 +53,6 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
-  const orderKeypadAmount: number = useSelector(orderKeypadAmountSelector);
   const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
 
   const [keypadType, setKeypadType] = useState<string>('');
