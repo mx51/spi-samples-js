@@ -489,10 +489,10 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
         class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
       >
         <div
-          class="MuiPaper-root MuiBox-root MuiBox-root-44 makeStyles-root-32 MuiPaper-elevation1 MuiPaper-rounded"
+          class="MuiPaper-root MuiBox-root MuiBox-root-47 makeStyles-root-32 MuiPaper-elevation1 MuiPaper-rounded"
         >
           <div
-            class="MuiBox-root MuiBox-root-45 makeStyles-heading-33"
+            class="MuiBox-root MuiBox-root-48 makeStyles-heading-33"
           >
             <h1
               class="MuiTypography-root MuiTypography-h6"
@@ -500,7 +500,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               Order
             </h1>
             <div
-              class="MuiBox-root MuiBox-root-46"
+              class="MuiBox-root MuiBox-root-49"
             >
               <button
                 class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-clear-34"
@@ -522,7 +522,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
             class="MuiDivider-root"
           />
           <div
-            class="MuiBox-root MuiBox-root-47 makeStyles-orderList-43"
+            class="MuiBox-root MuiBox-root-50 makeStyles-orderList-43"
           >
             <ul
               class="MuiList-root MuiList-padding"
@@ -541,13 +541,13 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-48 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-51 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Subtotal
                 </span>
               </div>
               <p
-                class="MuiTypography-root makeStyles-price-49 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-price-52 MuiTypography-body1"
               >
                 $0.00
               </p>
@@ -559,7 +559,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-50 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-53 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Surcharge
                 </span>
@@ -567,7 +567,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-54"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-57"
                 role="button"
                 tabindex="0"
               >
@@ -597,7 +597,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-50 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-53 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Cashout
                 </span>
@@ -605,7 +605,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-54"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-57"
                 role="button"
                 tabindex="0"
               >
@@ -628,6 +628,48 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 />
               </span>
             </li>
+            <label
+              class="MuiFormControlLabel-root makeStyles-checkbox-44"
+            >
+              <span
+                aria-disabled="false"
+                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-58 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-46 MuiIconButton-colorPrimary"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <input
+                    class="PrivateSwitchBase-input-61"
+                    data-indeterminate="false"
+                    name="Prompt for Cashout"
+                    type="checkbox"
+                    value=""
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </span>
+              <span
+                class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+              >
+                <p
+                  class="MuiTypography-root makeStyles-checkboxLabel-45 MuiTypography-body1"
+                >
+                  Prompt terminal for cashout
+                </p>
+              </span>
+            </label>
             <li
               class="MuiListItem-root MuiListItem-gutters"
             >
@@ -635,7 +677,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-50 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-53 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Tip
                 </span>
@@ -643,7 +685,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <span
                 aria-disabled="false"
                 aria-label="Add Amount"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-54"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-57"
                 role="button"
                 tabindex="0"
               >

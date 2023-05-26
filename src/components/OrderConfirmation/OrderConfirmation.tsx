@@ -28,6 +28,7 @@ import {
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import {
   orderCashoutAmountSelector,
+  orderPromptForCashoutSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
   productSubTotalSelector,
@@ -66,6 +67,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
+  const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
+
   const terminals = useSelector(pairedConnectedTerminalList);
   const [subtotalAmount, setSubtotalAmount] = useState<number>(useSelector(productSubTotalSelector));
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
@@ -246,7 +249,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                       tipAmount,
                       cashoutAmount,
                       surchargeAmount,
-                      false
+                      promptForCashout
                     );
                   }}
                 >

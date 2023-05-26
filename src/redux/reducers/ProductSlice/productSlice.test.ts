@@ -13,6 +13,7 @@ test('should handle add product', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   };
   const action = { product: { id: 1, name: 'Latte', price: 360, image: 'Latte.jpeg' } };
@@ -21,6 +22,7 @@ test('should handle add product', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [
       {
         id: 1,
@@ -38,6 +40,7 @@ test('should handle clear products', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [
       {
         id: 1,
@@ -58,6 +61,7 @@ test('should handle clear products', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   });
 });
@@ -68,6 +72,7 @@ test('should add surcharge amount', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   };
   expect(reducer(previousState, addSurchargeAmount(105))).toEqual({
@@ -75,6 +80,7 @@ test('should add surcharge amount', () => {
     surchargeAmount: 105,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   });
 });
@@ -85,6 +91,7 @@ test('should add cashout amount', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   };
   expect(reducer(previousState, addCashoutAmount(105))).toEqual({
@@ -92,6 +99,7 @@ test('should add cashout amount', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 105,
+    promptForCashout: false,
     products: [],
   });
 });
@@ -102,6 +110,7 @@ test('should add tip amount', () => {
     surchargeAmount: 0,
     tipAmount: 0,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   };
   expect(reducer(previousState, addTipAmount(105))).toEqual({
@@ -109,6 +118,7 @@ test('should add tip amount', () => {
     surchargeAmount: 0,
     tipAmount: 105,
     cashoutAmount: 0,
+    promptForCashout: false,
     products: [],
   });
 });

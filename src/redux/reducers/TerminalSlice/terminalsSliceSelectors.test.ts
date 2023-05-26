@@ -120,6 +120,7 @@ describe('Test terminals slice selectors', () => {
         surchargeAmount: 0,
         tipAmount: 0,
         cashoutAmount: 0,
+        promptForCashout: false,
         products: [],
       },
       pairForm: {

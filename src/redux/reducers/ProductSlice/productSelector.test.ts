@@ -15,6 +15,7 @@ test('should return product quantity for list', () => {
       surchargeAmount: 100,
       tipAmount: 100,
       cashoutAmount: 100,
+      promptForCashout: false,
       products: [
         { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
@@ -36,6 +37,7 @@ test('should return product quantity for duplicate product', () => {
       surchargeAmount: 100,
       tipAmount: 100,
       cashoutAmount: 100,
+      promptForCashout: false,
       products: [
         { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
@@ -60,6 +62,7 @@ test('should return keypad amount as subtotal amount', () => {
       surchargeAmount: 100,
       tipAmount: 120,
       cashoutAmount: 110,
+      promptForCashout: false,
       products: [],
     },
   };
@@ -75,6 +78,7 @@ test('should add all the price and display subtotal', () => {
       surchargeAmount: 100,
       tipAmount: 100,
       cashoutAmount: 100,
+      promptForCashout: false,
       products: [
         { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
@@ -96,6 +100,7 @@ test('should get surcharge amount', () => {
       surchargeAmount: 155,
       tipAmount: 125,
       cashoutAmount: 0,
+      promptForCashout: false,
       products: [],
     },
   };
@@ -111,6 +116,7 @@ test('should get tip amount', () => {
       surchargeAmount: 155,
       tipAmount: 125,
       cashoutAmount: 0,
+      promptForCashout: false,
       products: [],
     },
   };
@@ -126,6 +132,7 @@ test('should get cashout amount', () => {
       surchargeAmount: 155,
       tipAmount: 0,
       cashoutAmount: 125,
+      promptForCashout: false,
       products: [],
     },
   };

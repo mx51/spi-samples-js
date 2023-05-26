@@ -111,7 +111,7 @@ function mockTxFlow(): ITxFlow {
         hostResponseText: 'string',
         purchaseAmount: 0,
         surchargeAmount: 0,
-        cashAmount: 0,
+        bankCashAmount: 0,
         tipAmount: 0,
       },
     },
