@@ -5,6 +5,7 @@ const initialState: IProductState = {
   keypadAmount: 0,
   tipAmount: 0,
   cashoutAmount: 0,
+  promptForCashout: false,
   surchargeAmount: 0,
   products: [],
 };
@@ -23,6 +24,7 @@ const productSlice = createSlice({
       state.surchargeAmount = 0;
       state.tipAmount = 0;
       state.cashoutAmount = 0;
+      state.promptForCashout = false;
       state.keypadAmount = 0;
     },
     // Only clear products and keyPadAmount for Override Purchase
@@ -42,6 +44,9 @@ const productSlice = createSlice({
     addKeypadAmount(state: IProductState, action: PayloadAction<number>) {
       state.keypadAmount = action.payload;
     },
+    togglePromptForCashout(state: IProductState) {
+      state.promptForCashout = !state.promptForCashout;
+    },
   },
 });
 
@@ -53,6 +58,7 @@ export const {
   addSurchargeAmount,
   addTipAmount,
   addKeypadAmount,
+  togglePromptForCashout,
 } = productSlice.actions;
 
 export default productSlice.reducer;

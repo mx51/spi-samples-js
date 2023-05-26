@@ -95,9 +95,9 @@ export const terminalTxTotalAmount = (instanceId: string): ((state: RootState) =
     terminalInstance(instanceId),
     (terminal: ITerminalProps) =>
       (terminal?.txFlow?.response?.data?.purchaseAmount as number) +
-        (terminal?.txFlow?.response?.data?.cashAmount as number) +
-        (terminal?.txFlow?.response?.data?.surchargeAmount as number) +
-        (terminal?.txFlow?.response?.data?.tipAmount as number) || 0
+      (terminal?.txFlow?.response?.data?.surchargeAmount as number) +
+      ((terminal?.txFlow?.response?.data?.bankCashAmount as number) || 0) +
+      ((terminal?.txFlow?.response?.data?.tipAmount as number) || 0)
   );
 
 export const terminalTxMessage = (instanceId: string): ((state: RootState) => ITxMessage | null) =>

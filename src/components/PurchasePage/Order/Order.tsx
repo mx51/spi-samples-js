@@ -1,5 +1,17 @@
 import React, { useState } from 'react';
-import { ListItemText, Box, Button, Divider, List, ListItem, Paper, Typography, Drawer } from '@material-ui/core';
+import {
+  ListItemText,
+  Box,
+  Button,
+  Divider,
+  List,
+  ListItem,
+  Paper,
+  Typography,
+  Drawer,
+  FormControlLabel,
+  Checkbox,
+} from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
 import { PATH_PAY_NOW, PATH_PURCHASE, TEXT_CASHOUT } from '../../../definitions/constants/routerConfigs';
@@ -12,12 +24,14 @@ import {
   orderTotalSelector,
   productsSelector,
   productSubTotalSelector,
+  orderPromptForCashoutSelector,
 } from '../../../redux/reducers/ProductSlice/productSelector';
 import {
   addCashoutAmount,
   addSurchargeAmount,
   addTipAmount,
   clearAllProducts,
+  togglePromptForCashout,
 } from '../../../redux/reducers/ProductSlice/productSlice';
 import { isPaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
@@ -41,6 +55,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const orderKeypadAmount: number = useSelector(orderKeypadAmountSelector);
+  const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
 
   const [keypadType, setKeypadType] = useState<string>('');
   const totalAmount: number = useSelector(orderTotalSelector);
@@ -137,14 +152,30 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
             viewOnly={disablePayNow}
           />
           <OrderLineItem
-            disabled={tipAmount > 0}
+            disabled={tipAmount > 0 || promptForCashout}
             label="Cashout"
             amount={cashoutAmount}
             onAdd={() => requestAmount(CASHOUT_AMOUNT)}
             viewOnly={disablePayNow}
           />
+          {tipAmount === 0 && cashoutAmount === 0 && (
+            <FormControlLabel
+              className={classes.checkbox}
+              checked={promptForCashout}
+              onChange={() => dispatch(togglePromptForCashout())}
+              control={
+                <Checkbox
+                  className={classes.checkboxBase}
+                  color="primary"
+                  disabled={tipAmount > 0}
+                  name="Prompt for Cashout"
+                />
+              }
+              label={<Typography className={classes.checkboxLabel}>Prompt terminal for cashout</Typography>}
+            />
+          )}
           <OrderLineItem
-            disabled={cashoutAmount > 0}
+            disabled={cashoutAmount > 0 || promptForCashout}
             label="Tip"
             amount={tipAmount}
             onAdd={() => requestAmount(TIP_AMOUNT)}

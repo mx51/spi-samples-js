@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '1.125rem',
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2),
+      display: 'inline-block',
     },
     modalBtn: {
       margin: theme.spacing(2, 0, 0, 0),

@@ -82,7 +82,7 @@ function PaymentSummary(): React.ReactElement {
             <Divider variant="middle" />
             <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
             <OrderLineItem disabled label="Surcharge" amount={amountSummaryInformation('surchargeAmount')} viewOnly />
-            <OrderLineItem disabled label="Cashout" amount={amountSummaryInformation('cashAmount')} viewOnly />
+            <OrderLineItem disabled label="Cashout" amount={amountSummaryInformation('bankCashAmount')} viewOnly />
             <OrderLineItem disabled label="Tip" amount={amountSummaryInformation('tipAmount')} viewOnly />
           </>
         ) : (
