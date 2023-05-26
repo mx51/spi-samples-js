@@ -33,7 +33,7 @@ import {
   orderTipAmountSelector,
   productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
-import { addKeypadAmount, clearProducts } from '../../redux/reducers/ProductSlice/productSlice';
+import { addKeypadAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -80,8 +80,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
 
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
 
-  const clearProductsAction = () => {
-    dispatch(clearProducts());
+  const clearProductsOnlyAction = () => {
+    dispatch(clearProductsOnly());
   };
 
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
@@ -143,7 +143,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
             setTotalAmount(amount);
             setSubtotalAmount(amount);
             setDisplayKeypad(false);
-            clearProductsAction();
+            clearProductsOnlyAction();
             dispatch(addKeypadAmount(amount));
           }}
         />

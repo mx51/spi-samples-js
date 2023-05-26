@@ -211,7 +211,7 @@ describe('Test <OrderConfirmation />', () => {
     // Assert
     expect(dispatch.mock.calls[0][0]).toEqual({
       payload: undefined,
-      type: 'product/clearProducts',
+      type: 'product/clearProductsOnly',
     });
   });
 
