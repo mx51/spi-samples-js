@@ -27,6 +27,11 @@ const productSlice = createSlice({
       state.promptForCashout = false;
       state.keypadAmount = 0;
     },
+    // Only clear products and keyPadAmount for Override Purchase
+    clearProductsOnly(state: IProductState) {
+      state.products.splice(0, state.products.length);
+      state.keypadAmount = 0;
+    },
     addSurchargeAmount(state: IProductState, action: PayloadAction<number>) {
       state.surchargeAmount = action.payload;
     },
@@ -48,6 +53,7 @@ const productSlice = createSlice({
 export const {
   addProduct,
   clearAllProducts,
+  clearProductsOnly,
   addCashoutAmount,
   addSurchargeAmount,
   addTipAmount,
