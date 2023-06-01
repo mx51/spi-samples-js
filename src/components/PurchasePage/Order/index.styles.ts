@@ -76,6 +76,7 @@ export default makeStyles((theme: Theme) =>
       paddingLeft: theme.spacing(3),
       color: theme.palette.primary.main,
       paddingBottom: theme.spacing(1),
+      paddingTop: theme.spacing(3),
     },
     checkboxLabel: {
       fontSize: '0.875rem',
@@ -83,6 +84,9 @@ export default makeStyles((theme: Theme) =>
     checkboxBase: {
       paddingTop: 0,
       paddingBottom: 0,
+    },
+    divider: {
+      marginTop: theme.spacing(1.2),
     },
   })
 );
