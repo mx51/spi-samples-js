@@ -1,6 +1,7 @@
 import { SpiStatus } from '@mx51/spi-client-js';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
+import { getLocalStorage } from '../../../utils/common/spi/common';
 import {
   IAddTerminalAction,
   IBatteryLevel,
@@ -19,7 +20,7 @@ import {
   IUpdateTxMessage,
 } from './interfaces';
 
-const initialState: ITerminalState = {};
+const initialState: ITerminalState = JSON.parse(getLocalStorage('terminals')) ?? {};
 
 const terminalsSlice = createSlice({
   name: 'terminals',
