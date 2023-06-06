@@ -20,7 +20,7 @@ import {
   IUpdateTxMessage,
 } from './interfaces';
 
-const initialState: ITerminalState = JSON.parse(getLocalStorage('terminals')) ?? {};
+const initialState: ITerminalState = getLocalStorage('terminals') ? JSON.parse(getLocalStorage('terminals')) : {};
 
 const terminalsSlice = createSlice({
   name: 'terminals',
