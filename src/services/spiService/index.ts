@@ -128,6 +128,8 @@ class SpiService {
       this.updateTerminalStorage(instanceId, 'posId', posId);
       this.updateTerminalStorage(instanceId, 'serialNumber', serialNumber);
       this.updateTerminalStorage(instanceId, 'testMode', testMode);
+      this.updateTerminalStorage(instanceId, 'status', SPI_PAIR_STATUS.PairedConnecting);
+      this.updateTerminalStorage(instanceId, 'reconnecting', true);
 
       if (!autoAddress) this.updateTerminalStorage(instanceId, 'deviceAddress', deviceAddress);
 
