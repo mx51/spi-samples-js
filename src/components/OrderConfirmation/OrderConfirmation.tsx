@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
+import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import {
   PATH_CASH_OUT,
   PATH_REFUND,
@@ -96,7 +97,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   }
 
   function isDisabled() {
-    return !selectedTerminal || totalAmount <= 0;
+    return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected || totalAmount <= 0;
   }
 
   function updateUnknownTerminalState(success: string) {
