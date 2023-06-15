@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [1.2.7] - 2023-6-14
-
 ### Added
 
 - [INTG-506](https://mx51.atlassian.net/browse/INTG-506) Changelog file
+- [INTG-522](https://mx51.atlassian.net/browse/INTG-522) Pairing record is missing when terminal is disconnected
+
+### Fixed
+
+- [INTG-518](https://mx51.atlassian.net/browse/INTG-518) Select Card button without selecting a terminal
 
 ## [1.2.6] - 2023-6-6
 
