@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - [INTG-526](https://mx51.atlassian.net/browse/INTG-526) (UI) Placement of prompt for cashout checkbox on Espresso POS
+- [INTG-503](https://mx51.atlassian.net/browse/INTG-503) Override the subtotal of an order on EspressoPOS
 
 ## [1.2.5] - 2023-5-29
 
@@ -27,7 +28,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- [INTG-490](https://mx51.atlassian.net/browse/INTG-490) hide p@t on espresso pos
 - [INTG-504](https://mx51.atlassian.net/browse/INTG-504) Update prompt for checkout to hide instead of disable
+- [INTG-512](https://mx51.atlassian.net/browse/INTG-512) Bump SPI version to 2.9.8
 
 ### Fixed
 
@@ -69,11 +72,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Engine version
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Engine version
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Snapshot test
 
 ### Changed
 
-- Updated readme requirements/script
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Updated readme requirements/script
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Migrated the support tool from burgerPOS to espressoPOS
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Updated the code to support better types for espressoPOS eslint config
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Updated the style according to material UI and Jess's figma designs
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Refactor the result tables into another file
+- [INTG-265](https://mx51.atlassian.net/browse/INTG-265) Refactor to use shared types
 
 ## [1.0.4] - 2022-7-12
 
@@ -83,9 +92,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.3] - 2022-7-1
 
-### Added
+### Changed
 
 - Hidden developer mode toggle when terminal is unpaired
+- Display developer mode button on related screens
+- Updated unit tests (ensure test coverage is 80% above)
+- Ensure order finished page also show developer mode toggle button
 
 ## [1.0.2] - 2022-6-21
 
@@ -95,18 +107,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.1] - 2022-5-25
 
+### Changed
+
+- Disable test mode checkbox during pairing for Gecko Bank
+- [INTG-226](https://mx51.atlassian.net/browse/INTG-226) Updated project page title
+- Updated version value to 1.0.0
+- Update payment providers automatically
+
 ### Fixed
 
 - When selected other and entered gko
 
 ## [1.0.0] - 2022-5-17
 
-### Added
+### Changed
 
-- Production based pipeline
+- Removed character v from deployment condition in azure yaml file
 
 ## [0.0.2] - 2022-5-16
 
 ### Added
+
+- Production Pipeline
+
+### Changed
 
 - Production pipeline yaml configs
