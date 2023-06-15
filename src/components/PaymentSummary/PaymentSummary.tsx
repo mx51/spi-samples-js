@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter, useHistory } from 'react-router-dom';
@@ -38,9 +38,9 @@ function PaymentSummary(): React.ReactElement {
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
   const originalTotalAmount: number = useSelector(terminalTxTotalAmount(selectedTerminal));
 
-  const clearAllProductsAction = () => {
+  useEffect(() => {
     dispatch(clearAllProducts());
-  };
+  }, []);
 
   const amountSummaryInformation = (type: string) => {
     const returns =
@@ -112,7 +112,6 @@ function PaymentSummary(): React.ReactElement {
               classes={{ root: classes.actionBtn }}
               component={LinkRouter}
               to={PATH_PURCHASE}
-              onClick={clearAllProductsAction}
             >
               New Order
             </Button>
