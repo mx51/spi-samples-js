@@ -6,7 +6,7 @@ import { PATH_PURCHASE, TEXT_PURCHASE } from '../../definitions/constants/router
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 
-import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+// import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -31,21 +31,30 @@ function PaymentSummary(): React.ReactElement {
   } = useHistory();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const subtotalAmount = useSelector(productSubTotalSelector);
+  // const subtotalAmount = useSelector(productSubTotalSelector);
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const transactionAmount = useSelector(terminalTxAmount(selectedTerminal));
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
   const originalTotalAmount: number = useSelector(terminalTxTotalAmount(selectedTerminal));
 
+  // figure out why the cashout amount is still getting cleared - most likely because of the mismatch in names
   useEffect(() => {
-    dispatch(clearAllProducts());
+    console.log('response', currentTerminal?.txFlow?.response?.data);
+    console.log('request', currentTerminal?.txFlow?.request?.data);
+    if (currentTerminal?.txFlow?.response?.data.hostResponseText === 'APPROVED') {
+      dispatch(clearAllProducts());
+    }
   }, []);
 
   const amountSummaryInformation = (type: string) => {
     const returns =
-      pathname === '/order-finished' ? currentTerminal?.txFlow?.response?.data : currentTerminal?.txFlow?.request?.data;
-    if (returns) return (returns as Any)[type];
+      pathname === '/order-finished' && currentTerminal?.txFlow?.response?.data.hostResponseText === 'APPROVED'
+        ? currentTerminal?.txFlow?.response?.data
+        : currentTerminal?.txFlow?.request?.data;
+    console.log('returns', returns);
+    // i can remove the ?? 0 once i figure out how to change bankcashamount to cashamount
+    if (returns) return (returns as Any)[type] ?? 0;
     return 0;
   };
 
@@ -80,8 +89,11 @@ function PaymentSummary(): React.ReactElement {
           <>
             <Typography className={classes.orderSummery}>Order Summary</Typography>
             <Divider variant="middle" />
-            <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+            {/* <OrderSubTotal label="Subtotal" amount={subtotalAmount} /> */}
+            {/* this is being cleared by the dispatch action after the done button is clicked so you have to check the response to get the subtotal */}
+            <OrderSubTotal label="Subtotal" amount={amountSummaryInformation('purchaseAmount')} />
             <OrderLineItem disabled label="Surcharge" amount={amountSummaryInformation('surchargeAmount')} viewOnly />
+            {/* todo figure out how to make bankcashoutamount  => cashoutamount */}
             <OrderLineItem disabled label="Cashout" amount={amountSummaryInformation('bankCashAmount')} viewOnly />
             <OrderLineItem disabled label="Tip" amount={amountSummaryInformation('tipAmount')} viewOnly />
           </>
