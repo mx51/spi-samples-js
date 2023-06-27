@@ -19,7 +19,12 @@ function PayNow(): React.ReactElement {
           <Order disablePayNow />
         </Grid>
         <Grid item xs={8}>
-          <OrderConfirmation title="Pay" pathname={PATH_PAY_NOW} currentAmount={originalTotalAmount} />
+          <OrderConfirmation
+            title="Pay"
+            pathname={PATH_PAY_NOW}
+            currentAmount={originalTotalAmount}
+            editSubtotal={false}
+          />
         </Grid>
       </Grid>
     </Layout>

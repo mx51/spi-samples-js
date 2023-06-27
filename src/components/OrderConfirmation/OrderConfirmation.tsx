@@ -61,7 +61,7 @@ import UnknownTransactionModal from '../UnknownTransactionModal';
 import useStyles from './index.styles';
 import { IOrderConfirmation, ITitleStrategy } from './interfaces';
 
-function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmation): React.ReactElement {
+function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOrderConfirmation): React.ReactElement {
   const dispatch = useDispatch();
 
   const classes = useStyles();
@@ -71,7 +71,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
 
   const terminals = useSelector(pairedConnectedTerminalList);
-  const [subtotalAmount, setSubtotalAmount] = useState<number>(useSelector(productSubTotalSelector));
+  const subtotalAmount = useSelector(productSubTotalSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
@@ -142,7 +142,6 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
           }}
           onAmountChange={(amount) => {
             setTotalAmount(amount);
-            setSubtotalAmount(amount);
             setDisplayKeypad(false);
             clearProductsOnlyAction();
             dispatch(addKeypadAmount(amount));
@@ -159,17 +158,21 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
               <Button
                 data-testid="orderTotalButton"
                 className={classes.orderTotalBtn}
+                disableRipple={!editSubtotal}
+                disabled={!editSubtotal}
                 onClick={() => setDisplayKeypad(true)}
               >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
-                    {currencyFormat(totalAmount / 100)}
+                    {currencyFormat((editSubtotal ? totalAmount : subtotalAmount) / 100)}
                   </Box>
-                  <Box>
-                    <Icon>
-                      <CreateIcon />
-                    </Icon>
-                  </Box>
+                  {editSubtotal && (
+                    <Box>
+                      <Icon>
+                        <CreateIcon />
+                      </Icon>
+                    </Box>
+                  )}
                 </Box>
               </Button>
             </Box>

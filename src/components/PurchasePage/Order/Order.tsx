@@ -27,9 +27,12 @@ import {
 } from '../../../redux/reducers/ProductSlice/productSelector';
 import {
   addCashoutAmount,
+  addKeypadAmount,
+  addSubtotalAmount,
   addSurchargeAmount,
   addTipAmount,
   clearAllProducts,
+  clearProductsOnly,
   togglePromptForCashout,
 } from '../../../redux/reducers/ProductSlice/productSlice';
 import { isPaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
@@ -44,6 +47,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
   const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT';
   const CASHOUT_AMOUNT = 'CASHOUT_AMOUNT';
   const TIP_AMOUNT = 'TIP_AMOUNT';
+  const SUBTOTAL_AMOUNT = 'SUBTOTAL_AMOUNT';
 
   const dispatch = useDispatch();
 
@@ -70,6 +74,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
     if (keypadType === SURCHARGE_AMOUNT) return surchargeAmount;
     if (keypadType === CASHOUT_AMOUNT) return cashoutAmount;
     if (keypadType === TIP_AMOUNT) return tipAmount;
+    if (keypadType === SUBTOTAL_AMOUNT) return subtotalAmount;
     return 0;
   };
 
@@ -77,6 +82,10 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
     if (keypadType === SURCHARGE_AMOUNT) dispatch(addSurchargeAmount(val));
     else if (keypadType === CASHOUT_AMOUNT) dispatch(addCashoutAmount(val));
     else if (keypadType === TIP_AMOUNT) dispatch(addTipAmount(val));
+    else if (keypadType === SUBTOTAL_AMOUNT) {
+      dispatch(addSubtotalAmount(val));
+      dispatch(clearProductsOnly());
+    }
     setKeypadType('');
   };
 
@@ -84,6 +93,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
     if (keypadType === SURCHARGE_AMOUNT) return 'Surcharge';
     if (keypadType === CASHOUT_AMOUNT) return TEXT_CASHOUT;
     if (keypadType === TIP_AMOUNT) return 'Tip';
+    if (keypadType === SUBTOTAL_AMOUNT) return 'Override Purchase';
     return '';
   };
 
@@ -107,7 +117,9 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
           onClose={() => {
             setKeypadType('');
           }}
-          onAmountChange={setKeypadAmount}
+          onAmountChange={(amount: number) => {
+            setKeypadAmount(amount);
+          }}
         />
       </Drawer>
       <Box component={Paper} className={classes.root} display="flex" flexDirection="column">
@@ -141,7 +153,19 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
         </Box>
         <Divider />
         <List>
-          <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+          {!disablePayNow && <OrderSubTotal label="Subtotal" amount={subtotalAmount} />}
+          {disablePayNow && (
+            <OrderLineItem
+              label="Subtotal"
+              amount={subtotalAmount}
+              onAdd={() => {
+                requestAmount(SUBTOTAL_AMOUNT);
+              }}
+              disabled={false}
+              viewOnly={false}
+            />
+          )}
+
           <OrderLineItem
             disabled={false}
             label="Surcharge"

@@ -80,7 +80,7 @@ function PaymentSummary(): React.ReactElement {
           <>
             <Typography className={classes.orderSummery}>Order Summary</Typography>
             <Divider variant="middle" />
-            <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
+            <OrderSubTotal label="Subtotal" amount={amountSummaryInformation('purchaseAmount')} />
             <OrderLineItem disabled label="Surcharge" amount={amountSummaryInformation('surchargeAmount')} viewOnly />
             <OrderLineItem disabled label="Cashout" amount={amountSummaryInformation('bankCashAmount')} viewOnly />
             <OrderLineItem disabled label="Tip" amount={amountSummaryInformation('tipAmount')} viewOnly />

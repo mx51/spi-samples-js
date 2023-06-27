@@ -20,19 +20,16 @@ export const productsSelector = createSelector(products, (state: IProductState):
   return Object.values(productMap);
 });
 
-export const productSubTotalSelector = createSelector(
-  orderKeypadAmountSelector,
-  productsSelector,
-  (subtotalAmount, productSelect: Array<IProductSelector>): number => {
-    if (subtotalAmount > 0) return subtotalAmount;
-    const subTotal = productSelect.reduce((prev, current) => prev + current.quantity * current.product.price, 0);
-    return subTotal;
-  }
-);
+export const productSubTotalSelector = createSelector(products, (state: IProductState): number => state.subtotalAmount);
 
 export const orderSurchargeAmountSelector = createSelector(
   products,
   (state: IProductState): number => state.surchargeAmount
+);
+
+export const orderOverrideSubtotalSelector = createSelector(
+  products,
+  (state: IProductState): boolean => state.overrideSubtotalAmount
 );
 
 export const orderTipAmountSelector = createSelector(products, (state: IProductState): number => state.tipAmount);
@@ -52,6 +49,5 @@ export const orderTotalSelector = createSelector(
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
   orderCashoutAmountSelector,
-  orderPromptForCashoutSelector,
   (subtotal, surcharge, tip, cashout): number => subtotal + surcharge + tip + cashout
 );

@@ -47,6 +47,8 @@ describe('Test PairFormSelectors', () => {
         surchargeAmount: 0,
         promptForCashout: false,
         products: [],
+        subtotalAmount: 0,
+        overrideSubtotalAmount: false,
       },
       selectedTerminal: { selectedTerminalId: '' },
     };
@@ -78,6 +80,8 @@ describe('Test PairFormSelectors', () => {
         surchargeAmount: 0,
         promptForCashout: false,
         products: [],
+        subtotalAmount: 0,
+        overrideSubtotalAmount: false,
       },
       selectedTerminal: { selectedTerminalId: '' },
     };
