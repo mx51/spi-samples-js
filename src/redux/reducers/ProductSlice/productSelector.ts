@@ -53,5 +53,8 @@ export const orderTotalSelector = createSelector(
   orderTipAmountSelector,
   orderCashoutAmountSelector,
   orderPromptForCashoutSelector,
-  (subtotal, surcharge, tip, cashout): number => subtotal + surcharge + tip + cashout
+  (subtotal, surcharge, tip, cashout): number => {
+    console.log({ subtotal, surcharge, tip, cashout });
+    return subtotal + surcharge + tip + cashout;
+  }
 );

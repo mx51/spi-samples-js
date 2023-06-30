@@ -127,7 +127,7 @@ function mockTxFlow(): ITxFlow {
         posRefId: 'string',
         purchaseAmount: 0,
         tipAmount: 0,
-        cashAmount: 0,
+        bankCashAmount: 0,
         promptForCashout: false,
         surchargeAmount: 0,
         promptForCustomerCopy: false,
