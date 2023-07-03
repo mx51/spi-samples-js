@@ -16,7 +16,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
       <p
         class="MuiTypography-root makeStyles-subheading-7 MuiTypography-body1"
       >
-         S/N
+         S/N 
       </p>
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-14 makeStyles-paper-8 MuiPaper-elevation1 MuiPaper-rounded"
@@ -149,8 +149,12 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       <h1
         class="MuiTypography-root MuiTypography-h5"
       >
-        Refund
-          Failed
+        REFUND FAILED
+      </h1>
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Approved
       </h1>
       <p
         class="MuiTypography-root makeStyles-heading-120 MuiTypography-body1"
@@ -162,13 +166,13 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
         class="MuiTypography-root makeStyles-subheading-121 MuiTypography-body1"
       >
         192.168.1.10
-         S/N
+         S/N 
         123-123-123
       </p>
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-138 makeStyles-paper-122 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $1.00
+        $0.00
       </div>
       <br />
       <div
@@ -224,38 +228,38 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
 exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] = `
 <div>
   <div
-    class="MuiBox-root MuiBox-root-22 makeStyles-root-1 makeStyles-alignTop-2"
+    class="MuiBox-root MuiBox-root-112 makeStyles-root-91 makeStyles-alignTop-92"
   >
     <div
-      class="MuiBox-root MuiBox-root-23 makeStyles-roots-3"
+      class="MuiBox-root MuiBox-root-113 makeStyles-roots-93"
     >
       <svg
-        class="makeStyles-successIcon-4"
+        class="makeStyles-successIcon-94"
       >
         SuccessIcon.svg
       </svg>
       <h1
         class="MuiTypography-root MuiTypography-h5"
       >
-        Refund Approved
+        REFUND APPROVED
       </h1>
       <p
-        class="MuiTypography-root makeStyles-heading-6 MuiTypography-body1"
+        class="MuiTypography-root makeStyles-heading-96 MuiTypography-body1"
       >
         Terminal:
         123
       </p>
       <p
-        class="MuiTypography-root makeStyles-subheading-7 MuiTypography-body1"
+        class="MuiTypography-root makeStyles-subheading-97 MuiTypography-body1"
       >
         192.168.1.10
-         S/N
+         S/N 
         123-123-123
       </p>
       <div
-        class="MuiPaper-root MuiBox-root MuiBox-root-24 makeStyles-paper-8 MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root MuiBox-root MuiBox-root-114 makeStyles-paper-98 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $1.00
+        $0.00
       </div>
       <br />
       <div
@@ -266,7 +270,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
         >
           <a
             aria-disabled="false"
-            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-11 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-101 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
             href="/refund"
             role="button"
             tabindex="0"
@@ -286,7 +290,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
         >
           <a
             aria-disabled="false"
-            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-11 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            class="MuiButtonBase-root MuiButton-root makeStyles-actionBtn-101 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
             data-test-id="newOrderBtn"
             href="/"
             role="button"

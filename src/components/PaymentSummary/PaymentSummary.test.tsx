@@ -74,7 +74,7 @@ describe('Test <PaymentSummary />', () => {
         txFlow: mockRefundTxFlow,
       },
     };
-    const refundApprovedText = 'Refund Approved';
+    const refundApprovedText = 'Refund Approved'.toUpperCase();
     const newMockContainer = mockWithRedux(<PaymentSummary />, customStore(mockTerminals));
     const actionBtnClassOccurrence = (newMockContainer.innerHTML.match(/actionBtn/g) || []).length;
 
@@ -96,7 +96,7 @@ describe('Test <PaymentSummary />', () => {
       },
     };
 
-    const refundDeclinedText = 'Refund Failed';
+    const refundDeclinedText = 'Refund Failed'.toUpperCase();
     const newMockContainer = mockWithRedux(<PaymentSummary />, customStore(mockTerminals));
     const actionBtnClassOccurrence = (newMockContainer.innerHTML.match(/actionBtn/g) || []).length;
 
