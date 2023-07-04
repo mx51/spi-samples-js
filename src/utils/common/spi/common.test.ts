@@ -45,7 +45,7 @@ describe('Test spi common functions', () => {
           posRefId: 'pos_ref_id',
           purchaseAmount: 0,
           tipAmount: 0,
-          cashAmount: 0,
+          bankCashAmount: 0,
           promptForCashout: 0,
           surchargeAmount: 0,
           promptForCustomerCopy: false,

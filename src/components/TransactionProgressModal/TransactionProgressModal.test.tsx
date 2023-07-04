@@ -99,6 +99,9 @@ describe('Test <TransactionProgressModal />', () => {
             },
           },
         },
+        selectedTerminal: {
+          selectedTerminalId: '444-444-444',
+        },
       }),
       subscribe: jest.fn(),
       dispatch: jest.fn(),

@@ -35,7 +35,7 @@ describe('Test <PaymentSummary />', () => {
           keypadAmount: 0,
           surchargeAmount: 100,
           tipAmount: 100,
-          cashoutAmount: 100,
+          bankCashAmount: 100,
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
@@ -74,7 +74,7 @@ describe('Test <PaymentSummary />', () => {
         txFlow: mockRefundTxFlow,
       },
     };
-    const refundApprovedText = 'Refund Approved';
+    const refundApprovedText = 'Refund Approved'.toUpperCase();
     const newMockContainer = mockWithRedux(<PaymentSummary />, customStore(mockTerminals));
     const actionBtnClassOccurrence = (newMockContainer.innerHTML.match(/actionBtn/g) || []).length;
 
@@ -96,7 +96,7 @@ describe('Test <PaymentSummary />', () => {
       },
     };
 
-    const refundDeclinedText = 'Refund Declined';
+    const refundDeclinedText = 'Refund Failed'.toUpperCase();
     const newMockContainer = mockWithRedux(<PaymentSummary />, customStore(mockTerminals));
     const actionBtnClassOccurrence = (newMockContainer.innerHTML.match(/actionBtn/g) || []).length;
 
@@ -119,7 +119,8 @@ describe('Test <PaymentSummary />', () => {
             data: {
               purchaseAmount: 550,
               surchargeAmount: 100,
-              cashAmount: 200,
+              bankCashAmount: 200,
+              cashoutAmount: 100,
               tipAmount: 150,
             },
           },

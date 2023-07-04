@@ -16,7 +16,7 @@ describe('Test <OrderFinished />', () => {
           data: {
             purchaseAmount: 550,
             surchargeAmount: 100,
-            cashAmount: 200,
+            bankCashAmount: 200,
             tipAmount: 150,
           },
         },

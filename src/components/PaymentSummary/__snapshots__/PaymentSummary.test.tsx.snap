@@ -21,7 +21,7 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-14 makeStyles-paper-8 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $NaN
+        $0.00
       </div>
       <p
         class="MuiTypography-root makeStyles-orderSummery-9 MuiTypography-body1"
@@ -149,8 +149,12 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       <h1
         class="MuiTypography-root MuiTypography-h5"
       >
-        Refund
-         Declined
+        REFUND FAILED
+      </h1>
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Approved
       </h1>
       <p
         class="MuiTypography-root makeStyles-heading-120 MuiTypography-body1"
@@ -168,7 +172,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-138 makeStyles-paper-122 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $1.00
+        $0.00
       </div>
       <br />
       <div
@@ -237,8 +241,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
       <h1
         class="MuiTypography-root MuiTypography-h5"
       >
-        Refund
-         Approved
+        REFUND APPROVED
       </h1>
       <p
         class="MuiTypography-root makeStyles-heading-96 MuiTypography-body1"
@@ -256,7 +259,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-114 makeStyles-paper-98 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $1.00
+        $0.00
       </div>
       <br />
       <div

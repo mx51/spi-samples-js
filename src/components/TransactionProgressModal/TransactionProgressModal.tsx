@@ -7,14 +7,18 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
+import { useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
 import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs';
 import { PATH_ORDER_FINISHED, TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
+import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
+import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 import {
   terminalTxFlowAwaitingSignatureTracker,
   terminalTxMessage,
+  terminalInstance,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { approveSignature, declineSignature } from '../../utils/common/terminal/terminalHelpers';
 import useStyles from './index.styles';
@@ -30,6 +34,8 @@ function TransactionProgressModal({
   onRetryTransaction,
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
+  const selectedTerminal = useSelector(selectedTerminalIdSelector);
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const awaitingSignatureCheck = useAppSelector(terminalTxFlowAwaitingSignatureTracker(terminalId));
   const modalTitle =
     transactionType === SPI_TRANSACTION_TYPES.CashoutOnly ? TEXT_CASHOUT.toUpperCase() : transactionType.toUpperCase();
@@ -106,7 +112,7 @@ function TransactionProgressModal({
                 {modalTitle}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                Approved
+                {currentTerminal?.txFlow?.response?.data?.hostResponseText.toUpperCase()}
               </Typography>
             </>
           )}
@@ -123,7 +129,7 @@ function TransactionProgressModal({
                 {modalTitle}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                Declined
+                {currentTerminal?.txFlow?.success.toUpperCase()}
               </Typography>
               <Typography className={classes.modalDescription}>{transactionDesc}</Typography>
             </>
