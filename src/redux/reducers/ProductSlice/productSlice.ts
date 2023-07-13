@@ -8,6 +8,8 @@ const initialState: IProductState = {
   promptForCashout: false,
   surchargeAmount: 0,
   products: [],
+  subtotalAmount: 0,
+  overrideSubtotalAmount: false,
 };
 
 const productSlice = createSlice({
@@ -18,6 +20,7 @@ const productSlice = createSlice({
       const { product } = action.payload;
 
       state.products.push(product);
+      state.subtotalAmount += product.price;
     },
     clearAllProducts(state: IProductState) {
       state.products.splice(0, state.products.length);
@@ -26,11 +29,12 @@ const productSlice = createSlice({
       state.cashoutAmount = 0;
       state.promptForCashout = false;
       state.keypadAmount = 0;
+      state.subtotalAmount = 0;
+      state.overrideSubtotalAmount = false;
     },
     // Only clear products and keyPadAmount for Override Purchase
     clearProductsOnly(state: IProductState) {
       state.products.splice(0, state.products.length);
-      state.keypadAmount = 0;
     },
     addSurchargeAmount(state: IProductState, action: PayloadAction<number>) {
       state.surchargeAmount = action.payload;
@@ -44,6 +48,12 @@ const productSlice = createSlice({
     addKeypadAmount(state: IProductState, action: PayloadAction<number>) {
       state.keypadAmount = action.payload;
     },
+    addSubtotalAmount(state: IProductState, action: PayloadAction<number>) {
+      if (action.payload !== state.subtotalAmount) {
+        state.overrideSubtotalAmount = true;
+        state.subtotalAmount = action.payload;
+      }
+    },
     togglePromptForCashout(state: IProductState) {
       state.promptForCashout = !state.promptForCashout;
     },
@@ -54,6 +64,7 @@ export const {
   addProduct,
   clearAllProducts,
   clearProductsOnly,
+  addSubtotalAmount,
   addCashoutAmount,
   addSurchargeAmount,
   addTipAmount,

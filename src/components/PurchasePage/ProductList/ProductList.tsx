@@ -24,7 +24,13 @@ function ProductList(): React.ReactElement {
   return (
     <Box display="flex" flexWrap="wrap" justifyContent="space-around">
       {products.map((product) => (
-        <Product key={product.name} product={product} onClick={() => addProductAction(product)} />
+        <Product
+          key={product.name}
+          product={product}
+          onClick={() => {
+            addProductAction(product);
+          }}
+        />
       ))}
     </Box>
   );

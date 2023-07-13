@@ -5,6 +5,8 @@ export interface IProductState {
   cashoutAmount: number;
   promptForCashout: boolean;
   products: Array<IProduct>;
+  subtotalAmount: number;
+  overrideSubtotalAmount: boolean;
 }
 
 export interface IProduct {

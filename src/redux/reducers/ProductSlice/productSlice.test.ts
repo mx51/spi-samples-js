@@ -15,6 +15,8 @@ test('should handle add product', () => {
     cashoutAmount: 0,
     promptForCashout: false,
     products: [],
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
   };
   const action = { product: { id: 1, name: 'Latte', price: 360, image: 'Latte.jpeg' } };
   expect(reducer(previousState, addProduct(action))).toEqual({
@@ -23,6 +25,8 @@ test('should handle add product', () => {
     tipAmount: 0,
     cashoutAmount: 0,
     promptForCashout: false,
+    subtotalAmount: 360,
+    overrideSubtotalAmount: false,
     products: [
       {
         id: 1,
@@ -41,6 +45,8 @@ test('should handle clear products', () => {
     tipAmount: 0,
     cashoutAmount: 0,
     promptForCashout: false,
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
     products: [
       {
         id: 1,
@@ -62,6 +68,8 @@ test('should handle clear products', () => {
     tipAmount: 0,
     cashoutAmount: 0,
     promptForCashout: false,
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
     products: [],
   });
 });
@@ -74,6 +82,8 @@ test('should add surcharge amount', () => {
     cashoutAmount: 0,
     promptForCashout: false,
     products: [],
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
   };
   expect(reducer(previousState, addSurchargeAmount(105))).toEqual({
     keypadAmount: 0,
@@ -81,6 +91,8 @@ test('should add surcharge amount', () => {
     tipAmount: 0,
     cashoutAmount: 0,
     promptForCashout: false,
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
     products: [],
   });
 });
@@ -93,6 +105,8 @@ test('should add cashout amount', () => {
     cashoutAmount: 0,
     promptForCashout: false,
     products: [],
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
   };
   expect(reducer(previousState, addCashoutAmount(105))).toEqual({
     keypadAmount: 0,
@@ -100,6 +114,8 @@ test('should add cashout amount', () => {
     tipAmount: 0,
     cashoutAmount: 105,
     promptForCashout: false,
+    subtotalAmount: 0,
+    overrideSubtotalAmount: false,
     products: [],
   });
 });
@@ -112,6 +128,8 @@ test('should add tip amount', () => {
     cashoutAmount: 0,
     promptForCashout: false,
     products: [],
+    overrideSubtotalAmount: false,
+    subtotalAmount: 0,
   };
   expect(reducer(previousState, addTipAmount(105))).toEqual({
     keypadAmount: 0,
@@ -119,6 +137,8 @@ test('should add tip amount', () => {
     tipAmount: 105,
     cashoutAmount: 0,
     promptForCashout: false,
+    overrideSubtotalAmount: false,
+    subtotalAmount: 0,
     products: [],
   });
 });
