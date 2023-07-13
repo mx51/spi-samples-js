@@ -263,7 +263,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                   variant="contained"
                   color="primary"
                   size="large"
-                  disabled={isDisabled() || tipAmount > 0}
+                  disabled={isDisabled() || tipAmount > 0 || cashoutAmount > 0}
                   focusRipple
                   classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                   onClick={() => {

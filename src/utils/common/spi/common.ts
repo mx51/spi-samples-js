@@ -41,7 +41,8 @@ function getTxFlow(detail: Any): Any {
         posRefId: detail?.Request?.Data?.pos_ref_id,
         purchaseAmount: detail?.Request?.Data?.purchase_amount,
         tipAmount: detail?.Request?.Data?.tip_amount,
-        cashAmount: detail?.Request?.Data?.cash_amount,
+        // We check cash_amount here as that is what we get from the event (instead of bank_cash_amount)
+        bankCashAmount: detail?.Request?.Data?.cash_amount,
         promptForCashout: detail?.Request?.Data?.prompt_for_cashout,
         surchargeAmount: detail?.Request?.Data?.surcharge_amount,
         promptForCustomerCopy: false,

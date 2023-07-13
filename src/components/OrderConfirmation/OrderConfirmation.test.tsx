@@ -95,14 +95,31 @@ describe('Test <OrderConfirmation />', () => {
     expect(initiatePurchaseTransaction.mock.calls.length).toBe(1);
   });
 
-  test('should initiate moto purchase on clicking Moto button', () => {
+  test('should initiate moto purchase on clicking Moto button if no tip or cashout', () => {
     const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
     initiateMotoPurchaseTransaction.mockReturnValue();
+
+    const customStoreWithoutCashout = {
+      ...store,
+      getState: () => ({
+        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
+        pairForm: defaultMockPairFormParams,
+        terminals: pairedMockTerminals,
+        products: {
+          keypadAmount: 0,
+          surchargeAmount: 100,
+          tipAmount: 0,
+          cashoutAmount: 0,
+          products: [],
+        },
+        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+      }),
+    };
 
     // Arrange
     mockWithRedux(
       <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
-      customStore
+      customStoreWithoutCashout
     );
     fireEvent.click(screen.getByText(/moto/i));
 
@@ -124,7 +141,7 @@ describe('Test <OrderConfirmation />', () => {
           keypadAmount: 0,
           surchargeAmount: 100,
           tipAmount: 0,
-          cashoutAmount: 100,
+          bankcashAmount: 100,
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },

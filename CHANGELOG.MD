@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- [INTG-530](https://mx51.atlassian.net/browse/INTG-530) Additional amounts such as surcharge is reset to 0 when transaction is cancelled
 - [INTG-518](https://mx51.atlassian.net/browse/INTG-518) Select Card button without selecting a terminal
 
 ## [1.2.6] - 2023-6-6

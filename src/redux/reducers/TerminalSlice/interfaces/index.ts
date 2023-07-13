@@ -60,7 +60,7 @@ export interface ITxFlow {
     data: {
       posRefId: string;
       purchaseAmount: number;
-      cashAmount: number;
+      bankCashAmount: number;
       surchargeAmount: number;
       tipAmount: number;
       promptForCashout: boolean;

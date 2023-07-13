@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter, useHistory } from 'react-router-dom';
-import { PATH_PURCHASE, TEXT_PURCHASE } from '../../definitions/constants/routerConfigs';
+import { PATH_PURCHASE } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 
-import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -14,9 +14,7 @@ import {
   isTerminalTxFlowSuccess,
   terminalInstance,
   terminalTransactionTypeObject,
-  terminalTxAmount,
   terminalTxFlowFinishedTracker,
-  terminalTxTotalAmount,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
@@ -31,23 +29,25 @@ function PaymentSummary(): React.ReactElement {
   } = useHistory();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const subtotalAmount = useSelector(productSubTotalSelector);
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
-  const transactionAmount = useSelector(terminalTxAmount(selectedTerminal));
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
-  const originalTotalAmount: number = useSelector(terminalTxTotalAmount(selectedTerminal));
+  const originalTotalAmount: number = useSelector(orderTotalSelector);
 
-  useEffect(() => {
+  const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
-  }, []);
+  };
 
   const amountSummaryInformation = (type: string) => {
     const returns =
-      pathname === '/order-finished' ? currentTerminal?.txFlow?.response?.data : currentTerminal?.txFlow?.request?.data;
-    if (returns) return (returns as Any)[type];
+      pathname === '/order-finished' && currentTerminal?.txFlow?.response?.data.hostResponseText === 'APPROVED'
+        ? currentTerminal?.txFlow?.response?.data
+        : currentTerminal?.txFlow?.request?.data;
+    if (returns) return (returns as Any)[type] ?? 0;
     return 0;
   };
+
+  // console.log(currencyFormat((originalTotalAmount ?? 0) / 100));
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
@@ -56,7 +56,7 @@ function PaymentSummary(): React.ReactElement {
           <>
             <SuccessIcon className={classes.successIcon} />
             <Typography variant="h5" component="h1">
-              {typeTitle} Approved
+              {`${typeTitle?.toUpperCase()} ${currentTerminal?.txFlow?.response?.data?.hostResponseText?.toUpperCase()}`}
             </Typography>
           </>
         )}
@@ -64,7 +64,10 @@ function PaymentSummary(): React.ReactElement {
           <>
             <FailedIcon className={classes.failedIcon} />
             <Typography variant="h5" component="h1">
-              {typeTitle} Declined
+              {`${typeTitle?.toUpperCase()} ${currentTerminal?.txFlow?.success?.toUpperCase()}`}
+            </Typography>
+            <Typography variant="h6" component="h1">
+              {currentTerminal?.txFlow?.response?.data?.hostResponseText}
             </Typography>
           </>
         )}
@@ -74,7 +77,7 @@ function PaymentSummary(): React.ReactElement {
           {currentTerminal?.deviceAddress} S/N {currentTerminal?.serialNumber}
         </Typography>
         <Box className={classes.paper} component={Paper}>
-          {currencyFormat((typeTitle !== TEXT_PURCHASE ? transactionAmount ?? 0 : originalTotalAmount ?? 0) / 100)}
+          {currencyFormat((Number.isNaN(originalTotalAmount) ? 0 : originalTotalAmount) / 100)}
         </Box>
         {typePath === PATH_PURCHASE ? (
           <>
@@ -112,6 +115,7 @@ function PaymentSummary(): React.ReactElement {
               classes={{ root: classes.actionBtn }}
               component={LinkRouter}
               to={PATH_PURCHASE}
+              onClick={clearAllProductsAction}
             >
               New Order
             </Button>
