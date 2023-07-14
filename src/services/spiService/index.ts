@@ -1,11 +1,12 @@
 import { Spi as SpiClient, TransactionOptions } from '@mx51/spi-client-js';
 import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
-import { currentVersion, defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
+import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
   FIELD_PRESSED_COLOR,
   PRIMARY_ERROR_COLOR,
   PRIMARY_THEME_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
+import currentVersion from '../../pos_version.json';
 import { setConfirmPairingFlow } from '../../redux/reducers/CommonSlice/commonSlice';
 import { IPairFormValues } from '../../redux/reducers/PairFormSlice/interfaces';
 import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
