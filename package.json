@@ -39,8 +39,7 @@
     "check-lint": "tsc --noEmit && eslint src/**/*.ts{,x} --max-warnings=0",
     "check-types": "tsc --pretty --noEmit",
     "prettier-format": "prettier --write src/**/*.ts{,x}",
-    "pre-check": "npm run check-prettier && npm run check-lint && npm run check-types",
-    "prebuild": "npm pkg get version > src/pos_version.json"
+    "pre-check": "npm run check-prettier && npm run check-lint && npm run check-types"
   },
   "husky": {
     "hooks": {
