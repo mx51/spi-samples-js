@@ -6,7 +6,6 @@ import {
   PRIMARY_ERROR_COLOR,
   PRIMARY_THEME_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
-import currentVersion from '../../pos_version.json';
 import { setConfirmPairingFlow } from '../../redux/reducers/CommonSlice/commonSlice';
 import { IPairFormValues } from '../../redux/reducers/PairFormSlice/interfaces';
 import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
@@ -22,6 +21,7 @@ import {
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
+import { posVersion } from '../../utils/constants';
 import { ITerminal, ITerminals } from '../interfaces';
 
 declare global {
@@ -139,7 +139,7 @@ class SpiService {
 
       // spi library methods setup
       instance.spiClient.SetEventBus(instance);
-      instance.spiClient.SetPosInfo(defaultPosName, currentVersion);
+      instance.spiClient.SetPosInfo(defaultPosName, posVersion);
       instance.spiClient.SetAcquirerCode(acquirerCode);
       instance.spiClient.SetDeviceApiKey(defaultApikey);
       instance.spiClient.SetTestMode(testMode);
