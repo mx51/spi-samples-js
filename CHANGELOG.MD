@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [INTG-506](https://mx51.atlassian.net/browse/INTG-506) Changelog file
 - [INTG-522](https://mx51.atlassian.net/browse/INTG-522) Pairing record is missing when terminal is disconnected
+- [INTG-573](https://mx51.atlassian.net/browse/INTG-573) Migrate MotelPOS pre-auth transaction flows to EspressoPOS
 
 ### Fixed
 
