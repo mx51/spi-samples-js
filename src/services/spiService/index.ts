@@ -416,6 +416,9 @@ class SpiService {
         );
       };
 
+      // set up pre-auth instance
+      instance.spiPreAuth = instance.spiClient.EnablePreauth();
+
       instance.spiClient.Start();
       this.dispatchAction(setConfirmPairingFlow(false)); // turn off "show confirm pairing flow message in flow panel"
 
@@ -552,6 +555,49 @@ class SpiService {
 
   initiateRefundTxTransaction(instanceId: string, posRefId: string, refundAmount: number): void {
     return this.readTerminalInstance(instanceId).spiClient.InitiateRefundTx(posRefId, refundAmount);
+  }
+
+  initiateAccountVerify(instanceId: string, posRefId: string): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateAccountVerifyTx(posRefId);
+  }
+
+  initiatePreAuthOpen(instanceId: string, posRefId: string, preAuthAmount: number): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateOpenTx(posRefId, preAuthAmount);
+  }
+
+  initiatePreAuthTopup(instanceId: string, posRefId: string, preAuthId: string, preAuthAmount: number): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateTopupTx(posRefId, preAuthId, preAuthAmount);
+  }
+
+  initiatePreAuthReduce(instanceId: string, posRefId: string, preAuthId: string, preAuthAmount: number): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiatePartialCancellationTx(
+      posRefId,
+      preAuthId,
+      preAuthAmount
+    );
+  }
+
+  initiatePreAuthExtend(instanceId: string, posRefId: string, preAuthId: string): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateExtendTx(posRefId, preAuthId);
+  }
+
+  initiatePreAuthCompletion(
+    instanceId: string,
+    posRefId: string,
+    preAuthId: string,
+    preAuthAmount: number,
+    surchargeAmount: number
+  ): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateCompletionTx(
+      posRefId,
+      preAuthId,
+      preAuthAmount,
+      surchargeAmount
+    );
+  }
+
+  initiatePreAuthCancel(instanceId: string, posRefId: string, preAuthId: string): void {
+    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateCancelTx(posRefId, preAuthId);
   }
 
   initTxSettlement(instanceId: string, posRefId: string) {

@@ -1,4 +1,5 @@
 export interface ITerminal {
+  spiPreAuth: any;
   autoAddressResolutionFailed: Any;
   acquirerCode: string;
   autoAddress: boolean;
