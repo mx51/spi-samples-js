@@ -7,6 +7,7 @@ export interface IProductState {
   products: Array<IProduct>;
   subtotalAmount: number;
   overrideSubtotalAmount: boolean;
+  refundAmount?: number;
 }
 
 export interface IProduct {

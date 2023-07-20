@@ -70,6 +70,7 @@ test('should handle clear products', () => {
     promptForCashout: false,
     subtotalAmount: 0,
     overrideSubtotalAmount: false,
+    refundAmount: 0,
     products: [],
   });
 });

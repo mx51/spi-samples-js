@@ -23,9 +23,6 @@ import useStyles from './index.style';
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {
-    location: { pathname },
-  } = useHistory();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
@@ -37,11 +34,8 @@ function PaymentSummary(): React.ReactElement {
   }, []);
 
   const amountSummaryInformation = (type: string) => {
-    const returns =
-      currentTerminal?.txFlow?.success === TxFlowState.Success
-        ? currentTerminal?.txFlow?.response?.data
-        : currentTerminal?.txFlow?.request?.data;
-    if (returns) return (returns as Any)[type] ?? 0;
+    const responseData = currentTerminal?.txFlow?.response?.data;
+    if (responseData) return (responseData as Any)[type] ?? 0;
     return 0;
   };
 

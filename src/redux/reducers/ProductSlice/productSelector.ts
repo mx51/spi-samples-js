@@ -20,11 +20,19 @@ export const productsSelector = createSelector(products, (state: IProductState):
   return Object.values(productMap);
 });
 
-export const productSubTotalSelector = createSelector(products, (state: IProductState): number => state.subtotalAmount);
+export const productSubTotalSelector = createSelector(
+  products,
+  (state: IProductState): number => state.subtotalAmount ?? 0
+);
 
 export const orderSurchargeAmountSelector = createSelector(
   products,
   (state: IProductState): number => state.surchargeAmount
+);
+
+export const orderRefundAmountSelector = createSelector(
+  products,
+  (state: IProductState): number => state.refundAmount ?? 0
 );
 
 export const orderOverrideSubtotalSelector = createSelector(
