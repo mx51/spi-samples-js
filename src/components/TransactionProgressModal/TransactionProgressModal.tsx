@@ -7,12 +7,13 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
 import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs';
 import { PATH_ORDER_FINISHED, TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
+import { initialState, updatePreAuthParams } from '../../redux/reducers/PreAuth/preAuthSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 import {
@@ -24,6 +25,71 @@ import { approveSignature, declineSignature } from '../../utils/common/terminal/
 import useStyles from './index.styles';
 import { TransactionProgressModalProps } from './interfaces';
 
+const handlePreAuthActions = (currentTerminal: ITerminalProps, dispatch: any) => {
+  const preAuth = {
+    preAuthRef: currentTerminal?.txFlow?.response?.data?.preAuthId ?? initialState.preAuthRef,
+    amount: currentTerminal?.txFlow?.response?.data?.preAuthAmount ?? initialState.amount,
+    topupAmount: currentTerminal?.txFlow?.response?.data?.topupAmount ?? 0,
+    reduceAmount: currentTerminal?.txFlow?.response?.data?.reduceAmount ?? 0,
+    surcharge: currentTerminal?.txFlow?.response?.data?.surchargeAmount ?? initialState.surcharge,
+    verified: currentTerminal?.txFlow?.success === 'Success' ? true : initialState.verified,
+  };
+
+  if (currentTerminal.txFlow?.response.data.transactionType === 'A/C VERIFIED') {
+    dispatch(
+      updatePreAuthParams({
+        key: 'UPDATE_VERIFIED',
+        value: preAuth.verified,
+      })
+    );
+  }
+
+  if (currentTerminal.txFlow?.response.data.transactionType === 'PRE-AUTH') {
+    dispatch(
+      updatePreAuthParams({
+        key: 'OPEN_PRE_AUTH',
+        value: preAuth,
+      })
+    );
+  }
+
+  if (currentTerminal.txFlow?.response.data.transactionType === 'TOPUP') {
+    dispatch(
+      updatePreAuthParams({
+        key: 'TOPUP_PRE_AUTH',
+        value: preAuth.topupAmount,
+      })
+    );
+  }
+
+  if (currentTerminal.txFlow?.response.data.transactionType === 'CANCEL') {
+    dispatch(
+      updatePreAuthParams({
+        key: 'REDUCE_PRE_AUTH',
+        value: preAuth.reduceAmount,
+      })
+    );
+  }
+
+  if (currentTerminal.txFlow?.response.data.transactionType === 'PRE-AUTH CANCEL') {
+    dispatch(
+      updatePreAuthParams({
+        key: 'CANCEL_PRE_AUTH',
+        value: null,
+      })
+    );
+  }
+
+  if (currentTerminal.txFlow?.response.data.transactionType === 'PCOMP') {
+    dispatch(
+      updatePreAuthParams({
+        key: 'COMPLETE_PRE_AUTH',
+        value: null,
+      })
+    );
+  }
+};
+
 function TransactionProgressModal({
   terminalId,
   transactionType,
@@ -33,6 +99,7 @@ function TransactionProgressModal({
   onCancelTransaction,
   onRetryTransaction,
 }: TransactionProgressModalProps): React.ReactElement {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
@@ -147,6 +214,9 @@ function TransactionProgressModal({
               component={LinkRouter}
               to={PATH_ORDER_FINISHED}
               className={classes.modalBtn}
+              onClick={() => {
+                handlePreAuthActions(currentTerminal, dispatch);
+              }}
             >
               Done
             </Button>

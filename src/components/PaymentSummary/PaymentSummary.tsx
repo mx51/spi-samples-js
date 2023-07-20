@@ -2,10 +2,14 @@ import React from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter, useHistory } from 'react-router-dom';
-import { PATH_PURCHASE } from '../../definitions/constants/routerConfigs';
+import {
+  PATH_ACCOUNT_VERIFY,
+  PATH_PRE_AUTH,
+  PATH_PURCHASE,
+  TEXT_PRE_AUTH,
+} from '../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
-
 import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
@@ -47,7 +51,13 @@ function PaymentSummary(): React.ReactElement {
     return 0;
   };
 
-  // console.log(currencyFormat((originalTotalAmount ?? 0) / 100));
+  const pathNameFormatter = (path: string) => {
+    if (path) {
+      const pathName = path.split('/')[1];
+      return pathName.charAt(0).toUpperCase() + pathName.slice(1);
+    }
+    return '';
+  };
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
@@ -71,10 +81,10 @@ function PaymentSummary(): React.ReactElement {
             </Typography>
           </>
         )}
-        <Typography className={classes.heading}>Terminal:{currentTerminal?.posId}</Typography>
+        <Typography className={classes.heading}>Terminal: {currentTerminal?.posId}</Typography>
 
         <Typography className={classes.subheading}>
-          {currentTerminal?.deviceAddress} S/N {currentTerminal?.serialNumber}
+          {currentTerminal?.deviceAddress} | S/N {currentTerminal?.serialNumber}
         </Typography>
         <Box className={classes.paper} component={Paper}>
           {currencyFormat((Number.isNaN(originalTotalAmount) ? 0 : originalTotalAmount) / 100)}
@@ -100,9 +110,9 @@ function PaymentSummary(): React.ReactElement {
                 size="large"
                 classes={{ root: classes.actionBtn }}
                 component={LinkRouter}
-                to={typePath}
+                to={typePath !== PATH_ACCOUNT_VERIFY ? typePath : PATH_PRE_AUTH}
               >
-                {typeTitle}
+                {typePath !== PATH_ACCOUNT_VERIFY ? pathNameFormatter(typePath) : TEXT_PRE_AUTH}
               </Button>
             </Grid>
           )}

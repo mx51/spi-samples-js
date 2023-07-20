@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
+  Chip,
   Divider,
   Drawer,
   Grid,
@@ -13,6 +14,12 @@ import {
   Paper,
   Radio,
   RadioGroup,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
   Typography,
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
@@ -21,12 +28,14 @@ import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import {
   PATH_CASH_OUT,
   PATH_REFUND,
+  PATH_PRE_AUTH,
   TEXT_PURCHASE,
   TEXT_REFUND,
   TEXT_CASHOUT,
   PATH_PAY_NOW,
 } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
+import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
 import {
   orderCashoutAmountSelector,
   orderPromptForCashoutSelector,
@@ -46,18 +55,25 @@ import {
   terminalTxFlowReceipt,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
+import { getTitleFromStatus } from '../../utils/common/pair/pairStatusHelpers';
 import {
   initiatePurchase,
   initiateMotoPurchase,
   initiateCashoutOnlyTx,
   initiateRefundTx,
+  InitiateAccountVerifyTx,
   cancelTransaction,
   setTerminalToIdle,
+  InitiatePreAuthOpenTx,
+  InitiatePreAuthCompleteTx,
+  InitiatePreAuthCancelTx,
+  InitiatePreAuthExtendTx,
+  InitiatePreAuthReduceTx,
+  InitiatePreAuthTopupTx,
 } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
 import UnknownTransactionModal from '../UnknownTransactionModal';
-
 import useStyles from './index.styles';
 import { IOrderConfirmation, ITitleStrategy } from './interfaces';
 
@@ -76,6 +92,7 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
   const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
+  const preAuth = useSelector(preAuthSelector);
 
   const successStatus = currentTerminal?.txFlow?.success;
 
@@ -100,6 +117,10 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
     return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected || totalAmount <= 0;
   }
 
+  function isAccountVerify() {
+    return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected;
+  }
+
   function updateUnknownTerminalState(success: string) {
     setTerminalToIdle(selectedTerminal);
     setShowUnknownTransactionModal(false);
@@ -113,6 +134,8 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
     }
   }
 
+  const preAuthButtonText = ['Top Up', 'Reduce', 'Extend', 'Cancel', 'Complete'];
+
   const titleStrategy: ITitleStrategy = {
     Pay: `Override ${TEXT_PURCHASE}`,
     [TEXT_CASHOUT]: TEXT_CASHOUT,
@@ -122,6 +145,28 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
   function getTitleForKeypad(): string {
     return title in titleStrategy ? (titleStrategy as unknown as Record<string, keyof ITitleStrategy>)[title] : title;
   }
+
+  const handlePreAuthTxs = (terminal: any, type: string, amount: number) => {
+    switch (type) {
+      case 'Top Up':
+        InitiatePreAuthTopupTx(terminal, amount, preAuth.preAuthRef);
+        break;
+      case 'Reduce':
+        InitiatePreAuthReduceTx(terminal, amount, preAuth.preAuthRef);
+        break;
+      case 'Extend':
+        InitiatePreAuthExtendTx(terminal, preAuth.preAuthRef);
+        break;
+      case 'Cancel':
+        InitiatePreAuthCancelTx(terminal, preAuth.preAuthRef);
+        break;
+      case 'Complete':
+        InitiatePreAuthCompleteTx(terminal, preAuth.amount, preAuth.preAuthRef, preAuth.surcharge);
+        break;
+      default:
+        break;
+    }
+  };
 
   return (
     <>
@@ -196,6 +241,35 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                   ))}
                 </List>
               </Box>
+              {pathname === PATH_PRE_AUTH &&
+                (preAuth.verified || preAuth.preAuthRef ? (
+                  <TableContainer component={Paper} className={classes.table} elevation={0}>
+                    <Table>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Pre Auth Ref</TableCell>
+                          <TableCell>Account Verified</TableCell>
+                          <TableCell>Surcharge</TableCell>
+                          <TableCell>Amount</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow className={classes.unclickable}>
+                          <TableCell scope="row">{preAuth.preAuthRef !== '' ? preAuth.preAuthRef : '-'}</TableCell>
+                          <TableCell>
+                            <Chip
+                              size="small"
+                              label={preAuth.verified ? 'Verified' : 'Unverified'}
+                              className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
+                            />
+                          </TableCell>
+                          <TableCell>{`$${preAuth.surcharge / 100}`}</TableCell>
+                          <TableCell>{`$${preAuth.amount / 100}`}</TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                ) : null)}
             </RadioGroup>
             {pathname === PATH_PAY_NOW && (
               <>
@@ -233,8 +307,47 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                 }}
               />
             )}
-            {pathname === PATH_PAY_NOW && (
-              <Box display="flex" justifyContent="space-evenly">
+            <Box display="flex" justifyContent="space-evenly">
+              {pathname === PATH_PAY_NOW && (
+                <>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disabled={isDisabled()}
+                    focusRipple
+                    classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                    onClick={() => {
+                      setShowTransactionProgressModal(true);
+                      initiatePurchase(
+                        selectedTerminal,
+                        subtotalAmount,
+                        tipAmount,
+                        cashoutAmount,
+                        surchargeAmount,
+                        promptForCashout
+                      );
+                    }}
+                  >
+                    Card
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    size="large"
+                    disabled={isDisabled() || tipAmount > 0 || cashoutAmount > 0}
+                    focusRipple
+                    classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                    onClick={() => {
+                      setShowTransactionProgressModal(true);
+                      initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
+                    }}
+                  >
+                    Moto
+                  </Button>
+                </>
+              )}
+              {pathname === PATH_CASH_OUT && (
                 <Button
                   variant="contained"
                   color="primary"
@@ -244,66 +357,79 @@ function OrderConfirmation({ title, pathname, currentAmount }: IOrderConfirmatio
                   classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                   onClick={() => {
                     setShowTransactionProgressModal(true);
-                    initiatePurchase(
-                      selectedTerminal,
-                      subtotalAmount,
-                      tipAmount,
-                      cashoutAmount,
-                      surchargeAmount,
-                      promptForCashout
-                    );
+                    initiateCashoutOnlyTx(selectedTerminal, totalAmount, surchargeAmount);
                   }}
                 >
-                  Card
+                  Cashout
                 </Button>
+              )}
+              {pathname === PATH_REFUND && (
                 <Button
                   variant="contained"
                   color="primary"
                   size="large"
-                  disabled={isDisabled() || tipAmount > 0 || cashoutAmount > 0}
+                  disabled={isDisabled()}
                   focusRipple
                   classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
                   onClick={() => {
                     setShowTransactionProgressModal(true);
-                    initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
+                    initiateRefundTx(selectedTerminal, totalAmount);
                   }}
                 >
-                  Moto
+                  Refund
                 </Button>
-              </Box>
-            )}
-            {pathname === PATH_CASH_OUT && (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={isDisabled()}
-                focusRipple
-                classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                onClick={() => {
-                  setShowTransactionProgressModal(true);
-                  initiateCashoutOnlyTx(selectedTerminal, totalAmount, surchargeAmount);
-                }}
-              >
-                Cashout
-              </Button>
-            )}
-            {pathname === PATH_REFUND && (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={isDisabled()}
-                focusRipple
-                classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                onClick={() => {
-                  setShowTransactionProgressModal(true);
-                  initiateRefundTx(selectedTerminal, totalAmount);
-                }}
-              >
-                Refund
-              </Button>
-            )}
+              )}
+              {pathname === PATH_PRE_AUTH &&
+                (preAuth.preAuthRef ? (
+                  preAuthButtonText.map((text) => (
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      disabled={['Extend', 'Cancel', 'Complete'].includes(text) ? isAccountVerify() : isDisabled()}
+                      focusRipple
+                      classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                      onClick={() => {
+                        setShowTransactionProgressModal(true);
+                        handlePreAuthTxs(selectedTerminal, text, totalAmount);
+                      }}
+                    >
+                      {text}
+                    </Button>
+                  ))
+                ) : (
+                  <>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      disabled={isAccountVerify()}
+                      focusRipple
+                      classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                      onClick={() => {
+                        setShowTransactionProgressModal(true);
+                        InitiateAccountVerifyTx(selectedTerminal);
+                      }}
+                    >
+                      Verify Account
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      size="large"
+                      disabled={isDisabled()}
+                      focusRipple
+                      classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+                      onClick={() => {
+                        setShowTransactionProgressModal(true);
+                        InitiatePreAuthOpenTx(selectedTerminal, totalAmount);
+                      }}
+                    >
+                      Open Pre-Auth
+                    </Button>
+                  </>
+                ))}
+            </Box>
           </Box>
         </Grid>
       </Grid>
