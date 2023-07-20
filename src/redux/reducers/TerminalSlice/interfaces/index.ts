@@ -63,6 +63,9 @@ export interface ITxFlow {
       bankCashAmount: number;
       surchargeAmount: number;
       tipAmount: number;
+      preAuthAmount: number;
+      topupAmount: number;
+      reduceAmount: number;
       promptForCashout: boolean;
       promptForCustomerCopy: boolean;
       printForSignatureRequiredTransactions: boolean;
@@ -87,6 +90,11 @@ export interface ITxFlow {
       bankCashAmount: number;
       surchargeAmount: number;
       tipAmount: number;
+      preAuthAmount: number;
+      topupAmount: number;
+      reduceAmount: number;
+      preAuthId: string;
+      success: boolean;
     };
   };
 }

@@ -1,3 +1,4 @@
+import { isPairDisabled } from './PairFormSelectors';
 import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
@@ -9,7 +10,6 @@ import {
   defaultMockCommonState,
   mockTerminalInstanceId,
 } from '../../../utils/tests/common';
-import { isPairDisabled } from './PairFormSelectors';
 
 describe('Test PairFormSelectors', () => {
   test('test isPairDisabled() and return false as result', () => {
@@ -49,6 +49,12 @@ describe('Test PairFormSelectors', () => {
         products: [],
       },
       selectedTerminal: { selectedTerminalId: '' },
+      preAuth: {
+        preAuthRef: 'Test',
+        amount: 1000,
+        surcharge: 200,
+        verified: true,
+      },
     };
 
     // Assert
@@ -80,6 +86,12 @@ describe('Test PairFormSelectors', () => {
         products: [],
       },
       selectedTerminal: { selectedTerminalId: '' },
+      preAuth: {
+        preAuthRef: 'Test',
+        amount: 1000,
+        surcharge: 200,
+        verified: true,
+      },
     };
 
     // Assert

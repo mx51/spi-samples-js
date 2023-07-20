@@ -3,6 +3,7 @@ import spiService from '../services/spiService';
 import { getLocalStorage } from '../utils/common/spi/common';
 import commonReducer from './reducers/CommonSlice/commonSlice';
 import pairFormReducer from './reducers/PairFormSlice/pairFormSlice';
+import preAuthReducer from './reducers/PreAuth/preAuthSlice';
 import productSlice from './reducers/ProductSlice/productSlice';
 import selectedTerminalReducer from './reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import terminalReducer from './reducers/TerminalSlice/terminalsSlice';
@@ -21,6 +22,7 @@ export const store = configureStore({
     products: productSlice,
     terminals: terminalReducer,
     selectedTerminal: selectedTerminalReducer,
+    preAuth: preAuthReducer,
   },
   preloadedState: persistedState,
   devTools: process.env.NODE_ENV === 'development',
