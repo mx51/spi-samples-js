@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -30,11 +30,12 @@ import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import {
   orderCashoutAmountSelector,
   orderPromptForCashoutSelector,
+  orderRefundAmountSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
   productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
-import { addKeypadAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
+import { addCashoutAmount, addRefundAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -61,22 +62,38 @@ import UnknownTransactionModal from '../UnknownTransactionModal';
 import useStyles from './index.styles';
 import { IOrderConfirmation, ITitleStrategy } from './interfaces';
 
-function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOrderConfirmation): React.ReactElement {
+function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation): React.ReactElement {
+  const cashoutPage = pathname === PATH_CASH_OUT;
+  const refundPage = pathname === PATH_REFUND;
+  const purchasePage = pathname === PATH_PAY_NOW;
+
   const dispatch = useDispatch();
 
   const classes = useStyles();
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
+  const refundAmount: number = useSelector(orderRefundAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
+  const subtotalAmount = useSelector(productSubTotalSelector);
 
   const terminals = useSelector(pairedConnectedTerminalList);
-  const subtotalAmount = useSelector(productSubTotalSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
   const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
 
+  const totalAmount = useMemo(() => {
+    if (cashoutPage) {
+      return cashoutAmount;
+    }
+
+    if (refundPage) {
+      return refundAmount;
+    }
+
+    return surchargeAmount + tipAmount + cashoutAmount + subtotalAmount;
+  }, [surchargeAmount, tipAmount, cashoutAmount, subtotalAmount, refundAmount]);
   const successStatus = currentTerminal?.txFlow?.success;
 
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
@@ -86,10 +103,8 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
   };
 
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
   const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
-
   const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
 
   function selectTerminal(terminalId: string) {
@@ -97,7 +112,14 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
   }
 
   function isDisabled() {
-    return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected || totalAmount <= 0;
+    if (
+      !selectedTerminal ||
+      currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected ||
+      (purchasePage && subtotalAmount === 0)
+    )
+      return true;
+
+    return totalAmount <= 0;
   }
 
   function updateUnknownTerminalState(success: string) {
@@ -141,10 +163,15 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
             setDisplayKeypad(false);
           }}
           onAmountChange={(amount) => {
-            setTotalAmount(amount);
             setDisplayKeypad(false);
+
+            if (cashoutPage) {
+              dispatch(addCashoutAmount(amount));
+            } else if (refundPage) {
+              dispatch(addRefundAmount(amount));
+            }
+
             clearProductsOnlyAction();
-            dispatch(addKeypadAmount(amount));
           }}
         />
       </Drawer>
@@ -164,7 +191,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
               >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
-                    {currencyFormat((editSubtotal ? totalAmount : subtotalAmount) / 100)}
+                    {currencyFormat(totalAmount / 100)}
                   </Box>
                   {editSubtotal && (
                     <Box>
@@ -200,7 +227,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                 </List>
               </Box>
             </RadioGroup>
-            {pathname === PATH_PAY_NOW && (
+            {purchasePage && (
               <>
                 <Typography className={classes.label}>Select payment method</Typography>
                 <Divider />
@@ -236,7 +263,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                 }}
               />
             )}
-            {pathname === PATH_PAY_NOW && (
+            {purchasePage && (
               <Box display="flex" justifyContent="space-evenly">
                 <Button
                   variant="contained"
@@ -275,7 +302,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                 </Button>
               </Box>
             )}
-            {pathname === PATH_CASH_OUT && (
+            {cashoutPage && (
               <Button
                 variant="contained"
                 color="primary"
@@ -291,7 +318,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                 Cashout
               </Button>
             )}
-            {pathname === PATH_REFUND && (
+            {refundPage && (
               <Button
                 variant="contained"
                 color="primary"

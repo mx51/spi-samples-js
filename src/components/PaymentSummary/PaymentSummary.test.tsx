@@ -15,6 +15,12 @@ import mockWithRedux, {
   pairedMockTerminals,
 } from '../../utils/tests/common';
 
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useHistory: () => ({
+    location: { pathname: '/order-finished' },
+  }),
+}));
 describe('Test <PaymentSummary />', () => {
   let mockContainer: Any;
   let customStore: Any;
@@ -117,11 +123,13 @@ describe('Test <PaymentSummary />', () => {
           success: isSuccess ? 'Success' : 'Failed',
           request: {
             data: {
-              purchaseAmount: 550,
-              surchargeAmount: 100,
-              bankCashAmount: 200,
-              cashoutAmount: 100,
-              tipAmount: 150,
+              refundAmount: 100,
+            },
+          },
+          response: {
+            data: {
+              ...mockRefundTxFlow.response.data,
+              refundAmount: 100,
             },
           },
         },
@@ -140,7 +148,7 @@ describe('Test <PaymentSummary />', () => {
     expect(container).toMatchSnapshot();
   });
 
-  test('should clear all products on new order', () => {
+  test('should clear all products when component first mounted', () => {
     renderPurchaseSummaryComponent(true);
 
     fireEvent.click(screen.getAllByText(/New Order/i)[0]);

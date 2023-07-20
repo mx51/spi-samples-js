@@ -10,7 +10,6 @@ import useStyles from './index.styles';
 
 function PayNow(): React.ReactElement {
   const classes = useStyles();
-  const originalTotalAmount: number = useSelector(orderTotalSelector);
 
   return (
     <Layout>
@@ -19,12 +18,7 @@ function PayNow(): React.ReactElement {
           <Order disablePayNow />
         </Grid>
         <Grid item xs={8}>
-          <OrderConfirmation
-            title="Pay"
-            pathname={PATH_PAY_NOW}
-            currentAmount={originalTotalAmount}
-            editSubtotal={false}
-          />
+          <OrderConfirmation title="Pay" pathname={PATH_PAY_NOW} editSubtotal={false} />
         </Grid>
       </Grid>
     </Layout>

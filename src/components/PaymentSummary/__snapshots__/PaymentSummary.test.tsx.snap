@@ -172,7 +172,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-138 makeStyles-paper-122 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $0.00
+        $1.00
       </div>
       <br />
       <div
@@ -259,7 +259,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-114 makeStyles-paper-98 MuiPaper-elevation1 MuiPaper-rounded"
       >
-        $0.00
+        $1.00
       </div>
       <br />
       <div
