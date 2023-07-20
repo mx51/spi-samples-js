@@ -50,7 +50,10 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should match OrderConfirmationPage snapshot test', () => {
     // Arrange
-    const container = mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />, customStore);
+    const container = mockWithRedux(
+      <OrderConfirmation title="title" pathname="/" currentAmount={500} editSubtotal />,
+      customStore
+    );
 
     // Assert
     expect(container).toMatchSnapshot();
@@ -58,7 +61,7 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should clearAllProducts on amount override ', () => {
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />, customStore);
+    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} editSubtotal />, customStore);
     fireEvent.click(screen.getByText(/test/i));
 
     // Assert
@@ -71,7 +74,7 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should select a terminal from list', () => {
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} />, customStore);
+    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} editSubtotal />, customStore);
     fireEvent.click(screen.getByText(/test/i));
 
     // Assert
@@ -88,7 +91,10 @@ describe('Test <OrderConfirmation />', () => {
     initiatePurchaseTransaction.mockReturnValue();
 
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />, customStore);
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
+      customStore
+    );
     fireEvent.click(screen.getByText(/card/i));
 
     // Assert
@@ -124,7 +130,7 @@ describe('Test <OrderConfirmation />', () => {
 
     // Arrange
     mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />,
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
       customStoreWithoutCashout
     );
     fireEvent.click(screen.getByText(/moto/i));
@@ -175,7 +181,7 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />,
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
       customStore2(mockTerminals)
     );
 
@@ -228,7 +234,7 @@ describe('Test <OrderConfirmation />', () => {
 
     // Act
     mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />,
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
       customStore2(mockTerminals)
     );
     const motoButton = screen.getByText(/Moto/i).closest('button');
@@ -247,7 +253,10 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={600} />, customStore);
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={600} editSubtotal />,
+      customStore
+    );
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByText(/5/i));
     fireEvent.click(screen.getByText(/ok/i));
@@ -268,7 +277,10 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} />, customStore);
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
+      customStore
+    );
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByLabelText(/close button/i));
 
@@ -284,7 +296,10 @@ describe('Test <OrderConfirmation />', () => {
     initiateCashoutOnlyTxTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_CASH_OUT} currentAmount={500} />, customStore);
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_CASH_OUT} currentAmount={500} editSubtotal />,
+      customStore
+    );
     const cashoutButton = screen.queryByText(/Cashout/i);
     fireEvent.click(cashoutButton as Element);
 
@@ -298,7 +313,10 @@ describe('Test <OrderConfirmation />', () => {
     initiateRefundTxTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_REFUND} currentAmount={500} />, customStore);
+    mockWithRedux(
+      <OrderConfirmation title="title" pathname={PATH_REFUND} currentAmount={500} editSubtotal={false} />,
+      customStore
+    );
     const refundButton = screen.queryByText(/Refund/i);
     fireEvent.click(refundButton as Element);
 

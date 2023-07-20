@@ -1,6 +1,6 @@
 import { Spi as SpiClient, TransactionOptions } from '@mx51/spi-client-js';
 import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
-import { currentVersion, defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
+import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
   FIELD_PRESSED_COLOR,
   PRIMARY_ERROR_COLOR,
@@ -21,6 +21,7 @@ import {
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
+import { posVersion } from '../../utils/constants';
 import { ITerminal, ITerminals } from '../interfaces';
 
 declare global {
@@ -138,7 +139,7 @@ class SpiService {
 
       // spi library methods setup
       instance.spiClient.SetEventBus(instance);
-      instance.spiClient.SetPosInfo(defaultPosName, currentVersion);
+      instance.spiClient.SetPosInfo(defaultPosName, posVersion);
       instance.spiClient.SetAcquirerCode(acquirerCode);
       instance.spiClient.SetDeviceApiKey(defaultApikey);
       instance.spiClient.SetTestMode(testMode);

@@ -16,6 +16,8 @@ test('should return product quantity for list', () => {
       tipAmount: 100,
       cashoutAmount: 100,
       promptForCashout: false,
+      subtotalAmount: 0,
+      overrideSubtotalAmount: false,
       products: [
         { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
@@ -38,6 +40,8 @@ test('should return product quantity for duplicate product', () => {
       tipAmount: 100,
       cashoutAmount: 100,
       promptForCashout: false,
+      subtotalAmount: 0,
+      overrideSubtotalAmount: false,
       products: [
         { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
@@ -64,6 +68,8 @@ test('should return keypad amount as subtotal amount', () => {
       cashoutAmount: 110,
       promptForCashout: false,
       products: [],
+      subtotalAmount: 500,
+      overrideSubtotalAmount: false,
     },
   };
   expect(productSubTotalSelector(state)).toEqual(500);
@@ -79,6 +85,8 @@ test('should add all the price and display subtotal', () => {
       tipAmount: 100,
       cashoutAmount: 100,
       promptForCashout: false,
+      subtotalAmount: 2400,
+      overrideSubtotalAmount: false,
       products: [
         { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
         { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },
@@ -102,6 +110,8 @@ test('should get surcharge amount', () => {
       cashoutAmount: 0,
       promptForCashout: false,
       products: [],
+      subtotalAmount: 0,
+      overrideSubtotalAmount: false,
     },
   };
   expect(orderSurchargeAmountSelector(state)).toEqual(155);
@@ -118,6 +128,8 @@ test('should get tip amount', () => {
       cashoutAmount: 0,
       promptForCashout: false,
       products: [],
+      subtotalAmount: 0,
+      overrideSubtotalAmount: false,
     },
   };
   expect(orderTipAmountSelector(state)).toEqual(125);
@@ -134,6 +146,8 @@ test('should get cashout amount', () => {
       cashoutAmount: 125,
       promptForCashout: false,
       products: [],
+      subtotalAmount: 0,
+      overrideSubtotalAmount: false,
     },
   };
   expect(orderCashoutAmountSelector(state)).toEqual(125);

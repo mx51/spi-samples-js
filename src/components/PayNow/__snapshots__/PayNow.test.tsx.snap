@@ -96,16 +96,36 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-30 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-30 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Subtotal
                 </span>
               </div>
-              <p
-                class="MuiTypography-root makeStyles-price-31 MuiTypography-body1"
+              <span
+                aria-disabled="false"
+                aria-label="Add Amount"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-34"
+                role="button"
+                tabindex="0"
               >
-                $0.00
-              </p>
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </span>
             </li>
             <li
               class="MuiListItem-root MuiListItem-gutters"
@@ -114,7 +134,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-33 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-31 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Surcharge
                 </span>
@@ -132,7 +152,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-33 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-31 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Cashout
                 </span>
@@ -150,7 +170,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiListItemText-root"
               >
                 <span
-                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-33 MuiTypography-body1 MuiTypography-displayBlock"
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-31 MuiTypography-body1 MuiTypography-displayBlock"
                 >
                   Tip
                 </span>
@@ -169,13 +189,13 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
             >
               <span
                 aria-disabled="false"
-                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-37 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-24 MuiIconButton-colorPrimary"
+                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-35 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-24 MuiIconButton-colorPrimary"
               >
                 <span
                   class="MuiIconButton-label"
                 >
                   <input
-                    class="PrivateSwitchBase-input-40"
+                    class="PrivateSwitchBase-input-38"
                     data-indeterminate="false"
                     name="Prompt for Cashout"
                     type="checkbox"
@@ -250,7 +270,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
           class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
         >
           <div
-            class="MuiGrid-root makeStyles-gridStyles-42 MuiGrid-item MuiGrid-grid-xs-7"
+            class="MuiGrid-root makeStyles-gridStyles-40 MuiGrid-item MuiGrid-grid-xs-7"
           >
             <div
               class="MuiBox-root MuiBox-root-59 makeStyles-root-41"
@@ -262,15 +282,16 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                   class="MuiBox-root MuiBox-root-61"
                 >
                   <p
-                    class="MuiTypography-root makeStyles-payLabel-43 MuiTypography-body1"
+                    class="MuiTypography-root makeStyles-payLabel-41 MuiTypography-body1"
                   >
                     Pay
                   </p>
                 </div>
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-45"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-43 Mui-disabled Mui-disabled"
                   data-testid="orderTotalButton"
-                  tabindex="0"
+                  disabled=""
+                  tabindex="-1"
                   type="button"
                 >
                   <span
@@ -305,13 +326,10 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                       </div>
                     </div>
                   </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
                 </button>
               </div>
               <p
-                class="MuiTypography-root makeStyles-label-48 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-label-46 MuiTypography-body1"
               >
                 Select terminal
               </p>
@@ -320,7 +338,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
               />
               <div
                 aria-label="terminalList"
-                class="MuiFormGroup-root makeStyles-radioGroup-46"
+                class="MuiFormGroup-root makeStyles-radioGroup-44"
                 role="radiogroup"
               >
                 <div
@@ -332,7 +350,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 </div>
               </div>
               <p
-                class="MuiTypography-root makeStyles-label-48 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-label-46 MuiTypography-body1"
               >
                 Select payment method
               </p>
@@ -343,25 +361,25 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiBox-root MuiBox-root-66"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-50 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-48 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
                   disabled=""
                   tabindex="-1"
                   type="button"
                 >
                   <span
-                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-49"
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-47"
                   >
                     Card
                   </span>
                 </button>
                 <button
-                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-50 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-48 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
                   disabled=""
                   tabindex="-1"
                   type="button"
                 >
                   <span
-                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-49"
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-47"
                   >
                     Moto
                   </span>

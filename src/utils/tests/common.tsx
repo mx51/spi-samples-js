@@ -126,6 +126,9 @@ export const mockDefaultProducts = {
   tipAmount: 100,
   cashoutAmount: 100,
   promptForCashout: false,
+  subtotalAmount: 300,
+  overrideSubtotalAmount: false,
+
   products: [
     { id: 1, name: 'Mocha', price: 500, image: 'Mocha.jpeg' },
     { id: 2, name: 'Latte', price: 450, image: 'Latte.jpeg' },

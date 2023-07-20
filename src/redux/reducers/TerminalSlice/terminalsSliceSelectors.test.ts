@@ -124,6 +124,8 @@ describe('Test terminals slice selectors', () => {
         cashoutAmount: 0,
         promptForCashout: false,
         products: [],
+        subtotalAmount: 0,
+        overrideSubtotalAmount: false,
       },
       pairForm: {
         acquirerCode: {

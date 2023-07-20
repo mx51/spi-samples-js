@@ -1,5 +1,4 @@
 import { createSelector } from '@reduxjs/toolkit';
-import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState, ITxMessage } from './interfaces';
 import { SPI_PAIR_STATUS, SPI_TRANSACTION_TYPES } from '../../../definitions/constants/commonConfigs';
 import {
   PATH_CASH_OUT,
@@ -15,6 +14,7 @@ import {
 } from '../../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../../definitions/constants/terminalConfigs';
 import { RootState } from '../../store';
+import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState, ITxMessage } from './interfaces';
 
 export const terminalList = (state: RootState): ITerminalState => state.terminals;
 
