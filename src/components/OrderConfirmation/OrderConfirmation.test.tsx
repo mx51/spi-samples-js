@@ -36,6 +36,12 @@ describe('Test <OrderConfirmation />', () => {
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        preAuth: {
+          preAuthRef: 'Test',
+          amount: 1000,
+          surcharge: 200,
+          verified: true,
+        },
       }),
     };
   });
@@ -107,6 +113,12 @@ describe('Test <OrderConfirmation />', () => {
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        preAuth: {
+          preAuthRef: 'Test',
+          amount: 1000,
+          surcharge: 200,
+          verified: true,
+        },
       }),
     };
 
@@ -139,6 +151,12 @@ describe('Test <OrderConfirmation />', () => {
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        preAuth: {
+          preAuthRef: 'Test',
+          amount: 1000,
+          surcharge: 200,
+          verified: true,
+        },
       }),
     });
     const mockTerminals = {
@@ -188,6 +206,12 @@ describe('Test <OrderConfirmation />', () => {
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        preAuth: {
+          preAuthRef: 'Test',
+          amount: 1000,
+          surcharge: 200,
+          verified: true,
+        },
       }),
     });
     const mockTerminals = {

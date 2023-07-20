@@ -62,6 +62,13 @@ export const defaultEmptyMockPairFormParams = {
 
 export const defaultMockSelectedTerminals = { selectedTerminalId: 'test' };
 
+export const defaultMockPreAuthState = {
+  preAuthRef: 'Test',
+  amount: 1000,
+  surcharge: 200,
+  verified: true,
+};
+
 export const defaultMockPairFormParams = {
   acquirerCode: {
     value: 'test',
@@ -306,6 +313,11 @@ export const mockTxFlow: ITxFlow = {
       surchargeAmount: 0,
       bankCashAmount: 0,
       tipAmount: 0,
+      preAuthAmount: 0,
+      topupAmount: 0,
+      reduceAmount: 0,
+      preAuthId: 'string',
+      success: true,
     },
   },
   signatureRequiredMessage: {
@@ -323,6 +335,9 @@ export const mockTxFlow: ITxFlow = {
       bankCashAmount: 0,
       promptForCashout: false,
       surchargeAmount: 0,
+      preAuthAmount: 0,
+      topupAmount: 0,
+      reduceAmount: 0,
       promptForCustomerCopy: false,
       printForSignatureRequiredTransactions: false,
       printMerchantCopy: false,
@@ -393,6 +408,7 @@ export const mockTerminalInstance: ITerminal = {
   removeEventListener: jest.fn(),
   setEventMapper: jest.fn(),
   spiClient: mockSpiClient,
+  spiPreAuth: null,
   autoAddressResolutionFailed: jest.fn(),
   acquirerCode: 'test',
   autoAddress: false,

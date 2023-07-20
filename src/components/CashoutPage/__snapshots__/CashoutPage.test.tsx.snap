@@ -65,13 +65,13 @@ exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
             class="MuiGrid-root makeStyles-gridStyles-10 MuiGrid-item MuiGrid-grid-xs-7"
           >
             <div
-              class="MuiBox-root MuiBox-root-21 makeStyles-root-9"
+              class="MuiBox-root MuiBox-root-27 makeStyles-root-9"
             >
               <div
-                class="MuiBox-root MuiBox-root-22"
+                class="MuiBox-root MuiBox-root-28"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-23"
+                  class="MuiBox-root MuiBox-root-29"
                 >
                   <p
                     class="MuiTypography-root makeStyles-payLabel-11 MuiTypography-body1"
@@ -89,15 +89,15 @@ exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
                     class="MuiButton-label"
                   >
                     <div
-                      class="MuiPaper-root MuiBox-root MuiBox-root-24 makeStyles-paper-12 MuiPaper-elevation1 MuiPaper-rounded"
+                      class="MuiPaper-root MuiBox-root MuiBox-root-30 makeStyles-paper-12 MuiPaper-elevation1 MuiPaper-rounded"
                     >
                       <div
-                        class="MuiBox-root MuiBox-root-25 makeStyles-orderTotalInputField-15"
+                        class="MuiBox-root MuiBox-root-31 makeStyles-orderTotalInputField-15"
                       >
                         $0.00
                       </div>
                       <div
-                        class="MuiBox-root MuiBox-root-26"
+                        class="MuiBox-root MuiBox-root-32"
                       >
                         <span
                           aria-hidden="true"
@@ -136,25 +136,29 @@ exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
                 role="radiogroup"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-27"
+                  class="MuiBox-root MuiBox-root-33"
                 >
                   <ul
                     class="MuiList-root MuiList-padding"
                   />
                 </div>
               </div>
-              <button
-                class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-18 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
-                disabled=""
-                tabindex="-1"
-                type="button"
+              <div
+                class="MuiBox-root MuiBox-root-34"
               >
-                <span
-                  class="MuiButton-label makeStyles-paymentTypeBtnLabel-17"
+                <button
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-18 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
                 >
-                  Cashout
-                </span>
-              </button>
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-17"
+                  >
+                    Cashout
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>

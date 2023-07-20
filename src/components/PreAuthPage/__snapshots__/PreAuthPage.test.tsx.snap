@@ -52,9 +52,130 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
         </div>
       </header>
     </div>
-    <p>
-      Pre Auth Page
-    </p>
+    <div
+      class="MuiGrid-root"
+    >
+      <div
+        class="MuiGrid-root"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+        >
+          <div
+            class="MuiGrid-root makeStyles-gridStyles-10 MuiGrid-item MuiGrid-grid-xs-7"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-27 makeStyles-root-9"
+            >
+              <div
+                class="MuiBox-root MuiBox-root-28"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-29"
+                >
+                  <p
+                    class="MuiTypography-root makeStyles-payLabel-11 MuiTypography-body1"
+                  >
+                    Pre Auth
+                  </p>
+                </div>
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-13"
+                  data-testid="orderTotalButton"
+                  tabindex="0"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label"
+                  >
+                    <div
+                      class="MuiPaper-root MuiBox-root MuiBox-root-30 makeStyles-paper-12 MuiPaper-elevation1 MuiPaper-rounded"
+                    >
+                      <div
+                        class="MuiBox-root MuiBox-root-31 makeStyles-orderTotalInputField-15"
+                      >
+                        $0.00
+                      </div>
+                      <div
+                        class="MuiBox-root MuiBox-root-32"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="material-icons MuiIcon-root"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+              <p
+                class="MuiTypography-root makeStyles-label-16 MuiTypography-body1"
+              >
+                Select terminal
+              </p>
+              <hr
+                class="MuiDivider-root"
+              />
+              <div
+                aria-label="terminalList"
+                class="MuiFormGroup-root makeStyles-radioGroup-14"
+                role="radiogroup"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-33"
+                >
+                  <ul
+                    class="MuiList-root MuiList-padding"
+                  />
+                </div>
+              </div>
+              <div
+                class="MuiBox-root MuiBox-root-34"
+              >
+                <button
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-18 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-17"
+                  >
+                    Verify Account
+                  </span>
+                </button>
+                <button
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-18 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-17"
+                  >
+                    Open Pre-Auth
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

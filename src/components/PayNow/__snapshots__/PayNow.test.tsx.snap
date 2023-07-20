@@ -253,13 +253,13 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
             class="MuiGrid-root makeStyles-gridStyles-42 MuiGrid-item MuiGrid-grid-xs-7"
           >
             <div
-              class="MuiBox-root MuiBox-root-53 makeStyles-root-41"
+              class="MuiBox-root MuiBox-root-59 makeStyles-root-41"
             >
               <div
-                class="MuiBox-root MuiBox-root-54"
+                class="MuiBox-root MuiBox-root-60"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-55"
+                  class="MuiBox-root MuiBox-root-61"
                 >
                   <p
                     class="MuiTypography-root makeStyles-payLabel-43 MuiTypography-body1"
@@ -277,15 +277,15 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                     class="MuiButton-label"
                   >
                     <div
-                      class="MuiPaper-root MuiBox-root MuiBox-root-56 makeStyles-paper-44 MuiPaper-elevation1 MuiPaper-rounded"
+                      class="MuiPaper-root MuiBox-root MuiBox-root-62 makeStyles-paper-44 MuiPaper-elevation1 MuiPaper-rounded"
                     >
                       <div
-                        class="MuiBox-root MuiBox-root-57 makeStyles-orderTotalInputField-47"
+                        class="MuiBox-root MuiBox-root-63 makeStyles-orderTotalInputField-47"
                       >
                         $0.00
                       </div>
                       <div
-                        class="MuiBox-root MuiBox-root-58"
+                        class="MuiBox-root MuiBox-root-64"
                       >
                         <span
                           aria-hidden="true"
@@ -324,7 +324,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 role="radiogroup"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-59"
+                  class="MuiBox-root MuiBox-root-65"
                 >
                   <ul
                     class="MuiList-root MuiList-padding"
@@ -340,7 +340,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiDivider-root"
               />
               <div
-                class="MuiBox-root MuiBox-root-60"
+                class="MuiBox-root MuiBox-root-66"
               >
                 <button
                   class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-50 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"

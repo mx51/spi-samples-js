@@ -9,13 +9,13 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
       class="MuiGrid-root makeStyles-gridStyles-2 MuiGrid-item MuiGrid-grid-xs-7"
     >
       <div
-        class="MuiBox-root MuiBox-root-13 makeStyles-root-1"
+        class="MuiBox-root MuiBox-root-19 makeStyles-root-1"
       >
         <div
-          class="MuiBox-root MuiBox-root-14"
+          class="MuiBox-root MuiBox-root-20"
         >
           <div
-            class="MuiBox-root MuiBox-root-15"
+            class="MuiBox-root MuiBox-root-21"
           >
             <p
               class="MuiTypography-root makeStyles-payLabel-3 MuiTypography-body1"
@@ -33,15 +33,15 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
               class="MuiButton-label"
             >
               <div
-                class="MuiPaper-root MuiBox-root MuiBox-root-16 makeStyles-paper-4 MuiPaper-elevation1 MuiPaper-rounded"
+                class="MuiPaper-root MuiBox-root MuiBox-root-22 makeStyles-paper-4 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-17 makeStyles-orderTotalInputField-7"
+                  class="MuiBox-root MuiBox-root-23 makeStyles-orderTotalInputField-7"
                 >
                   $5.00
                 </div>
                 <div
-                  class="MuiBox-root MuiBox-root-18"
+                  class="MuiBox-root MuiBox-root-24"
                 >
                   <span
                     aria-hidden="true"
@@ -80,7 +80,7 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
           role="radiogroup"
         >
           <div
-            class="MuiBox-root MuiBox-root-19"
+            class="MuiBox-root MuiBox-root-25"
           >
             <ul
               class="MuiList-root MuiList-padding"
@@ -93,20 +93,20 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
                 >
                   <span
                     aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-20 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-11 PrivateSwitchBase-checked-21 Mui-checked MuiIconButton-colorSecondary"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-26 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-11 PrivateSwitchBase-checked-27 Mui-checked MuiIconButton-colorSecondary"
                   >
                     <span
                       class="MuiIconButton-label"
                     >
                       <input
                         checked=""
-                        class="PrivateSwitchBase-input-23"
+                        class="PrivateSwitchBase-input-29"
                         name="terminal"
                         type="radio"
                         value="123-123-123"
                       />
                       <div
-                        class="PrivateRadioButtonIcon-root-24 PrivateRadioButtonIcon-checked-26"
+                        class="PrivateRadioButtonIcon-root-30 PrivateRadioButtonIcon-checked-32"
                       >
                         <svg
                           aria-hidden="true"
@@ -120,7 +120,7 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
                         </svg>
                         <svg
                           aria-hidden="true"
-                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-25"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-31"
                           focusable="false"
                           viewBox="0 0 24 24"
                         >
@@ -153,6 +153,9 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
             </ul>
           </div>
         </div>
+        <div
+          class="MuiBox-root MuiBox-root-33"
+        />
       </div>
     </div>
   </div>

@@ -11,12 +11,12 @@ exports[`Test <PaymentSummary /> should match PaymentSummary snapshot test 1`] =
       <p
         class="MuiTypography-root makeStyles-heading-6 MuiTypography-body1"
       >
-        Terminal:
+        Terminal: 
       </p>
       <p
         class="MuiTypography-root makeStyles-subheading-7 MuiTypography-body1"
       >
-         S/N 
+         | S/N 
       </p>
       <div
         class="MuiPaper-root MuiBox-root MuiBox-root-14 makeStyles-paper-8 MuiPaper-elevation1 MuiPaper-rounded"
@@ -159,14 +159,14 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       <p
         class="MuiTypography-root makeStyles-heading-120 MuiTypography-body1"
       >
-        Terminal:
+        Terminal: 
         123
       </p>
       <p
         class="MuiTypography-root makeStyles-subheading-121 MuiTypography-body1"
       >
         192.168.1.10
-         S/N 
+         | S/N 
         123-123-123
       </p>
       <div
@@ -246,14 +246,14 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase success 1`] 
       <p
         class="MuiTypography-root makeStyles-heading-96 MuiTypography-body1"
       >
-        Terminal:
+        Terminal: 
         123
       </p>
       <p
         class="MuiTypography-root makeStyles-subheading-97 MuiTypography-body1"
       >
         192.168.1.10
-         S/N 
+         | S/N 
         123-123-123
       </p>
       <div
