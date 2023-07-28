@@ -10,3 +10,9 @@ export interface ITitleStrategy {
   Cashout: string;
   Refund: string;
 }
+
+export interface IProps {
+  isDisabled: () => boolean;
+  totalAmount: number;
+  setShowTransactionProgressModal: (show: boolean) => void;
+}

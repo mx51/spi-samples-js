@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   Box,
   Button,
-  Chip,
   Divider,
   Drawer,
   Grid,
@@ -14,12 +13,6 @@ import {
   Paper,
   Radio,
   RadioGroup,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Typography,
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
@@ -35,14 +28,7 @@ import {
   PATH_PAY_NOW,
 } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
-import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
-import {
-  orderCashoutAmountSelector,
-  orderPromptForCashoutSelector,
-  orderSurchargeAmountSelector,
-  orderTipAmountSelector,
-  productSubTotalSelector,
-} from '../../redux/reducers/ProductSlice/productSelector';
+import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { addKeypadAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
@@ -55,69 +41,44 @@ import {
   terminalTxFlowReceipt,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
-import {
-  initiatePurchase,
-  initiateMotoPurchase,
-  initiateCashoutOnlyTx,
-  initiateRefundTx,
-  InitiateAccountVerifyTx,
-  cancelTransaction,
-  setTerminalToIdle,
-  InitiatePreAuthOpenTx,
-  InitiatePreAuthCompleteTx,
-  InitiatePreAuthCancelTx,
-  InitiatePreAuthExtendTx,
-  InitiatePreAuthReduceTx,
-  InitiatePreAuthTopupTx,
-} from '../../utils/common/purchase/purchaseHelper';
+import { cancelTransaction, setTerminalToIdle } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
 import UnknownTransactionModal from '../UnknownTransactionModal';
 import useStyles from './index.styles';
 import { IOrderConfirmation, ITitleStrategy } from './interfaces';
+import { CashoutOrderConfirmation } from './CashoutOrderConfirmation';
+import { PayNowOrderConfirmation } from './PayNowOrderConfirmation';
+import { PreAuthOrderConfirmation } from './PreAuthOrderConfirmation';
+import { RefundOrderConfirmation } from './RefundOrderConfirmation';
+
+function isDisabled(selectedTerminal: string, currentTerminal: ITerminalProps, totalAmount: number) {
+  return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected || totalAmount <= 0;
+}
 
 function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOrderConfirmation): React.ReactElement {
   const dispatch = useDispatch();
-
   const classes = useStyles();
-  const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
-  const tipAmount: number = useSelector(orderTipAmountSelector);
-  const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
-  const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
-
   const terminals = useSelector(pairedConnectedTerminalList);
   const subtotalAmount = useSelector(productSubTotalSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
   const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
-  const preAuth = useSelector(preAuthSelector);
-
   const successStatus = currentTerminal?.txFlow?.success;
-
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
+  const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
+  const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
+  const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
+  const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
+  const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
   };
 
-  const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
-  const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
-  const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
-
-  const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
-
   function selectTerminal(terminalId: string) {
     dispatch(updateSelectedTerminal(terminalId));
-  }
-
-  function isDisabled() {
-    return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected || totalAmount <= 0;
-  }
-
-  function isAccountVerify() {
-    return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected;
   }
 
   function updateUnknownTerminalState(success: string) {
@@ -133,8 +94,6 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
     }
   }
 
-  const preAuthButtonText = ['Top Up', 'Reduce', 'Extend', 'Cancel', 'Complete'];
-
   const titleStrategy: ITitleStrategy = {
     Pay: `Override ${TEXT_PURCHASE}`,
     [TEXT_CASHOUT]: TEXT_CASHOUT,
@@ -145,26 +104,44 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
     return title in titleStrategy ? (titleStrategy as unknown as Record<string, keyof ITitleStrategy>)[title] : title;
   }
 
-  const handlePreAuthTxs = (terminal: any, type: string, amount: number) => {
-    switch (type) {
-      case 'Top Up':
-        InitiatePreAuthTopupTx(terminal, amount, preAuth.preAuthRef);
-        break;
-      case 'Reduce':
-        InitiatePreAuthReduceTx(terminal, amount, preAuth.preAuthRef);
-        break;
-      case 'Extend':
-        InitiatePreAuthExtendTx(terminal, preAuth.preAuthRef);
-        break;
-      case 'Cancel':
-        InitiatePreAuthCancelTx(terminal, preAuth.preAuthRef);
-        break;
-      case 'Complete':
-        InitiatePreAuthCompleteTx(terminal, preAuth.amount, preAuth.preAuthRef, preAuth.surcharge);
-        break;
-      default:
-        break;
+  type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
+
+  const componentByPathName: Record<ComponentByPathNameKeys, JSX.Element> = {
+    '/pre-auth': (
+      <PreAuthOrderConfirmation
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
+        totalAmount={totalAmount}
+      />
+    ),
+    '/refund': (
+      <RefundOrderConfirmation
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
+        totalAmount={totalAmount}
+      />
+    ),
+    '/paynow': (
+      <PayNowOrderConfirmation
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
+        totalAmount={totalAmount}
+      />
+    ),
+    '/cashout': (
+      <CashoutOrderConfirmation
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
+        totalAmount={totalAmount}
+      />
+    ),
+  };
+
+  const renderOrderConfirmationByAction = (): JSX.Element | undefined => {
+    if (pathname in componentByPathName) {
+      return componentByPathName[pathname as ComponentByPathNameKeys];
     }
+    return undefined;
   };
 
   return (
@@ -243,42 +220,11 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                   ))}
                 </List>
               </Box>
-              {pathname === PATH_PRE_AUTH &&
-                (preAuth.verified || preAuth.preAuthRef ? (
-                  <TableContainer component={Paper} className={classes.table} elevation={0}>
-                    <Table>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell>Pre Auth Ref</TableCell>
-                          <TableCell>Account Verified</TableCell>
-                          <TableCell>Surcharge</TableCell>
-                          <TableCell>Amount</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow className={classes.unclickable}>
-                          <TableCell scope="row">{preAuth.preAuthRef !== '' ? preAuth.preAuthRef : '-'}</TableCell>
-                          <TableCell>
-                            <Chip
-                              size="small"
-                              label={preAuth.verified ? 'Verified' : 'Unverified'}
-                              className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
-                            />
-                          </TableCell>
-                          <TableCell>{`$${preAuth.surcharge / 100}`}</TableCell>
-                          <TableCell>{`$${preAuth.amount / 100}`}</TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </TableContainer>
-                ) : null)}
             </RadioGroup>
-            {pathname === PATH_PAY_NOW && (
-              <>
-                <Typography className={classes.label}>Select payment method</Typography>
-                <Divider />
-              </>
-            )}
+
+            {/* Dynamically render OrderConfirmation component based on pathname */}
+            {renderOrderConfirmationByAction()}
+
             {showUnknownTransactionModal && isUnknownState && (
               <UnknownTransactionModal
                 onSuccessTransaction={() => {
@@ -309,129 +255,6 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
                 }}
               />
             )}
-            <Box display="flex" justifyContent="space-evenly">
-              {pathname === PATH_PAY_NOW && (
-                <>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    disabled={isDisabled()}
-                    focusRipple
-                    classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                    onClick={() => {
-                      setShowTransactionProgressModal(true);
-                      initiatePurchase(
-                        selectedTerminal,
-                        subtotalAmount,
-                        tipAmount,
-                        cashoutAmount,
-                        surchargeAmount,
-                        promptForCashout
-                      );
-                    }}
-                  >
-                    Card
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    disabled={isDisabled() || tipAmount > 0 || cashoutAmount > 0}
-                    focusRipple
-                    classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                    onClick={() => {
-                      setShowTransactionProgressModal(true);
-                      initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
-                    }}
-                  >
-                    Moto
-                  </Button>
-                </>
-              )}
-              {pathname === PATH_CASH_OUT && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  disabled={isDisabled()}
-                  focusRipple
-                  classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                  onClick={() => {
-                    setShowTransactionProgressModal(true);
-                    initiateCashoutOnlyTx(selectedTerminal, totalAmount, surchargeAmount);
-                  }}
-                >
-                  Cashout
-                </Button>
-              )}
-              {pathname === PATH_REFUND && (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  disabled={isDisabled()}
-                  focusRipple
-                  classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                  onClick={() => {
-                    setShowTransactionProgressModal(true);
-                    initiateRefundTx(selectedTerminal, totalAmount);
-                  }}
-                >
-                  Refund
-                </Button>
-              )}
-              {pathname === PATH_PRE_AUTH &&
-                (preAuth.preAuthRef ? (
-                  preAuthButtonText.map((text) => (
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      disabled={['Extend', 'Cancel', 'Complete'].includes(text) ? isAccountVerify() : isDisabled()}
-                      focusRipple
-                      classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                      onClick={() => {
-                        setShowTransactionProgressModal(true);
-                        handlePreAuthTxs(selectedTerminal, text, totalAmount);
-                      }}
-                    >
-                      {text}
-                    </Button>
-                  ))
-                ) : (
-                  <>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      disabled={isAccountVerify()}
-                      focusRipple
-                      classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                      onClick={() => {
-                        setShowTransactionProgressModal(true);
-                        InitiateAccountVerifyTx(selectedTerminal);
-                      }}
-                    >
-                      Verify Account
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      size="large"
-                      disabled={isDisabled()}
-                      focusRipple
-                      classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                      onClick={() => {
-                        setShowTransactionProgressModal(true);
-                        InitiatePreAuthOpenTx(selectedTerminal, totalAmount);
-                      }}
-                    >
-                      Open Pre-Auth
-                    </Button>
-                  </>
-                ))}
-            </Box>
           </Box>
         </Grid>
       </Grid>

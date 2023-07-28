@@ -16,6 +16,12 @@ const useStyles = makeStyles((theme: Theme) =>
       top: theme.spacing(6),
       zIndex: 1020,
     },
+    tableBox: {
+      display: 'flex',
+      flexDirection: 'column',
+      top: theme.spacing(6),
+      height: '75%',
+    },
     gridStyles: {
       margin: theme.spacing(3),
     },
