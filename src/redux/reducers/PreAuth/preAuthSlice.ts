@@ -63,7 +63,7 @@ export const preAuthSlice = createSlice({
         case 'COMPLETE_PRE_AUTH':
           return initialState;
         default:
-          return state;
+          throw new Error(`Unhandled action key: ${key}`);
       }
     },
   },

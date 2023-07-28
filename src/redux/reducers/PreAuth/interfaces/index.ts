@@ -43,9 +43,9 @@ export type IPreAuthAction =
     }
   | {
       key: 'CANCEL_PRE_AUTH';
-      value: null;
+      value: undefined;
     }
   | {
       key: 'COMPLETE_PRE_AUTH';
-      value: null;
+      value: undefined;
     };

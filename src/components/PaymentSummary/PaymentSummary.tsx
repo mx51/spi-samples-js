@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter, useHistory } from 'react-router-dom';
+import useStyles from './index.style';
 import {
   PATH_ACCOUNT_VERIFY,
   PATH_PRE_AUTH,
@@ -23,7 +24,6 @@ import {
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
 import OrderSubTotal from '../OrderSubTotal';
-import useStyles from './index.style';
 
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();

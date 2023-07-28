@@ -11,7 +11,4 @@ export const preAuthSelector = createSelector(preAuth, (params) => ({
   verified: params.verified,
 }));
 
-export const isPreAuthDisabledSelector = createSelector(
-  preAuth,
-  (params) => params.preAuthRef === '' || params.amount === 0
-);
+export const isPreAuthDisabledSelector = createSelector(preAuth, (params) => !params.preAuthRef || !params.amount);
