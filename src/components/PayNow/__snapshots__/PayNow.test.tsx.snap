@@ -270,25 +270,25 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
           class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
         >
           <div
-            class="MuiGrid-root makeStyles-gridStyles-40 MuiGrid-item MuiGrid-grid-xs-7"
+            class="MuiGrid-root makeStyles-gridStyles-41 MuiGrid-item MuiGrid-grid-xs-7"
           >
             <div
-              class="MuiBox-root MuiBox-root-57 makeStyles-root-39"
+              class="MuiBox-root MuiBox-root-58 makeStyles-root-39"
             >
               <div
-                class="MuiBox-root MuiBox-root-58"
+                class="MuiBox-root MuiBox-root-59"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-59"
+                  class="MuiBox-root MuiBox-root-60"
                 >
                   <p
-                    class="MuiTypography-root makeStyles-payLabel-41 MuiTypography-body1"
+                    class="MuiTypography-root makeStyles-payLabel-42 MuiTypography-body1"
                   >
                     Pay
                   </p>
                 </div>
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-43 Mui-disabled Mui-disabled"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-44 Mui-disabled Mui-disabled"
                   data-testid="orderTotalButton"
                   disabled=""
                   tabindex="-1"
@@ -298,10 +298,10 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                     class="MuiButton-label"
                   >
                     <div
-                      class="MuiPaper-root MuiBox-root MuiBox-root-60 makeStyles-paper-42 MuiPaper-elevation1 MuiPaper-rounded"
+                      class="MuiPaper-root MuiBox-root MuiBox-root-61 makeStyles-paper-43 MuiPaper-elevation1 MuiPaper-rounded"
                     >
                       <div
-                        class="MuiBox-root MuiBox-root-61 makeStyles-orderTotalInputField-45"
+                        class="MuiBox-root MuiBox-root-62 makeStyles-orderTotalInputField-46"
                       >
                         $0.00
                       </div>
@@ -310,7 +310,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 </button>
               </div>
               <p
-                class="MuiTypography-root makeStyles-label-46 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-label-47 MuiTypography-body1"
               >
                 Select terminal
               </p>
@@ -319,11 +319,11 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
               />
               <div
                 aria-label="terminalList"
-                class="MuiFormGroup-root makeStyles-radioGroup-44"
+                class="MuiFormGroup-root makeStyles-radioGroup-45"
                 role="radiogroup"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-62"
+                  class="MuiBox-root MuiBox-root-63"
                 >
                   <ul
                     class="MuiList-root MuiList-padding"
@@ -331,7 +331,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 </div>
               </div>
               <p
-                class="MuiTypography-root makeStyles-label-46 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-label-47 MuiTypography-body1"
               >
                 Select payment method
               </p>
@@ -339,28 +339,28 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiDivider-root"
               />
               <div
-                class="MuiBox-root MuiBox-root-63"
+                class="MuiBox-root MuiBox-root-64"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-48 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-49 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
                   disabled=""
                   tabindex="-1"
                   type="button"
                 >
                   <span
-                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-47"
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-48"
                   >
                     Card
                   </span>
                 </button>
                 <button
-                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-48 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-49 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
                   disabled=""
                   tabindex="-1"
                   type="button"
                 >
                   <span
-                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-47"
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-48"
                   >
                     Moto
                   </span>
