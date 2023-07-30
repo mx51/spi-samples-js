@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Button,
@@ -17,24 +17,17 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
-import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import {
   PATH_CASH_OUT,
   PATH_REFUND,
+  PATH_PRE_AUTH,
   TEXT_PURCHASE,
   TEXT_REFUND,
   TEXT_CASHOUT,
   PATH_PAY_NOW,
 } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
-import {
-  orderCashoutAmountSelector,
-  orderPromptForCashoutSelector,
-  orderRefundAmountSelector,
-  orderSurchargeAmountSelector,
-  orderTipAmountSelector,
-  productSubTotalSelector,
-} from '../../redux/reducers/ProductSlice/productSelector';
+import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { addCashoutAmount, addRefundAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
@@ -47,79 +40,48 @@ import {
   terminalTxFlowReceipt,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
-import {
-  initiatePurchase,
-  initiateMotoPurchase,
-  initiateCashoutOnlyTx,
-  initiateRefundTx,
-  cancelTransaction,
-  setTerminalToIdle,
-} from '../../utils/common/purchase/purchaseHelper';
+import { cancelTransaction, setTerminalToIdle } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
 import UnknownTransactionModal from '../UnknownTransactionModal';
-
 import useStyles from './index.styles';
 import { IOrderConfirmation, ITitleStrategy } from './interfaces';
+import { CashoutOrderConfirmation } from './CashoutOrderConfirmation';
+import { PayNowOrderConfirmation } from './PayNowOrderConfirmation';
+import { PreAuthOrderConfirmation } from './PreAuthOrderConfirmation';
+import { RefundOrderConfirmation } from './RefundOrderConfirmation';
+import { updatePreAuthParams } from '../../redux/reducers/PreAuth/preAuthSlice';
+import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
+
+type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
 
 function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation): React.ReactElement {
   const cashoutPage = pathname === PATH_CASH_OUT;
   const refundPage = pathname === PATH_REFUND;
-  const purchasePage = pathname === PATH_PAY_NOW;
+  const preAuthPage = pathname === PATH_PRE_AUTH;
 
   const dispatch = useDispatch();
-
   const classes = useStyles();
-  const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
-  const refundAmount: number = useSelector(orderRefundAmountSelector);
-  const tipAmount: number = useSelector(orderTipAmountSelector);
-  const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
-  const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
-  const subtotalAmount = useSelector(productSubTotalSelector);
-
   const terminals = useSelector(pairedConnectedTerminalList);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps | undefined;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
   const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
-
-  const totalAmount = useMemo(() => {
-    if (cashoutPage) {
-      return cashoutAmount;
-    }
-
-    if (refundPage) {
-      return refundAmount;
-    }
-
-    return surchargeAmount + tipAmount + cashoutAmount + subtotalAmount;
-  }, [surchargeAmount, tipAmount, cashoutAmount, subtotalAmount, refundAmount]);
   const successStatus = currentTerminal?.txFlow?.success;
-
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
+  const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
+  const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
+  const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
+  const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
+  const totalAmount = useSelector(orderTotalSelector);
+  const preAuth = useSelector(preAuthSelector);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
   };
 
-  const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
-  const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
-  const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
-
   function selectTerminal(terminalId: string) {
     dispatch(updateSelectedTerminal(terminalId));
-  }
-
-  function isDisabled() {
-    if (
-      !selectedTerminal ||
-      currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected ||
-      (purchasePage && subtotalAmount === 0)
-    )
-      return true;
-
-    return totalAmount <= 0;
   }
 
   function updateUnknownTerminalState(success: string) {
@@ -145,6 +107,15 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
     return title in titleStrategy ? (titleStrategy as unknown as Record<string, keyof ITitleStrategy>)[title] : title;
   }
 
+  const componentByPathName: Record<ComponentByPathNameKeys, JSX.Element> = {
+    '/pre-auth': <PreAuthOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/refund': <RefundOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/paynow': <PayNowOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/cashout': <CashoutOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+  };
+
+  const renderOrderConfirmationByAction = () => componentByPathName[pathname as ComponentByPathNameKeys];
+
   return (
     <>
       <Drawer
@@ -169,8 +140,14 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
               dispatch(addCashoutAmount(amount));
             } else if (refundPage) {
               dispatch(addRefundAmount(amount));
+            } else if (preAuthPage) {
+              dispatch(
+                updatePreAuthParams({
+                  key: 'UPDATE_CURRENT_AMOUNT',
+                  value: amount,
+                })
+              );
             }
-
             clearProductsOnlyAction();
           }}
         />
@@ -191,7 +168,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
               >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
-                    {currencyFormat(totalAmount / 100)}
+                    {preAuthPage ? currencyFormat(preAuth.currentAmount / 100) : currencyFormat(totalAmount / 100)}
                   </Box>
                   {editSubtotal && (
                     <Box>
@@ -227,12 +204,9 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
                 </List>
               </Box>
             </RadioGroup>
-            {purchasePage && (
-              <>
-                <Typography className={classes.label}>Select payment method</Typography>
-                <Divider />
-              </>
-            )}
+
+            {renderOrderConfirmationByAction()}
+
             {showUnknownTransactionModal && isUnknownState && (
               <UnknownTransactionModal
                 onSuccessTransaction={() => {
@@ -262,77 +236,6 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
                   setShowTransactionProgressModal(false);
                 }}
               />
-            )}
-            {purchasePage && (
-              <Box display="flex" justifyContent="space-evenly">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  disabled={isDisabled()}
-                  focusRipple
-                  classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                  onClick={() => {
-                    setShowTransactionProgressModal(true);
-                    initiatePurchase(
-                      selectedTerminal,
-                      subtotalAmount,
-                      tipAmount,
-                      cashoutAmount,
-                      surchargeAmount,
-                      promptForCashout
-                    );
-                  }}
-                >
-                  Card
-                </Button>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  size="large"
-                  disabled={isDisabled() || tipAmount > 0 || cashoutAmount > 0}
-                  focusRipple
-                  classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                  onClick={() => {
-                    setShowTransactionProgressModal(true);
-                    initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
-                  }}
-                >
-                  Moto
-                </Button>
-              </Box>
-            )}
-            {cashoutPage && (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={isDisabled()}
-                focusRipple
-                classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                onClick={() => {
-                  setShowTransactionProgressModal(true);
-                  initiateCashoutOnlyTx(selectedTerminal, totalAmount, surchargeAmount);
-                }}
-              >
-                Cashout
-              </Button>
-            )}
-            {refundPage && (
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                disabled={isDisabled()}
-                focusRipple
-                classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
-                onClick={() => {
-                  setShowTransactionProgressModal(true);
-                  initiateRefundTx(selectedTerminal, totalAmount);
-                }}
-              >
-                Refund
-              </Button>
             )}
           </Box>
         </Grid>

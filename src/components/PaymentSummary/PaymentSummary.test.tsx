@@ -9,6 +9,7 @@ import '@testing-library/jest-dom/extend-expect';
 
 import mockWithRedux, {
   defaultMockPairFormParams,
+  defaultMockPreAuthState,
   mockReceiptResponse,
   mockRefundTxFlow,
   mockTerminalInstanceId,
@@ -45,6 +46,7 @@ describe('Test <PaymentSummary />', () => {
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        preAuth: defaultMockPreAuthState,
       }),
     });
   });

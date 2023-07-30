@@ -11,7 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [INTG-506](https://mx51.atlassian.net/browse/INTG-506) Changelog file
 - [INTG-522](https://mx51.atlassian.net/browse/INTG-522) Pairing record is missing when terminal is disconnected
+- [INTG-573](https://mx51.atlassian.net/browse/INTG-573) Migrate MotelPOS pre-auth transaction flows to EspressoPOS
 - [INTG-544](https://mx51.atlassian.net/browse/INTG-544) View the version of EspressoPOS
+
 ### Fixed
 
 - [INTG-549](https://mx51.atlassian.net/browse/INTG-549) Incorrect version of POS shown in various places
@@ -20,6 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [INTG-578](https://mx51.atlassian.net/browse/INTG-578) Order summary does not show tip, surcharge or cashout after transaction is cancelled
 - [INTG-530](https://mx51.atlassian.net/browse/INTG-530) Additional amounts such as surcharge is reset to 0 when transaction is cancelled
 - [INTG-518](https://mx51.atlassian.net/browse/INTG-518) Select Card button without selecting a terminal
+
 ## [1.2.6] - 2023-6-6
 
 ### Changed

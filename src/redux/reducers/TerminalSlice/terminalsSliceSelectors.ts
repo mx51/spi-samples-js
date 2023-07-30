@@ -4,9 +4,13 @@ import {
   PATH_CASH_OUT,
   PATH_PURCHASE,
   PATH_REFUND,
+  PATH_ACCOUNT_VERIFY,
+  PATH_PRE_AUTH,
   TEXT_CASHOUT,
   TEXT_PURCHASE,
   TEXT_REFUND,
+  TEXT_ACCOUNT_VERIFY,
+  TEXT_PRE_AUTH,
 } from '../../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../../definitions/constants/terminalConfigs';
 import { RootState } from '../../store';
@@ -53,6 +57,16 @@ export const terminalTransactionTypeObject = (
         return {
           typePath: PATH_REFUND,
           typeTitle: TEXT_REFUND,
+        };
+      case SPI_TRANSACTION_TYPES.Preauth:
+        return {
+          typePath: PATH_PRE_AUTH,
+          typeTitle: TEXT_PRE_AUTH,
+        };
+      case SPI_TRANSACTION_TYPES.AccountVerify:
+        return {
+          typePath: PATH_ACCOUNT_VERIFY,
+          typeTitle: TEXT_ACCOUNT_VERIFY,
         };
       default:
         return {

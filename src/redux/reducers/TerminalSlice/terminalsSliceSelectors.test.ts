@@ -1,14 +1,5 @@
 import { cleanup } from '@testing-library/react';
 import {
-  defaultMockCommonState,
-  defaultMockPairFormParams,
-  defaultMockTerminals,
-  mockDefaultProducts,
-  mockTerminalInstanceId,
-  defaultMockSelectedTerminals,
-  mockTxFlow,
-} from '../../../utils/tests/common';
-import {
   terminalList,
   terminalInstance,
   isTerminalUnpaired,
@@ -19,6 +10,16 @@ import {
   terminalTxFlowAwaitingSignatureTracker,
   terminalTxTotalAmount,
 } from './terminalsSliceSelectors';
+import {
+  defaultMockCommonState,
+  defaultMockPairFormParams,
+  defaultMockTerminals,
+  mockDefaultProducts,
+  mockTerminalInstanceId,
+  defaultMockSelectedTerminals,
+  mockTxFlow,
+  defaultMockPreAuthState,
+} from '../../../utils/tests/common';
 
 const mockStoreState = {
   common: defaultMockCommonState,
@@ -32,6 +33,7 @@ const mockStoreState = {
     },
   },
   selectedTerminal: defaultMockSelectedTerminals,
+  preAuth: defaultMockPreAuthState,
 };
 
 describe('Test terminals slice selectors', () => {
@@ -197,6 +199,13 @@ describe('Test terminals slice selectors', () => {
         },
       },
       selectedTerminal: { selectedTerminalId: '' },
+      preAuth: {
+        preAuthRef: 'Test',
+        preAuthAmount: 1000,
+        currentAmount: 500,
+        surcharge: 200,
+        verified: true,
+      },
     };
 
     expect(pairedConnectedTerminalList(state)).toEqual([

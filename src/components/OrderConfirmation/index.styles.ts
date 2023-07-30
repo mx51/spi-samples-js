@@ -1,4 +1,12 @@
 import { alpha, createStyles, makeStyles, Theme } from '@material-ui/core';
+import {
+  CHIP_BACKGROUND_FAILURE_COLOR,
+  CHIP_BACKGROUND_PENDING_COLOR,
+  CHIP_BACKGROUND_SUCCESS_COLOR,
+  CHIP_FONT_FAILURE_COLOR,
+  CHIP_FONT_PENDING_COLOR,
+  CHIP_FONT_SUCCESS_COLOR,
+} from '../../definitions/constants/themeStylesConfigs';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -7,6 +15,12 @@ const useStyles = makeStyles((theme: Theme) =>
       position: 'sticky',
       top: theme.spacing(6),
       zIndex: 1020,
+    },
+    tableBox: {
+      display: 'flex',
+      flexDirection: 'column',
+      top: theme.spacing(6),
+      height: '75%',
     },
     gridStyles: {
       margin: theme.spacing(3),
@@ -48,7 +62,6 @@ const useStyles = makeStyles((theme: Theme) =>
       fontSize: '1.5rem',
       lineHeight: '1.5rem',
     },
-
     paymentTypeBtn: {
       padding: theme.spacing(2),
       backgroundColor: theme.palette.error.dark,
@@ -56,7 +69,6 @@ const useStyles = makeStyles((theme: Theme) =>
         background: alpha(theme.palette.error.dark, 0.75),
         color: theme.palette.common.white,
       },
-
       width: '100%',
       margin: theme.spacing(1),
     },
@@ -67,6 +79,28 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '33.34%',
       backgroundColor: 'transparent',
       border: 0,
+    },
+    table: {
+      marginTop: theme.spacing(2),
+    },
+    chipSuccess: {
+      background: `${CHIP_BACKGROUND_SUCCESS_COLOR}`,
+      color: `${CHIP_FONT_SUCCESS_COLOR}`,
+    },
+    chipPending: {
+      background: `${CHIP_BACKGROUND_PENDING_COLOR}`,
+      color: `${CHIP_FONT_PENDING_COLOR}`,
+    },
+    chipFailure: {
+      background: `${CHIP_BACKGROUND_FAILURE_COLOR}`,
+      color: `${CHIP_FONT_FAILURE_COLOR}`,
+    },
+    link: {
+      textDecoration: 'none',
+      cursor: 'pointer',
+    },
+    unclickable: {
+      pointerEvents: 'none',
     },
   })
 );
