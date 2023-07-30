@@ -17,7 +17,6 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
-import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import {
   PATH_CASH_OUT,
   PATH_REFUND,
@@ -28,8 +27,8 @@ import {
   PATH_PAY_NOW,
 } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
-import { productSubTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
-import { addKeypadAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
+import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+import { addCashoutAmount, addRefundAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -51,27 +50,31 @@ import { CashoutOrderConfirmation } from './CashoutOrderConfirmation';
 import { PayNowOrderConfirmation } from './PayNowOrderConfirmation';
 import { PreAuthOrderConfirmation } from './PreAuthOrderConfirmation';
 import { RefundOrderConfirmation } from './RefundOrderConfirmation';
+import { updatePreAuthParams } from '../../redux/reducers/PreAuth/preAuthSlice';
+import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
 
-function isDisabled(selectedTerminal: string, currentTerminal: ITerminalProps, totalAmount: number) {
-  return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected || totalAmount <= 0;
-}
+type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
 
-function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOrderConfirmation): React.ReactElement {
+function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation): React.ReactElement {
+  const cashoutPage = pathname === PATH_CASH_OUT;
+  const refundPage = pathname === PATH_REFUND;
+  const preAuthPage = pathname === PATH_PRE_AUTH;
+
   const dispatch = useDispatch();
   const classes = useStyles();
   const terminals = useSelector(pairedConnectedTerminalList);
-  const subtotalAmount = useSelector(productSubTotalSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps | undefined;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
   const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
   const successStatus = currentTerminal?.txFlow?.success;
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const [totalAmount, setTotalAmount] = useState<number>(currentAmount);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
   const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
   const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
+  const totalAmount = useSelector(orderTotalSelector);
+  const preAuth = useSelector(preAuthSelector);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
@@ -104,45 +107,14 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
     return title in titleStrategy ? (titleStrategy as unknown as Record<string, keyof ITitleStrategy>)[title] : title;
   }
 
-  type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
-
   const componentByPathName: Record<ComponentByPathNameKeys, JSX.Element> = {
-    '/pre-auth': (
-      <PreAuthOrderConfirmation
-        setShowTransactionProgressModal={setShowTransactionProgressModal}
-        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
-        totalAmount={totalAmount}
-      />
-    ),
-    '/refund': (
-      <RefundOrderConfirmation
-        setShowTransactionProgressModal={setShowTransactionProgressModal}
-        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
-        totalAmount={totalAmount}
-      />
-    ),
-    '/paynow': (
-      <PayNowOrderConfirmation
-        setShowTransactionProgressModal={setShowTransactionProgressModal}
-        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
-        totalAmount={totalAmount}
-      />
-    ),
-    '/cashout': (
-      <CashoutOrderConfirmation
-        setShowTransactionProgressModal={setShowTransactionProgressModal}
-        isDisabled={() => isDisabled(selectedTerminal, currentTerminal, totalAmount)}
-        totalAmount={totalAmount}
-      />
-    ),
+    '/pre-auth': <PreAuthOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/refund': <RefundOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/paynow': <PayNowOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/cashout': <CashoutOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
   };
 
-  const renderOrderConfirmationByAction = (): JSX.Element | undefined => {
-    if (pathname in componentByPathName) {
-      return componentByPathName[pathname as ComponentByPathNameKeys];
-    }
-    return undefined;
-  };
+  const renderOrderConfirmationByAction = () => componentByPathName[pathname as ComponentByPathNameKeys];
 
   return (
     <>
@@ -157,15 +129,26 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
           open={displayKeypad}
           title={getTitleForKeypad()}
           subtitle={`Enter ${getTitleForKeypad().toLowerCase()} amount`}
-          defaultAmount={totalAmount}
+          defaultAmount={0}
           onClose={() => {
             setDisplayKeypad(false);
           }}
           onAmountChange={(amount) => {
-            setTotalAmount(amount);
             setDisplayKeypad(false);
+
+            if (cashoutPage) {
+              dispatch(addCashoutAmount(amount));
+            } else if (refundPage) {
+              dispatch(addRefundAmount(amount));
+            } else if (preAuthPage) {
+              dispatch(
+                updatePreAuthParams({
+                  key: 'UPDATE_CURRENT_AMOUNT',
+                  value: amount,
+                })
+              );
+            }
             clearProductsOnlyAction();
-            dispatch(addKeypadAmount(amount));
           }}
         />
       </Drawer>
@@ -185,7 +168,7 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
               >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
-                    {currencyFormat((editSubtotal ? totalAmount : subtotalAmount) / 100)}
+                    {preAuthPage ? currencyFormat(preAuth.currentAmount / 100) : currencyFormat(totalAmount / 100)}
                   </Box>
                   {editSubtotal && (
                     <Box>
@@ -222,7 +205,6 @@ function OrderConfirmation({ title, pathname, currentAmount, editSubtotal }: IOr
               </Box>
             </RadioGroup>
 
-            {/* Dynamically render OrderConfirmation component based on pathname */}
             {renderOrderConfirmationByAction()}
 
             {showUnknownTransactionModal && isUnknownState && (

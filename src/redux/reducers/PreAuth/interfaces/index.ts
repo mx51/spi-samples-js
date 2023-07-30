@@ -1,6 +1,7 @@
 export interface IPreAuthValues {
   preAuthRef: string;
-  amount: number;
+  preAuthAmount: number;
+  currentAmount: number;
   surcharge: number;
   verified: boolean;
 }
@@ -8,7 +9,8 @@ export interface IPreAuthValues {
 export const key = {
   UPDATE_MULTIPLE: 'updateMultiple',
   PRE_AUTH_REF: 'preAuthRef',
-  AMOUNT: 'amount',
+  PRE_AUTH_AMOUNT: 'preAuthAmount',
+  CURRENT_AMOUNT: 'currentAmount',
   SURCHARGE: 'surcharge',
 };
 
@@ -18,8 +20,16 @@ export type IPreAuthAction =
       value: string;
     }
   | {
-      key: 'UPDATE_AMOUNT';
+      key: 'UPDATE_PRE_AUTH_AMOUNT';
       value: number;
+    }
+  | {
+      key: 'UPDATE_CURRENT_AMOUNT';
+      value: number;
+    }
+  | {
+      key: 'CLEAR_AMOUNT';
+      value: undefined;
     }
   | {
       key: 'UPDATE_SURCHARGE';

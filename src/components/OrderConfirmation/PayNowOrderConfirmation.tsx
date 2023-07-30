@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import useStyles from './index.styles';
 import {
   orderCashoutAmountSelector,
-  orderKeypadAmountSelector,
   orderPromptForCashoutSelector,
   orderSurchargeAmountSelector,
   orderTipAmountSelector,
@@ -14,20 +13,17 @@ import { initiateMotoPurchase, initiatePurchase } from '../../utils/common/purch
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { IProps } from './interfaces';
 
-export const PayNowOrderConfirmation: React.FC<IProps> = ({
-  isDisabled,
-  setShowTransactionProgressModal,
-  totalAmount,
-}) => {
+// const PayNowOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
+export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
   const classes = useStyles();
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
-  const promptForCashout: boolean = useSelector(orderPromptForCashoutSelector);
   const subtotalAmount = useSelector(productSubTotalSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const keyPadAmount = useSelector(orderKeypadAmountSelector);
+  const promptForCashout = useSelector(orderPromptForCashoutSelector);
 
+  const isDisabled = subtotalAmount <= 0;
   return (
     <>
       <Typography className={classes.label}>Select payment method</Typography>
@@ -37,17 +33,14 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({
           variant="contained"
           color="primary"
           size="large"
-          disabled={isDisabled()}
+          disabled={subtotalAmount <= 0 || !selectedTerminal}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
-            console.log('subtotalAmount', subtotalAmount);
-            console.log('keyPadAmount', keyPadAmount);
             setShowTransactionProgressModal(true);
             initiatePurchase(
               selectedTerminal,
-              // subtotalAmount || keyPadAmount,
-              totalAmount,
+              subtotalAmount,
               tipAmount,
               cashoutAmount,
               surchargeAmount,
@@ -61,7 +54,7 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({
           variant="contained"
           color="primary"
           size="large"
-          disabled={isDisabled() || tipAmount > 0 || cashoutAmount > 0}
+          disabled={isDisabled || tipAmount > 0 || cashoutAmount > 0}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
@@ -75,3 +68,5 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({
     </>
   );
 };
+
+// export const PayNowOrderConfirmation = React.memo(PayNowOrderConfirmationComponent, () => true);

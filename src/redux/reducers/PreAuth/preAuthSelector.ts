@@ -6,9 +6,13 @@ export const preAuth = (state: RootState): IPreAuthValues => state.preAuth;
 
 export const preAuthSelector = createSelector(preAuth, (params) => ({
   preAuthRef: params.preAuthRef,
-  amount: params.amount,
+  preAuthAmount: params.preAuthAmount,
+  currentAmount: params.currentAmount,
   surcharge: params.surcharge,
   verified: params.verified,
 }));
 
-export const isPreAuthDisabledSelector = createSelector(preAuth, (params) => !params.preAuthRef || !params.amount);
+export const isPreAuthDisabledSelector = createSelector(
+  preAuth,
+  (params) => !params.preAuthRef || !params.preAuthAmount
+);

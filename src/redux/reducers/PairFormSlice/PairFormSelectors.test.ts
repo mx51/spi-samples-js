@@ -53,7 +53,8 @@ describe('Test PairFormSelectors', () => {
       selectedTerminal: { selectedTerminalId: '' },
       preAuth: {
         preAuthRef: 'Test',
-        amount: 1000,
+        preAuthAmount: 1000,
+        currentAmount: 500,
         surcharge: 200,
         verified: true,
       },
@@ -92,7 +93,8 @@ describe('Test PairFormSelectors', () => {
       selectedTerminal: { selectedTerminalId: '' },
       preAuth: {
         preAuthRef: 'Test',
-        amount: 1000,
+        preAuthAmount: 1000,
+        currentAmount: 500,
         surcharge: 200,
         verified: true,
       },

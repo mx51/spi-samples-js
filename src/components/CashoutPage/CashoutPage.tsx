@@ -9,7 +9,7 @@ function CashoutPage(): React.ReactElement {
     <Layout>
       <Grid container>
         <Grid item xs={12}>
-          <OrderConfirmation title="Cashout" pathname={PATH_CASH_OUT} currentAmount={0} editSubtotal />
+          <OrderConfirmation title="Cashout" pathname={PATH_CASH_OUT} editSubtotal />
         </Grid>
       </Grid>
     </Layout>

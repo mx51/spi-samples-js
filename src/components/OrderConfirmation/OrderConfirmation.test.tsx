@@ -14,6 +14,26 @@ import mockWithRedux, {
   pairedMockTerminals,
 } from '../../utils/tests/common';
 
+const defaultState = {
+  common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
+  pairForm: defaultMockPairFormParams,
+  terminals: pairedMockTerminals,
+  products: {
+    keypadAmount: 0,
+    surchargeAmount: 100,
+    tipAmount: 0,
+    cashoutAmount: 1000,
+    products: [],
+  },
+  selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+  preAuth: {
+    preAuthRef: 'Test',
+    amount: 1000,
+    surcharge: 200,
+    verified: true,
+  },
+};
+
 describe('Test <OrderConfirmation />', () => {
   let dispatch: Any;
   let customStore: Any;
@@ -24,25 +44,7 @@ describe('Test <OrderConfirmation />', () => {
     spyDispatch.mockReturnValue(dispatch);
     customStore = {
       ...store,
-      getState: () => ({
-        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
-        pairForm: defaultMockPairFormParams,
-        terminals: pairedMockTerminals,
-        products: {
-          keypadAmount: 0,
-          surchargeAmount: 100,
-          tipAmount: 0,
-          cashoutAmount: 1000,
-          products: [],
-        },
-        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
-        preAuth: {
-          preAuthRef: 'Test',
-          amount: 1000,
-          surcharge: 200,
-          verified: true,
-        },
-      }),
+      getState: () => defaultState,
     };
   });
 
@@ -50,10 +52,20 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should match OrderConfirmationPage snapshot test', () => {
     // Arrange
-    const container = mockWithRedux(
-      <OrderConfirmation title="title" pathname="/" currentAmount={500} editSubtotal />,
-      customStore
-    );
+    const container = mockWithRedux(<OrderConfirmation title="title" pathname="/" editSubtotal />, {
+      ...customStore,
+      getState: () => ({
+        ...defaultState,
+        products: {
+          keypadAmount: 0,
+          surchargeAmount: 0,
+          tipAmount: 0,
+          cashoutAmount: 0,
+          subtotalAmount: 500,
+          products: [],
+        },
+      }),
+    });
 
     // Assert
     expect(container).toMatchSnapshot();
@@ -61,7 +73,7 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should clearAllProducts on amount override ', () => {
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} editSubtotal />, customStore);
+    mockWithRedux(<OrderConfirmation title="title" pathname="/" editSubtotal />, customStore);
     fireEvent.click(screen.getByText(/test/i));
 
     // Assert
@@ -74,7 +86,7 @@ describe('Test <OrderConfirmation />', () => {
 
   test('should select a terminal from list', () => {
     // Arrange
-    mockWithRedux(<OrderConfirmation title="title" pathname="/" currentAmount={500} editSubtotal />, customStore);
+    mockWithRedux(<OrderConfirmation title="title" pathname="/" editSubtotal />, customStore);
     fireEvent.click(screen.getByText(/test/i));
 
     // Assert
@@ -91,10 +103,21 @@ describe('Test <OrderConfirmation />', () => {
     initiatePurchaseTransaction.mockReturnValue();
 
     // Arrange
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
-      customStore
-    );
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal />, {
+      ...customStore,
+      getState: () => ({
+        ...defaultState,
+        products: {
+          keypadAmount: 0,
+          surchargeAmount: 0,
+          tipAmount: 0,
+          cashoutAmount: 0,
+          subtotalAmount: 500,
+          products: [],
+        },
+      }),
+    });
+
     fireEvent.click(screen.getByText(/card/i));
 
     // Assert
@@ -105,55 +128,17 @@ describe('Test <OrderConfirmation />', () => {
     const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
     initiateMotoPurchaseTransaction.mockReturnValue();
 
-    const customStoreWithoutCashout = {
-      ...store,
+    // Arrange
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal />, {
+      ...customStore,
       getState: () => ({
-        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
-        pairForm: defaultMockPairFormParams,
-        terminals: pairedMockTerminals,
+        ...defaultState,
         products: {
           keypadAmount: 0,
-          surchargeAmount: 100,
+          surchargeAmount: 0,
           tipAmount: 0,
           cashoutAmount: 0,
-          products: [],
-        },
-        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
-        preAuth: {
-          preAuthRef: 'Test',
-          amount: 1000,
-          surcharge: 200,
-          verified: true,
-        },
-      }),
-    };
-
-    // Arrange
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
-      customStoreWithoutCashout
-    );
-    fireEvent.click(screen.getByText(/moto/i));
-
-    // Assert
-    expect(initiateMotoPurchaseTransaction.mock.calls.length).toBe(1);
-  });
-
-  test('should cancel moto purchase on clicking Cancel button', () => {
-    // Arrange
-    const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
-    initiateMotoPurchaseTransaction.mockReturnValue();
-
-    const customStore2 = (mockTerminals: Any) => ({
-      ...store,
-      getState: () => ({
-        common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
-        terminals: mockTerminals,
-        products: {
-          keypadAmount: 0,
-          surchargeAmount: 100,
-          tipAmount: 0,
-          bankcashAmount: 100,
+          subtotalAmount: 500,
           products: [],
         },
         selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
@@ -165,25 +150,46 @@ describe('Test <OrderConfirmation />', () => {
         },
       }),
     });
-    const mockTerminals = {
-      [mockTerminalInstanceId]: {
-        ...pairedMockTerminals[mockTerminalInstanceId],
-        receipt: mockReceiptResponse,
-        txFlow: {
-          ...mockRefundTxFlow,
-          finished: false,
-          success: TxFlowState.Unknown,
-        },
-      },
-    };
+
+    fireEvent.click(screen.getByText(/moto/i));
+
+    // Assert
+    expect(initiateMotoPurchaseTransaction.mock.calls.length).toBe(1);
+  });
+
+  test('should cancel moto purchase on clicking Cancel button', () => {
+    // Arrange
+    const initiateMotoPurchaseTransaction = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
+    initiateMotoPurchaseTransaction.mockReturnValue();
 
     const spiCancelTransaction = jest.spyOn(spiService, 'spiCancelTransaction');
     spiCancelTransaction.mockReturnValue();
 
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
-      customStore2(mockTerminals)
-    );
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal />, {
+      ...customStore,
+      terminals: {
+        [mockTerminalInstanceId]: {
+          ...pairedMockTerminals[mockTerminalInstanceId],
+          receipt: mockReceiptResponse,
+          txFlow: {
+            ...mockRefundTxFlow,
+            finished: false,
+            success: TxFlowState.Unknown,
+          },
+        },
+      },
+      getState: () => ({
+        ...defaultState,
+        products: {
+          keypadAmount: 0,
+          surchargeAmount: 0,
+          tipAmount: 0,
+          cashoutAmount: 0,
+          subtotalAmount: 500,
+          products: [],
+        },
+      }),
+    });
 
     // Act
     fireEvent.click(screen.getByText(/moto/i));
@@ -234,7 +240,7 @@ describe('Test <OrderConfirmation />', () => {
 
     // Act
     mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
+      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal />,
       customStore2(mockTerminals)
     );
     const motoButton = screen.getByText(/Moto/i).closest('button');
@@ -253,10 +259,7 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={600} editSubtotal />,
-      customStore
-    );
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal />, customStore);
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByText(/5/i));
     fireEvent.click(screen.getByText(/ok/i));
@@ -277,10 +280,7 @@ describe('Test <OrderConfirmation />', () => {
     spiCancelTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_PAY_NOW} currentAmount={500} editSubtotal />,
-      customStore
-    );
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal />, customStore);
     fireEvent.click(screen.getByTestId('orderTotalButton'));
     fireEvent.click(screen.getByLabelText(/close button/i));
 
@@ -296,10 +296,7 @@ describe('Test <OrderConfirmation />', () => {
     initiateCashoutOnlyTxTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_CASH_OUT} currentAmount={500} editSubtotal />,
-      customStore
-    );
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_CASH_OUT} editSubtotal />, customStore);
     const cashoutButton = screen.queryByText(/Cashout/i);
     fireEvent.click(cashoutButton as Element);
 
@@ -313,10 +310,7 @@ describe('Test <OrderConfirmation />', () => {
     initiateRefundTxTransaction.mockReturnValue();
 
     // Act
-    mockWithRedux(
-      <OrderConfirmation title="title" pathname={PATH_REFUND} currentAmount={500} editSubtotal={false} />,
-      customStore
-    );
+    mockWithRedux(<OrderConfirmation title="title" pathname={PATH_REFUND} editSubtotal={false} />, customStore);
     const refundButton = screen.queryByText(/Refund/i);
     fireEvent.click(refundButton as Element);
 

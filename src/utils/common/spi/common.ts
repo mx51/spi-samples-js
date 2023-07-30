@@ -41,6 +41,7 @@ function getTxFlow(detail: Any): Any {
         posRefId: detail?.Request?.Data?.pos_ref_id,
         purchaseAmount: detail?.Request?.Data?.purchase_amount,
         tipAmount: detail?.Request?.Data?.tip_amount,
+        refundAmount: detail?.Request?.Data?.refund_amount,
         // We check cash_amount here as that is what we get from the event (instead of bank_cash_amount)
         bankCashAmount: detail?.Request?.Data?.cash_amount,
         promptForCashout: detail?.Request?.Data?.prompt_for_cashout,
@@ -75,6 +76,7 @@ function getTxFlow(detail: Any): Any {
         topupAmount: detail?.Request?.Data?.topup_amount || 0,
         reduceAmount: detail?.Request?.Data?.preauth_cancel_amount || 0,
         preAuthId: detail?.Response?.Data?.preauth_id,
+        refundAmount: detail?.Request?.Data?.refund_amount || 0,
       },
     },
   };

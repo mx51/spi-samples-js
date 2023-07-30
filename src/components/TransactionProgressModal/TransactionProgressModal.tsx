@@ -15,7 +15,7 @@ import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs
 import { PATH_ORDER_FINISHED, TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
-import { initialState, updatePreAuthParams } from '../../redux/reducers/PreAuth/preAuthSlice';
+import { clearPreAuthCurentAmount, initialState, updatePreAuthParams } from '../../redux/reducers/PreAuth/preAuthSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 import {
@@ -30,7 +30,8 @@ function useTransactionProgressModal(transactionType: string) {
   const handlePreAuthActions = (currentTerminal: ITerminalProps) => {
     const preAuth = {
       preAuthRef: currentTerminal?.txFlow?.response?.data?.preAuthId ?? initialState.preAuthRef,
-      amount: currentTerminal?.txFlow?.response?.data?.preAuthAmount ?? initialState.amount,
+      preAuthAmount: currentTerminal?.txFlow?.response?.data?.preAuthAmount ?? initialState.preAuthAmount,
+      currentAmount: 0,
       topupAmount: currentTerminal?.txFlow?.response?.data?.topupAmount ?? 0,
       reduceAmount: currentTerminal?.txFlow?.response?.data?.reduceAmount ?? 0,
       surcharge: currentTerminal?.txFlow?.response?.data?.surchargeAmount ?? initialState.surcharge,
@@ -109,6 +110,7 @@ function TransactionProgressModal({
 }: TransactionProgressModalProps): React.ReactElement {
   const { handlePreAuthActions, modalTitle } = useTransactionProgressModal(transactionType);
   const classes = useStyles();
+  const dispatch = useDispatch();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const awaitingSignatureCheck = useAppSelector(terminalTxFlowAwaitingSignatureTracker(terminalId));
@@ -222,6 +224,7 @@ function TransactionProgressModal({
               className={classes.modalBtn}
               onClick={() => {
                 handlePreAuthActions(currentTerminal);
+                dispatch(clearPreAuthCurentAmount());
               }}
             >
               Done

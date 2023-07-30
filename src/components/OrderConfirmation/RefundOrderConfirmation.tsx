@@ -5,14 +5,12 @@ import { initiateRefundTx } from '../../utils/common/purchase/purchaseHelper';
 import { IProps } from './interfaces';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import useStyles from './index.styles';
+import { orderRefundAmountSelector } from '../../redux/reducers/ProductSlice/productSelector';
 
-export const RefundOrderConfirmation: React.FC<IProps> = ({
-  isDisabled,
-  totalAmount,
-  setShowTransactionProgressModal,
-}) => {
+const RefundOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
   const classes = useStyles();
-  const selectedTerminal = useSelector(selectedTerminalIdSelector);
+  const selectedTerminalId = useSelector(selectedTerminalIdSelector);
+  const refundAmount: number = useSelector(orderRefundAmountSelector);
 
   return (
     <Box display="flex" justifyContent="space-evenly">
@@ -20,12 +18,12 @@ export const RefundOrderConfirmation: React.FC<IProps> = ({
         variant="contained"
         color="primary"
         size="large"
-        disabled={isDisabled()}
+        disabled={refundAmount < 0 || !selectedTerminalId}
         focusRipple
         classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
         onClick={() => {
           setShowTransactionProgressModal(true);
-          initiateRefundTx(selectedTerminal, totalAmount);
+          initiateRefundTx(selectedTerminalId, refundAmount);
         }}
       >
         Refund
@@ -33,3 +31,5 @@ export const RefundOrderConfirmation: React.FC<IProps> = ({
     </Box>
   );
 };
+
+export const RefundOrderConfirmation = React.memo(RefundOrderConfirmationComponent, () => true);

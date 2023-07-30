@@ -10,6 +10,7 @@ const initialState: IProductState = {
   products: [],
   subtotalAmount: 0,
   overrideSubtotalAmount: false,
+  refundAmount: 0,
 };
 
 const productSlice = createSlice({
@@ -30,6 +31,7 @@ const productSlice = createSlice({
       state.promptForCashout = false;
       state.keypadAmount = 0;
       state.subtotalAmount = 0;
+      state.refundAmount = 0;
       state.overrideSubtotalAmount = false;
     },
     // Only clear products and keyPadAmount for Override Purchase
@@ -44,6 +46,9 @@ const productSlice = createSlice({
     },
     addCashoutAmount(state: IProductState, action: PayloadAction<number>) {
       state.cashoutAmount = action.payload;
+    },
+    addRefundAmount(state: IProductState, action: PayloadAction<number>) {
+      state.refundAmount = action.payload;
     },
     addKeypadAmount(state: IProductState, action: PayloadAction<number>) {
       state.keypadAmount = action.payload;
@@ -70,6 +75,7 @@ export const {
   addTipAmount,
   addKeypadAmount,
   togglePromptForCashout,
+  addRefundAmount,
 } = productSlice.actions;
 
 export default productSlice.reducer;

@@ -9,7 +9,7 @@ function RefundPage(): React.ReactElement {
     <Layout>
       <Grid container>
         <Grid item xs={12}>
-          <OrderConfirmation title="Refund" pathname={PATH_REFUND} currentAmount={0} editSubtotal />
+          <OrderConfirmation title="Refund" pathname={PATH_REFUND} editSubtotal />
         </Grid>
       </Grid>
     </Layout>

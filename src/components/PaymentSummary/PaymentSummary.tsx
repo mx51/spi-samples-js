@@ -1,17 +1,16 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as LinkRouter, useHistory } from 'react-router-dom';
+import { Link as LinkRouter } from 'react-router-dom';
 import useStyles from './index.style';
 import {
   PATH_ACCOUNT_VERIFY,
   PATH_PRE_AUTH,
-  PATH_PURCHASE,
   TEXT_PRE_AUTH,
+  PATH_PURCHASE,
 } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
-import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
@@ -24,30 +23,25 @@ import {
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
 import OrderSubTotal from '../OrderSubTotal';
+import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
 
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const {
-    location: { pathname },
-  } = useHistory();
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
-  const originalTotalAmount: number = useSelector(orderTotalSelector);
+  const { preAuthAmount } = useSelector(preAuthSelector);
 
-  const clearAllProductsAction = () => {
+  useEffect(() => {
     dispatch(clearAllProducts());
-  };
+  }, []);
 
   const amountSummaryInformation = (type: string) => {
-    const returns =
-      pathname === '/order-finished' && currentTerminal?.txFlow?.response?.data.hostResponseText === 'APPROVED'
-        ? currentTerminal?.txFlow?.response?.data
-        : currentTerminal?.txFlow?.request?.data;
-    if (returns) return (returns as Any)[type] ?? 0;
+    const responseData = currentTerminal?.txFlow?.response?.data;
+    if (responseData) return (responseData as Any)[type] ?? 0;
     return 0;
   };
 
@@ -58,6 +52,13 @@ function PaymentSummary(): React.ReactElement {
     }
     return '';
   };
+
+  const subTotal = amountSummaryInformation('purchaseAmount');
+  const surchangeAmount = amountSummaryInformation('surchargeAmount');
+  const cashoutAmount = amountSummaryInformation('bankCashAmount');
+  const tipAmount = amountSummaryInformation('tipAmount');
+  const refundAmount = amountSummaryInformation('refundAmount');
+  const originalTotalAmount = subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + preAuthAmount;
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
@@ -125,7 +126,6 @@ function PaymentSummary(): React.ReactElement {
               classes={{ root: classes.actionBtn }}
               component={LinkRouter}
               to={PATH_PURCHASE}
-              onClick={clearAllProductsAction}
             >
               New Order
             </Button>

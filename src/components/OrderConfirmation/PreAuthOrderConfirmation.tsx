@@ -29,32 +29,28 @@ import {
 import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { IProps } from './interfaces';
 
-export const PreAuthOrderConfirmation: React.FC<IProps> = ({
-  isDisabled,
-  totalAmount,
-  setShowTransactionProgressModal,
-}) => {
+const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
   const classes = useStyles();
-  const preAuth = useSelector(preAuthSelector);
+  const { preAuthRef, preAuthAmount, currentAmount, surcharge, verified } = useSelector(preAuthSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
 
-  const handlePreAuthTxs = (terminal: any, type: string, amount: number) => {
+  const handlePreAuthTxs = (type: string) => {
     switch (type) {
       case 'Top Up':
-        InitiatePreAuthTopupTx(terminal, amount, preAuth.preAuthRef);
+        InitiatePreAuthTopupTx(selectedTerminal, currentAmount, preAuthRef);
         break;
       case 'Reduce':
-        InitiatePreAuthReduceTx(terminal, amount, preAuth.preAuthRef);
+        InitiatePreAuthReduceTx(selectedTerminal, currentAmount, preAuthRef);
         break;
       case 'Extend':
-        InitiatePreAuthExtendTx(terminal, preAuth.preAuthRef);
+        InitiatePreAuthExtendTx(selectedTerminal, preAuthRef);
         break;
       case 'Cancel':
-        InitiatePreAuthCancelTx(terminal, preAuth.preAuthRef);
+        InitiatePreAuthCancelTx(selectedTerminal, preAuthRef);
         break;
       case 'Complete':
-        InitiatePreAuthCompleteTx(terminal, preAuth.amount, preAuth.preAuthRef, preAuth.surcharge);
+        InitiatePreAuthCompleteTx(selectedTerminal, preAuthAmount, preAuthRef, surcharge);
         break;
       default:
         break;
@@ -68,7 +64,7 @@ export const PreAuthOrderConfirmation: React.FC<IProps> = ({
   return (
     <>
       <Box className={classes.tableBox}>
-        {preAuth.verified || preAuth.preAuthRef ? (
+        {verified || preAuthRef ? (
           <TableContainer component={Paper} className={classes.table} elevation={0}>
             <Table>
               <TableHead>
@@ -81,16 +77,16 @@ export const PreAuthOrderConfirmation: React.FC<IProps> = ({
               </TableHead>
               <TableBody>
                 <TableRow className={classes.unclickable}>
-                  <TableCell scope="row">{preAuth.preAuthRef || '-'}</TableCell>
+                  <TableCell scope="row">{preAuthRef || '-'}</TableCell>
                   <TableCell>
                     <Chip
                       size="small"
-                      label={preAuth.verified ? 'Verified' : 'Unverified'}
-                      className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
+                      label={verified ? 'Verified' : 'Unverified'}
+                      className={verified ? classes.chipSuccess : classes.chipFailure}
                     />
                   </TableCell>
-                  <TableCell>{`$${preAuth.surcharge / 100}`}</TableCell>
-                  <TableCell>{`$${preAuth.amount / 100}`}</TableCell>
+                  <TableCell>{`$${surcharge / 100}`}</TableCell>
+                  <TableCell>{`$${preAuthAmount / 100}`}</TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -99,22 +95,26 @@ export const PreAuthOrderConfirmation: React.FC<IProps> = ({
       </Box>
 
       <Box display="flex" justifyContent="space-evenly" sx={{ border: 1 }}>
-        {preAuth.preAuthRef ? (
-          ['Top Up', 'Reduce', 'Extend', 'Cancel', 'Complete'].map((text) => (
+        {preAuthRef ? (
+          ['Top Up', 'Reduce', 'Extend', 'Cancel', 'Complete'].map((type) => (
             <Button
               variant="contained"
               color="primary"
               size="large"
-              key={text}
-              disabled={['Extend', 'Cancel', 'Complete'].includes(text) ? isAccountVerify() : isDisabled()}
+              key={type}
+              disabled={
+                ['Extend', 'Cancel', 'Complete'].includes(type)
+                  ? isAccountVerify()
+                  : currentAmount <= 0 || !selectedTerminal
+              }
               focusRipple
               classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
               onClick={() => {
                 setShowTransactionProgressModal(true);
-                handlePreAuthTxs(selectedTerminal, text, totalAmount);
+                handlePreAuthTxs(type);
               }}
             >
-              {text}
+              {type}
             </Button>
           ))
         ) : (
@@ -137,12 +137,12 @@ export const PreAuthOrderConfirmation: React.FC<IProps> = ({
               variant="contained"
               color="primary"
               size="large"
-              disabled={isDisabled()}
+              disabled={currentAmount <= 0 || !selectedTerminal}
               focusRipple
               classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
               onClick={() => {
                 setShowTransactionProgressModal(true);
-                InitiatePreAuthOpenTx(selectedTerminal, totalAmount);
+                InitiatePreAuthOpenTx(selectedTerminal, currentAmount);
               }}
             >
               Open Pre-Auth
@@ -153,3 +153,5 @@ export const PreAuthOrderConfirmation: React.FC<IProps> = ({
     </>
   );
 };
+
+export const PreAuthOrderConfirmation = React.memo(PreAuthOrderConfirmationComponent);

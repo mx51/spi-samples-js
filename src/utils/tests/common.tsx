@@ -64,7 +64,8 @@ export const defaultMockSelectedTerminals = { selectedTerminalId: 'test' };
 
 export const defaultMockPreAuthState = {
   preAuthRef: 'Test',
-  amount: 1000,
+  preAuthAmount: 1000,
+  currentAmount: 500,
   surcharge: 200,
   verified: true,
 };

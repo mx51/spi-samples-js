@@ -1,7 +1,6 @@
 export interface IOrderConfirmation {
   title: string;
   pathname: string;
-  currentAmount: number;
   editSubtotal: boolean;
 }
 
@@ -12,7 +11,5 @@ export interface ITitleStrategy {
 }
 
 export interface IProps {
-  isDisabled: () => boolean;
-  totalAmount: number;
   setShowTransactionProgressModal: (show: boolean) => void;
 }

@@ -8,7 +8,7 @@ const PreAuthPage: React.FC = () => (
   <Layout>
     <Grid>
       <Grid>
-        <OrderConfirmation title="Pre Auth" pathname={PATH_PRE_AUTH} currentAmount={0} editSubtotal />
+        <OrderConfirmation title="Pre Auth" pathname={PATH_PRE_AUTH} editSubtotal />
       </Grid>
     </Grid>
   </Layout>

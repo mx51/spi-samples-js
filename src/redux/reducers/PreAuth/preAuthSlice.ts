@@ -3,7 +3,8 @@ import { IPreAuthAction, IPreAuthValues } from './interfaces';
 
 export const initialState: IPreAuthValues = {
   preAuthRef: '',
-  amount: 0,
+  preAuthAmount: 0,
+  currentAmount: 0,
   surcharge: 0,
   verified: false,
 };
@@ -13,6 +14,12 @@ export const preAuthSlice = createSlice({
   initialState,
   reducers: {
     resetPreAuth: () => initialState,
+    clearPreAuthAmount(state: IPreAuthValues) {
+      state.preAuthAmount = 0;
+    },
+    clearPreAuthCurentAmount(state: IPreAuthValues) {
+      state.currentAmount = 0;
+    },
     updatePreAuthParams(state: IPreAuthValues, action: PayloadAction<IPreAuthAction>) {
       const { key, value } = action.payload;
 
@@ -22,10 +29,15 @@ export const preAuthSlice = createSlice({
             ...state,
             preAuthRef: value,
           };
-        case 'UPDATE_AMOUNT':
+        case 'UPDATE_PRE_AUTH_AMOUNT':
           return {
             ...state,
-            amount: value,
+            preAuthAmount: value,
+          };
+        case 'UPDATE_CURRENT_AMOUNT':
+          return {
+            ...state,
+            currentAmount: value,
           };
         case 'UPDATE_SURCHARGE':
           return {
@@ -43,19 +55,17 @@ export const preAuthSlice = createSlice({
             ...value,
           };
         case 'TOPUP_PRE_AUTH': {
-          const currentAmount = state.amount;
-          const newAmount = currentAmount + value;
+          const newAmount = state.preAuthAmount + value;
           return {
             ...state,
-            amount: newAmount,
+            preAuthAmount: newAmount,
           };
         }
         case 'REDUCE_PRE_AUTH': {
-          const currentAmount = state.amount;
-          const newAmount = currentAmount - value;
+          const newAmount = state.preAuthAmount - value;
           return {
             ...state,
-            amount: newAmount,
+            preAuthAmount: newAmount,
           };
         }
         case 'CANCEL_PRE_AUTH':
@@ -69,6 +79,6 @@ export const preAuthSlice = createSlice({
   },
 });
 
-export const { resetPreAuth, updatePreAuthParams } = preAuthSlice.actions;
+export const { resetPreAuth, updatePreAuthParams, clearPreAuthAmount, clearPreAuthCurentAmount } = preAuthSlice.actions;
 
 export default preAuthSlice.reducer;
