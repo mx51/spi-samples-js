@@ -129,7 +129,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
           open={displayKeypad}
           title={getTitleForKeypad()}
           subtitle={`Enter ${getTitleForKeypad().toLowerCase()} amount`}
-          defaultAmount={0}
+          defaultAmount={totalAmount}
           onClose={() => {
             setDisplayKeypad(false);
           }}
