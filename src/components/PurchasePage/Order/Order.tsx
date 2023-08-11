@@ -27,7 +27,6 @@ import {
 } from '../../../redux/reducers/ProductSlice/productSelector';
 import {
   addCashoutAmount,
-  addKeypadAmount,
   addSubtotalAmount,
   addSurchargeAmount,
   addTipAmount,

@@ -63,11 +63,8 @@ export const defaultEmptyMockPairFormParams = {
 export const defaultMockSelectedTerminals = { selectedTerminalId: 'test' };
 
 export const defaultMockPreAuthState = {
-  preAuthRef: 'Test',
-  preAuthAmount: 1000,
-  currentAmount: 500,
-  surcharge: 200,
-  verified: true,
+  openPreAuths: [],
+  keyPadAmount: 0,
 };
 
 export const defaultMockPairFormParams = {

@@ -1,18 +1,14 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
-import { IPreAuthValues } from './interfaces';
+import { IPreAuthState, IPreAuthValues } from './interfaces';
 
-export const preAuth = (state: RootState): IPreAuthValues => state.preAuth;
+export const preAuths = (state: RootState): IPreAuthState => state.preAuth;
 
-export const preAuthSelector = createSelector(preAuth, (params) => ({
-  preAuthRef: params.preAuthRef,
-  preAuthAmount: params.preAuthAmount,
-  currentAmount: params.currentAmount,
-  surcharge: params.surcharge,
-  verified: params.verified,
-}));
+export const selectAllPreAuths = createSelector(preAuths, (state): IPreAuthValues[] => state.openPreAuths);
 
-export const isPreAuthDisabledSelector = createSelector(
-  preAuth,
-  (params) => !params.preAuthRef || !params.preAuthAmount
+export const selectPreAuthKeyPadAmount = createSelector(preAuths, (state): number => state.keyPadAmount);
+
+export const selectPreAuthById = createSelector(
+  [preAuths, (state: RootState, id: string) => id],
+  (state, id): IPreAuthValues | undefined => state.openPreAuths.find((preAuthItem) => preAuthItem?.preAuthRef === id)
 );

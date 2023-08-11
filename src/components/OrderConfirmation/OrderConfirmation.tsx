@@ -50,8 +50,7 @@ import { CashoutOrderConfirmation } from './CashoutOrderConfirmation';
 import { PayNowOrderConfirmation } from './PayNowOrderConfirmation';
 import { PreAuthOrderConfirmation } from './PreAuthOrderConfirmation';
 import { RefundOrderConfirmation } from './RefundOrderConfirmation';
-import { updatePreAuthParams } from '../../redux/reducers/PreAuth/preAuthSlice';
-import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
+import { usePreAuthActions } from '../../hooks/usePreAuthActions';
 
 type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
 
@@ -64,7 +63,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const classes = useStyles();
   const terminals = useSelector(pairedConnectedTerminalList);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps | undefined;
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
   const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
   const successStatus = currentTerminal?.txFlow?.success;
@@ -73,8 +72,9 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
   const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
   const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
+  const [keypadAmount, setKeypadAmount] = useState<number>(0);
   const totalAmount = useSelector(orderTotalSelector);
-  const preAuth = useSelector(preAuthSelector);
+  const { handlePreAuthActions } = usePreAuthActions(currentTerminal);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
@@ -135,18 +135,13 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
           }}
           onAmountChange={(amount) => {
             setDisplayKeypad(false);
-
+            setKeypadAmount(amount);
             if (cashoutPage) {
               dispatch(addCashoutAmount(amount));
             } else if (refundPage) {
               dispatch(addRefundAmount(amount));
             } else if (preAuthPage) {
-              dispatch(
-                updatePreAuthParams({
-                  key: 'UPDATE_CURRENT_AMOUNT',
-                  value: amount,
-                })
-              );
+              handlePreAuthActions(amount);
             }
             clearProductsOnlyAction();
           }}
@@ -168,7 +163,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
               >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
-                    {preAuthPage ? currencyFormat(preAuth.currentAmount / 100) : currencyFormat(totalAmount / 100)}
+                    {preAuthPage ? currencyFormat(keypadAmount / 100) : currencyFormat(totalAmount / 100)}
                   </Box>
                   {editSubtotal && (
                     <Box>
