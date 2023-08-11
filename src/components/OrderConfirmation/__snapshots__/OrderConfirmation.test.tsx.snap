@@ -9,13 +9,13 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
       class="MuiGrid-root makeStyles-gridStyles-3 MuiGrid-item MuiGrid-grid-xs-7"
     >
       <div
-        class="MuiBox-root MuiBox-root-20 makeStyles-root-1"
+        class="MuiBox-root MuiBox-root-22 makeStyles-root-1"
       >
         <div
-          class="MuiBox-root MuiBox-root-21"
+          class="MuiBox-root MuiBox-root-23"
         >
           <div
-            class="MuiBox-root MuiBox-root-22"
+            class="MuiBox-root MuiBox-root-24"
           >
             <p
               class="MuiTypography-root makeStyles-payLabel-4 MuiTypography-body1"
@@ -33,15 +33,15 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
               class="MuiButton-label"
             >
               <div
-                class="MuiPaper-root MuiBox-root MuiBox-root-23 makeStyles-paper-5 MuiPaper-elevation1 MuiPaper-rounded"
+                class="MuiPaper-root MuiBox-root MuiBox-root-25 makeStyles-paper-5 MuiPaper-elevation1 MuiPaper-rounded"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-24 makeStyles-orderTotalInputField-8"
+                  class="MuiBox-root MuiBox-root-26 makeStyles-orderTotalInputField-8"
                 >
                   $5.00
                 </div>
                 <div
-                  class="MuiBox-root MuiBox-root-25"
+                  class="MuiBox-root MuiBox-root-27"
                 >
                   <span
                     aria-hidden="true"
@@ -80,7 +80,7 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
           role="radiogroup"
         >
           <div
-            class="MuiBox-root MuiBox-root-26"
+            class="MuiBox-root MuiBox-root-28"
           >
             <ul
               class="MuiList-root MuiList-padding"
@@ -93,20 +93,20 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
                 >
                   <span
                     aria-disabled="false"
-                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-27 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-12 PrivateSwitchBase-checked-28 Mui-checked MuiIconButton-colorSecondary"
+                    class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-29 MuiRadio-root MuiRadio-colorSecondary makeStyles-radioBtn-12 PrivateSwitchBase-checked-30 Mui-checked MuiIconButton-colorSecondary"
                   >
                     <span
                       class="MuiIconButton-label"
                     >
                       <input
                         checked=""
-                        class="PrivateSwitchBase-input-30"
+                        class="PrivateSwitchBase-input-32"
                         name="terminal"
                         type="radio"
                         value="123-123-123"
                       />
                       <div
-                        class="PrivateRadioButtonIcon-root-31 PrivateRadioButtonIcon-checked-33"
+                        class="PrivateRadioButtonIcon-root-33 PrivateRadioButtonIcon-checked-35"
                       >
                         <svg
                           aria-hidden="true"
@@ -120,7 +120,7 @@ exports[`Test <OrderConfirmation /> should match OrderConfirmationPage snapshot 
                         </svg>
                         <svg
                           aria-hidden="true"
-                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-32"
+                          class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-34"
                           focusable="false"
                           viewBox="0 0 24 24"
                         >

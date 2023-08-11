@@ -9,7 +9,12 @@ import {
   updatePreAuthSurcharge,
 } from '../redux/reducers/PreAuth/preAuthSlice';
 
-export const usePreAuthActions = (currentTerminal: ITerminalProps): any => {
+type IPreAuthActionsType = {
+  preAuthValues: Record<string, unknown>;
+  handlePreAuthActions: (keyPadAmound?: number, surchageAmount?: number, preAuthId?: string) => void;
+};
+
+export const usePreAuthActions = (currentTerminal: ITerminalProps): IPreAuthActionsType => {
   const dispatch = useDispatch();
 
   const preAuthValues = {

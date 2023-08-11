@@ -65,13 +65,13 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
             class="MuiGrid-root makeStyles-gridStyles-11 MuiGrid-item MuiGrid-grid-xs-7"
           >
             <div
-              class="MuiBox-root MuiBox-root-28 makeStyles-root-9"
+              class="MuiBox-root MuiBox-root-30 makeStyles-root-9"
             >
               <div
-                class="MuiBox-root MuiBox-root-29"
+                class="MuiBox-root MuiBox-root-31"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-30"
+                  class="MuiBox-root MuiBox-root-32"
                 >
                   <p
                     class="MuiTypography-root makeStyles-payLabel-12 MuiTypography-body1"
@@ -89,15 +89,15 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
                     class="MuiButton-label"
                   >
                     <div
-                      class="MuiPaper-root MuiBox-root MuiBox-root-31 makeStyles-paper-13 MuiPaper-elevation1 MuiPaper-rounded"
+                      class="MuiPaper-root MuiBox-root MuiBox-root-33 makeStyles-paper-13 MuiPaper-elevation1 MuiPaper-rounded"
                     >
                       <div
-                        class="MuiBox-root MuiBox-root-32 makeStyles-orderTotalInputField-16"
+                        class="MuiBox-root MuiBox-root-34 makeStyles-orderTotalInputField-16"
                       >
                         $0.00
                       </div>
                       <div
-                        class="MuiBox-root MuiBox-root-33"
+                        class="MuiBox-root MuiBox-root-35"
                       >
                         <span
                           aria-hidden="true"
@@ -136,7 +136,7 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
                 role="radiogroup"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-34"
+                  class="MuiBox-root MuiBox-root-36"
                 >
                   <ul
                     class="MuiList-root MuiList-padding"
@@ -144,35 +144,103 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
                 </div>
               </div>
               <div
-                class="MuiBox-root MuiBox-root-35 makeStyles-tableBox-10"
+                class="MuiBox-root MuiBox-root-37 makeStyles-tableBox-10"
               />
               <div
-                class="MuiBox-root MuiBox-root-36"
+                class="MuiBox-root MuiBox-root-38"
               >
-                <button
-                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
-                  disabled=""
-                  tabindex="-1"
-                  type="button"
+                <div
+                  class="MuiBox-root MuiBox-root-39"
                 >
-                  <span
-                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
-                    Verify Account
-                  </span>
-                </button>
-                <button
-                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
-                  disabled=""
-                  tabindex="-1"
-                  type="button"
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Verify
+                    </span>
+                  </button>
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Open
+                    </span>
+                  </button>
+                </div>
+                <div
+                  class="MuiBox-root MuiBox-root-40"
                 >
-                  <span
-                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
                   >
-                    Open Pre-Auth
-                  </span>
-                </button>
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Extend
+                    </span>
+                  </button>
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Cancel
+                    </span>
+                  </button>
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Top Up
+                    </span>
+                  </button>
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Reduce
+                    </span>
+                  </button>
+                  <button
+                    class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                    disabled=""
+                    tabindex="-1"
+                    type="button"
+                  >
+                    <span
+                      class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                    >
+                      Complete
+                    </span>
+                  </button>
+                </div>
               </div>
             </div>
           </div>
