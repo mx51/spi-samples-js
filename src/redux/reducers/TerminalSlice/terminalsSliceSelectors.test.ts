@@ -200,11 +200,8 @@ describe('Test terminals slice selectors', () => {
       },
       selectedTerminal: { selectedTerminalId: '' },
       preAuth: {
-        preAuthRef: 'Test',
-        preAuthAmount: 1000,
-        currentAmount: 500,
-        surcharge: 200,
-        verified: true,
+        openPreAuths: [],
+        keyPadAmount: 0,
       },
     };
 

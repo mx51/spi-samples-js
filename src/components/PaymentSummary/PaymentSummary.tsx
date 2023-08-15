@@ -23,7 +23,9 @@ import {
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
 import OrderSubTotal from '../OrderSubTotal';
-import { preAuthSelector } from '../../redux/reducers/PreAuth/preAuthSelector';
+import { selectPreAuthById } from '../../redux/reducers/PreAuth/preAuthSelector';
+import { IPreAuthValues } from '../../redux/reducers/PreAuth/interfaces';
+import { RootState } from '../../redux/store';
 
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
@@ -33,7 +35,10 @@ function PaymentSummary(): React.ReactElement {
   const isTxFlowFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal));
   const isTxFlowSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const { typePath, typeTitle } = useSelector(terminalTransactionTypeObject(selectedTerminal));
-  const { preAuthAmount } = useSelector(preAuthSelector);
+  const preAuthId = currentTerminal?.txFlow?.response?.data?.preAuthId ?? '';
+  const selectedPreAuth = useSelector((state: RootState): IPreAuthValues | undefined =>
+    selectPreAuthById(state, preAuthId)
+  );
 
   useEffect(() => {
     dispatch(clearAllProducts());
@@ -58,7 +63,8 @@ function PaymentSummary(): React.ReactElement {
   const cashoutAmount = amountSummaryInformation('bankCashAmount');
   const tipAmount = amountSummaryInformation('tipAmount');
   const refundAmount = amountSummaryInformation('refundAmount');
-  const originalTotalAmount = subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + preAuthAmount;
+  const originalTotalAmount =
+    subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + selectedPreAuth?.preAuthAmount;
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>

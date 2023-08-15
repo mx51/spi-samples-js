@@ -1,12 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { IPreAuthAction, IPreAuthValues } from './interfaces';
+import { IPreAuthValues, IPreAuthAction, IPreAuthState } from './interfaces';
 
-export const initialState: IPreAuthValues = {
-  preAuthRef: '',
-  preAuthAmount: 0,
-  currentAmount: 0,
-  surcharge: 0,
-  verified: false,
+export const initialState: IPreAuthState = {
+  openPreAuths: [] as IPreAuthValues[],
+  keyPadAmount: 0,
 };
 
 export const preAuthSlice = createSlice({
@@ -14,71 +11,64 @@ export const preAuthSlice = createSlice({
   initialState,
   reducers: {
     resetPreAuth: () => initialState,
-    clearPreAuthAmount(state: IPreAuthValues) {
-      state.preAuthAmount = 0;
+    addPreAuth: (state, action: PayloadAction<IPreAuthAction>) => {
+      const { preAuth } = action.payload;
+      state.openPreAuths.push(preAuth);
     },
-    clearPreAuthCurentAmount(state: IPreAuthValues) {
-      state.currentAmount = 0;
+    updateKeypadAmount: (state, action: PayloadAction<number>) => {
+      state.keyPadAmount = action.payload;
     },
-    updatePreAuthParams(state: IPreAuthValues, action: PayloadAction<IPreAuthAction>) {
-      const { key, value } = action.payload;
-
-      switch (key) {
-        case 'UPDATE_PRE_AUTH_REF':
-          return {
-            ...state,
-            preAuthRef: value,
-          };
-        case 'UPDATE_PRE_AUTH_AMOUNT':
-          return {
-            ...state,
-            preAuthAmount: value,
-          };
-        case 'UPDATE_CURRENT_AMOUNT':
-          return {
-            ...state,
-            currentAmount: value,
-          };
-        case 'UPDATE_SURCHARGE':
-          return {
-            ...state,
-            surcharge: value,
-          };
-        case 'UPDATE_VERIFIED':
-          return {
-            ...state,
-            verified: value,
-          };
-        case 'OPEN_PRE_AUTH':
-          return {
-            ...state,
-            ...value,
-          };
-        case 'TOPUP_PRE_AUTH': {
-          const newAmount = state.preAuthAmount + value;
-          return {
-            ...state,
-            preAuthAmount: newAmount,
-          };
-        }
-        case 'REDUCE_PRE_AUTH': {
-          const newAmount = state.preAuthAmount - value;
-          return {
-            ...state,
-            preAuthAmount: newAmount,
-          };
-        }
-        case 'CANCEL_PRE_AUTH':
-          return initialState;
-        case 'COMPLETE_PRE_AUTH':
-          return initialState;
-        default:
-          throw new Error(`Unhandled action key: ${key}`);
+    clearKeypadAmount: (state) => {
+      state.keyPadAmount = 0;
+    },
+    updatePreAuth: (state, action: PayloadAction<IPreAuthAction>) => {
+      const { preAuth } = action.payload;
+      const index = state.openPreAuths.findIndex((obj) => obj.preAuthRef === preAuth.preAuthRef);
+      if (index !== -1) {
+        state.openPreAuths[index] = preAuth;
+      }
+    },
+    updatePreAuthSurcharge: (state, action: PayloadAction<IPreAuthAction>) => {
+      const { preAuth } = action.payload;
+      const index = state.openPreAuths.findIndex((obj) => obj.preAuthRef === preAuth.preAuthRef);
+      if (index !== -1) {
+        state.openPreAuths[index].surcharge = preAuth.surcharge;
+      }
+    },
+    topupPreAuth: (state, action: PayloadAction<IPreAuthAction>) => {
+      const { preAuth } = action.payload;
+      const index = state.openPreAuths.findIndex((obj) => obj.preAuthRef === preAuth.preAuthRef);
+      if (index !== -1) {
+        state.openPreAuths[index].preAuthAmount += preAuth.topupAmount;
+      }
+    },
+    reducePreAuth: (state, action: PayloadAction<IPreAuthAction>) => {
+      const { preAuth } = action.payload;
+      const index = state.openPreAuths.findIndex((obj) => obj.preAuthRef === preAuth.preAuthRef);
+      if (index !== -1) {
+        state.openPreAuths[index].preAuthAmount -= preAuth.reduceAmount;
+      }
+    },
+    clearPreAuth: (state, action: PayloadAction<IPreAuthAction>) => {
+      const { preAuth } = action.payload;
+      const index = state.openPreAuths.findIndex((obj) => obj.preAuthRef === preAuth.preAuthRef);
+      if (index !== -1) {
+        state.openPreAuths.splice(index, 1);
       }
     },
   },
 });
 
-export const { resetPreAuth, updatePreAuthParams, clearPreAuthAmount, clearPreAuthCurentAmount } = preAuthSlice.actions;
+export const {
+  resetPreAuth,
+  addPreAuth,
+  updateKeypadAmount,
+  updatePreAuth,
+  updatePreAuthSurcharge,
+  clearKeypadAmount,
+  topupPreAuth,
+  reducePreAuth,
+  clearPreAuth,
+} = preAuthSlice.actions;
 
 export default preAuthSlice.reducer;

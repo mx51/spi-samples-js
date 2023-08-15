@@ -6,6 +6,7 @@ import {
   CHIP_FONT_FAILURE_COLOR,
   CHIP_FONT_PENDING_COLOR,
   CHIP_FONT_SUCCESS_COLOR,
+  SECONDRARY_BACKGROUND_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -101,6 +102,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     unclickable: {
       pointerEvents: 'none',
+    },
+    additionalChargeBtn: {
+      color: theme.palette.primary.main,
+      backgroundColor: SECONDRARY_BACKGROUND_COLOR,
+      fontSize: '1.25rem',
+      padding: 0,
+    },
+    additionalChargeBtnLabel: {
+      padding: 0,
     },
   })
 );

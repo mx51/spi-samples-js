@@ -273,13 +273,13 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
             class="MuiGrid-root makeStyles-gridStyles-41 MuiGrid-item MuiGrid-grid-xs-7"
           >
             <div
-              class="MuiBox-root MuiBox-root-58 makeStyles-root-39"
+              class="MuiBox-root MuiBox-root-60 makeStyles-root-39"
             >
               <div
-                class="MuiBox-root MuiBox-root-59"
+                class="MuiBox-root MuiBox-root-61"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-60"
+                  class="MuiBox-root MuiBox-root-62"
                 >
                   <p
                     class="MuiTypography-root makeStyles-payLabel-42 MuiTypography-body1"
@@ -298,10 +298,10 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                     class="MuiButton-label"
                   >
                     <div
-                      class="MuiPaper-root MuiBox-root MuiBox-root-61 makeStyles-paper-43 MuiPaper-elevation1 MuiPaper-rounded"
+                      class="MuiPaper-root MuiBox-root MuiBox-root-63 makeStyles-paper-43 MuiPaper-elevation1 MuiPaper-rounded"
                     >
                       <div
-                        class="MuiBox-root MuiBox-root-62 makeStyles-orderTotalInputField-46"
+                        class="MuiBox-root MuiBox-root-64 makeStyles-orderTotalInputField-46"
                       >
                         $0.00
                       </div>
@@ -323,7 +323,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 role="radiogroup"
               >
                 <div
-                  class="MuiBox-root MuiBox-root-63"
+                  class="MuiBox-root MuiBox-root-65"
                 >
                   <ul
                     class="MuiList-root MuiList-padding"
@@ -339,7 +339,7 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                 class="MuiDivider-root"
               />
               <div
-                class="MuiBox-root MuiBox-root-64"
+                class="MuiBox-root MuiBox-root-66"
               >
                 <button
                   class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-49 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
