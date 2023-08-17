@@ -40,11 +40,11 @@ export default {
       path: PATH_CASH_OUT,
       icon: <IconCashout />,
     },
-    {
-      name: TEXT_PRE_AUTH,
-      path: PATH_PRE_AUTH,
-      icon: <IconPreAuth />,
-    },
+    // {
+    //   name: TEXT_PRE_AUTH,
+    //   path: PATH_PRE_AUTH,
+    //   icon: <IconPreAuth />,
+    // },
   ],
   terminals: [
     {
