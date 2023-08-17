@@ -5,13 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.7] - 2023-8-17
 
 ### Added
 
 - [INTG-506](https://mx51.atlassian.net/browse/INTG-506) Changelog file
 - [INTG-522](https://mx51.atlassian.net/browse/INTG-522) Pairing record is missing when terminal is disconnected
-- [INTG-573](https://mx51.atlassian.net/browse/INTG-573) Migrate MotelPOS pre-auth transaction flows to EspressoPOS
 - [INTG-544](https://mx51.atlassian.net/browse/INTG-544) View the version of EspressoPOS
 
 ### Fixed

@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "1.2.5",
+  "version": "1.2.7",
   "private": true,
   "engines": {
     "node": ">=16"
@@ -31,6 +31,7 @@
     "dev": "NODE_OPTIONS=--openssl-legacy-provider react-scripts start",
     "build": "NODE_OPTIONS=--openssl-legacy-provider react-scripts build",
     "test": "tsc && react-scripts test --watchAll=false",
+    "test:watch": "react-scripts test",
     "test:deploy": "npm test -- --reporters=jest-junit --reporters=default --coverage --coverageReporters=cobertura --coverageReporters=html",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "eject": "react-scripts eject",
