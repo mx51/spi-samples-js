@@ -18,7 +18,7 @@ const RefundOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransaction
         variant="contained"
         color="primary"
         size="large"
-        disabled={refundAmount < 0 || !selectedTerminalId}
+        disabled={refundAmount <= 0 || !selectedTerminalId}
         focusRipple
         classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
         onClick={() => {

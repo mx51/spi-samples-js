@@ -63,8 +63,9 @@ function PaymentSummary(): React.ReactElement {
   const cashoutAmount = amountSummaryInformation('bankCashAmount');
   const tipAmount = amountSummaryInformation('tipAmount');
   const refundAmount = amountSummaryInformation('refundAmount');
+
   const originalTotalAmount =
-    subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + selectedPreAuth?.preAuthAmount;
+    subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + (selectedPreAuth?.preAuthAmount ?? 0);
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>

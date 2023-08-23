@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import {
   Box,
   Button,
@@ -27,7 +27,11 @@ import {
   PATH_PAY_NOW,
 } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
-import { orderTotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
+import {
+  orderCashoutAmountSelector,
+  orderRefundAmountSelector,
+  orderTotalSelector,
+} from '../../redux/reducers/ProductSlice/productSelector';
 import { addCashoutAmount, addRefundAmount, clearProductsOnly } from '../../redux/reducers/ProductSlice/productSlice';
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
@@ -54,6 +58,7 @@ import { usePreAuthActions } from '../../hooks/usePreAuthActions';
 
 type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
 
+// @TODO - Redesign this component.
 function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation): React.ReactElement {
   const cashoutPage = pathname === PATH_CASH_OUT;
   const refundPage = pathname === PATH_REFUND;
@@ -73,7 +78,10 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const [toShowUnknownTransaction, setToShowUnknownTransaction] = useState<boolean>(false);
   const [showUnknownTransactionModal, setShowUnknownTransactionModal] = useState<boolean>(true);
   const [keypadAmount, setKeypadAmount] = useState<number>(0);
+  const refundAmount: number = useSelector(orderRefundAmountSelector);
+  const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const totalAmount = useSelector(orderTotalSelector);
+
   const { handlePreAuthActions } = usePreAuthActions(currentTerminal);
 
   const clearProductsOnlyAction = () => {
@@ -116,6 +124,22 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
 
   const renderOrderConfirmationByAction = () => componentByPathName[pathname as ComponentByPathNameKeys];
 
+  const keypayDisplayAmount = useMemo(() => {
+    if (refundPage) {
+      return refundAmount;
+    }
+
+    if (cashoutPage) {
+      return cashoutAmount;
+    }
+
+    if (preAuthPage) {
+      return keypadAmount;
+    }
+
+    return totalAmount;
+  }, [refundAmount, cashoutAmount, keypadAmount, totalAmount]);
+
   return (
     <>
       <Drawer
@@ -129,7 +153,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
           open={displayKeypad}
           title={getTitleForKeypad()}
           subtitle={`Enter ${getTitleForKeypad().toLowerCase()} amount`}
-          defaultAmount={totalAmount}
+          defaultAmount={keypayDisplayAmount}
           onClose={() => {
             setDisplayKeypad(false);
           }}
@@ -163,7 +187,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
               >
                 <Box flex="1" display="flex" className={classes.paper} component={Paper}>
                   <Box className={classes.orderTotalInputField} flex="1">
-                    {preAuthPage ? currencyFormat(keypadAmount / 100) : currencyFormat(totalAmount / 100)}
+                    {currencyFormat(keypayDisplayAmount / 100)}
                   </Box>
                   {editSubtotal && (
                     <Box>
