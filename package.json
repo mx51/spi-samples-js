@@ -36,10 +36,10 @@
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
     "eject": "react-scripts eject",
     "prepare": "husky install",
-    "check-prettier": "prettier --check .",
-    "check-lint": "tsc --noEmit && eslint src/**/*.ts{,x} --max-warnings=0",
+    "check-prettier": "prettier --check . --config .prettierrc",
+    "check-lint": "tsc --noEmit && eslint src/**/*.ts{,x} --max-warnings=0 --config .eslintrc.json",
     "check-types": "tsc --pretty --noEmit",
-    "prettier-format": "prettier --write src/**/*.ts{,x}",
+    "prettier-format": "prettier --write . --config .prettierrc",
     "pre-check": "npm run check-prettier && npm run check-lint && npm run check-types"
   },
   "husky": {

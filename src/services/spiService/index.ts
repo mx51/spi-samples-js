@@ -21,7 +21,8 @@ import {
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
-import { posVersion } from '../../utils/constants';
+import { RECEIPT_CONFIG, posVersion } from '../../utils/constants';
+
 import { ITerminal, ITerminals } from '../interfaces';
 
 declare global {
@@ -31,15 +32,62 @@ declare global {
 }
 
 class SpiService {
+  state = {
+    receiptConfig: (() => {
+      const receiptConfigString = getLocalStorage(RECEIPT_CONFIG);
+      return typeof receiptConfigString === 'string'
+        ? JSON.parse(receiptConfigString)
+        : {
+            eftposMerchantCopy: false,
+            eftposCustomerCopy: false,
+            eftposSignatureFlow: false,
+            suppressMerchantPassword: false,
+            receiptHeader: '',
+            receiptFooter: '',
+          };
+    })(),
+  };
+
   dispatchAction: Any; // redux dispatch action
 
-  print: Console;
+  print: Console = console;
 
-  terminals: ITerminals;
+  terminals: ITerminals = {};
 
-  constructor() {
-    this.print = console;
-    this.terminals = {};
+  // updates receipt config when state changes in useLocalSate hook
+  updateReceiptConfig(config: any) {
+    this.state.receiptConfig = config;
+  }
+
+  // sets custom receipt headers and footers
+  setCustomReceipts() {
+    const { receiptConfig } = this.state;
+    const options = new TransactionOptions();
+    options.SetCustomerReceiptHeader(receiptConfig.receiptHeader);
+    options.SetMerchantReceiptHeader(receiptConfig.receiptHeader);
+    options.SetCustomerReceiptFooter(receiptConfig.receiptFooter);
+    options.SetMerchantReceiptFooter(receiptConfig.receiptFooter);
+    return options;
+  }
+
+  // sets the receipt configuration for the terminal instance
+  setSpiConfig(instanceId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    const { receiptConfig } = this.state;
+    spi.Config.PromptForCustomerCopyOnEftpos = receiptConfig.eftposCustomerCopy;
+    spi.Config.SignatureFlowOnEftpos = receiptConfig.eftposSignatureFlow;
+    spi.Config.PrintMerchantCopy = receiptConfig.eftposMerchantCopy;
+    return spi;
+  }
+
+  // sets the receipt configuration for the preauth instance
+  setPreAuthConfig(instanceId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiPreAuth;
+    const { receiptConfig } = this.state;
+    spi.Config.PromptForCustomerCopyOnEftpos = receiptConfig.eftposCustomerCopy;
+    spi.Config.SignatureFlowOnEftpos = receiptConfig.eftposSignatureFlow;
+    spi.Config.PrintMerchantCopy = receiptConfig.eftposMerchantCopy;
+    return spi;
   }
 
   start(dispatch: Any): void {
@@ -513,12 +561,8 @@ class SpiService {
     promptForCashout: boolean,
     surchargeAmount: number
   ): void {
-    const spi = this.readTerminalInstance(instanceId).spiClient;
-    const options = new TransactionOptions();
-    options.SetCustomerReceiptHeader('');
-    options.SetMerchantReceiptHeader('');
-    options.SetCustomerReceiptFooter('');
-    options.SetMerchantReceiptFooter('');
+    const spi = this.setSpiConfig(instanceId);
+    const options = this.setCustomReceipts();
 
     return spi.InitiatePurchaseTxV2(
       posRefId,
@@ -537,8 +581,10 @@ class SpiService {
     purchaseAmount: number,
     surchargeAmount: number
   ): void {
-    const spi = this.readTerminalInstance(instanceId).spiClient;
-    return spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount);
+    const spi = this.setSpiConfig(instanceId);
+    const options = this.setCustomReceipts();
+    const { suppressMerchantPassword } = this.state.receiptConfig;
+    return spi.InitiateMotoPurchaseTx(posRefId, purchaseAmount, surchargeAmount, suppressMerchantPassword, options);
   }
 
   initiateCashoutOnlyTxTransaction(
@@ -547,15 +593,16 @@ class SpiService {
     purchaseAmount: number,
     surchargeAmount: number
   ): void {
-    return this.readTerminalInstance(instanceId).spiClient.InitiateCashoutOnlyTx(
-      posRefId,
-      purchaseAmount,
-      surchargeAmount
-    );
+    const spi = this.setSpiConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return spi.InitiateCashoutOnlyTx(posRefId, purchaseAmount, surchargeAmount, options);
   }
 
   initiateRefundTxTransaction(instanceId: string, posRefId: string, refundAmount: number): void {
-    return this.readTerminalInstance(instanceId).spiClient.InitiateRefundTx(posRefId, refundAmount);
+    const spi = this.setSpiConfig(instanceId);
+    const options = this.setCustomReceipts();
+    const { suppressMerchantPassword } = this.state.receiptConfig;
+    return spi.InitiateRefundTx(posRefId, refundAmount, suppressMerchantPassword, options);
   }
 
   initiateAccountVerify(instanceId: string, posRefId: string): void {
@@ -563,23 +610,27 @@ class SpiService {
   }
 
   initiatePreAuthOpen(instanceId: string, posRefId: string, preAuthAmount: number): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateOpenTx(posRefId, preAuthAmount);
+    const preAuth = this.setPreAuthConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return preAuth.InitiateOpenTx(posRefId, preAuthAmount, options);
   }
 
   initiatePreAuthTopup(instanceId: string, posRefId: string, preAuthId: string, preAuthAmount: number): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateTopupTx(posRefId, preAuthId, preAuthAmount);
+    const preAuth = this.setPreAuthConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return preAuth.InitiateTopupTx(posRefId, preAuthId, preAuthAmount, options);
   }
 
   initiatePreAuthReduce(instanceId: string, posRefId: string, preAuthId: string, preAuthAmount: number): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiatePartialCancellationTx(
-      posRefId,
-      preAuthId,
-      preAuthAmount
-    );
+    const preAuth = this.setPreAuthConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return preAuth.InitiatePartialCancellationTx(posRefId, preAuthId, preAuthAmount, options);
   }
 
   initiatePreAuthExtend(instanceId: string, posRefId: string, preAuthId: string): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateExtendTx(posRefId, preAuthId);
+    const preAuth = this.setPreAuthConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return preAuth.InitiateExtendTx(posRefId, preAuthId, options);
   }
 
   initiatePreAuthCompletion(
@@ -589,32 +640,37 @@ class SpiService {
     preAuthAmount: number,
     surchargeAmount: number
   ): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateCompletionTx(
-      posRefId,
-      preAuthId,
-      preAuthAmount,
-      surchargeAmount
-    );
+    const preAuth = this.setPreAuthConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return preAuth.InitiateCompletionTx(posRefId, preAuthId, preAuthAmount, surchargeAmount, options);
   }
 
   initiatePreAuthCancel(instanceId: string, posRefId: string, preAuthId: string): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateCancelTx(posRefId, preAuthId);
+    const preAuth = this.setPreAuthConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return preAuth.InitiateCancelTx(posRefId, preAuthId, options);
   }
 
   initTxSettlement(instanceId: string, posRefId: string) {
-    return this.readTerminalInstance(instanceId).spiClient.InitiateSettleTx(posRefId);
+    const spi = this.setSpiConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return spi.InitiateSettleTx(posRefId, options);
   }
 
   initTxSettlementEnquiry(instanceId: string, posRefId: string) {
-    return this.readTerminalInstance(instanceId).spiClient.InitiateSettlementEnquiry(posRefId);
+    const spi = this.setSpiConfig(instanceId);
+    const options = this.setCustomReceipts();
+    return spi.InitiateSettlementEnquiry(posRefId, options);
   }
 
   signatureForApprove(instanceId: string) {
-    return this.readTerminalInstance(instanceId).spiClient.AcceptSignature(true);
+    const spi = this.setSpiConfig(instanceId);
+    return spi.AcceptSignature(true);
   }
 
   signatureForDecline(instanceId: string) {
-    return this.readTerminalInstance(instanceId).spiClient.AcceptSignature(false);
+    const spi = this.setSpiConfig(instanceId);
+    return spi.AcceptSignature(false);
   }
 }
 
