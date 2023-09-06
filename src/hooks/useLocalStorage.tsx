@@ -18,9 +18,7 @@ export const useLocalStorage = <T,>(
 
   useEffect(() => {
     setLocalStorage(key, JSON.stringify(state));
-    if (onStateChanged) {
-      onStateChanged(state);
-    }
+    onStateChanged?.(state);
   }, [state]);
 
   return [state, setState];

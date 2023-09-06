@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 import { Box, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 import Layout from '../Layout';
 import useStyles from './index.styles';
@@ -35,17 +36,16 @@ const SettingsPage: React.FC = () => {
                 <Tab id="terminalSettingsTab" label="Terminal Settings" />
                 {/* <Tab id="posSettingsTab" label="POS Settings" /> */}
               </Tabs>
-              {tabIndex === 0 && (
-                <SettingsPanel
-                  index={0}
-                  subtitle="Configure the terminal settings and customise the EFTPOS receipts."
-                  title="Terminal Settings"
-                  value={tabIndex}
-                />
-              )}
-              {tabIndex === 1 && (
-                <SettingsPanel index={1} subtitle="Configure the POS settings." title="POS Settings" value={tabIndex} />
-              )}
+              <SettingsPanel
+                index={tabIndex}
+                subtitle={
+                  tabIndex === 0
+                    ? 'Configure the terminal settings and customise the EFTPOS receipts.'
+                    : 'Configure the POS settings.'
+                }
+                title={tabIndex === 0 ? 'Terminal Settings' : 'POS Settings'}
+                value={tabIndex}
+              />
             </Grid>
           </Grid>
         </Grid>
