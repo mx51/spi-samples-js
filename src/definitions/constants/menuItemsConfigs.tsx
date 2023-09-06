@@ -4,6 +4,7 @@ import { ReactComponent as IconPairing } from '../../images/PairingIcon.svg';
 import { ReactComponent as IconPreAuth } from '../../images/PreAuthorisationIcon.svg';
 import { ReactComponent as IconPurchase } from '../../images/PurchaseIcon.svg';
 import { ReactComponent as IconRefund } from '../../images/RefundIcon.svg';
+import { ReactComponent as IconSettings } from '../../images/FleetSettingsIcon.svg';
 import { ReactComponent as IconSupport } from '../../images/SupportIcon.svg';
 import { ReactComponent as IconTerminalsList } from '../../images/TerminalsListIcon.svg';
 import {
@@ -13,6 +14,7 @@ import {
   TEXT_PURCHASE,
   TEXT_REFUND,
   TEXT_TERMINALS,
+  TEXT_SETTINGS,
   TEXT_SUPPORT,
   PATH_CASH_OUT,
   PATH_PAIR,
@@ -20,6 +22,7 @@ import {
   PATH_PURCHASE,
   PATH_REFUND,
   PATH_TERMINALS,
+  PATH_SETTINGS,
   PATH_SUPPORT,
 } from './routerConfigs';
 
@@ -59,6 +62,11 @@ export default {
     },
   ],
   support: [
+    {
+      name: TEXT_SETTINGS,
+      path: PATH_SETTINGS,
+      icon: <IconSettings />,
+    },
     {
       name: TEXT_SUPPORT,
       path: PATH_SUPPORT,

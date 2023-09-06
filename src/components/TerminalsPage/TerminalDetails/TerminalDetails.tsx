@@ -44,6 +44,7 @@ export default function TerminalDetails(): React.ReactElement {
           >
             <Tab id="aboutTerminalTab" label="About this terminal" />
             {/* <Tab id="payAtTableTab" label="Pay at Table" /> */}
+            {/* <Tab id="eftposSettings" label="EFTPOS Settings" /> */}
           </Tabs>
 
           <TabPanel
