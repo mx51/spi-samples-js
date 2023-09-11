@@ -7,8 +7,14 @@ export const TEXT_FORM_DEFAULT_OPTION = 'Payment provider';
 export const TEXT_FORM_DEFAULT_VALUE = '(Other) Please specify';
 // form validations
 export const TEXT_FORM_VALIDATION_API_KEY_TEXTFIELD = 'Please enter an API Key.';
-export const TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD = 'Please enter a supported provider.';
+export const TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD = 'Please enter a supported provider less than 10 characters';
 export const TEXT_FORM_VALIDATION_EFTPOS_ADDRESS_TEXTFIELD = 'Please enter a valid EFTPOS address.';
+
+export const deviceAddressEnv = {
+  rnd: 'rnd',
+  qa: 'qa',
+  dev: 'dev',
+};
 
 export const SPI_PAIR_STATUS = {
   PairedConnected: SpiStatus.PairedConnected,

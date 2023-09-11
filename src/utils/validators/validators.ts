@@ -31,7 +31,7 @@ function charactersValidator(value: string): boolean {
 }
 
 function paymentProviderValidator(value: string): boolean {
-  return charactersValidator(value);
+  return charactersValidator(value) && value.length <= 10;
 }
 
 function serialNumberValidatorOnBlur(value: string): string {

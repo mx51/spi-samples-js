@@ -10,6 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
 
 import {
+  deviceAddressEnv,
   SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -41,6 +42,7 @@ import {
   handlePosIdFieldOnBlur,
   handlePosIdFieldOnChange,
   isHttps,
+  handleEnvironmentChanged,
 } from '../../../../utils/common/pair/pairFormHelpers';
 import {
   eftposAddressValidator,
@@ -55,11 +57,17 @@ import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
 import { IFormEventCheckbox, IFormEventValue } from '../interfaces';
 
+const acquirerCodeToEnvOptions: Record<string, string[]> = {
+  perf: [deviceAddressEnv.rnd],
+  eng: [deviceAddressEnv.qa, deviceAddressEnv.dev],
+};
+
 export default function PairConfiguration(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   // read redux store states
-  const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode } = useAppSelector(pairForm);
+  const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode, environment } =
+    useAppSelector(pairForm);
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));
@@ -73,6 +81,8 @@ export default function PairConfiguration(): React.ReactElement {
       }
     );
   }, []);
+
+  const envOptions = acquirerCodeToEnvOptions[acquirerCode.value] ?? [];
 
   return (
     <>
@@ -134,6 +144,28 @@ export default function PairConfiguration(): React.ReactElement {
             />
           </Grid>
         </Grid>
+        {envOptions.length >= 1 ? (
+          <Grid item className={classes.fieldSpace}>
+            <FormControl variant="outlined" margin="dense" fullWidth data-test-id="environment">
+              <InputLabel data-test-id="environmentLabel">Environment</InputLabel>
+              <Select
+                className={classes.pairFormSelector}
+                data-test-id="configurationSelector"
+                disabled={envOptions.length === 1}
+                label="Environment"
+                labelId="environmentDropdownLabel"
+                onChange={(event: IFormEventValue) => handleEnvironmentChanged(dispatch, event, updatePairFormParams)}
+                value={environment ?? ''}
+              >
+                {envOptions.map((option) => (
+                  <MenuItem key={option} value={option}>
+                    {option}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+        ) : null}
         <Grid container direction="row" className={classes.fieldSpace}>
           <Grid item sm={6} xs={12} className={classes.columnSpace}>
             <FormControl variant="outlined" margin="dense" fullWidth data-test-id="configurationTypeSelector">
@@ -248,7 +280,9 @@ export default function PairConfiguration(): React.ReactElement {
                 checked={testMode && acquirerCode.value.toLowerCase() !== 'gko'}
                 color="primary"
                 disabled={
-                  terminal?.status === SPI_PAIR_STATUS.PairedConnecting || acquirerCode.value.toLowerCase() === 'gko'
+                  envOptions.length > 0 ||
+                  terminal?.status === SPI_PAIR_STATUS.PairedConnecting ||
+                  acquirerCode.value.toLowerCase() === 'gko'
                 }
                 data-test-id="testModeCheckbox"
                 name="testMode"

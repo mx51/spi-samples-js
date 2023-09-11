@@ -53,7 +53,6 @@ describe('Test <PairForm />', () => {
     const fieldNames = [
       'Simple Payments Integration',
       'Cloud Connect',
-      'ZNV PayFast',
       'Fyro Payments',
       'Payment provider',
       '(Other) Please specify',

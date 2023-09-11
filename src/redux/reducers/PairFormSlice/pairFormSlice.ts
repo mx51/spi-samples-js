@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
+  deviceAddressEnv,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
   TEXT_FORM_DEFAULT_OPTION,
@@ -31,6 +32,7 @@ const initialState: IPairFormParams = {
     isValid: true,
   },
   testMode: true,
+  environment: undefined,
 };
 
 // The only reason for introducing pairFormSlice is for checking pair Form validation because before pairing process terminal instance id (serial number) is not available
@@ -55,6 +57,8 @@ export const pairFormSlice = createSlice({
           return {
             ...state,
             acquirerCode: value,
+            environment: value.value === 'perf' ? deviceAddressEnv.rnd : undefined,
+            testMode: ['perf', 'eng'].includes(value.value) ? false : state.testMode,
           };
         case 'addressType':
           return {
@@ -81,6 +85,12 @@ export const pairFormSlice = createSlice({
             ...state,
             testMode: value,
           };
+        case 'environment': {
+          return {
+            ...state,
+            environment: value,
+          };
+        }
         default:
           return state;
       }

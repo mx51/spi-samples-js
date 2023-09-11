@@ -277,3 +277,16 @@ export const handleTestModeCheckboxOnChange = (
     })
   );
 };
+
+export const handleEnvironmentChanged = (
+  dispatch: Any,
+  event: IFormEventValue,
+  updatePairFormParams: IUpdatePairFormParams
+): void => {
+  dispatch(
+    updatePairFormParams({
+      key: 'environment',
+      value: event.target.value as string,
+    })
+  );
+};

@@ -159,7 +159,8 @@ class SpiService {
         Object.keys(terminalsStorage).indexOf(instanceId) > -1 ? terminalsStorage[instanceId] : pairForm;
 
       // get current terminal settings
-      const { acquirerCode, autoAddress, deviceAddress, posId, serialNumber, testMode, secrets } = terminalFormParams;
+      const { acquirerCode, autoAddress, deviceAddress, posId, serialNumber, testMode, secrets, environment } =
+        terminalFormParams;
 
       // create localStorage instance if no terminal instance has been found inside current local terminals storage
       if (Object.keys(terminalsStorage).indexOf(instanceId) <= -1) {
@@ -190,6 +191,7 @@ class SpiService {
       instance.spiClient.SetPosInfo(defaultPosName, posVersion);
       instance.spiClient.SetAcquirerCode(acquirerCode);
       instance.spiClient.SetDeviceApiKey(defaultApikey);
+      instance.spiClient.EnvironmentCode = environment;
       instance.spiClient.SetTestMode(testMode);
 
       // setup terminal id in localStorage
