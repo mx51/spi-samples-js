@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Added
+- [INTG-628](https://mx51.atlassian.net/browse/INTG-628) Allow Espresso POS to select the environment used for pairing
+- [INTG-266](https://mx51.atlassian.net/browse/INTG-266) Adding terminal settings tab
+
 ## [1.2.8] - 2023-8-23
 
 ### Fixed

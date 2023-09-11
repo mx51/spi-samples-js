@@ -28,6 +28,7 @@ export interface IPairFormParams {
     isValid: boolean;
   };
   testMode: boolean;
+  environment?: string;
 }
 
 export interface IPairFormValues {
@@ -41,6 +42,8 @@ export interface IPairFormValues {
     hmacKey: string;
   } | null;
   testMode: boolean;
+  deviceAddressEnv?: string;
+  environment?: string;
 }
 
 export interface IFormParamsAction {

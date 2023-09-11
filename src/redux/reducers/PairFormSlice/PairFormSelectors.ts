@@ -16,6 +16,7 @@ export const selectPairFormValues = createSelector(pairForm, (params) => ({
   serialNumber: params.serialNumber.value,
   testMode: params.testMode,
   secrets: null,
+  environment: params.environment,
 }));
 
 export const isPairDisabled = createSelector(
