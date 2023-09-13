@@ -1,7 +1,9 @@
 {
   "env": {
     "browser": true,
-    "es2021": true
+    "es2021": true,
+    "node": true,
+    "jest": true
   },
   "extends": [
     "eslint:recommended",
@@ -20,6 +22,7 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint", "import"],
+  "ignorePatterns": ["node_modules/"],
   "rules": {
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
     "react/jsx-no-duplicate-props": [1, { "ignoreCase": false }],
@@ -46,6 +49,17 @@
       }
     ]
   },
+  "overrides": [
+    {
+      "files": ["**/*.test.js", "**/*.test.ts", "**/*.test.jsx", "**/*.test.tsx"],
+      "env": {
+        "jest": true
+      },
+      "parserOptions": {
+        "project": "./tsconfig.json"
+      }
+    }
+  ],
   "settings": {
     "import/extensions": [".js", ".jsx", ".ts", ".tsx"],
     "import/resolver": { "node": { "extensions": [".js", ".jsx", ".ts", ".tsx"] } },

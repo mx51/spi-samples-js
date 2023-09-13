@@ -606,7 +606,8 @@ class SpiService {
   }
 
   initiateAccountVerify(instanceId: string, posRefId: string): void {
-    return this.readTerminalInstance(instanceId).spiPreAuth.InitiateAccountVerifyTx(posRefId);
+    const preAuth = this.setPreAuthConfig(instanceId);
+    return preAuth.InitiateAccountVerifyTx(posRefId);
   }
 
   initiatePreAuthOpen(instanceId: string, posRefId: string, preAuthAmount: number): void {

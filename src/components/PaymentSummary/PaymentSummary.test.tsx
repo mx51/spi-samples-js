@@ -104,7 +104,7 @@ describe('Test <PaymentSummary />', () => {
       },
     };
 
-    const refundDeclinedText = 'Refund Failed'.toUpperCase();
+    const refundDeclinedText = 'Refund Declined'.toUpperCase();
     const newMockContainer = mockWithRedux(<PaymentSummary />, customStore(mockTerminals));
     const actionBtnClassOccurrence = (newMockContainer.innerHTML.match(/actionBtn/g) || []).length;
 

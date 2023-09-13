@@ -202,6 +202,10 @@ describe('Test terminals slice selectors', () => {
       preAuth: {
         openPreAuths: [],
         keyPadAmount: 0,
+        _persist: {
+          version: -1,
+          rehydrated: true,
+        },
       },
     };
 

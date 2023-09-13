@@ -27,6 +27,10 @@ import { selectPreAuthById } from '../../redux/reducers/PreAuth/preAuthSelector'
 import { IPreAuthValues } from '../../redux/reducers/PreAuth/interfaces';
 import { RootState } from '../../redux/store';
 
+type StatusMap = {
+  [key: string]: string;
+};
+
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -67,6 +71,25 @@ function PaymentSummary(): React.ReactElement {
   const originalTotalAmount =
     subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + (selectedPreAuth?.preAuthAmount ?? 0);
 
+  const preAuthStatusMap: StatusMap = {
+    PCOMP: 'Preauth Complete',
+    'PRE-AUTH EXT': 'Preauth Extend',
+    'PRE-AUTH CANCEL': 'Preauth Cancel',
+    TOPUP: 'Preauth Topup',
+    'A/C VERIFIED': 'Account Verified',
+    CANCEL: 'Preauth Reduce',
+    'PRE-AUTH': 'Preauth Open',
+  };
+
+  const transactionStatus = () => {
+    const preAuthtype = currentTerminal?.txFlow?.response?.data?.transactionType
+      ? preAuthStatusMap[currentTerminal?.txFlow?.response?.data?.transactionType]?.toUpperCase()
+      : 'PREAUTH';
+    const transactionType = typeTitle === 'Pre Auth' ? preAuthtype : typeTitle?.toUpperCase();
+    const status = currentTerminal?.txFlow?.success === 'Success' ? 'APPROVED' : 'DECLINED';
+    return `${transactionType} ${status}`;
+  };
+
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
       <Box flexGrow="2" className={classes.roots}>
@@ -74,7 +97,7 @@ function PaymentSummary(): React.ReactElement {
           <>
             <SuccessIcon className={classes.successIcon} />
             <Typography variant="h5" component="h1">
-              {`${typeTitle?.toUpperCase()} ${currentTerminal?.txFlow?.response?.data?.hostResponseText?.toUpperCase()}`}
+              {transactionStatus()}
             </Typography>
           </>
         )}
@@ -82,10 +105,7 @@ function PaymentSummary(): React.ReactElement {
           <>
             <FailedIcon className={classes.failedIcon} />
             <Typography variant="h5" component="h1">
-              {`${typeTitle?.toUpperCase()} ${currentTerminal?.txFlow?.success?.toUpperCase()}`}
-            </Typography>
-            <Typography variant="h6" component="h1">
-              {currentTerminal?.txFlow?.response?.data?.hostResponseText}
+              {transactionStatus()}
             </Typography>
           </>
         )}

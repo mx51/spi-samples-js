@@ -77,7 +77,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
     }
   };
 
-  function isAccountVerify() {
+  function isDisabled() {
     return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected;
   }
 
@@ -98,9 +98,9 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
           onClose={() => {
             setDisplayKeypad(false);
           }}
-          onAmountChange={(amount) => {
+          onAmountChange={(surchargeAmount) => {
             setDisplayKeypad(false);
-            handlePreAuthActions(undefined, amount, selectedPreAuthId);
+            handlePreAuthActions(undefined, surchargeAmount, selectedPreAuthId);
           }}
         />
       </Drawer>
@@ -164,7 +164,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             variant="contained"
             color="primary"
             size="large"
-            disabled={isAccountVerify()}
+            disabled={isDisabled()}
             focusRipple
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
@@ -178,7 +178,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             variant="contained"
             color="primary"
             size="large"
-            disabled={keypadAmount <= 0 || !selectedTerminal}
+            disabled={keypadAmount <= 0 || isDisabled()}
             focusRipple
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
@@ -199,8 +199,8 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
                 key={type}
                 disabled={
                   ['Extend', 'Cancel'].includes(type)
-                    ? !selectedPreAuthId || !selectedTerminal
-                    : !selectedPreAuthId || !selectedTerminal || keypadAmount <= 0
+                    ? !selectedPreAuthId || isDisabled()
+                    : !selectedPreAuthId || keypadAmount <= 0 || isDisabled()
                 }
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}

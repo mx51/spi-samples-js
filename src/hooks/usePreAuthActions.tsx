@@ -31,6 +31,8 @@ export const usePreAuthActions = (currentTerminal: ITerminalProps): IPreAuthActi
   const handlePreAuthActions = (keyPadAmount?: number, surchargeAmount?: number, preAuthRefId?: string) => {
     if (keyPadAmount) {
       dispatch(updateKeypadAmount(keyPadAmount));
+    } else if (keyPadAmount === 0) {
+      dispatch(updateKeypadAmount(0));
     } else if (surchargeAmount && preAuthRefId) {
       preAuthValues.preAuth.preAuthRef = preAuthRefId;
       preAuthValues.preAuth.surcharge = surchargeAmount;

@@ -149,12 +149,7 @@ exports[`Test <PaymentSummary /> should match snapshot for Purchase failure 1`] 
       <h1
         class="MuiTypography-root MuiTypography-h5"
       >
-        REFUND FAILED
-      </h1>
-      <h1
-        class="MuiTypography-root MuiTypography-h6"
-      >
-        Approved
+        REFUND DECLINED
       </h1>
       <p
         class="MuiTypography-root makeStyles-heading-120 MuiTypography-body1"
