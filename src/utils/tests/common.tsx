@@ -65,6 +65,10 @@ export const defaultMockSelectedTerminals = { selectedTerminalId: 'test' };
 export const defaultMockPreAuthState = {
   openPreAuths: [],
   keyPadAmount: 0,
+  _persist: {
+    version: -1,
+    rehydrated: true,
+  },
 };
 
 export const defaultMockPairFormParams = {

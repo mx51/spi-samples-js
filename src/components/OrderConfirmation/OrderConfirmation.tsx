@@ -82,7 +82,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const totalAmount = useSelector(orderTotalSelector);
 
-  const { handlePreAuthActions } = usePreAuthActions(currentTerminal);
+  const { handleKeypadUpdate } = usePreAuthActions(currentTerminal);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
@@ -165,7 +165,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
             } else if (refundPage) {
               dispatch(addRefundAmount(amount));
             } else if (preAuthPage) {
-              handlePreAuthActions(amount);
+              handleKeypadUpdate(amount);
             }
             clearProductsOnlyAction();
           }}

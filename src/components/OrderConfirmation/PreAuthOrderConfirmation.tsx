@@ -12,7 +12,7 @@ import {
   TableHead,
   TableRow,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useSelector } from 'react-redux';
 import useStyles from './index.styles';
 import {
@@ -50,7 +50,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
   );
   const keypadAmount = useSelector(selectPreAuthKeyPadAmount);
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const { handlePreAuthActions } = usePreAuthActions(currentTerminal);
+  const { handleSurchargeUpdate } = usePreAuthActions(currentTerminal);
 
   const handlePreAuthTxs = (type: string) => {
     if (selectedPreAuth) {
@@ -77,9 +77,10 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
     }
   };
 
-  function isAccountVerify() {
-    return !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected;
-  }
+  const isDisabled = useMemo(
+    () => !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected,
+    [selectedTerminal, currentTerminal]
+  );
 
   return (
     <>
@@ -98,9 +99,9 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
           onClose={() => {
             setDisplayKeypad(false);
           }}
-          onAmountChange={(amount) => {
+          onAmountChange={(surchargeAmount) => {
             setDisplayKeypad(false);
-            handlePreAuthActions(undefined, amount, selectedPreAuthId);
+            handleSurchargeUpdate(surchargeAmount, selectedPreAuthId);
           }}
         />
       </Drawer>
@@ -164,7 +165,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             variant="contained"
             color="primary"
             size="large"
-            disabled={isAccountVerify()}
+            disabled={isDisabled}
             focusRipple
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
@@ -178,7 +179,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             variant="contained"
             color="primary"
             size="large"
-            disabled={keypadAmount <= 0 || !selectedTerminal}
+            disabled={keypadAmount <= 0 || isDisabled}
             focusRipple
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
@@ -199,8 +200,8 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
                 key={type}
                 disabled={
                   ['Extend', 'Cancel'].includes(type)
-                    ? !selectedPreAuthId || !selectedTerminal
-                    : !selectedPreAuthId || !selectedTerminal || keypadAmount <= 0
+                    ? !selectedPreAuthId || isDisabled
+                    : !selectedPreAuthId || keypadAmount <= 0 || isDisabled
                 }
                 focusRipple
                 classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}

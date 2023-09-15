@@ -54,6 +54,10 @@ describe('Test PairFormSelectors', () => {
       preAuth: {
         openPreAuths: [],
         keyPadAmount: 0,
+        _persist: {
+          version: -1,
+          rehydrated: true,
+        },
       },
     };
 
@@ -91,6 +95,10 @@ describe('Test PairFormSelectors', () => {
       preAuth: {
         openPreAuths: [],
         keyPadAmount: 0,
+        _persist: {
+          version: -1,
+          rehydrated: true,
+        },
       },
     };
 

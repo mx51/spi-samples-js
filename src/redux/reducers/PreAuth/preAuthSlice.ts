@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, Reducer } from '@reduxjs/toolkit';
 import { IPreAuthValues, IPreAuthAction, IPreAuthState } from './interfaces';
 
 export const initialState: IPreAuthState = {
@@ -71,4 +71,4 @@ export const {
   clearPreAuth,
 } = preAuthSlice.actions;
 
-export default preAuthSlice.reducer;
+export const preAuthReducer: Reducer<IPreAuthState> = preAuthSlice.reducer;

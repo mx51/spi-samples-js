@@ -166,6 +166,9 @@ function TransactionProgressModal({
                 component={LinkRouter}
                 to={PATH_ORDER_FINISHED}
                 className={classes.modalBtn}
+                onClick={() => {
+                  dispatch(clearKeypadAmount());
+                }}
               >
                 Done
               </Button>

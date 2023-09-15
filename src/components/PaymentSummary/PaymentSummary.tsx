@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link as LinkRouter } from 'react-router-dom';
@@ -26,6 +26,10 @@ import OrderSubTotal from '../OrderSubTotal';
 import { selectPreAuthById } from '../../redux/reducers/PreAuth/preAuthSelector';
 import { IPreAuthValues } from '../../redux/reducers/PreAuth/interfaces';
 import { RootState } from '../../redux/store';
+
+type StatusMap = {
+  [key: string]: string;
+};
 
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
@@ -67,6 +71,25 @@ function PaymentSummary(): React.ReactElement {
   const originalTotalAmount =
     subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + (selectedPreAuth?.preAuthAmount ?? 0);
 
+  const getTransactionStatus = useMemo(() => {
+    const preAuthStatusMap: StatusMap = {
+      PCOMP: 'Preauth Complete',
+      'PRE-AUTH EXT': 'Preauth Extend',
+      'PRE-AUTH CANCEL': 'Preauth Cancel',
+      TOPUP: 'Preauth Topup',
+      'A/C VERIFIED': 'Account Verified',
+      CANCEL: 'Preauth Reduce',
+      'PRE-AUTH': 'Preauth Open',
+    };
+
+    const preAuthtype = currentTerminal?.txFlow?.response?.data?.transactionType
+      ? preAuthStatusMap[currentTerminal?.txFlow?.response?.data?.transactionType]?.toUpperCase()
+      : 'PREAUTH';
+    const transactionType = typeTitle === 'Pre Auth' ? preAuthtype : typeTitle?.toUpperCase();
+    const status = currentTerminal?.txFlow?.success === 'Success' ? 'APPROVED' : 'DECLINED';
+    return `${transactionType} ${status}`;
+  }, [currentTerminal, typeTitle]);
+
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
       <Box flexGrow="2" className={classes.roots}>
@@ -74,7 +97,7 @@ function PaymentSummary(): React.ReactElement {
           <>
             <SuccessIcon className={classes.successIcon} />
             <Typography variant="h5" component="h1">
-              {`${typeTitle?.toUpperCase()} ${currentTerminal?.txFlow?.response?.data?.hostResponseText?.toUpperCase()}`}
+              {getTransactionStatus}
             </Typography>
           </>
         )}
@@ -82,10 +105,7 @@ function PaymentSummary(): React.ReactElement {
           <>
             <FailedIcon className={classes.failedIcon} />
             <Typography variant="h5" component="h1">
-              {`${typeTitle?.toUpperCase()} ${currentTerminal?.txFlow?.success?.toUpperCase()}`}
-            </Typography>
-            <Typography variant="h6" component="h1">
-              {currentTerminal?.txFlow?.response?.data?.hostResponseText}
+              {getTransactionStatus}
             </Typography>
           </>
         )}
