@@ -14,8 +14,7 @@ import {
   Grid,
 } from '@material-ui/core';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
-import { serialNumberFormatter } from '../../../utils/common/helpers';
-import { isSerialNumberValid, serialNumberValidatorOnChange } from '../../../utils/validators/validators';
+import { serialNumberValidatorOnChange } from '../../../utils/validators/validators';
 import CustomTextField from '../../CustomTextField';
 import useStyles from './index.styles';
 import { ErrorResponse, GoogleDns, IFormEventValue } from './interfaces';
@@ -204,8 +203,8 @@ function AutoAddressCheck(): React.ReactElement {
     setOtherTenantCode(event.target.value as string);
   };
   const onSerialNumberChange = (event: IFormEventValue) => {
-    const value = serialNumberFormatter(event.target.value as string);
-    const isValid = isSerialNumberValid(value);
+    const value = event.target.value as string;
+    const isValid = serialNumberValidatorOnChange(value) === '';
     setSerialNumber({ isValid, value });
   };
   const onTestModeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
