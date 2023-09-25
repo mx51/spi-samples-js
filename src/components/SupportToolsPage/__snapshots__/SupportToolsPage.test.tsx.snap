@@ -48,7 +48,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                 height="15"
                 width="48"
               >
-                PrimaryLogoIconWhite.svg
+                SecondaryLogoIcon.svg
               </svg>
             </div>
           </div>
