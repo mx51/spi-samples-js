@@ -44,7 +44,10 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                   class="MuiTouchRipple-root"
                 />
               </button>
-              <svg>
+              <svg
+                height="15"
+                width="48"
+              >
                 PrimaryLogoIconWhite.svg
               </svg>
             </div>
