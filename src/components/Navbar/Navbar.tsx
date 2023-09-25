@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
       <AppBar className={classes.navbar}>
         <NavbarHeader
           handleToggleDrawer={toggleDrawer(true)}
-          icon={<PrimaryLogoIconWhite />}
+          icon={<PrimaryLogoIconWhite height={15} width={48} />}
           isDevelopModeShown={showDeveloperMode(pathname)}
         />
       </AppBar>
