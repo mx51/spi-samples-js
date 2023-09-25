@@ -16,7 +16,11 @@ function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
 
   return (
     <Box className={classes.list} onClick={toggleDrawer} onKeyDown={toggleDrawer}>
-      <NavbarHeader handleToggleDrawer={toggleDrawer} icon={<SecondaryLogoIcon />} isDevelopModeShown={false} />
+      <NavbarHeader
+        handleToggleDrawer={toggleDrawer}
+        icon={<SecondaryLogoIcon height={15} width={48} />}
+        isDevelopModeShown={false}
+      />
       <div className={classes.menuLinks}>
         <div>
           <Typography className={classes.title}>Sample POS</Typography>

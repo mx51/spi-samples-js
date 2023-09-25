@@ -44,7 +44,10 @@ exports[`Test <FleetSettingsPage /> should match FleetSettingsPage snapshot test
                   class="MuiTouchRipple-root"
                 />
               </button>
-              <svg>
+              <svg
+                height="15"
+                width="48"
+              >
                 PrimaryLogoIcon.svg
               </svg>
             </div>
