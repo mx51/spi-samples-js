@@ -45,7 +45,7 @@ exports[`Test <NotFoundPage /> should match NotFoundPage snapshot test 1`] = `
                 />
               </button>
               <svg>
-                PrimaryLogoIcon.svg
+                PrimaryLogoIconWhite.svg
               </svg>
             </div>
           </div>

@@ -45,7 +45,7 @@ exports[`Test <PayAtTablePage /> should match PayAtTablePage snapshot test 1`] =
                 />
               </button>
               <svg>
-                PrimaryLogoIcon.svg
+                PrimaryLogoIconWhite.svg
               </svg>
             </div>
           </div>

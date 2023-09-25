@@ -45,7 +45,7 @@ exports[`Test <FleetSettingsPage /> should match FleetSettingsPage snapshot test
                 />
               </button>
               <svg>
-                PrimaryLogoIcon.svg
+                PrimaryLogoIconWhite.svg
               </svg>
             </div>
           </div>

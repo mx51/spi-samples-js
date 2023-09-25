@@ -45,7 +45,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                 />
               </button>
               <svg>
-                PrimaryLogoIcon.svg
+                PrimaryLogoIconWhite.svg
               </svg>
             </div>
           </div>

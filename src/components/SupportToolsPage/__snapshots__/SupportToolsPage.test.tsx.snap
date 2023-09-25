@@ -45,7 +45,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                 />
               </button>
               <svg>
-                PrimaryLogoIcon.svg
+                PrimaryLogoIconWhite.svg
               </svg>
             </div>
           </div>

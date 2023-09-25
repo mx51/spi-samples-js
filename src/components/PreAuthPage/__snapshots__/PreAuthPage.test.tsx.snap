@@ -45,7 +45,7 @@ exports[`Test <PreAuthPage /> should match PreAuthPage snapshot test 1`] = `
                 />
               </button>
               <svg>
-                PrimaryLogoIcon.svg
+                PrimaryLogoIconWhite.svg
               </svg>
             </div>
           </div>
