@@ -5,7 +5,7 @@ import { ITerminalState } from '../../redux/reducers/TerminalSlice/interfaces';
 export const eftposIPAddressRegex = /^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}(\:[0-9]{1,5})?$/;
 export const eftposAutoAddressRegex = /^[a-zA-Z0-9\.-]+$/;
 export const numberCharactersRegex = /^[a-zA-Z0-9]+$/;
-export const serialNumberRegex = /^[0-9.-]*$/;
+export const serialNumberRegex = /^[^\s]{0,20}$/;
 export const charactersRegex = /^[a-zA-Z]+$/;
 
 function eftposAddressValidator(addressType: string, value: string): boolean {
@@ -35,13 +35,11 @@ function paymentProviderValidator(value: string): boolean {
 }
 
 function serialNumberValidatorOnBlur(value: string): string {
-  const valueWithoutDash = value.replaceAll('-', '');
-  if (!value.match(serialNumberRegex)) return 'Sorry, the serial number should only contain numbers. Please try again.';
-  if (valueWithoutDash.length < 9) return 'Please enter a 9 digits Serial number.';
+  if (!value.match(serialNumberRegex)) return 'Serial number must be 20 characters or less with no spaces.';
   return '';
 }
 function serialNumberValidatorOnChange(value: string): string {
-  if (!value.match(serialNumberRegex)) return 'Sorry, the serial number should only contain numbers. Please try again.';
+  if (!value.match(serialNumberRegex)) return 'Serial number must be 20 characters or less with no spaces.';
   return '';
 }
 

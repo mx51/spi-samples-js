@@ -11,12 +11,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - [INTG-573](https://mx51.atlassian.net/browse/INTG-573) Migrate MotelPOS pre-auth transaction flows to EspressoPOS
 
+### Changed
+
+- [INTG-613](https://mx51.atlassian.net/browse/INTG-613) Removed serial number field validation
+
 ## [1.2.9] - 2023-9-14
 
 ### Added
 
 - [INTG-628](https://mx51.atlassian.net/browse/INTG-628) Allow Espresso POS to select the environment used for pairing
-- [INTG-266](https://mx51.atlassian.net/browse/INTG-266) Adding terminal settings tab
+- [INTG-266](https://mx51.atlassian.net/browse/INTG-266) Terminal settings tab
 
 ## [1.2.8] - 2023-8-23
 

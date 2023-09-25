@@ -42,19 +42,19 @@ describe('Test pairFormValidators functions', () => {
     expect(invalidEftposIPAddress).toBe(false);
   });
 
-  test('should not accept number typed value for serial number after user finish typing', () => {
+  test('should not accept spaces for serial number after user finish typing', () => {
     // Arrange
-    const errorMessage = 'Sorry, the serial number should only contain numbers. Please try again.';
-    const characterSerialNumber = serialNumberValidatorOnBlur('testTests');
+    const errorMessage = 'Serial number must be 20 characters or less with no spaces.';
+    const characterSerialNumber = serialNumberValidatorOnBlur('test Tests');
 
     // Assert
     expect(characterSerialNumber).toEqual(errorMessage);
   });
 
-  test('should not accept number typed value for serial number during typing', () => {
+  test('should not accept spaces for serial number during typing', () => {
     // Arrange
-    const errorMessage = 'Sorry, the serial number should only contain numbers. Please try again.';
-    const characterSerialNumber = serialNumberValidatorOnChange('testTests');
+    const errorMessage = 'Serial number must be 20 characters or less with no spaces.';
+    const characterSerialNumber = serialNumberValidatorOnChange('test Tests');
 
     // Assert
     expect(characterSerialNumber).toEqual(errorMessage);
@@ -62,7 +62,7 @@ describe('Test pairFormValidators functions', () => {
 
   test('should return false on invalid serial number', () => {
     // Arrange
-    const characterSerialNumber = isSerialNumberValid('testTests');
+    const characterSerialNumber = isSerialNumberValid('test Tests');
 
     // Assert
     expect(characterSerialNumber).toEqual(false);

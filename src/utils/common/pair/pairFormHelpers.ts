@@ -9,7 +9,6 @@ import {
 import { IUpdatePairFormParams } from '../../../redux/reducers/PairFormSlice/interfaces';
 import { ITerminalState } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { serialNumberValidatorOnBlur, serialNumberValidatorOnChange } from '../../validators/validators';
-import { serialNumberFormatter } from '../helpers';
 
 export function isHttps(): boolean {
   return window.location.protocol === 'https:';
@@ -197,13 +196,13 @@ export const handleSerialNumberFieldOnChange = (
   serialNumberValidator: (value: string) => string,
   updatePairFormParams: IUpdatePairFormParams
 ): void => {
-  const currentSerialNumber = (event.target.value as unknown as string).slice(0, 11);
+  const currentSerialNumber = event.target.value as unknown as string;
 
   dispatch(
     updatePairFormParams({
       key: 'serialNumber',
       value: {
-        value: serialNumberFormatter(currentSerialNumber),
+        value: currentSerialNumber,
         isValid: serialNumberValidatorOnChange(event.target.value as string) === '',
       },
     })

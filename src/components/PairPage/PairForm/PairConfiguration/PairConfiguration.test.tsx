@@ -36,7 +36,7 @@ describe('Test <PairConfiguration />', () => {
     // This test case is for form field error handling
 
     // Arrange
-    const invalidSerialNumber = '123-45';
+    const invalidSerialNumber = '123 45';
     const adornmentErrorClassName = 'MuiSvgIcon-colorError';
     const serialNumberFieldDOM = mockContainer.querySelector('[data-test-id="serialNumberField"] input') as Element;
 
@@ -245,33 +245,6 @@ describe('Test <PairConfiguration />', () => {
 
     // Assert
     expect(handleDeviceAddressFieldOnBlur).toHaveBeenCalled();
-  });
-
-  test('should function serialNumberFormatter() returns the serial number value in a correct format', () => {
-    // Arrange
-    const mockRawSerialNumber = '1234';
-    const serialNumberFieldDOM = mockContainer.querySelector('[data-test-id="serialNumberField"] input');
-    const serialNumberFormatter = jest.fn();
-    const handleSerialNumberFieldOnChange = jest.fn().mockImplementation(() => {
-      dispatch(
-        updatePairFormParams({
-          key: 'serialNumber',
-          value: {
-            isValid: false,
-            value: serialNumberFormatter(mockRawSerialNumber),
-          },
-        })
-      );
-    });
-
-    // Act
-    fireEvent.change(serialNumberFieldDOM, { target: { value: mockRawSerialNumber } });
-    handleSerialNumberFieldOnChange();
-
-    // Assert
-    expect(serialNumberFieldDOM.value).toBe('123-4');
-    expect(serialNumberFormatter).toHaveBeenCalled();
-    expect(handleSerialNumberFieldOnChange).toHaveBeenCalled();
   });
 
   test('should show the error hint message icon when payment provider input is invalid', () => {
