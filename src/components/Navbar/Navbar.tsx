@@ -5,7 +5,7 @@ import Drawer from '@material-ui/core/Drawer';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { useLocation } from 'react-router-dom';
 import { PRIMARY_DARK_COLOR } from '../../definitions/constants/themeStylesConfigs';
-import { ReactComponent as PrimaryLogoIcon } from '../../images/PrimaryLogoIcon.svg';
+import { ReactComponent as PrimaryLogoIconWhite } from '../../images/PrimaryLogoIconWhite.svg';
 import { showDeveloperMode } from '../../utils/common/spi/common';
 import DrawerList from './DrawerList';
 import { IDrawerPosition } from './interfaces/NavbarInterfaces';
@@ -45,7 +45,7 @@ const Navbar: React.FC = () => {
       <AppBar className={classes.navbar}>
         <NavbarHeader
           handleToggleDrawer={toggleDrawer(true)}
-          icon={<PrimaryLogoIcon />}
+          icon={<PrimaryLogoIconWhite />}
           isDevelopModeShown={showDeveloperMode(pathname)}
         />
       </AppBar>

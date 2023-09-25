@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import menuItems from '../../../definitions/constants/menuItemsConfigs';
-import { ReactComponent as SecondaryLogoIcon } from '../../../images/SecondaryLogoIcon.svg';
+import { ReactComponent as PrimaryLogoIconBlack } from '../../../images/PrimaryLogoIconBlack.svg';
 import { posVersion } from '../../../utils/constants';
 import { IDrawerList } from '../interfaces/NavbarInterfaces';
 import NavbarHeader from '../NavbarHeader';
@@ -16,7 +16,7 @@ function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
 
   return (
     <Box className={classes.list} onClick={toggleDrawer} onKeyDown={toggleDrawer}>
-      <NavbarHeader handleToggleDrawer={toggleDrawer} icon={<SecondaryLogoIcon />} isDevelopModeShown={false} />
+      <NavbarHeader handleToggleDrawer={toggleDrawer} icon={<PrimaryLogoIconBlack />} isDevelopModeShown={false} />
       <div className={classes.menuLinks}>
         <div>
           <Typography className={classes.title}>Sample POS</Typography>
