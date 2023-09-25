@@ -3,7 +3,7 @@ import Box from '@material-ui/core/Box';
 import Divider from '@material-ui/core/Divider';
 import Typography from '@material-ui/core/Typography';
 import menuItems from '../../../definitions/constants/menuItemsConfigs';
-import { ReactComponent as PrimaryLogoIcon } from '../../../images/PrimaryLogoIcon.svg';
+import { ReactComponent as SecondaryLogoIcon } from '../../../images/SecondaryLogoIcon.svg';
 import { posVersion } from '../../../utils/constants';
 import { IDrawerList } from '../interfaces/NavbarInterfaces';
 import NavbarHeader from '../NavbarHeader';
@@ -18,7 +18,7 @@ function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
     <Box className={classes.list} onClick={toggleDrawer} onKeyDown={toggleDrawer}>
       <NavbarHeader
         handleToggleDrawer={toggleDrawer}
-        icon={<PrimaryLogoIcon height={15} width={48} />}
+        icon={<SecondaryLogoIcon height={15} width={48} />}
         isDevelopModeShown={false}
       />
       <div className={classes.menuLinks}>

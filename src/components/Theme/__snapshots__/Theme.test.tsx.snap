@@ -48,7 +48,7 @@ exports[`Test <ThemeStyles /> should match ThemeStyles snapshot test 1`] = `
                 height="15"
                 width="48"
               >
-                SecondaryLogoIcon.svg
+                PrimaryLogoIcon.svg
               </svg>
             </div>
           </div>
