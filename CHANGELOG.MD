@@ -5,14 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.3.0] - 2023-9-26
 
 ### Added
 
 - [INTG-573](https://mx51.atlassian.net/browse/INTG-573) Migrate MotelPOS pre-auth transaction flows to EspressoPOS
-
-### Changed
-
+- [INTG-626](https://mx51.atlassian.net/browse/INTG-573) Mx51 logo update
 - [INTG-613](https://mx51.atlassian.net/browse/INTG-613) Removed serial number field validation
 
 ## [1.2.9] - 2023-9-14
