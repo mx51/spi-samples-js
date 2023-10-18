@@ -1,3 +1,5 @@
+# This master branch contains 4 POSes, which are getting deprecated in favour of  EspressoPOS. Please use the branch feature/sample-pos-two for EspressoPOS.
+
 # SPI Samples JavaScript
 
 This is a set of SPI samples for JavaScript.
