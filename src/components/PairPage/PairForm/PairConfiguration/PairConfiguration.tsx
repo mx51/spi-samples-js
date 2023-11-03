@@ -10,7 +10,7 @@ import Typography from '@material-ui/core/Typography';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
 
 import {
-  deviceAddressEnv,
+  acquirerCodeToEnvOptions,
   SPI_PAIR_STATUS,
   TEXT_FORM_CONFIGURATION_AUTO_ADDRESS_VALUE,
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -56,11 +56,6 @@ import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
 import { IFormEventCheckbox, IFormEventValue } from '../interfaces';
-
-const acquirerCodeToEnvOptions: Record<string, string[]> = {
-  perf: [deviceAddressEnv.rnd],
-  eng: [deviceAddressEnv.qa, deviceAddressEnv.dev],
-};
 
 export default function PairConfiguration(): React.ReactElement {
   const classes = useStyles();

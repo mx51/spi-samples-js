@@ -59,7 +59,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
       class="MuiContainer-root makeStyles-root-1 MuiContainer-maxWidthLg"
     >
       <div
-        class="MuiBox-root MuiBox-root-23 makeStyles-toolContainer-10"
+        class="MuiBox-root MuiBox-root-25 makeStyles-toolContainer-10"
       >
         <h1
           class="MuiTypography-root makeStyles-h1-11 MuiTypography-body1"
@@ -133,10 +133,10 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                 </svg>
                 <fieldset
                   aria-hidden="true"
-                  class="PrivateNotchedOutline-root-24 MuiOutlinedInput-notchedOutline"
+                  class="PrivateNotchedOutline-root-26 MuiOutlinedInput-notchedOutline"
                 >
                   <legend
-                    class="PrivateNotchedOutline-legendLabelled-26"
+                    class="PrivateNotchedOutline-legendLabelled-28"
                   >
                     <span>
                       Tenant
@@ -151,7 +151,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
               Select the tenant for the Auto address test
             </p>
             <div
-              class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-28 MuiFormControl-marginDense MuiFormControl-fullWidth"
+              class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-30 MuiFormControl-marginDense MuiFormControl-fullWidth"
               data-test-id="autoAddressSerialNumberField"
               theme="[object Object]"
             >
@@ -180,10 +180,10 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                 />
                 <fieldset
                   aria-hidden="true"
-                  class="PrivateNotchedOutline-root-24 MuiOutlinedInput-notchedOutline"
+                  class="PrivateNotchedOutline-root-26 MuiOutlinedInput-notchedOutline"
                 >
                   <legend
-                    class="PrivateNotchedOutline-legendLabelled-26"
+                    class="PrivateNotchedOutline-legendLabelled-28"
                   >
                     <span>
                       Serial Number
@@ -207,14 +207,14 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
               >
                 <span
                   aria-disabled="false"
-                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-29 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-31 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
                   data-test-id="autoAddressCheckbox"
                 >
                   <span
                     class="MuiIconButton-label"
                   >
                     <input
-                      class="PrivateSwitchBase-input-32"
+                      class="PrivateSwitchBase-input-34"
                       data-indeterminate="false"
                       name="testMode"
                       type="checkbox"
