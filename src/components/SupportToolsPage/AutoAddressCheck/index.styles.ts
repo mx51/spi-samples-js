@@ -61,5 +61,13 @@ export default makeStyles((theme: Theme) =>
     resultTitle: {
       marginBottom: theme.spacing(3),
     },
+    pairFormSelector: {
+      '&:hover .MuiOutlinedInput-notchedOutline': {
+        borderColor: theme.palette.info.main,
+      },
+    },
+    fieldSpace: {
+      marginBottom: theme.spacing(1.5),
+    },
   })
 );

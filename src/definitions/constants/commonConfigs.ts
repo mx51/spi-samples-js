@@ -16,6 +16,11 @@ export const deviceAddressEnv = {
   dev: 'dev',
 };
 
+export const acquirerCodeToEnvOptions: Record<string, string[]> = {
+  perf: [deviceAddressEnv.rnd],
+  eng: [deviceAddressEnv.qa, deviceAddressEnv.dev],
+};
+
 export const SPI_PAIR_STATUS = {
   PairedConnected: SpiStatus.PairedConnected,
   PairedConnecting: SpiStatus.PairedConnecting,

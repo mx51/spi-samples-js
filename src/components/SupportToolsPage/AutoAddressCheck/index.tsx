@@ -19,6 +19,11 @@ import CustomTextField from '../../CustomTextField';
 import useStyles from './index.styles';
 import { ErrorResponse, GoogleDns, IFormEventValue } from './interfaces';
 import Result from './Result';
+import {
+  TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD,
+  acquirerCodeToEnvOptions,
+  deviceAddressEnv,
+} from '../../../definitions/constants/commonConfigs';
 
 // eslint-disable-next-line @typescript-eslint/ban-types
 async function getTenantsList(setTenantList: Function) {
@@ -54,6 +59,11 @@ function webSocketFqdn(webFqdn: string, sn: string, tm: boolean, setWebSocketCon
   };
 }
 
+function environmentSetter(tm: boolean, selectedEnvironment: string) {
+  const isTestMode = tm ? '-sb' : '';
+  return selectedEnvironment ? `-${selectedEnvironment}` : isTestMode;
+}
+
 async function fetchFqdn(
   sn: string,
   tenant: string,
@@ -63,37 +73,50 @@ async function fetchFqdn(
   setResult: (value: string) => void,
   setErrorResponse: (value: ErrorResponse) => void,
   setGoogleDns: (value: GoogleDns) => void,
-  setWebSocketConnectionFqdn: (value: string) => void
+  setWebSocketConnectionFqdn: (value: string) => void,
+  selectedEnvironment: string
 ) {
-  const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.${tenant}.mspenv.io/v1/${sn}/fqdn`, {
-    headers: {
-      'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
-    },
-  });
-  let fqdn;
-  if (response.ok) {
-    const data = await response.json();
-    fqdn = data.fqdn;
-    setFqdn(data.fqdn);
-    setTimeStampFqdn(data.last_updated);
-    setResult('success');
-    webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
-  } else {
-    const data = await response.json();
-    setErrorResponse(data);
-    setResult('error');
-  }
-
-  if (response.ok) {
-    const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
-    if (dnsResponse.ok) {
-      const data = await dnsResponse.json();
-      if (dnsResponse.ok && data.Answer) {
-        setGoogleDns(data);
-      } else {
-        setGoogleDns({ Answer: [{ data: 'Error in Google Api', name: '' }] });
+  try {
+    const response = await fetch(
+      `https://device-address-api${environmentSetter(tm, selectedEnvironment)}.${tenant}.mspenv.io/v1/${sn}/fqdn`,
+      {
+        headers: {
+          'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
+        },
+      }
+    );
+    let fqdn;
+    if (response.ok) {
+      const data = await response.json();
+      fqdn = data.fqdn;
+      setFqdn(data.fqdn);
+      setTimeStampFqdn(data.last_updated);
+      setResult('success');
+      webSocketFqdn(data.fqdn, sn, tm, setWebSocketConnectionFqdn);
+    } else {
+      const data = await response.json();
+      setErrorResponse(data);
+      setResult('error');
+    }
+    if (response.ok) {
+      const dnsResponse = await fetch(`https://dns.google/resolve?name=${fqdn}`);
+      if (dnsResponse.ok) {
+        const data = await dnsResponse.json();
+        if (dnsResponse.ok && data.Answer) {
+          setGoogleDns(data);
+        } else {
+          setGoogleDns({ Answer: [{ data: 'Error in Google Api', name: '' }] });
+        }
       }
     }
+  } catch (error: any) {
+    const data = {
+      error: error.message,
+      error_code: 401,
+      request_id: '',
+    };
+    setErrorResponse(data);
+    setResult('error');
   }
 }
 
@@ -104,23 +127,37 @@ async function fetchIp(
   setIp: (value: string) => void,
   setTimeStampIp: (value: string) => void,
   setResult: (value: string) => void,
-  setErrorResponse: (value: ErrorResponse) => void
+  setErrorResponse: (value: ErrorResponse) => void,
+  selectedEnvironment: string
 ) {
-  const response = await fetch(`https://device-address-api${tm ? '-sb' : ''}.${tenant}.mspenv.io/v1/${sn}/ip`, {
-    headers: {
-      'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
-    },
-  });
+  try {
+    const response = await fetch(
+      `https://device-address-api${environmentSetter(tm, selectedEnvironment)}.${tenant}.mspenv.io/v1/${sn}/ip`,
+      {
+        headers: {
+          'ASM-MSP-DEVICE-ADDRESS-API-KEY': 'DADDRTESTTOOL',
+        },
+      }
+    );
 
-  if (response.ok) {
-    const data = await response.json();
-    setIp(data.ip);
-    setTimeStampIp(data.last_updated);
-    setResult('success');
-    // Todo
-    // webSocketIp(data.ip);
-  } else {
-    const data = await response.json();
+    if (response.ok) {
+      const data = await response.json();
+      setIp(data.ip);
+      setTimeStampIp(data.last_updated);
+      setResult('success');
+      // Todo
+      // webSocketIp(data.ip);
+    } else {
+      const data = await response.json();
+      setErrorResponse(data);
+      setResult('error');
+    }
+  } catch (error: any) {
+    const data = {
+      error: error.message,
+      error_code: 401,
+      request_id: '',
+    };
     setErrorResponse(data);
     setResult('error');
   }
@@ -137,6 +174,7 @@ function AutoAddressCheck(): React.ReactElement {
   const [otherTenantCode, setOtherTenantCode] = useState(
     !tenantList.find((tenant: Tenant) => tenant.code === selectedTenantCode) ? selectedTenantCode : ''
   );
+  const [selectedEnvironment, setSelectedEnvironment] = useState('');
   const [testMode, setTestMode] = useState(false);
   const [result, setResult] = useState('');
   const [errorResponse, setErrorResponse] = useState({
@@ -163,9 +201,10 @@ function AutoAddressCheck(): React.ReactElement {
       setResult,
       setErrorResponse,
       setGoogleDns,
-      setWebSocketConnectionFqdn
+      setWebSocketConnectionFqdn,
+      selectedEnvironment
     );
-    fetchIp(sn, tenant, tm, setIp, setTimeStampIp, setResult, setErrorResponse);
+    fetchIp(sn, tenant, tm, setIp, setTimeStampIp, setResult, setErrorResponse, selectedEnvironment);
   }
 
   useEffect(() => {
@@ -198,10 +237,6 @@ function AutoAddressCheck(): React.ReactElement {
   //   };
   // }
 
-  const onOtherTextChange = (event: IFormEventValue) => {
-    setSelectedTenantCode('other');
-    setOtherTenantCode(event.target.value as string);
-  };
   const onSerialNumberChange = (event: IFormEventValue) => {
     const value = event.target.value as string;
     const isValid = serialNumberValidatorOnChange(value) === '';
@@ -211,13 +246,30 @@ function AutoAddressCheck(): React.ReactElement {
     setTestMode(event.target.checked);
     setResult('');
   };
-  const onTenantChange = (e: IFormEventValue) => setSelectedTenantCode(e.target.value as string);
+  const onTenantChange = (e: IFormEventValue) => {
+    setOtherTenantCode('');
+    setSelectedEnvironment('');
+    setSelectedTenantCode(e.target.value as string);
+  };
   const onSubmitBtnClick = () => {
     const tenant = selectedTenantCode !== 'other' ? selectedTenantCode : otherTenantCode;
     fetchResponse(serialNumber.value, tenant, testMode);
   };
 
   const helperText = serialNumber.isValid ? '' : serialNumberValidatorOnChange(serialNumber.value);
+
+  const envOptions = acquirerCodeToEnvOptions[otherTenantCode] ?? [];
+  const onOtherTextChange = (event: IFormEventValue) => {
+    setSelectedTenantCode('other');
+    setOtherTenantCode(event.target.value as string);
+    const newEnvOptions = acquirerCodeToEnvOptions[event.target.value as string] ?? [];
+    if (newEnvOptions.length === 0) {
+      setSelectedEnvironment('');
+    } else if (newEnvOptions.length === 1) {
+      setSelectedEnvironment(deviceAddressEnv.rnd);
+    }
+  };
+  const onEnvironmentChange = (e: IFormEventValue) => setSelectedEnvironment(e.target.value as string);
 
   return (
     <Box className={classes.toolContainer}>
@@ -239,7 +291,7 @@ function AutoAddressCheck(): React.ReactElement {
               data-test-id="autoAddressTenantSelectorLabel"
               label="Tenant"
               labelId="autoAddressTenantDropDownLabel"
-              value={selectedTenantCode}
+              value={selectedTenantCode ?? ''}
               onChange={onTenantChange}
             >
               {tenantList.map((tenant: Tenant) => (
@@ -260,9 +312,33 @@ function AutoAddressCheck(): React.ReactElement {
               onBlur={onOtherTextChange}
               onChange={onOtherTextChange}
               value={otherTenantCode}
+              error={!otherTenantCode}
+              helperText={!otherTenantCode ? TEXT_FORM_VALIDATION_PROVIDER_TEXTFIELD : ''}
               variant="outlined"
             />
           )}
+          {envOptions.length >= 1 ? (
+            <Grid item className={classes.fieldSpace}>
+              <FormControl variant="outlined" margin="dense" fullWidth data-test-id="environment">
+                <InputLabel data-test-id="environmentLabel">Environment</InputLabel>
+                <Select
+                  className={classes.pairFormSelector}
+                  data-test-id="configurationSelector"
+                  disabled={envOptions.length === 1}
+                  label="Environment"
+                  labelId="environmentDropdownLabel"
+                  onChange={onEnvironmentChange}
+                  value={selectedEnvironment ?? ''}
+                >
+                  {envOptions.map((option) => (
+                    <MenuItem key={option} value={option}>
+                      {option}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+          ) : null}
           <CustomTextField
             dataTestId="autoAddressSerialNumberField"
             fullWidth
@@ -283,6 +359,7 @@ function AutoAddressCheck(): React.ReactElement {
                 <Checkbox
                   checked={testMode}
                   onChange={onTestModeChange}
+                  disabled={envOptions.length > 0}
                   data-test-id="autoAddressCheckbox"
                   color="primary"
                   name="testMode"
