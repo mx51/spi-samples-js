@@ -10,13 +10,19 @@ const App = () => (
     <nav className="homePageLink">
       <ol>
         <li>
-          <Link to="/burger">Burger POS</Link>
+          <a target="_blank" rel="noreferrer" href="https://espressopos.mx51.io">
+            Burger POS
+          </a>
         </li>
         <li>
-          <Link to="/ramen">Ramen POS</Link>
+          <a target="_blank" rel="noreferrer" href="https://espressopos.mx51.io/">
+            Ramen POS
+          </a>
         </li>
         <li>
-          <Link to="/motel">Motel POS</Link>
+          <a target="_blank" rel="noreferrer" href="https://espressopos.mx51.io/">
+            Motel POS
+          </a>
         </li>
         <li>
           <Link to="/table">Table POS</Link>
