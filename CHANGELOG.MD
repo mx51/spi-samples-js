@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2023-11-20
+
+### Added
+
+- [INTG-656] (https://mx51.atlassian.net/browse/INTG-656) Auto address check to support other environments field
+
 ## [1.3.0] - 2023-9-26
 
 ### Added
