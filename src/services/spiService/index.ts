@@ -16,7 +16,7 @@ import {
   updateTerminalBatteryLevel,
   updateTerminalConfigurations,
   updateTxFlowSettlementResponse,
-  updateTxFlow,
+  updateTxFlowWithSideEffect,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
@@ -445,7 +445,7 @@ class SpiService {
           );
 
         this.dispatchAction(
-          updateTxFlow({
+          updateTxFlowWithSideEffect({
             id: instanceId,
             txFlow: getTxFlow(detail),
           })

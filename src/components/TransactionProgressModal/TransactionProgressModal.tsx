@@ -115,7 +115,7 @@ function TransactionProgressModal({
                 {modalTitle}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                {currentTerminal?.txFlow?.response?.data?.hostResponseText.toUpperCase()}
+                {currentTerminal?.txFlow?.response?.data?.hostResponseText?.toUpperCase()}
               </Typography>
             </>
           )}
@@ -132,7 +132,7 @@ function TransactionProgressModal({
                 {modalTitle}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                {currentTerminal?.txFlow?.success.toUpperCase()}
+                {currentTerminal?.txFlow?.success?.toUpperCase()}
               </Typography>
               <Typography className={classes.modalDescription}>{transactionDesc}</Typography>
             </>

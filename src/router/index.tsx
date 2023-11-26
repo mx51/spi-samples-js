@@ -12,7 +12,9 @@ import {
   PATH_CASH_OUT,
   PATH_SUPPORT,
   PATH_SETTINGS,
+  PATH_TRANSACTION,
 } from '../definitions/constants/routerConfigs';
+import { TransactionPage } from '../components/TransactionPage/TransactionPage';
 
 const Pair = React.lazy(() => import('../components/PairPage'));
 const PreAuth = React.lazy(() => import('../components/PreAuthPage'));
@@ -32,6 +34,7 @@ const AppRoutes = (): React.ReactElement => (
     <Suspense fallback={<Loading />}>
       <Switch>
         <Route exact path={PATH_PAIR} component={Pair} />
+        <Route exact path={PATH_TRANSACTION} component={TransactionPage} />
         <Route exact path={PATH_PRE_AUTH} component={PreAuth} />
         <Route exact path={PATH_PURCHASE} component={Purchase} />
         <Route exact path={PATH_REFUND} component={Refund} />

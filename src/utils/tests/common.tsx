@@ -306,6 +306,9 @@ export const mockTxFlow: ITxFlow = {
   awaitingSignatureCheck: true,
   finished: true,
   success: 'string',
+  completedTime: 0,
+  cancelAttemptTime: 0,
+  receipt: '',
   response: {
     data: {
       rrn: 'string',

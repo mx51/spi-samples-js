@@ -54,6 +54,10 @@ export interface ITxFlow {
     requestId: string | undefined;
     receiptToSign: string | undefined;
   } | null;
+  completedTime: number;
+  cancelAttemptTime?: number;
+  receipt: string;
+  override?: boolean;
   request: {
     id: string;
     eventName: string;
