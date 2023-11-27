@@ -34,6 +34,9 @@ function getTxFlow(detail: Any): Any {
     finished: detail?.Finished,
     success: detail?.Success,
     signatureRequiredMessage: detail?.SignatureRequiredMessage,
+    completedTime: detail?.CompletedTime,
+    cancelAttemptTime: detail?.CancelAttemptTime,
+    receipt: detail?.Response?.Data?.merchant_receipt,
     request: {
       id: detail?.Request?.Id,
       eventName: detail?.Request?.EventName,

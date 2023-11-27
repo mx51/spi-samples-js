@@ -24,6 +24,8 @@ import {
   PATH_TERMINALS,
   PATH_SETTINGS,
   PATH_SUPPORT,
+  TEXT_TRANSACTION_HISTORY,
+  PATH_TRANSACTION,
 } from './routerConfigs';
 
 export default {
@@ -59,6 +61,13 @@ export default {
       name: TEXT_PAIR,
       path: PATH_PAIR,
       icon: <IconPairing />,
+    },
+  ],
+  transactions: [
+    {
+      name: TEXT_TRANSACTION_HISTORY,
+      path: PATH_TRANSACTION,
+      icon: <IconSettings />,
     },
   ],
   support: [

@@ -101,6 +101,12 @@ function mockTxFlow(): ITxFlow {
     awaitingSignatureCheck: true,
     finished: true,
     success: 'string',
+    completedTime: 0,
+    cancelAttemptTime: 0,
+    posId: 'string',
+    tid: 'string',
+    mid: 'string',
+    receipt: '',
     response: {
       data: {
         rrn: 'string',

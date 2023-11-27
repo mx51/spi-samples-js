@@ -1,5 +1,5 @@
 import { SpiStatus } from '@mx51/spi-client-js';
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { getLocalStorage } from '../../../utils/common/spi/common';
 import {
@@ -19,6 +19,7 @@ import {
   IUpdateTxFlowAction,
   IUpdateTxMessage,
 } from './interfaces';
+import { TxLogService } from '../../../services/txLogService';
 
 const initialState: ITerminalState = getLocalStorage('terminals') ? JSON.parse(getLocalStorage('terminals')) : {};
 
@@ -153,6 +154,7 @@ const terminalsSlice = createSlice({
         currentState.txMessage = null;
       }
       currentState.txFlow = txFlow;
+
       state[id] = currentState;
     },
 
@@ -165,6 +167,47 @@ const terminalsSlice = createSlice({
     },
   },
 });
+
+export const updateTxFlowWithSideEffect = createAsyncThunk(
+  'terminals/updateTxFlowWithSideEffect',
+  async (payload: IUpdateTxFlowAction, { dispatch, getState }) => {
+    dispatch(terminalsSlice.actions.updateTxFlow(payload));
+    const {
+      id,
+      txFlow: {
+        finished,
+        response,
+        cancelAttemptTime,
+        success: successState,
+        completedTime,
+        type,
+        posRefId,
+        receipt: transactionReceipt,
+        override,
+        amountCents: amount,
+      },
+    } = payload;
+
+    if (finished && response.data) {
+      if (override || !cancelAttemptTime) {
+        const { terminals } = getState() as Any;
+        const { posId, merchantId: mid, terminalId: tid } = terminals[id];
+        TxLogService.saveAndDeleteYesterdayTx({
+          successState,
+          completedTime,
+          type,
+          posRefId,
+          posId,
+          tid,
+          mid,
+          receipt: transactionReceipt,
+          override,
+          amount,
+        });
+      }
+    }
+  }
+);
 
 export const {
   addTerminal,

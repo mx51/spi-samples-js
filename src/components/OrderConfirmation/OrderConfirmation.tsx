@@ -36,7 +36,7 @@ import { addCashoutAmount, addRefundAmount, clearProductsOnly } from '../../redu
 import { updateSelectedTerminal } from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
-import { updateTxFlow } from '../../redux/reducers/TerminalSlice/terminalsSlice';
+import { updateTxFlowWithSideEffect } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import {
   pairedConnectedTerminalList,
   terminalInstance,
@@ -97,9 +97,9 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
     setShowUnknownTransactionModal(false);
     if (currentTerminal?.txFlow != null) {
       dispatch(
-        updateTxFlow({
+        updateTxFlowWithSideEffect({
           id: selectedTerminal,
-          txFlow: { ...currentTerminal?.txFlow, finished: true, success },
+          txFlow: { ...currentTerminal?.txFlow, finished: true, success, override: true },
         })
       );
     }
