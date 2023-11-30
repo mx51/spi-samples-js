@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core';
 import { SuccessState } from '@mx51/spi-client-js';
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
 import Layout from '../Layout';
 import { useTransactionPageStyle } from './TransactionPage.style';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
@@ -26,7 +25,7 @@ export const TransactionPage: React.FC = () => {
   const classes = useTransactionPageStyle();
 
   useEffect(() => {
-    setTxLogItems(TxLogService.load());
+    setTxLogItems(TxLogService.load().filter((tx) => dayjs(tx.completedTime).date() >= dayjs().date()));
   }, []);
 
   const iconByStatus = {
