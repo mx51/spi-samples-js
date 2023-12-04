@@ -63,6 +63,14 @@ const useStyles = makeStyles((theme: Theme) =>
       // marginLeft: theme.spacing(2),
       margin: theme.spacing(2),
     },
+    textField: {
+      marginLeft: theme.spacing(2),
+    },
+    patSettingsFormContainer: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(2),
+    },
   })
 );
 export default useStyles;

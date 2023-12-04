@@ -1,4 +1,5 @@
 import { Spi as SpiClient, TransactionOptions } from '@mx51/spi-client-js';
+import { SpiPayAtTable } from '@mx51/spi-client-js/SpiPayAtTable';
 import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
@@ -21,7 +22,7 @@ import {
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
-import { RECEIPT_CONFIG, posVersion } from '../../utils/constants';
+import { localStorageKeys, posVersion } from '../../utils/constants';
 
 import { ITerminal, ITerminals } from '../interfaces';
 
@@ -31,28 +32,67 @@ declare global {
   }
 }
 
+export interface PayAtTableConfig {
+  payAtTableEnabled: boolean;
+  operatorIdEnabled: boolean;
+  splitByAmountEnabled: boolean;
+  equalSplitEnabled: boolean;
+  tableRetrievalEnabled: boolean;
+  tippingEnabled: boolean;
+  summaryReportEnabled: boolean;
+  labelPayButton: string;
+  labelOperatorId: string;
+  labelTableId: string;
+  allowedOperatorIds: string[];
+}
+
+export const initialPatConfig: PayAtTableConfig = {
+  payAtTableEnabled: false,
+  operatorIdEnabled: false,
+  splitByAmountEnabled: false,
+  equalSplitEnabled: false,
+  tableRetrievalEnabled: false,
+  tippingEnabled: false,
+  summaryReportEnabled: false,
+  labelPayButton: '',
+  labelOperatorId: '',
+  labelTableId: '',
+  allowedOperatorIds: [],
+};
+
 class SpiService {
-  state = {
-    receiptConfig: (() => {
-      const receiptConfigString = getLocalStorage(RECEIPT_CONFIG);
-      return typeof receiptConfigString === 'string'
-        ? JSON.parse(receiptConfigString)
-        : {
-            eftposMerchantCopy: false,
-            eftposCustomerCopy: false,
-            eftposSignatureFlow: false,
-            suppressMerchantPassword: false,
-            receiptHeader: '',
-            receiptFooter: '',
-          };
-    })(),
-  };
+  state: { receiptConfig: Any; patConfig: PayAtTableConfig };
 
   dispatchAction: Any; // redux dispatch action
 
   print: Console = console;
 
   terminals: ITerminals = {};
+
+  /**
+   *
+   */
+  constructor() {
+    this.state = {
+      receiptConfig: (() => {
+        const receiptConfigString = getLocalStorage(localStorageKeys.receiptConfig);
+        return typeof receiptConfigString === 'string'
+          ? JSON.parse(receiptConfigString)
+          : {
+              eftposMerchantCopy: false,
+              eftposCustomerCopy: false,
+              eftposSignatureFlow: false,
+              suppressMerchantPassword: false,
+              receiptHeader: '',
+              receiptFooter: '',
+            };
+      })(),
+      patConfig: (() => {
+        const patConfig = getLocalStorage(localStorageKeys.patConfig);
+        return typeof patConfig === 'string' ? JSON.parse(patConfig) : initialPatConfig;
+      })(),
+    };
+  }
 
   // updates receipt config when state changes in useLocalSate hook
   updateReceiptConfig(config: any) {
@@ -146,6 +186,28 @@ class SpiService {
     }
   }
 
+  updatePatConfig(config: PayAtTableConfig) {
+    Object.keys(this.terminals).forEach((terminalId) => {
+      const terminal = this.terminals[terminalId];
+      if (terminal.spiPat) {
+        terminal.spiPat.Config.PayAtTableEnabled = config.payAtTableEnabled;
+        terminal.spiPat.Config.OperatorIdEnabled = config.operatorIdEnabled;
+        terminal.spiPat.Config.SplitByAmountEnabled = config.splitByAmountEnabled;
+        terminal.spiPat.Config.EqualSplitEnabled = config.equalSplitEnabled;
+        terminal.spiPat.Config.TableRetrievalEnabled = config.tableRetrievalEnabled;
+        terminal.spiPat.Config.TippingEnabled = config.tippingEnabled;
+        terminal.spiPat.Config.SummaryReportEnabled = config.summaryReportEnabled;
+        terminal.spiPat.Config.LabelPayButton = config.labelPayButton;
+        terminal.spiPat.Config.LabelOperatorId = config.labelOperatorId;
+        terminal.spiPat.Config.LabelTableId = config.labelTableId;
+        terminal.spiPat.Config.AllowedOperatorIds = config.allowedOperatorIds;
+        terminal.spiPat.PushPayAtTableConfig();
+
+        setLocalStorage(localStorageKeys.patConfig, JSON.stringify(config));
+      }
+    });
+  }
+
   async createLibraryInstance(instanceId: string, pairForm?: IPairFormValues): Promise<ITerminal> {
     try {
       const terminalsStorage = this.readTerminalList();
@@ -185,6 +247,23 @@ class SpiService {
 
       // instantiate spi library
       instance.spiClient = new SpiClient(posId, serialNumber, deviceAddress, secrets);
+      instance.spiPat = instance.spiClient.EnablePayAtTable();
+
+      // Setup PAT
+      if (this.state.patConfig.payAtTableEnabled) {
+        instance.spiPat.Config.PayAtTableEnabled = this.state.patConfig.payAtTableEnabled;
+        instance.spiPat.Config.OperatorIdEnabled = this.state.patConfig.operatorIdEnabled;
+        instance.spiPat.Config.SplitByAmountEnabled = this.state.patConfig.splitByAmountEnabled;
+        instance.spiPat.Config.EqualSplitEnabled = this.state.patConfig.equalSplitEnabled;
+        instance.spiPat.Config.TableRetrievalEnabled = this.state.patConfig.tableRetrievalEnabled;
+        instance.spiPat.Config.TippingEnabled = this.state.patConfig.tippingEnabled;
+        instance.spiPat.Config.SummaryReportEnabled = this.state.patConfig.summaryReportEnabled;
+        instance.spiPat.Config.LabelPayButton = this.state.patConfig.labelPayButton;
+        instance.spiPat.Config.LabelOperatorId = this.state.patConfig.labelOperatorId;
+        instance.spiPat.Config.LabelTableId = this.state.patConfig.labelTableId;
+        instance.spiPat.Config.AllowedOperatorIds = this.state.patConfig.allowedOperatorIds;
+        instance.spiPat.PushPayAtTableConfig();
+      }
 
       // spi library methods setup
       instance.spiClient.SetEventBus(instance);

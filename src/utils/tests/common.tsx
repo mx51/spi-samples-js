@@ -436,6 +436,7 @@ export const mockTerminalInstance: ITerminal = {
   spi_receipt_header: 'test',
   spi_receipt_footer: 'test',
   use_secure_web_sockets: false,
+  spiPat: null,
 };
 
 export const mockReceiptResponse = {

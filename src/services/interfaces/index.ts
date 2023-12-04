@@ -1,3 +1,5 @@
+import { SpiPayAtTable } from '@mx51/spi-client-js/SpiPayAtTable';
+
 export interface ITerminal {
   spiPreAuth: any;
   autoAddressResolutionFailed: Any;
@@ -23,6 +25,7 @@ export interface ITerminal {
   addEventListener: Any;
   removeEventListener: Any;
   setEventMapper: Any;
+  spiPat: SpiPayAtTable | null;
 }
 
 export interface ITerminals {
