@@ -4,7 +4,7 @@ import { Box, Button, Container, Divider, Grid, Typography } from '@material-ui/
 import dayjs from 'dayjs';
 import { SuccessState } from '@mx51/spi-client-js';
 import { useTransactionDetailPageStyle } from './TransactionDetailsPage.style';
-import { PATH_TRANSACTION, PATH_TRANSACTIONS } from '../../../definitions/constants/routerConfigs';
+import { PATH_TRANSACTIONS } from '../../../definitions/constants/routerConfigs';
 import { TxLogItem } from '../../../services/txLogService';
 import { getLocalStorage } from '../../../utils/common/spi/common';
 import Layout from '../../Layout';
@@ -18,7 +18,7 @@ export const TransactionDetailsPage: React.FC = () => {
   const classes = useTransactionDetailPageStyle();
   const { pathname } = useLocation();
   const history = useHistory();
-  const currentTransactionId = pathname?.split(`${PATH_TRANSACTION}/`)[1];
+  const currentTransactionId = pathname?.split(`${PATH_TRANSACTIONS}/`)[1];
   const transactionLog: TxLogItem[] = JSON.parse(getLocalStorage('TransactionLog'));
   const [currentTransaction, setcurrentTransaction] = useState<TxLogItem>();
   const [formattedTotal, setFormattedTotal] = useState<string>();

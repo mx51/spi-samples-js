@@ -1,6 +1,5 @@
 // paths
 export const PATH_PAIR = '/pair';
-export const PATH_TRANSACTION = '/transaction';
 export const PATH_TRANSACTIONS = '/transactions';
 export const PATH_ACCOUNT_VERIFY = '/account-verify';
 export const PATH_PRE_AUTH = '/pre-auth';

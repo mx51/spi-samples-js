@@ -16,7 +16,7 @@ import { useHistory } from 'react-router-dom';
 import Layout from '../Layout';
 import { useTransactionPageStyle } from './TransactionPage.style';
 import { TxLogItem, TxLogService } from '../../services/txLogService';
-import { PATH_TRANSACTION } from '../../definitions/constants/routerConfigs';
+import { PATH_TRANSACTIONS } from '../../definitions/constants/routerConfigs';
 import { useGetTxDetails } from '../../hooks/useGetTxDetails';
 import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../utils/common/helpers';
 
@@ -72,7 +72,7 @@ export const TransactionPage: React.FC = () => {
                     bankCashAmount,
                     tipAmount,
                   }) => (
-                    <TableRow key={posRefId} onClick={() => goToTransactionDetails(`${PATH_TRANSACTION}/${posRefId}`)}>
+                    <TableRow key={posRefId} onClick={() => goToTransactionDetails(`${PATH_TRANSACTIONS}/${posRefId}`)}>
                       {posRefId && (
                         <>
                           <TableCell>

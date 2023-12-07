@@ -13,7 +13,6 @@ import {
   PATH_SUPPORT,
   PATH_SETTINGS,
   PATH_TRANSACTIONS,
-  PATH_TRANSACTION,
 } from '../definitions/constants/routerConfigs';
 
 const Pair = React.lazy(() => import('../components/PairPage'));
@@ -36,8 +35,8 @@ const AppRoutes = (): React.ReactElement => (
     <Suspense fallback={<Loading />}>
       <Switch>
         <Route exact path={PATH_PAIR} component={Pair} />
-        <Route exact path={`${PATH_TRANSACTION}/:id`} component={TransactionDetailsPage} />
         <Route exact path={PATH_TRANSACTIONS} component={TransactionPage} />
+        <Route exact path={`${PATH_TRANSACTIONS}/:id`} component={TransactionDetailsPage} />
         <Route exact path={PATH_PRE_AUTH} component={PreAuth} />
         <Route exact path={PATH_PURCHASE} component={Purchase} />
         <Route exact path={PATH_REFUND} component={Refund} />
