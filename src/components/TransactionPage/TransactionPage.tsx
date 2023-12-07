@@ -31,7 +31,7 @@ export const TransactionPage: React.FC = () => {
   };
 
   useEffect(() => {
-    setTxLogItems(TxLogService.load());
+    setTxLogItems(TxLogService.load().filter((tx) => dayjs(tx.completedTime).date() >= dayjs().date()));
   }, []);
 
   return (
