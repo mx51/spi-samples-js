@@ -54,13 +54,24 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
               class="MuiGrid-root makeStyles-receiptBoxWrapper-15"
             >
               <div
-                class="MuiBox-root MuiBox-root-18"
+                class="MuiBox-root MuiBox-root-23 makeStyles-box-22"
               >
-                <h1
-                  class="MuiTypography-root MuiTypography-h6"
+                <div
+                  class="MuiGrid-root makeStyles-gridContainer-18"
                 >
-                  Settlement Receipt
-                </h1>
+                  <div
+                    class="MuiGrid-root makeStyles-receiptGrid-19 MuiGrid-item MuiGrid-grid-md-12"
+                  >
+                    <h1
+                      class="MuiTypography-root MuiTypography-h6"
+                    >
+                      Settlement Receipt
+                    </h1>
+                  </div>
+                  <div
+                    class="MuiGrid-root makeStyles-buttonGrid-20 MuiGrid-item MuiGrid-grid-md-12"
+                  />
+                </div>
               </div>
             </div>
           </div>
@@ -68,17 +79,17 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
       </div>
     </div>
     <div
-      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-19"
+      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-24"
       data-test-id="flowPanel"
     >
       <div
-        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-20 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
+        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-25 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
       >
         <div
-          class="MuiBox-root MuiBox-root-24 makeStyles-flowBoxWrapper-21"
+          class="MuiBox-root MuiBox-root-29 makeStyles-flowBoxWrapper-26"
         >
           <div
-            class="MuiBox-root MuiBox-root-25 makeStyles-flowBox-22"
+            class="MuiBox-root MuiBox-root-30 makeStyles-flowBox-27"
           >
             <h1
               class="MuiTypography-root MuiTypography-h6"
@@ -86,7 +97,7 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
               Flow
             </h1>
             <pre
-              class="makeStyles-flowContent-23"
+              class="makeStyles-flowContent-28"
             />
           </div>
         </div>

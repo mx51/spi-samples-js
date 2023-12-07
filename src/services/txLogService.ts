@@ -12,7 +12,17 @@ export interface TxLogItem {
   tid: string;
   type: string;
   override?: boolean;
-  amount: number;
+  amountCents: number;
+  purchaseAmount: number;
+  surchargeAmount: number;
+  bankCashAmount: number;
+  tipAmount: number;
+  preAuthAmount?: number;
+  topupAmount?: number;
+  reduceAmount?: number;
+  preAuthId?: string;
+  hostResponseText: string;
+  transactionType: string;
 }
 
 export class TxLogService {

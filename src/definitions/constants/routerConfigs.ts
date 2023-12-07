@@ -1,6 +1,7 @@
 // paths
 export const PATH_PAIR = '/pair';
-export const PATH_TRANSACTION = '/transactions';
+export const PATH_TRANSACTION = '/transaction';
+export const PATH_TRANSACTIONS = '/transactions';
 export const PATH_ACCOUNT_VERIFY = '/account-verify';
 export const PATH_PRE_AUTH = '/pre-auth';
 export const PATH_PURCHASE = '/';
@@ -24,4 +25,5 @@ export const TEXT_CASHOUT = 'Cashout';
 export const TEXT_TERMINALS = 'Terminals List';
 export const TEXT_SETTINGS = 'Settings';
 export const TEXT_TRANSACTION_HISTORY = 'Transaction History';
+export const TEXT_TRANSACTION_DETAILS = 'Transaction Details';
 export const TEXT_SUPPORT = 'Support';

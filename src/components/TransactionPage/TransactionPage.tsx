@@ -12,28 +12,27 @@ import {
 } from '@material-ui/core';
 import { SuccessState } from '@mx51/spi-client-js';
 import dayjs from 'dayjs';
-import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import Layout from '../Layout';
 import { useTransactionPageStyle } from './TransactionPage.style';
-import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
-import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
-import { ReactComponent as UnknownIcon } from '../../images/WarningIcon.svg';
 import { TxLogItem, TxLogService } from '../../services/txLogService';
-import currencyFormat from '../../utils/common/intl/currencyFormatter';
+import { PATH_TRANSACTION } from '../../definitions/constants/routerConfigs';
+import { useGetTxDetails } from '../../hooks/useGetTxDetails';
+import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../utils/common/helpers';
 
 export const TransactionPage: React.FC = () => {
   const [txLogItems, setTxLogItems] = useState<TxLogItem[]>([]);
   const classes = useTransactionPageStyle();
+  const history = useHistory();
+  const { getTransactionType, getIconByStatus } = useGetTxDetails();
+
+  const goToTransactionDetails = (path: string) => {
+    history.push(path);
+  };
 
   useEffect(() => {
     setTxLogItems(TxLogService.load());
   }, []);
-
-  const iconByStatus = {
-    [SuccessState.Success]: <SuccessIcon className={classes.successIcon} />,
-    [SuccessState.Failed]: <FailedIcon className={classes.failedIcon} />,
-    [SuccessState.Unknown]: <UnknownIcon className={classes.failedIcon} />,
-  };
 
   return (
     <Layout>
@@ -58,20 +57,48 @@ export const TransactionPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {txLogItems.map(({ posRefId, successState, completedTime, posId, type, tid, amount, override }) => (
-                  <TableRow key={posRefId}>
-                    <TableCell>
-                      <div className={classes.iconContainer}>
-                        {iconByStatus[override ? SuccessState.Unknown : successState]}
-                      </div>
-                    </TableCell>
-                    <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
-                    <TableCell>{type}</TableCell>
-                    <TableCell>{posId}</TableCell>
-                    <TableCell>{tid}</TableCell>
-                    <TableCell>{currencyFormat(amount / 100)}</TableCell>
-                  </TableRow>
-                ))}
+                {txLogItems.map(
+                  ({
+                    posRefId,
+                    successState,
+                    completedTime,
+                    posId,
+                    type,
+                    tid,
+                    amountCents,
+                    override,
+                    transactionType,
+                    surchargeAmount,
+                    bankCashAmount,
+                    tipAmount,
+                  }) => (
+                    <TableRow key={posRefId} onClick={() => goToTransactionDetails(`${PATH_TRANSACTION}/${posRefId}`)}>
+                      {posRefId && (
+                        <>
+                          <TableCell>
+                            <div className={classes.iconContainer}>
+                              {getIconByStatus(override ? SuccessState.Unknown : successState)}
+                            </div>
+                          </TableCell>
+                          <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
+                          <TableCell>{getTransactionType(type, transactionType)}</TableCell>
+                          <TableCell>{posId}</TableCell>
+                          <TableCell>{tid}</TableCell>
+                          <TableCell>
+                            {type === 'CashoutOnly'
+                              ? calculateCashoutOnlyTotalAmount({
+                                  amountCents,
+                                  surchargeAmount,
+                                  bankCashAmount,
+                                  tipAmount,
+                                })
+                              : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })}
+                          </TableCell>
+                        </>
+                      )}
+                    </TableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </TableContainer>

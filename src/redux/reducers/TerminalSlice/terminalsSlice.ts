@@ -184,13 +184,25 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
         posRefId,
         receipt: transactionReceipt,
         override,
-        amountCents: amount,
+        amountCents,
       },
     } = payload;
 
     if (finished && response.data) {
       if (override || !cancelAttemptTime) {
         const { terminals } = getState() as Any;
+        const {
+          purchaseAmount,
+          surchargeAmount,
+          bankCashAmount,
+          tipAmount,
+          preAuthAmount,
+          topupAmount,
+          reduceAmount,
+          preAuthId,
+          hostResponseText,
+          transactionType,
+        } = response.data;
         const { posId, merchantId: mid, terminalId: tid } = terminals[id];
         TxLogService.saveAndDeleteYesterdayTx({
           successState,
@@ -202,7 +214,17 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
           mid,
           receipt: transactionReceipt,
           override,
-          amount,
+          amountCents,
+          purchaseAmount,
+          surchargeAmount,
+          bankCashAmount,
+          tipAmount,
+          preAuthAmount,
+          topupAmount,
+          reduceAmount,
+          preAuthId,
+          hostResponseText,
+          transactionType,
         });
       }
     }

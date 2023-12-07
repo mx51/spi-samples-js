@@ -6,15 +6,21 @@ exports[`Test <ReceiptPanel /> should match ReceiptPanel snapshot test 1`] = `
     class="MuiGrid-root {}"
   >
     <div
-      class="MuiBox-root MuiBox-root-1"
+      class="MuiBox-root MuiBox-root-6 makeStyles-box-5"
     >
-      <h1
-        class="MuiTypography-root MuiTypography-h6"
+      <div
+        class="MuiGrid-root makeStyles-gridContainer-1"
       >
-        Mock Receipt
-      </h1>
-      <pre>
-        
+        <div
+          class="MuiGrid-root makeStyles-receiptGrid-2 MuiGrid-item MuiGrid-grid-md-12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h6"
+          >
+            Mock Receipt
+          </h1>
+          <pre>
+            
 EFTPOS FROM TEST TENANT
 Presto VAA Sales
 TEST Street
@@ -23,7 +29,12 @@ Address 0000
 
 Country
 
-      </pre>
+          </pre>
+        </div>
+        <div
+          class="MuiGrid-root makeStyles-buttonGrid-3 MuiGrid-item MuiGrid-grid-md-12"
+        />
+      </div>
     </div>
   </div>
 </div>

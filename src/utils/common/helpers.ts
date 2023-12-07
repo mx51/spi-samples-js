@@ -1,3 +1,5 @@
+import currencyFormat from './intl/currencyFormatter';
+
 // eslint-disable-next-line import/prefer-default-export
 export function serialNumberFormatter(currentSerialNumber: string): string {
   let formatSerialNumber = currentSerialNumber.slice(0, 11).replaceAll('-', '');
@@ -12,3 +14,27 @@ export function serialNumberFormatter(currentSerialNumber: string): string {
 
   return formatSerialNumber;
 }
+
+type CurrentTX = {
+  amountCents: number;
+  surchargeAmount: number;
+  bankCashAmount: number;
+  tipAmount: number;
+  preAuthAmount?: number;
+};
+
+export const calculateTotalAmount = (currentTransaction: CurrentTX): string => {
+  const { amountCents, surchargeAmount, bankCashAmount, tipAmount } = currentTransaction;
+  const totalAmount = amountCents + surchargeAmount + bankCashAmount + tipAmount;
+  const formattedTotal = currencyFormat((Number.isNaN(totalAmount) ? 0 : totalAmount) / 100);
+
+  return formattedTotal;
+};
+
+export const calculateCashoutOnlyTotalAmount = (currentTransaction: CurrentTX): string => {
+  const { amountCents, surchargeAmount } = currentTransaction;
+  const totalAmount = amountCents + surchargeAmount;
+  const formattedTotal = currencyFormat((Number.isNaN(totalAmount) ? 0 : totalAmount) / 100);
+
+  return formattedTotal;
+};

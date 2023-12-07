@@ -31,4 +31,5 @@ export interface IReceiptPanel {
   children?: React.ReactNode;
   title: string;
   css: string;
+  textReceipt?: string;
 }
