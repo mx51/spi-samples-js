@@ -95,14 +95,20 @@ export const TransactionDetailsPage: React.FC = () => {
                       {formattedTotal}
                     </Typography>
                     <OrderSubTotal label="Subtotal" amount={currentTransaction.amountCents} />
-                    <OrderLineItem disabled label="Surcharge" amount={currentTransaction.surchargeAmount} viewOnly />
-                    <OrderLineItem
-                      disabled
-                      label="Cashout"
-                      amount={isCashoutOnly ? 0 : currentTransaction.bankCashAmount}
-                      viewOnly
-                    />
-                    <OrderLineItem disabled label="Tip" amount={currentTransaction.tipAmount} viewOnly />
+                    {currentTransaction.surchargeAmount ? (
+                      <OrderLineItem disabled label="Surcharge" amount={currentTransaction.surchargeAmount} viewOnly />
+                    ) : null}
+                    {!isCashoutOnly && currentTransaction.bankCashAmount ? (
+                      <OrderLineItem
+                        disabled
+                        label="Cashout"
+                        amount={isCashoutOnly ? 0 : currentTransaction.bankCashAmount}
+                        viewOnly
+                      />
+                    ) : null}
+                    {currentTransaction.tipAmount ? (
+                      <OrderLineItem disabled label="Tip" amount={currentTransaction.tipAmount} viewOnly />
+                    ) : null}
                   </Box>
                 </Box>
               </Grid>
