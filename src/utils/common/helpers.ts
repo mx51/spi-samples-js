@@ -23,18 +23,17 @@ type CurrentTX = {
   preAuthAmount?: number;
 };
 
-export const calculateTotalAmount = (currentTransaction: CurrentTX): string => {
+export const calculateTotalAmount = (currentTransaction: CurrentTX): number => {
   const { amountCents, surchargeAmount, bankCashAmount, tipAmount } = currentTransaction;
-  const totalAmount = amountCents + surchargeAmount + bankCashAmount + tipAmount;
-  const formattedTotal = currencyFormat((Number.isNaN(totalAmount) ? 0 : totalAmount) / 100);
+  const totalAmount = amountCents + (surchargeAmount ?? 0) + (bankCashAmount ?? 0) + (tipAmount ?? 0);
 
-  return formattedTotal;
+
+  return totalAmount;
 };
 
-export const calculateCashoutOnlyTotalAmount = (currentTransaction: CurrentTX): string => {
+export const calculateCashoutOnlyTotalAmount = (currentTransaction: CurrentTX): number => {
   const { amountCents, surchargeAmount } = currentTransaction;
-  const totalAmount = amountCents + surchargeAmount;
-  const formattedTotal = currencyFormat((Number.isNaN(totalAmount) ? 0 : totalAmount) / 100);
+  const totalAmount = amountCents + (surchargeAmount ?? 0);
 
-  return formattedTotal;
+  return totalAmount;
 };

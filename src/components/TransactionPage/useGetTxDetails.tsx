@@ -1,37 +1,8 @@
 import React from 'react';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { ReactComponent as FailedIcon } from '../images/FailedIcon.svg';
-import { ReactComponent as SuccessIcon } from '../images/SuccessIcon.svg';
-import { ReactComponent as WarningIcon } from '../images/WarningIcon.svg';
-
-export const useIconStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    successIcon: {
-      color: theme.palette.success.main,
-      margin: theme.spacing(1),
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      width: '24px',
-      height: '24px',
-    },
-    failedIcon: {
-      color: theme.palette.error.main,
-      margin: theme.spacing(1),
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      width: '24px',
-      height: '24px',
-    },
-    unknownIcon: {
-      color: theme.palette.warning.main,
-      margin: theme.spacing(1),
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      width: '24px',
-      height: '24px',
-    },
-  })
-);
+import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
+import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
+import { ReactComponent as WarningIcon } from '../../images/WarningIcon.svg';
+import { useTransactionPageStyle } from './TransactionPage.style';
 
 type GetTxDetails = {
   getTransactionType: (txType: string, preAuthTxType: string) => string;
@@ -40,7 +11,7 @@ type GetTxDetails = {
 };
 
 export const useGetTxDetails = (): GetTxDetails => {
-  const classes = useIconStyles();
+  const classes = useTransactionPageStyle();
 
   const getTransactionType = (txType: string, preAuthTxType: string) => {
     const preAuthTypeMap = {

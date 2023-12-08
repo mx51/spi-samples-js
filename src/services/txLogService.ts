@@ -23,6 +23,7 @@ export interface TxLogItem {
   preAuthId?: string;
   hostResponseText: string;
   transactionType: string;
+  total: number;
 }
 
 export class TxLogService {
@@ -36,5 +37,9 @@ export class TxLogService {
 
   static load(): TxLogItem[] {
     return JSON.parse(localStorage.getItem(TX_LOG_KEY) ?? '[]') as TxLogItem[];
+  }
+
+  static findTxByPosRefId(posRefId: string): TxLogItem | undefined {
+    return TxLogService.load().find((tx) => tx.posRefId === posRefId);
   }
 }

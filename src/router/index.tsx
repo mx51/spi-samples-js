@@ -27,8 +27,14 @@ const PayNow = React.lazy(() => import('../components/PayNow'));
 const Cashout = React.lazy(() => import('../components/CashoutPage'));
 const Settings = React.lazy(() => import('../components/SettingsPage'));
 const SupportTool = React.lazy(() => import('../components/SupportToolsPage'));
-const TransactionPage = React.lazy(() => import('../components/TransactionPage'));
-const TransactionDetailsPage = React.lazy(() => import('../components/TransactionPage/TransactionDetailsPage'));
+const TransactionPage = React.lazy(() =>
+  import('../components/TransactionPage/TransactionPage').then((module) => ({ default: module.TransactionPage }))
+);
+const TransactionDetailsPage = React.lazy(() =>
+  import('../components/TransactionPage/TransactionDetailsPage/TransactionDetailsPage').then((module) => ({
+    default: module.TransactionDetailsPage,
+  }))
+);
 
 const AppRoutes = (): React.ReactElement => (
   <Router>

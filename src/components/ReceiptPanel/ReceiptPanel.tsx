@@ -1,32 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Box, Button } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { IReceiptPanel } from '../TerminalsPage/TerminalDetails/interfaces';
-import { receiptPanelStyles } from './index.styles';
+import { useReceiptPanelStyles } from './index.styles';
 import { ReactComponent as TickIcon } from '../../images/TickIcon.svg';
 import { ReactComponent as CopyIcon } from '../../images/CopyIcon.svg';
 
 export default function ReceiptPanel({ children, title, css, textReceipt }: IReceiptPanel): React.ReactElement {
-  const classes = receiptPanelStyles();
+  const classes = useReceiptPanelStyles();
   const [copySuccess, setCopySuccess] = useState<string>('');
 
   const copyToClipboard = async (receipt: string) => {
     try {
       await navigator.clipboard.writeText(receipt);
       setCopySuccess('Success');
+      setTimeout(() => {
+        setCopySuccess('');
+      }, 1000);
     } catch (err) {
       console.log('Failed to copy: ', err);
     }
   };
-
-  useEffect(() => {
-    if (copySuccess) {
-      setTimeout(() => {
-        setCopySuccess('');
-      }, 1000);
-    }
-  }, [copySuccess]);
 
   return (
     <Grid className={css}>

@@ -17,8 +17,8 @@ import Layout from '../Layout';
 import { useTransactionPageStyle } from './TransactionPage.style';
 import { TxLogItem, TxLogService } from '../../services/txLogService';
 import { PATH_TRANSACTIONS } from '../../definitions/constants/routerConfigs';
-import { useGetTxDetails } from '../../hooks/useGetTxDetails';
-import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../utils/common/helpers';
+import { useGetTxDetails } from './useGetTxDetails';
+import currencyFormat from '../../utils/common/intl/currencyFormatter';
 
 export const TransactionPage: React.FC = () => {
   const [txLogItems, setTxLogItems] = useState<TxLogItem[]>([]);
@@ -31,7 +31,7 @@ export const TransactionPage: React.FC = () => {
   };
 
   useEffect(() => {
-    setTxLogItems(TxLogService.load().filter((tx) => dayjs(tx.completedTime).date() >= dayjs().date()));
+    setTxLogItems(TxLogService.load().filter((tx) => tx.posRefId && dayjs(tx.completedTime).date() >= dayjs().date()));
   }, []);
 
   return (
@@ -58,44 +58,18 @@ export const TransactionPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {txLogItems.map(
-                  ({
-                    posRefId,
-                    successState,
-                    completedTime,
-                    posId,
-                    type,
-                    tid,
-                    amountCents,
-                    override,
-                    transactionType,
-                    surchargeAmount,
-                    bankCashAmount,
-                    tipAmount,
-                  }) => (
+                  ({ posRefId, successState, completedTime, posId, type, tid, override, transactionType, total }) => (
                     <TableRow key={posRefId} onClick={() => goToTransactionDetails(`${PATH_TRANSACTIONS}/${posRefId}`)}>
-                      {posRefId && (
-                        <>
-                          <TableCell>
-                            <div className={classes.iconContainer}>
-                              {getIconByStatus(override ? SuccessState.Unknown : successState)}
-                            </div>
-                          </TableCell>
-                          <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
-                          <TableCell>{getTransactionType(type, transactionType)}</TableCell>
-                          <TableCell>{posId}</TableCell>
-                          <TableCell>{tid}</TableCell>
-                          <TableCell>
-                            {type === 'CashoutOnly'
-                              ? calculateCashoutOnlyTotalAmount({
-                                  amountCents,
-                                  surchargeAmount,
-                                  bankCashAmount,
-                                  tipAmount,
-                                })
-                              : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })}
-                          </TableCell>
-                        </>
-                      )}
+                      <TableCell>
+                        <div className={classes.iconContainer}>
+                          {getIconByStatus(override ? SuccessState.Unknown : successState)}
+                        </div>
+                      </TableCell>
+                      <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
+                      <TableCell>{getTransactionType(type, transactionType)}</TableCell>
+                      <TableCell>{posId}</TableCell>
+                      <TableCell>{tid}</TableCell>
+                      <TableCell>{currencyFormat(total / 100)}</TableCell>
                     </TableRow>
                   )
                 )}
