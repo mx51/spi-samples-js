@@ -27,6 +27,8 @@ import {
   PATH_SUPPORT,
   TEXT_TRANSACTIONS,
   PATH_TRANSACTIONS,
+  TEXT_PAT,
+  PATH_PAT,
 } from './routerConfigs';
 
 export default {
@@ -49,6 +51,11 @@ export default {
     {
       name: TEXT_PRE_AUTH,
       path: PATH_PRE_AUTH,
+      icon: <IconPreAuth />,
+    },
+    {
+      name: TEXT_PAT,
+      path: PATH_PAT,
       icon: <IconPreAuth />,
     },
   ],

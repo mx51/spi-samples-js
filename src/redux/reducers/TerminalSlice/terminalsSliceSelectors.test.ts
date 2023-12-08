@@ -19,6 +19,7 @@ import {
   defaultMockSelectedTerminals,
   mockTxFlow,
   defaultMockPreAuthState,
+  defaultMockPayAtTableState,
 } from '../../../utils/tests/common';
 
 const mockStoreState = {
@@ -34,6 +35,7 @@ const mockStoreState = {
   },
   selectedTerminal: defaultMockSelectedTerminals,
   preAuth: defaultMockPreAuthState,
+  payAtTable: defaultMockPayAtTableState,
 };
 
 describe('Test terminals slice selectors', () => {
@@ -199,14 +201,8 @@ describe('Test terminals slice selectors', () => {
         },
       },
       selectedTerminal: { selectedTerminalId: '' },
-      preAuth: {
-        openPreAuths: [],
-        keyPadAmount: 0,
-        _persist: {
-          version: -1,
-          rehydrated: true,
-        },
-      },
+      preAuth: defaultMockPreAuthState,
+      payAtTable: defaultMockPayAtTableState,
     };
 
     expect(pairedConnectedTerminalList(state)).toEqual([

@@ -1,5 +1,11 @@
-import { Spi as SpiClient, TransactionOptions } from '@mx51/spi-client-js';
-import { SpiPayAtTable } from '@mx51/spi-client-js/SpiPayAtTable';
+import {
+  BillRetrievalResult,
+  BillStatusResponse,
+  GetOpenTablesResponse,
+  OpenTablesEntry,
+  Spi as SpiClient,
+  TransactionOptions,
+} from '@mx51/spi-client-js';
 import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
@@ -20,11 +26,13 @@ import {
   updateTxFlowWithSideEffect,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
+import { store } from '../../redux/store';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
 import { localStorageKeys, posVersion } from '../../utils/constants';
 
 import { ITerminal, ITerminals } from '../interfaces';
+import { addPaymentToTable, lockTable, unlockTable } from '../../redux/reducers/PayAtTableSlice/payAtTableSlice';
 
 declare global {
   interface Window {
@@ -248,6 +256,113 @@ class SpiService {
       // instantiate spi library
       instance.spiClient = new SpiClient(posId, serialNumber, deviceAddress, secrets);
       instance.spiPat = instance.spiClient.EnablePayAtTable();
+
+      instance.spiPat.GetBillStatus = (
+        billId: string,
+        tableId: string,
+        operatorId: string,
+        paymentFlowStarted: boolean
+      ) => {
+        const { tables } = store.getState().payAtTable;
+        const table = tables.find((t) => String(t.tableId) === tableId || t.billId === billId);
+
+        if (!table || (table.locked && paymentFlowStarted)) {
+          // We need more status in the BillRetrievalResult enum but this will do for now.
+          return new BillStatusResponse({ Result: BillRetrievalResult.INVALID_TABLE_ID });
+        }
+
+        if (operatorId && table.operatorId && table.operatorId !== operatorId) {
+          return Object.assign(new BillStatusResponse(), {
+            Result: BillRetrievalResult.INVALID_OPERATOR_ID,
+            OutstandingAmount: table.outStandingAmount,
+            TotalAmount: table.totalAmount,
+          });
+        }
+
+        if (paymentFlowStarted) {
+          this.dispatchAction(lockTable(table.tableId));
+        }
+
+        return new BillStatusResponse({
+          Result: BillRetrievalResult.SUCCESS,
+          BillId: table.billId,
+          TableId: tableId,
+          OperatorId: operatorId,
+          TotalAmount: table.totalAmount,
+          OutstandingAmount: table.outStandingAmount,
+          BillData: table.bill.billData,
+        });
+      };
+
+      instance.spiPat.BillPaymentReceived = (billPayment: Any, billData: string) => {
+        const { tables } = store.getState().payAtTable;
+        const table = tables.find((t) => t.billId === billPayment.BillId);
+
+        if (!table) {
+          return new BillStatusResponse({ Result: BillRetrievalResult.INVALID_BILL_ID });
+        }
+
+        // eslint-disable-next-line no-underscore-dangle
+        const terminalRefId = billPayment.PurchaseResponse._m.Data.terminal_ref_id;
+
+        // Terminal RefId need to be unique, so ignore if we already processed a payment with this refId
+        if (table.bill.payments.some((payment) => payment.terminalRefId === terminalRefId)) {
+          return new BillStatusResponse({
+            Result: BillRetrievalResult.SUCCESS,
+            OutstandingAmount: table.outStandingAmount,
+            TotalAmount: table.totalAmount,
+          });
+        }
+
+        const outstandingAmount = table.outStandingAmount - billPayment.PurchaseAmount;
+        this.dispatchAction(
+          addPaymentToTable({
+            tableId: table.tableId,
+            payment: {
+              paymentType: billPayment.PaymentType,
+              purchaseAmount: billPayment.PurchaseAmount,
+              surchargeAmount: billPayment.SurchargeAmount,
+              tipAmount: billPayment.TipAmount,
+              // eslint-disable-next-line no-underscore-dangle
+              terminalRefId,
+            },
+            billData,
+          })
+        );
+
+        return new BillStatusResponse({
+          Result: BillRetrievalResult.SUCCESS,
+          OutstandingAmount: outstandingAmount,
+          TotalAmount: table.totalAmount,
+        });
+      };
+      instance.spiPat.BillPaymentFlowEnded = (message: Any) => {
+        const { tables } = store.getState().payAtTable;
+        const table = tables.find((t) => t.tableId === message.TableId || t.billId === message.BillId);
+
+        if (table) {
+          this.dispatchAction(unlockTable(table.tableId));
+        }
+      };
+      instance.spiPat.GetOpenTables = (operatorId?: string): GetOpenTablesResponse =>
+        Object.assign(new GetOpenTablesResponse(), {
+          TableData: JSON.stringify(
+            store
+              .getState()
+              .payAtTable.tables.filter(
+                (table) =>
+                  table.outStandingAmount > 0 && (!operatorId || !table.operatorId || table.operatorId === operatorId)
+              )
+              .map(
+                (table) =>
+                  new OpenTablesEntry({
+                    TableId: table.tableId,
+                    Label: table.label,
+                    BillOutstandingAmount: table.totalAmount,
+                  })
+              )
+          ),
+        });
 
       // Setup PAT
       if (this.state.patConfig.payAtTableEnabled) {
@@ -757,5 +872,6 @@ class SpiService {
 }
 
 const spiService = new SpiService();
+spiService.start(store.dispatch);
 
 export { spiService as default };

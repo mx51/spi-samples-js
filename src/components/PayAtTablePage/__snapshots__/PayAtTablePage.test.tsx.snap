@@ -4,23 +4,23 @@ exports[`Test <PayAtTablePage /> should match PayAtTablePage snapshot test 1`] =
 <div>
   <div>
     <div
-      class="makeStyles-root-1"
+      class="makeStyles-root-10"
     >
       <header
-        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-2 mui-fixed MuiPaper-elevation4"
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-11 mui-fixed MuiPaper-elevation4"
       >
         <div
           class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
         >
           <div
-            class="MuiBox-root MuiBox-root-7 makeStyles-navbar-4"
+            class="MuiBox-root MuiBox-root-16 makeStyles-navbar-13"
           >
             <div
-              class="MuiBox-root MuiBox-root-8"
+              class="MuiBox-root MuiBox-root-17"
             >
               <button
                 aria-label="menu"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-5 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-14 MuiIconButton-colorInherit MuiIconButton-edgeStart"
                 data-test-id="navbarMenuIcon"
                 name="menuIcon"
                 tabindex="0"
@@ -55,9 +55,32 @@ exports[`Test <PayAtTablePage /> should match PayAtTablePage snapshot test 1`] =
         </div>
       </header>
     </div>
-    <p>
-      Pay At Table Page
-    </p>
+    <div
+      class="MuiContainer-root makeStyles-container-1 MuiContainer-maxWidthMd"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Pay At Tables
+      </h1>
+      <div
+        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
+      />
+    </div>
+    <button
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-addButton-2 MuiButton-containedPrimary"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label"
+      >
+        Add
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
   </div>
 </div>
 `;

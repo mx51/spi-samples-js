@@ -71,6 +71,13 @@ export const defaultMockPreAuthState = {
   },
 };
 
+export const defaultMockPayAtTableState = {
+  tables: [],
+  _persist: {
+    version: -1,
+    rehydrated: true,
+  },
+};
 export const defaultMockPairFormParams = {
   acquirerCode: {
     value: 'test',
