@@ -105,4 +105,3 @@ export const TransactionDetailsPage: React.FC = () => {
     </Layout>
   );
 };
-

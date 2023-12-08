@@ -208,7 +208,7 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
         const isCashoutOnly = type === 'CashoutOnly';
         const total = isCashoutOnly
           ? calculateCashoutOnlyTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })
-          : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })
+          : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount });
         TxLogService.saveAndDeleteYesterdayTx({
           successState,
           completedTime,
