@@ -12,9 +12,8 @@ import {
   PATH_CASH_OUT,
   PATH_SUPPORT,
   PATH_SETTINGS,
-  PATH_TRANSACTION,
+  PATH_TRANSACTIONS,
 } from '../definitions/constants/routerConfigs';
-import { TransactionPage } from '../components/TransactionPage/TransactionPage';
 
 const Pair = React.lazy(() => import('../components/PairPage'));
 const PreAuth = React.lazy(() => import('../components/PreAuthPage'));
@@ -28,13 +27,22 @@ const PayNow = React.lazy(() => import('../components/PayNow'));
 const Cashout = React.lazy(() => import('../components/CashoutPage'));
 const Settings = React.lazy(() => import('../components/SettingsPage'));
 const SupportTool = React.lazy(() => import('../components/SupportToolsPage'));
+const TransactionPage = React.lazy(() =>
+  import('../components/TransactionPage/TransactionPage').then((module) => ({ default: module.TransactionPage }))
+);
+const TransactionDetailsPage = React.lazy(() =>
+  import('../components/TransactionPage/TransactionDetailsPage/TransactionDetailsPage').then((module) => ({
+    default: module.TransactionDetailsPage,
+  }))
+);
 
 const AppRoutes = (): React.ReactElement => (
   <Router>
     <Suspense fallback={<Loading />}>
       <Switch>
         <Route exact path={PATH_PAIR} component={Pair} />
-        <Route exact path={PATH_TRANSACTION} component={TransactionPage} />
+        <Route exact path={PATH_TRANSACTIONS} component={TransactionPage} />
+        <Route exact path={`${PATH_TRANSACTIONS}/:id`} component={TransactionDetailsPage} />
         <Route exact path={PATH_PRE_AUTH} component={PreAuth} />
         <Route exact path={PATH_PURCHASE} component={Purchase} />
         <Route exact path={PATH_REFUND} component={Refund} />

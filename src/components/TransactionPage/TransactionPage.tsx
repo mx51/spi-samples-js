@@ -12,27 +12,27 @@ import {
 } from '@material-ui/core';
 import { SuccessState } from '@mx51/spi-client-js';
 import dayjs from 'dayjs';
+import { useHistory } from 'react-router-dom';
 import Layout from '../Layout';
 import { useTransactionPageStyle } from './TransactionPage.style';
-import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
-import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
-import { ReactComponent as UnknownIcon } from '../../images/WarningIcon.svg';
 import { TxLogItem, TxLogService } from '../../services/txLogService';
+import { PATH_TRANSACTIONS } from '../../definitions/constants/routerConfigs';
+import { useGetTxDetails } from './useGetTxDetails';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 
 export const TransactionPage: React.FC = () => {
   const [txLogItems, setTxLogItems] = useState<TxLogItem[]>([]);
   const classes = useTransactionPageStyle();
+  const history = useHistory();
+  const { getTransactionType, getIconByStatus } = useGetTxDetails();
+
+  const goToTransactionDetails = (path: string) => {
+    history.push(path);
+  };
 
   useEffect(() => {
-    setTxLogItems(TxLogService.load().filter((tx) => dayjs(tx.completedTime).date() >= dayjs().date()));
+    setTxLogItems(TxLogService.load().filter((tx) => tx.posRefId && dayjs(tx.completedTime).date() >= dayjs().date()));
   }, []);
-
-  const iconByStatus = {
-    [SuccessState.Success]: <SuccessIcon className={classes.successIcon} />,
-    [SuccessState.Failed]: <FailedIcon className={classes.failedIcon} />,
-    [SuccessState.Unknown]: <UnknownIcon className={classes.failedIcon} />,
-  };
 
   return (
     <Layout>
@@ -57,20 +57,22 @@ export const TransactionPage: React.FC = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {txLogItems.map(({ posRefId, successState, completedTime, posId, type, tid, amount, override }) => (
-                  <TableRow key={posRefId}>
-                    <TableCell>
-                      <div className={classes.iconContainer}>
-                        {iconByStatus[override ? SuccessState.Unknown : successState]}
-                      </div>
-                    </TableCell>
-                    <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
-                    <TableCell>{type}</TableCell>
-                    <TableCell>{posId}</TableCell>
-                    <TableCell>{tid}</TableCell>
-                    <TableCell>{currencyFormat(amount / 100)}</TableCell>
-                  </TableRow>
-                ))}
+                {txLogItems.map(
+                  ({ posRefId, successState, completedTime, posId, type, tid, override, transactionType, total }) => (
+                    <TableRow key={posRefId} onClick={() => goToTransactionDetails(`${PATH_TRANSACTIONS}/${posRefId}`)}>
+                      <TableCell>
+                        <div className={classes.iconContainer}>
+                          {getIconByStatus(override ? SuccessState.Unknown : successState)}
+                        </div>
+                      </TableCell>
+                      <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
+                      <TableCell>{getTransactionType(type, transactionType)}</TableCell>
+                      <TableCell>{posId}</TableCell>
+                      <TableCell>{tid}</TableCell>
+                      <TableCell>{currencyFormat(total / 100)}</TableCell>
+                    </TableRow>
+                  )
+                )}
               </TableBody>
             </Table>
           </TableContainer>
