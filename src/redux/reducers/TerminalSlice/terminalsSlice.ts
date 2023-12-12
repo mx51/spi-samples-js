@@ -190,7 +190,11 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
     } = payload;
 
     if (finished && response.data) {
-      if (override || !cancelAttemptTime) {
+      if (
+        override ||
+        // Do not save cancelled transactions.
+        (!['511', 'T201', 'T204', 'T200'].includes(response.data.hostResponseCode) && !cancelAttemptTime)
+      ) {
         const { terminals } = getState() as Any;
         const {
           purchaseAmount,

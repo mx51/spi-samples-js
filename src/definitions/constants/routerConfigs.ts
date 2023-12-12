@@ -23,6 +23,6 @@ export const TEXT_REFUND = 'Refund';
 export const TEXT_CASHOUT = 'Cashout';
 export const TEXT_TERMINALS = 'Terminals List';
 export const TEXT_SETTINGS = 'Settings';
-export const TEXT_TRANSACTION_HISTORY = 'Transaction History';
+export const TEXT_TRANSACTIONS = 'Transactions';
 export const TEXT_TRANSACTION_DETAILS = 'Transaction Details';
 export const TEXT_SUPPORT = 'Support';

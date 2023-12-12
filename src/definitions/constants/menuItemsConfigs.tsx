@@ -7,6 +7,7 @@ import { ReactComponent as IconRefund } from '../../images/RefundIcon.svg';
 import { ReactComponent as IconSettings } from '../../images/FleetSettingsIcon.svg';
 import { ReactComponent as IconSupport } from '../../images/SupportIcon.svg';
 import { ReactComponent as IconTerminalsList } from '../../images/TerminalsListIcon.svg';
+import { ReactComponent as IconTransaction } from '../../images/Transaction.svg';
 import {
   TEXT_CASHOUT,
   TEXT_PAIR,
@@ -24,7 +25,7 @@ import {
   PATH_TERMINALS,
   PATH_SETTINGS,
   PATH_SUPPORT,
-  TEXT_TRANSACTION_HISTORY,
+  TEXT_TRANSACTIONS,
   PATH_TRANSACTIONS,
 } from './routerConfigs';
 
@@ -65,9 +66,9 @@ export default {
   ],
   transactions: [
     {
-      name: TEXT_TRANSACTION_HISTORY,
+      name: TEXT_TRANSACTIONS,
       path: PATH_TRANSACTIONS,
-      icon: <IconSettings />,
+      icon: <IconTransaction />,
     },
   ],
   support: [
