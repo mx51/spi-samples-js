@@ -4,7 +4,7 @@ import { Box, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 import Layout from '../Layout';
 import useStyles from './index.styles';
 import { SettingsPanel } from './SettingsPanel/SettingsPanel';
-import { PatAtTablePanel } from './PatAtTablePanel';
+import { PayAtTablePanel } from './PayAtTablePanel';
 
 const panel = {
   terminalSetting: 0,
@@ -28,7 +28,7 @@ const SettingsPage: React.FC = () => {
         value={tabIndex}
       />
     ),
-    [panel.payAtTable]: <PatAtTablePanel />,
+    [panel.payAtTable]: <PayAtTablePanel />,
   };
 
   return (
@@ -52,7 +52,7 @@ const SettingsPage: React.FC = () => {
                 value={tabIndex}
               >
                 <Tab label="Terminal Settings" />
-                <Tab label="Pat At Table Settings" />
+                <Tab label="Pay At Table Settings" />
               </Tabs>
               {panelByIndex[tabIndex]}
             </Grid>

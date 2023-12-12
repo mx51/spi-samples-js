@@ -61,7 +61,7 @@ const payAtTableFormConfig: Array<{ name: keyof PayAtTableConfig; type: 'switch'
   },
 ];
 
-export const PatAtTablePanel: React.FC = () => {
+export const PayAtTablePanel: React.FC = () => {
   const classes = useStyles();
   const [patConfig, setPatConfig] = useState<PayAtTableConfig>(spiService.state.patConfig);
 
@@ -89,9 +89,9 @@ export const PatAtTablePanel: React.FC = () => {
   return (
     <Box className={classes.toolContainer}>
       <Typography component="h1" className={classes.h1}>
-        Pat At Table
+        Pay At Table
       </Typography>
-      <Typography>Configure Pat At Table</Typography>
+      <Typography>Configure Pay At Table</Typography>
       <Divider className={classes.divider} />
       <div className={classes.patSettingsFormContainer}>
         {payAtTableFormConfig.map(({ name, label, type }) => {

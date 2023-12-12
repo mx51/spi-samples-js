@@ -58,10 +58,10 @@ export const Table: React.FC<Props> = ({
   title,
   locked,
   operatorIds,
-  selectedOperatorId,
+  selectedOperatorId = '',
   payments,
 }) => {
-  const [operatorId, setOperatorId] = React.useState(selectedOperatorId || '');
+  const [operatorId, setOperatorId] = React.useState(selectedOperatorId);
   const [expanded, setExpanded] = React.useState(false);
   const [amount, setAmount] = React.useState(0);
   const handleExpandClick = () => setExpanded(!expanded);

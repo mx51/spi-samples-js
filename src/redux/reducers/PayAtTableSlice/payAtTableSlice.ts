@@ -95,7 +95,12 @@ const payAtTableSlice = createSlice({
       existingTable.outStandingAmount += action.payload.cost;
     },
     closeTable(state, action: PayloadAction<number>) {
-      state.tables = state.tables.filter(({ tableId }) => tableId !== action.payload);
+      state.tables = state.tables
+        .filter(({ tableId }) => tableId !== action.payload)
+        .map((table, i) => ({
+          ...table,
+          tableId: i + 1,
+        }));
     },
     updateOperatorId(state, action: PayloadAction<{ tableId: number; operatorId: string }>) {
       const existingTable = state.tables.find(({ tableId }) => tableId === action.payload.tableId);
