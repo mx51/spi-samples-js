@@ -31,7 +31,11 @@ export const TransactionPage: React.FC = () => {
   };
 
   useEffect(() => {
-    setTxLogItems(TxLogService.load().filter((tx) => tx.posRefId && dayjs(tx.completedTime).date() >= dayjs().date()));
+    setTxLogItems(
+      TxLogService.load()
+        .filter((tx) => tx.posRefId && dayjs(tx.completedTime).date() >= dayjs().date())
+        .sort((tx1, tx2) => tx2.completedTime - tx1.completedTime)
+    );
   }, []);
 
   return (
@@ -59,7 +63,12 @@ export const TransactionPage: React.FC = () => {
               <TableBody>
                 {txLogItems.map(
                   ({ posRefId, successState, completedTime, posId, type, tid, override, transactionType, total }) => (
-                    <TableRow key={posRefId} onClick={() => goToTransactionDetails(`${PATH_TRANSACTIONS}/${posRefId}`)}>
+                    <TableRow
+                      hover
+                      key={posRefId}
+                      onClick={() => goToTransactionDetails(`${PATH_TRANSACTIONS}/${posRefId}`)}
+                      style={{ cursor: 'pointer' }}
+                    >
                       <TableCell>
                         <div className={classes.iconContainer}>
                           {getIconByStatus(override ? SuccessState.Unknown : successState)}

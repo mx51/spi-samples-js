@@ -326,6 +326,7 @@ export const mockTxFlow: ITxFlow = {
       reduceAmount: 0,
       preAuthId: 'string',
       success: true,
+      hostResponseCode: '',
     },
   },
   signatureRequiredMessage: {
