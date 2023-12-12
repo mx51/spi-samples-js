@@ -211,6 +211,7 @@ class SpiService {
         terminal.spiPat.Config.AllowedOperatorIds = config.allowedOperatorIds;
         terminal.spiPat.PushPayAtTableConfig();
 
+        this.state.patConfig = config;
         setLocalStorage(localStorageKeys.patConfig, JSON.stringify(config));
       }
     });
