@@ -193,20 +193,9 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
     if (finished) {
       if (override || !cancelAttemptTime) {
         const { terminals } = getState() as Any;
-        const {
-          purchaseAmount,
-          surchargeAmount,
-          bankCashAmount,
-          tipAmount,
-          preAuthAmount,
-          topupAmount,
-          reduceAmount,
-        } = override ? request.data : response.data;
-        const {
-          preAuthId,
-          hostResponseText,
-          transactionType,
-        } = response.data
+        const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
+          override ? request.data : response.data;
+        const { preAuthId, hostResponseText, transactionType } = response.data;
         const { posId, merchantId: mid, terminalId: tid } = terminals[id];
         const isCashoutOnly = type === 'CashoutOnly';
         const total = isCashoutOnly
