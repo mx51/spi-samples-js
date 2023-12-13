@@ -99,6 +99,7 @@ export interface ITxFlow {
       reduceAmount: number;
       preAuthId: string;
       success: boolean;
+      hostResponseCode: string;
     };
   };
 }

@@ -71,6 +71,7 @@ function getTxFlow(detail: Any): Any {
         merchantReceipt: detail?.Response?.Data?.merchant_receipt,
         transactionType: detail?.Response?.Data?.transaction_type,
         hostResponseText: detail?.Response?.Data?.host_response_text,
+        hostResponseCode: detail?.Response?.Data?.host_response_code,
         purchaseAmount: detail?.Response?.Data?.purchase_amount || 0,
         surchargeAmount: detail?.Response?.Data?.surcharge_amount || 0,
         bankCashAmount: detail?.Response?.Data?.bank_cash_amount || 0,
