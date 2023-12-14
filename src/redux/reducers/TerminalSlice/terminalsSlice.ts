@@ -1,4 +1,4 @@
-import { SpiStatus } from '@mx51/spi-client-js';
+import { SpiStatus, SuccessState } from '@mx51/spi-client-js';
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { getLocalStorage } from '../../../utils/common/spi/common';
@@ -9,6 +9,7 @@ import {
   IConfigurations,
   IRemoveTerminalAction,
   ITerminalState,
+  ITxFlow,
   IUpdateDeviceAddressAction,
   IUpdatePairingFlowAction,
   IUpdatePairingStatusAction,
@@ -169,6 +170,14 @@ const terminalsSlice = createSlice({
   },
 });
 
+const isCancelledTx = (txFlow: ITxFlow) => {
+  const { cancelAttemptTime, success: successState, response } = txFlow;
+  const txTimeOutOrCancelled =
+    ['511', 'T201', 'T204', 'T200'].includes(response.data.hostResponseCode) || cancelAttemptTime;
+  const terminalBusy = successState === SuccessState.Failed && !response.data.hostResponseCode;
+  return txTimeOutOrCancelled || terminalBusy;
+};
+
 export const updateTxFlowWithSideEffect = createAsyncThunk(
   'terminals/updateTxFlowWithSideEffect',
   async (payload: IUpdateTxFlowAction, { dispatch, getState }) => {
@@ -179,7 +188,6 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
         finished,
         request,
         response,
-        cancelAttemptTime,
         success: successState,
         completedTime,
         type,
@@ -191,11 +199,7 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
     } = payload;
 
     if (finished) {
-      if (
-        override ||
-        // Do not save cancelled transactions.
-        (!['511', 'T201', 'T204', 'T200'].includes(response.data.hostResponseCode) && !cancelAttemptTime)
-      ) {
+      if (override || !isCancelledTx(payload.txFlow)) {
         const { terminals } = getState() as Any;
         const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
           override ? request.data : response.data;
