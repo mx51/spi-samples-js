@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2023-12-14
+
+### Added
+
+- [INTG-701] (https://mx51.atlassian.net/browse/INTG-701) Transaction listing page.
+- [INTG-737] (https://mx51.atlassian.net/browse/INTG-737) Transaction detail page.
+
 ## [1.3.1] - 2023-11-20
 
 ### Added
