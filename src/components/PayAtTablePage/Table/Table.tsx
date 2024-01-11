@@ -108,6 +108,7 @@ export const Table: React.FC<Props> = ({
           placeholder="Add cost"
           type="number"
         />
+        <div style={{ marginTop: 20 }} />
         {operatorIds.length > 0 ? (
           <FormControl disabled={locked} variant="standard" fullWidth>
             <InputLabel id="demo-simple-select-standard-label">OperatorId</InputLabel>

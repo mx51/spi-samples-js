@@ -27,6 +27,7 @@
     "no-param-reassign": ["error", { "props": true, "ignorePropertyModificationsFor": ["state"] }],
     "react/jsx-no-duplicate-props": [1, { "ignoreCase": false }],
     "import/prefer-default-export": 0,
+    "@typescript-eslint/naming-convention": 0,
     "no-underscore-dangle": [
       "error",
       {
@@ -44,7 +45,9 @@
           "_serialNumber",
           "_spiPreauth",
           "_receiptToSign",
-          "_tenantCode"
+          "_tenantCode",
+          "_m",
+          "_incomingAdvice"
         ]
       }
     ]

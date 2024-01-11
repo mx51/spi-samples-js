@@ -4,8 +4,10 @@ import {
   GetOpenTablesResponse,
   OpenTablesEntry,
   Spi as SpiClient,
+  SuccessState,
   TransactionOptions,
 } from '@mx51/spi-client-js';
+import dayjs from 'dayjs';
 import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
@@ -33,6 +35,7 @@ import { localStorageKeys, posVersion } from '../../utils/constants';
 
 import { ITerminal, ITerminals } from '../interfaces';
 import { addPaymentToTable, lockTable, unlockTable } from '../../redux/reducers/PayAtTableSlice/payAtTableSlice';
+import { TxLogService } from '../txLogService';
 
 declare global {
   interface Window {
@@ -303,7 +306,6 @@ class SpiService {
           return new BillStatusResponse({ Result: BillRetrievalResult.INVALID_BILL_ID });
         }
 
-        // eslint-disable-next-line no-underscore-dangle
         const terminalRefId = billPayment.PurchaseResponse._m.Data.terminal_ref_id;
 
         // Terminal RefId need to be unique, so ignore if we already processed a payment with this refId
@@ -315,21 +317,51 @@ class SpiService {
           });
         }
 
-        const outstandingAmount = table.outStandingAmount - billPayment.PurchaseAmount;
+        const {
+          PaymentType,
+          PurchaseAmount,
+          SurchargeAmount,
+          TipAmount,
+          _incomingAdvice: {
+            PosId,
+            Data: { payment_details },
+          },
+        } = billPayment;
+        const outstandingAmount = table.outStandingAmount - PurchaseAmount;
+
         this.dispatchAction(
           addPaymentToTable({
             tableId: table.tableId,
             payment: {
-              paymentType: billPayment.PaymentType,
-              purchaseAmount: billPayment.PurchaseAmount,
-              surchargeAmount: billPayment.SurchargeAmount,
-              tipAmount: billPayment.TipAmount,
-              // eslint-disable-next-line no-underscore-dangle
+              paymentType: PaymentType,
+              purchaseAmount: PurchaseAmount,
+              surchargeAmount: SurchargeAmount,
+              tipAmount: TipAmount,
               terminalRefId,
             },
             billData,
           })
         );
+
+        TxLogService.saveAndDeleteYesterdayTx({
+          amountCents: PurchaseAmount,
+          purchaseAmount: PurchaseAmount,
+          tipAmount: TipAmount,
+          surchargeAmount: SurchargeAmount,
+          bankCashAmount: 0,
+          successState: SuccessState.Success,
+          completedTime: dayjs().unix() * 1000,
+          hostResponseText: 'APPROVED',
+          posId: PosId,
+          posRefId: payment_details.terminal_ref_id,
+          receipt: payment_details.merchant_receipt ?? '',
+          tid: payment_details.terminal_id,
+          mid: payment_details.merchant_id ?? '',
+          total: PurchaseAmount + TipAmount + SurchargeAmount,
+          type: 'Purchase',
+          transactionType: 'PURCHASE',
+          source: 'Pay At Table',
+        });
 
         return new BillStatusResponse({
           Result: BillRetrievalResult.SUCCESS,

@@ -100,6 +100,7 @@ const payAtTableSlice = createSlice({
         .map((table, i) => ({
           ...table,
           tableId: i + 1,
+          label: `Table #${i + 1}`,
         }));
     },
     updateOperatorId(state, action: PayloadAction<{ tableId: number; operatorId: string }>) {
