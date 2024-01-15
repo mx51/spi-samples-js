@@ -4,7 +4,7 @@ import useStyles from '../index.styles';
 import { Props, ReceiptConfig, ReceiptConfigKey } from '../interfaces';
 import { useLocalStorage } from '../../../hooks/useLocalStorage';
 import spiService from '../../../services/spiService';
-import { RECEIPT_CONFIG } from '../../../utils/constants';
+import { localStorageKeys } from '../../../utils/constants';
 
 export const SettingsPanel: React.FC<Props> = ({ title, subtitle }) => {
   const classes = useStyles();
@@ -18,8 +18,10 @@ export const SettingsPanel: React.FC<Props> = ({ title, subtitle }) => {
     receiptFooter: '',
   };
 
-  const [receiptConfigData, setReceiptConfigData] = useLocalStorage(RECEIPT_CONFIG, initialReceiptConfig, (state) =>
-    spiService.updateReceiptConfig(state)
+  const [receiptConfigData, setReceiptConfigData] = useLocalStorage(
+    localStorageKeys.receiptConfig,
+    initialReceiptConfig,
+    (state) => spiService.updateReceiptConfig(state)
   );
 
   const receiptConfigMap: Record<string, ReceiptConfigKey> = {

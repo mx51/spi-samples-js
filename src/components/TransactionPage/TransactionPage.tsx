@@ -58,11 +58,23 @@ export const TransactionPage: React.FC = () => {
                   <TableCell>POS ID</TableCell>
                   <TableCell>TID</TableCell>
                   <TableCell>Amount</TableCell>
+                  <TableCell>Source</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {txLogItems.map(
-                  ({ posRefId, successState, completedTime, posId, type, tid, override, transactionType, total }) => (
+                  ({
+                    posRefId,
+                    successState,
+                    completedTime,
+                    posId,
+                    type,
+                    tid,
+                    override,
+                    transactionType,
+                    total,
+                    source,
+                  }) => (
                     <TableRow
                       hover
                       key={posRefId}
@@ -79,6 +91,7 @@ export const TransactionPage: React.FC = () => {
                       <TableCell>{posId}</TableCell>
                       <TableCell>{tid}</TableCell>
                       <TableCell>{currencyFormat(total / 100)}</TableCell>
+                      <TableCell>{source}</TableCell>
                     </TableRow>
                   )
                 )}

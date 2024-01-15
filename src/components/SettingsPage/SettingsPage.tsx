@@ -4,13 +4,31 @@ import { Box, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 import Layout from '../Layout';
 import useStyles from './index.styles';
 import { SettingsPanel } from './SettingsPanel/SettingsPanel';
+import { PayAtTablePanel } from './PayAtTablePanel';
+
+const panel = {
+  terminalSetting: 0,
+  payAtTable: 1,
+};
 
 const SettingsPage: React.FC = () => {
   const classes = useStyles();
-  const [tabIndex, setTabIndex] = useState(0);
+  const [tabIndex, setTabIndex] = useState(panel.payAtTable);
 
   const handleTabChange = (event: React.ReactNode, newValue: number) => {
     setTabIndex(newValue);
+  };
+
+  const panelByIndex = {
+    [panel.terminalSetting]: (
+      <SettingsPanel
+        index={tabIndex}
+        subtitle="Configure the terminal settings and customise the EFTPOS receipts."
+        title="Terminal Settings"
+        value={tabIndex}
+      />
+    ),
+    [panel.payAtTable]: <PayAtTablePanel />,
   };
 
   return (
@@ -33,19 +51,10 @@ const SettingsPage: React.FC = () => {
                 onChange={handleTabChange}
                 value={tabIndex}
               >
-                <Tab id="terminalSettingsTab" label="Terminal Settings" />
-                {/* <Tab id="posSettingsTab" label="POS Settings" /> */}
+                <Tab label="Terminal Settings" />
+                <Tab label="Pay At Table Settings" />
               </Tabs>
-              <SettingsPanel
-                index={tabIndex}
-                subtitle={
-                  tabIndex === 0
-                    ? 'Configure the terminal settings and customise the EFTPOS receipts.'
-                    : 'Configure the POS settings.'
-                }
-                title={tabIndex === 0 ? 'Terminal Settings' : 'POS Settings'}
-                value={tabIndex}
-              />
+              {panelByIndex[tabIndex]}
             </Grid>
           </Grid>
         </Grid>

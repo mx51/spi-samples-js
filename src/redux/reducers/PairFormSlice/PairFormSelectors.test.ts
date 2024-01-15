@@ -9,6 +9,7 @@ import {
   customMockPairFormParamsState,
   defaultMockCommonState,
   mockTerminalInstanceId,
+  defaultMockPayAtTableState,
 } from '../../../utils/tests/common';
 
 describe('Test PairFormSelectors', () => {
@@ -59,6 +60,7 @@ describe('Test PairFormSelectors', () => {
           rehydrated: true,
         },
       },
+      payAtTable: defaultMockPayAtTableState,
     };
 
     // Assert
@@ -100,6 +102,7 @@ describe('Test PairFormSelectors', () => {
           rehydrated: true,
         },
       },
+      payAtTable: defaultMockPayAtTableState,
     };
 
     // Assert

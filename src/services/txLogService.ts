@@ -24,6 +24,7 @@ export interface TxLogItem {
   hostResponseText: string;
   transactionType: string;
   total: number;
+  source: 'Integrated' | 'Pay At Table';
 }
 
 export class TxLogService {

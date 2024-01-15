@@ -2,4 +2,7 @@ import { version } from '../../package.json';
 
 export const posVersion = version;
 
-export const RECEIPT_CONFIG = 'Receipt Config';
+export const localStorageKeys = {
+  receiptConfig: 'Receipt Config',
+  patConfig: 'PAT Config',
+};

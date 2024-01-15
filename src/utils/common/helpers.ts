@@ -1,5 +1,3 @@
-import currencyFormat from './intl/currencyFormatter';
-
 // eslint-disable-next-line import/prefer-default-export
 export function serialNumberFormatter(currentSerialNumber: string): string {
   let formatSerialNumber = currentSerialNumber.slice(0, 11).replaceAll('-', '');

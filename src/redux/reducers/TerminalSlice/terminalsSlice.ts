@@ -205,10 +205,10 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
           override ? request.data : response.data;
         const { preAuthId, hostResponseText, transactionType } = response.data;
         const { posId, merchantId: mid, terminalId: tid } = terminals[id];
-        const isCashoutOnly = type === 'CashoutOnly';
-        const total = isCashoutOnly
-          ? calculateCashoutOnlyTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })
-          : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount });
+        const total =
+          type === 'CashoutOnly'
+            ? calculateCashoutOnlyTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })
+            : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount });
         TxLogService.saveAndDeleteYesterdayTx({
           successState,
           completedTime,
@@ -231,6 +231,7 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
           hostResponseText,
           transactionType,
           total,
+          source: 'Integrated',
         });
       }
     }
