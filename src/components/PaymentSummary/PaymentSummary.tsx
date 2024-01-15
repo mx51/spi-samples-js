@@ -27,10 +27,6 @@ import { selectPreAuthById } from '../../redux/reducers/PreAuth/preAuthSelector'
 import { IPreAuthValues } from '../../redux/reducers/PreAuth/interfaces';
 import { RootState } from '../../redux/store';
 
-type StatusMap = {
-  [key: string]: string;
-};
-
 function PaymentSummary(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -72,7 +68,7 @@ function PaymentSummary(): React.ReactElement {
     subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount + (selectedPreAuth?.preAuthAmount ?? 0);
 
   const getTransactionStatus = useMemo(() => {
-    const preAuthStatusMap: StatusMap = {
+    const preAuthStatusMap: Record<string, string> = {
       PCOMP: 'Preauth Complete',
       'PRE-AUTH EXT': 'Preauth Extend',
       'PRE-AUTH CANCEL': 'Preauth Cancel',
@@ -89,6 +85,17 @@ function PaymentSummary(): React.ReactElement {
     const status = currentTerminal?.txFlow?.success === 'Success' ? 'APPROVED' : 'DECLINED';
     return `${transactionType} ${status}`;
   }, [currentTerminal, typeTitle]);
+
+  // console.log('Exp PaymentSummary', {
+  //   selectedTerminal,
+  //   currentTerminal,
+  //   isTxFlowFinished,
+  //   isTxFlowSuccess,
+  //   typePath,
+  //   typeTitle,
+  //   preAuthId,
+  //   selectedPreAuth,
+  // });
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Box, Button, Divider, Typography } from '@material-ui/core';
 import { useSelector } from 'react-redux';
+import { SpiStatus } from '@mx51/spi-client-js';
 import useStyles from './index.styles';
 import {
   orderCashoutAmountSelector,
@@ -10,20 +11,19 @@ import {
   productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
 import { initiateMotoPurchase, initiatePurchase } from '../../utils/common/purchase/purchaseHelper';
-import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import { IProps } from './interfaces';
 
-// const PayNowOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
-export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
+export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal, selectedTerminal }) => {
   const classes = useStyles();
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const subtotalAmount = useSelector(productSubTotalSelector);
-  const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const promptForCashout = useSelector(orderPromptForCashoutSelector);
 
-  const isDisabled = subtotalAmount <= 0;
+  const selectedTerminalId = selectedTerminal?.serialNumber;
+  const selectedTerminalIsConnected = selectedTerminal && selectedTerminal.status === SpiStatus.PairedConnected;
+
   return (
     <>
       <Typography className={classes.label}>Select payment method</Typography>
@@ -33,13 +33,13 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           variant="contained"
           color="primary"
           size="large"
-          disabled={subtotalAmount <= 0 || !selectedTerminal}
+          disabled={subtotalAmount <= 0 || !selectedTerminalIsConnected}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
             setShowTransactionProgressModal(true);
             initiatePurchase(
-              selectedTerminal,
+              selectedTerminalId!,
               subtotalAmount,
               tipAmount,
               cashoutAmount,
@@ -54,12 +54,12 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           variant="contained"
           color="primary"
           size="large"
-          disabled={isDisabled || tipAmount > 0 || cashoutAmount > 0}
+          disabled={subtotalAmount <= 0 || tipAmount > 0 || cashoutAmount > 0 || !selectedTerminalIsConnected}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
             setShowTransactionProgressModal(true);
-            initiateMotoPurchase(selectedTerminal, subtotalAmount, surchargeAmount);
+            initiateMotoPurchase(selectedTerminalId!, subtotalAmount, surchargeAmount);
           }}
         >
           Moto
@@ -68,5 +68,3 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
     </>
   );
 };
-
-// export const PayNowOrderConfirmation = React.memo(PayNowOrderConfirmationComponent, () => true);
