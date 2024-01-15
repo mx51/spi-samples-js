@@ -45,7 +45,9 @@ function PaymentSummary(): React.ReactElement {
   }, []);
 
   const amountSummaryInformation = (type: string) => {
-    const responseData = currentTerminal?.txFlow?.response?.data;
+    const responseData = currentTerminal?.txFlow?.override
+      ? currentTerminal?.txFlow?.request.data
+      : currentTerminal?.txFlow?.response.data;
     if (responseData) return (responseData as Any)[type] ?? 0;
     return 0;
   };
@@ -85,17 +87,6 @@ function PaymentSummary(): React.ReactElement {
     const status = currentTerminal?.txFlow?.success === 'Success' ? 'APPROVED' : 'DECLINED';
     return `${transactionType} ${status}`;
   }, [currentTerminal, typeTitle]);
-
-  // console.log('Exp PaymentSummary', {
-  //   selectedTerminal,
-  //   currentTerminal,
-  //   isTxFlowFinished,
-  //   isTxFlowSuccess,
-  //   typePath,
-  //   typeTitle,
-  //   preAuthId,
-  //   selectedPreAuth,
-  // });
 
   return (
     <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>

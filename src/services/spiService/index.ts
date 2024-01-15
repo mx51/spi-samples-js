@@ -572,7 +572,6 @@ class SpiService {
           settings: null, // not available during pair terminal stage
           status: spiClient?._currentStatus,
           terminalStatus: spiClient?.CurrentFlow,
-          txFlow: getTxFlow(spiClient?.CurrentTxFlowState),
           txMessage: null, // not available during pair terminal stage
         };
 

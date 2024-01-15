@@ -102,7 +102,7 @@ const terminalsSlice = createSlice({
     updateTerminal(state: ITerminalState, action: PayloadAction<Any>) {
       const { id, spiClient } = action.payload;
 
-      state[id] = spiClient;
+      state[id] = { ...spiClient, txFlow: state[id].txFlow };
     },
 
     updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<IConfigurations>) {
