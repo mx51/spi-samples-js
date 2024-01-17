@@ -81,6 +81,7 @@ function getTxFlow(detail: Any): Any {
         reduceAmount: detail?.Request?.Data?.preauth_cancel_amount || 0,
         preAuthId: detail?.Response?.Data?.preauth_id,
         refundAmount: detail?.Request?.Data?.refund_amount || 0,
+        balanceAmount: detail?.Response?.Data?.balance_amount || 0,
       },
     },
   };

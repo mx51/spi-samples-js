@@ -1,15 +1,22 @@
-import React from 'react';
+import React, { HTMLAttributes } from 'react';
 import { Button, IconButton, ListItem, ListItemText, Typography } from '@material-ui/core';
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import useStyles from './index.styles';
-import { IOrderLineItemProps } from './interfaces/index';
 
-function OrderLineItem({ label, amount, onAdd, disabled, viewOnly }: IOrderLineItemProps): React.ReactElement {
+interface Props extends HTMLAttributes<HTMLLIElement> {
+  label: string;
+  amount: number;
+  onAdd?: () => void;
+  disabled: boolean;
+  viewOnly: boolean;
+}
+
+function OrderLineItem({ label, amount, onAdd, disabled, viewOnly, ...props }: Props): React.ReactElement {
   const classes = useStyles();
 
   return (
-    <ListItem>
+    <ListItem {...props}>
       <ListItemText
         primary={label}
         classes={{
