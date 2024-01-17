@@ -60,4 +60,17 @@ export const spiEvents = {
   TerminalStatusResponse: 'terminal_status',
 };
 
+export const messageEvents = {
+  accountVerifyRequest: 'account_verify',
+  preauthOpenRequest: 'preauth',
+  preauthTopupRequest: 'preauth_topup',
+  preauthExtendRequest: 'preauth_extend',
+  preauthPartialCancellationRequest: 'preauth_partial_cancellation',
+  preauthCancellationRequest: 'preauth_cancellation',
+  preauthCompleteRequest: 'completion',
+  purchase: 'purchase',
+  refund: 'refund',
+  cash: 'cash',
+};
+
 export const commonPairErrorMessage = 'Unable to pair. Please check your configuration details and try again.';

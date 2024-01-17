@@ -116,39 +116,37 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
               </TableHead>
               <TableBody>
                 {openPreAuths.map((preAuth: IPreAuthValues) => (
-                  <>
-                    <TableRow onClick={() => setSelectedPreAuthId(preAuth.preAuthRef)}>
-                      <TableCell key={preAuth.preAuthRef} scope="row">
-                        <Radio
-                          className={classes.radioBtn}
-                          checked={preAuth.preAuthRef === selectedPreAuthId}
-                          value={preAuth.preAuthRef}
-                          name="selectedPreAuth"
-                        />
-                      </TableCell>
-                      <TableCell>{preAuth.preAuthRef}</TableCell>
-                      <TableCell>
-                        <Chip
-                          size="small"
-                          label={preAuth.verified ? 'Verified' : 'Unverified'}
-                          className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          disableElevation
-                          disabled={!(selectedPreAuthId === preAuth.preAuthRef)}
-                          classes={{ root: classes.additionalChargeBtn, label: classes.additionalChargeBtnLabel }}
-                          onClick={() => setDisplayKeypad(true)}
-                        >
-                          {`$${preAuth.surcharge / 100}`}
-                        </Button>
-                      </TableCell>
-                      <TableCell>{`$${preAuth.preAuthAmount / 100}`}</TableCell>
-                    </TableRow>
-                  </>
+                  <TableRow key={preAuth.preAuthRef} onClick={() => setSelectedPreAuthId(preAuth.preAuthRef)}>
+                    <TableCell key={preAuth.preAuthRef} scope="row">
+                      <Radio
+                        className={classes.radioBtn}
+                        checked={preAuth.preAuthRef === selectedPreAuthId}
+                        value={preAuth.preAuthRef}
+                        name="selectedPreAuth"
+                      />
+                    </TableCell>
+                    <TableCell>{preAuth.preAuthRef}</TableCell>
+                    <TableCell>
+                      <Chip
+                        size="small"
+                        label={preAuth.verified ? 'Verified' : 'Unverified'}
+                        className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disableElevation
+                        disabled={!(selectedPreAuthId === preAuth.preAuthRef)}
+                        classes={{ root: classes.additionalChargeBtn, label: classes.additionalChargeBtnLabel }}
+                        onClick={() => setDisplayKeypad(true)}
+                      >
+                        {`$${preAuth.surcharge / 100}`}
+                      </Button>
+                    </TableCell>
+                    <TableCell>{`$${preAuth.preAuthAmount / 100}`}</TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
