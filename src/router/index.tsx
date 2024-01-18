@@ -16,6 +16,7 @@ import {
   PATH_PAT,
 } from '../definitions/constants/routerConfigs';
 import PayAtTablePage from '../components/PayAtTablePage';
+import OrderFinished from '../components/OrderFinished/OrderFinished';
 
 const Pair = React.lazy(() => import('../components/PairPage'));
 const PreAuth = React.lazy(() => import('../components/PreAuthPage'));
@@ -23,7 +24,6 @@ const Purchase = React.lazy(() => import('../components/PurchasePage'));
 const Refund = React.lazy(() => import('../components/RefundPage'));
 const Terminals = React.lazy(() => import('../components/TerminalsPage'));
 const TerminalsDetails = React.lazy(() => import('../components/TerminalsPage/TerminalDetails'));
-const OrderFinished = React.lazy(() => import('../components/OrderFinished'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 const PayNow = React.lazy(() => import('../components/PayNow'));
 const Cashout = React.lazy(() => import('../components/CashoutPage'));

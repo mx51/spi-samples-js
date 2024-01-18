@@ -22,7 +22,6 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
   const promptForCashout = useSelector(orderPromptForCashoutSelector);
 
   const selectedTerminalId = selectedTerminal?.serialNumber;
-  const selectedTerminalIsConnected = selectedTerminal && selectedTerminal.status === SpiStatus.PairedConnected;
 
   return (
     <>
@@ -33,7 +32,7 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           variant="contained"
           color="primary"
           size="large"
-          disabled={subtotalAmount <= 0 || !selectedTerminalIsConnected}
+          disabled={subtotalAmount <= 0 || !selectedTerminal}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
@@ -54,7 +53,7 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           variant="contained"
           color="primary"
           size="large"
-          disabled={subtotalAmount <= 0 || tipAmount > 0 || cashoutAmount > 0 || !selectedTerminalIsConnected}
+          disabled={subtotalAmount <= 0 || tipAmount > 0 || cashoutAmount > 0 || !selectedTerminal}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
