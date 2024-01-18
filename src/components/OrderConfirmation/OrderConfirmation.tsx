@@ -17,6 +17,7 @@ import {
 } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
+import { SpiStatus } from '@mx51/spi-client-js';
 import {
   PATH_CASH_OUT,
   PATH_REFUND,
@@ -115,28 +116,31 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
     return title in titleStrategy ? (titleStrategy as unknown as Record<string, keyof ITitleStrategy>)[title] : title;
   }
 
+  const connectedSelectedTerminal =
+    selectedTerminal?.status === SpiStatus.PairedConnected ? selectedTerminal : undefined;
+
   const componentByPathName: Record<ComponentByPathNameKeys, JSX.Element> = {
     '/pre-auth': (
       <PreAuthOrderConfirmation
-        selectedTerminal={selectedTerminal}
+        selectedTerminal={connectedSelectedTerminal}
         setShowTransactionProgressModal={setShowTransactionProgressModal}
       />
     ),
     '/refund': (
       <RefundOrderConfirmation
-        selectedTerminal={selectedTerminal}
+        selectedTerminal={connectedSelectedTerminal}
         setShowTransactionProgressModal={setShowTransactionProgressModal}
       />
     ),
     '/paynow': (
       <PayNowOrderConfirmation
-        selectedTerminal={selectedTerminal}
+        selectedTerminal={connectedSelectedTerminal}
         setShowTransactionProgressModal={setShowTransactionProgressModal}
       />
     ),
     '/cashout': (
       <CashoutOrderConfirmation
-        selectedTerminal={selectedTerminal}
+        selectedTerminal={connectedSelectedTerminal}
         setShowTransactionProgressModal={setShowTransactionProgressModal}
       />
     ),
