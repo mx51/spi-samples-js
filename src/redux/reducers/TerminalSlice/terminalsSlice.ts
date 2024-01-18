@@ -1,7 +1,6 @@
 import { SpiStatus, SuccessState } from '@mx51/spi-client-js';
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
-import { getLocalStorage } from '../../../utils/common/spi/common';
 import {
   IAddTerminalAction,
   IBatteryLevel,
@@ -23,11 +22,9 @@ import {
 import { TxLogService } from '../../../services/txLogService';
 import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../../utils/common/helpers';
 
-const initialState: ITerminalState = getLocalStorage('terminals') ? JSON.parse(getLocalStorage('terminals')) : {};
-
 const terminalsSlice = createSlice({
   name: 'terminals',
-  initialState,
+  initialState: {},
   reducers: {
     addTerminal(state: ITerminalState, action: PayloadAction<IAddTerminalAction>) {
       const { id, terminalConfigs } = action.payload;
@@ -102,7 +99,7 @@ const terminalsSlice = createSlice({
     updateTerminal(state: ITerminalState, action: PayloadAction<Any>) {
       const { id, spiClient } = action.payload;
 
-      state[id] = spiClient;
+      state[id] = { ...spiClient, txFlow: state[id].txFlow };
     },
 
     updateTerminalConfigurations(state: ITerminalState, action: PayloadAction<IConfigurations>) {

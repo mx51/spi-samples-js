@@ -20,9 +20,6 @@ import {
   selectPreAuthById,
   selectPreAuthKeyPadAmount,
 } from '../../redux/reducers/PreAuth/preAuthSelector';
-import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
-import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
-import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import {
   InitiateAccountVerifyTx,
   InitiatePreAuthCancelTx,
@@ -39,37 +36,36 @@ import { RootState } from '../../redux/store';
 import KeyPad from '../KeyPad';
 import { usePreAuthActions } from '../../hooks/usePreAuthActions';
 
-const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
+const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal, selectedTerminal }) => {
   const classes = useStyles();
   const openPreAuths = useSelector(selectAllPreAuths);
-  const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
   const [selectedPreAuthId, setSelectedPreAuthId] = useState('');
   const selectedPreAuth = useSelector((state: RootState): IPreAuthValues | undefined =>
     selectPreAuthById(state, selectedPreAuthId)
   );
   const keypadAmount = useSelector(selectPreAuthKeyPadAmount);
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const { handleSurchargeUpdate } = usePreAuthActions(currentTerminal);
+  const { handleSurchargeUpdate } = usePreAuthActions(selectedTerminal);
 
+  const terminalId = selectedTerminal?.serialNumber;
   const handlePreAuthTxs = (type: string) => {
-    if (selectedPreAuth) {
+    if (selectedPreAuth && terminalId) {
       const { preAuthRef, surcharge } = selectedPreAuth;
       switch (type) {
         case 'Top Up':
-          InitiatePreAuthTopupTx(selectedTerminal, keypadAmount, preAuthRef);
+          InitiatePreAuthTopupTx(terminalId, keypadAmount, preAuthRef);
           break;
         case 'Reduce':
-          InitiatePreAuthReduceTx(selectedTerminal, keypadAmount, preAuthRef);
+          InitiatePreAuthReduceTx(terminalId, keypadAmount, preAuthRef);
           break;
         case 'Extend':
-          InitiatePreAuthExtendTx(selectedTerminal, preAuthRef);
+          InitiatePreAuthExtendTx(terminalId, preAuthRef);
           break;
         case 'Cancel':
-          InitiatePreAuthCancelTx(selectedTerminal, preAuthRef);
+          InitiatePreAuthCancelTx(terminalId, preAuthRef);
           break;
         case 'Complete':
-          InitiatePreAuthCompleteTx(selectedTerminal, keypadAmount, preAuthRef, surcharge);
+          InitiatePreAuthCompleteTx(terminalId, keypadAmount, preAuthRef, surcharge);
           break;
         default:
           break;
@@ -78,8 +74,8 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
   };
 
   const isDisabled = useMemo(
-    () => !selectedTerminal || currentTerminal?.status !== SPI_PAIR_STATUS.PairedConnected,
-    [selectedTerminal, currentTerminal]
+    () => !selectedTerminal || selectedTerminal.status !== SPI_PAIR_STATUS.PairedConnected,
+    [selectedTerminal]
   );
 
   return (
@@ -120,39 +116,37 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
               </TableHead>
               <TableBody>
                 {openPreAuths.map((preAuth: IPreAuthValues) => (
-                  <>
-                    <TableRow onClick={() => setSelectedPreAuthId(preAuth.preAuthRef)}>
-                      <TableCell key={preAuth.preAuthRef} scope="row">
-                        <Radio
-                          className={classes.radioBtn}
-                          checked={preAuth.preAuthRef === selectedPreAuthId}
-                          value={preAuth.preAuthRef}
-                          name="selectedPreAuth"
-                        />
-                      </TableCell>
-                      <TableCell>{preAuth.preAuthRef}</TableCell>
-                      <TableCell>
-                        <Chip
-                          size="small"
-                          label={preAuth.verified ? 'Verified' : 'Unverified'}
-                          className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
-                        />
-                      </TableCell>
-                      <TableCell>
-                        <Button
-                          variant="contained"
-                          size="small"
-                          disableElevation
-                          disabled={!(selectedPreAuthId === preAuth.preAuthRef)}
-                          classes={{ root: classes.additionalChargeBtn, label: classes.additionalChargeBtnLabel }}
-                          onClick={() => setDisplayKeypad(true)}
-                        >
-                          {`$${preAuth.surcharge / 100}`}
-                        </Button>
-                      </TableCell>
-                      <TableCell>{`$${preAuth.preAuthAmount / 100}`}</TableCell>
-                    </TableRow>
-                  </>
+                  <TableRow key={preAuth.preAuthRef} onClick={() => setSelectedPreAuthId(preAuth.preAuthRef)}>
+                    <TableCell key={preAuth.preAuthRef} scope="row">
+                      <Radio
+                        className={classes.radioBtn}
+                        checked={preAuth.preAuthRef === selectedPreAuthId}
+                        value={preAuth.preAuthRef}
+                        name="selectedPreAuth"
+                      />
+                    </TableCell>
+                    <TableCell>{preAuth.preAuthRef}</TableCell>
+                    <TableCell>
+                      <Chip
+                        size="small"
+                        label={preAuth.verified ? 'Verified' : 'Unverified'}
+                        className={preAuth.verified ? classes.chipSuccess : classes.chipFailure}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Button
+                        variant="contained"
+                        size="small"
+                        disableElevation
+                        disabled={!(selectedPreAuthId === preAuth.preAuthRef)}
+                        classes={{ root: classes.additionalChargeBtn, label: classes.additionalChargeBtnLabel }}
+                        onClick={() => setDisplayKeypad(true)}
+                      >
+                        {`$${preAuth.surcharge / 100}`}
+                      </Button>
+                    </TableCell>
+                    <TableCell>{`$${preAuth.preAuthAmount / 100}`}</TableCell>
+                  </TableRow>
                 ))}
               </TableBody>
             </Table>
@@ -170,7 +164,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
               setShowTransactionProgressModal(true);
-              InitiateAccountVerifyTx(selectedTerminal);
+              InitiateAccountVerifyTx(selectedTerminal?.serialNumber ?? '');
             }}
           >
             Verify
@@ -184,7 +178,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
               setShowTransactionProgressModal(true);
-              InitiatePreAuthOpenTx(selectedTerminal, keypadAmount);
+              InitiatePreAuthOpenTx(selectedTerminal?.serialNumber ?? '', keypadAmount);
             }}
           >
             Open

@@ -67,11 +67,11 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const dispatch = useDispatch();
   const classes = useStyles();
   const terminals = useSelector(pairedConnectedTerminalList);
-  const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminal)) ?? false;
-  const receipt = useSelector(terminalTxFlowReceipt(selectedTerminal));
-  const successStatus = currentTerminal?.txFlow?.success;
+  const selectedTerminalId = useSelector(selectedTerminalIdSelector);
+  const selectedTerminal = useSelector(terminalInstance(selectedTerminalId)) as ITerminalProps;
+  const isFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminalId)) ?? false;
+  const receipt = useSelector(terminalTxFlowReceipt(selectedTerminalId));
+  const successStatus = selectedTerminal?.txFlow?.success;
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
@@ -82,7 +82,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const totalAmount = useSelector(orderTotalSelector);
 
-  const { handleKeypadUpdate } = usePreAuthActions(currentTerminal);
+  const { handleKeypadUpdate } = usePreAuthActions(selectedTerminal);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
@@ -93,13 +93,13 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   }
 
   function updateUnknownTerminalState(success: string) {
-    setTerminalToIdle(selectedTerminal);
+    setTerminalToIdle(selectedTerminalId);
     setShowUnknownTransactionModal(false);
-    if (currentTerminal?.txFlow != null) {
+    if (selectedTerminal?.txFlow != null) {
       dispatch(
         updateTxFlowWithSideEffect({
-          id: selectedTerminal,
-          txFlow: { ...currentTerminal?.txFlow, finished: true, success, override: true },
+          id: selectedTerminalId,
+          txFlow: { ...selectedTerminal?.txFlow, finished: true, success, override: true },
         })
       );
     }
@@ -116,10 +116,30 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   }
 
   const componentByPathName: Record<ComponentByPathNameKeys, JSX.Element> = {
-    '/pre-auth': <PreAuthOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
-    '/refund': <RefundOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
-    '/paynow': <PayNowOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
-    '/cashout': <CashoutOrderConfirmation setShowTransactionProgressModal={setShowTransactionProgressModal} />,
+    '/pre-auth': (
+      <PreAuthOrderConfirmation
+        selectedTerminal={selectedTerminal}
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+      />
+    ),
+    '/refund': (
+      <RefundOrderConfirmation
+        selectedTerminal={selectedTerminal}
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+      />
+    ),
+    '/paynow': (
+      <PayNowOrderConfirmation
+        selectedTerminal={selectedTerminal}
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+      />
+    ),
+    '/cashout': (
+      <CashoutOrderConfirmation
+        selectedTerminal={selectedTerminal}
+        setShowTransactionProgressModal={setShowTransactionProgressModal}
+      />
+    ),
   };
 
   const renderOrderConfirmationByAction = () => componentByPathName[pathname as ComponentByPathNameKeys];
@@ -209,7 +229,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
                       <ListItemIcon>
                         <Radio
                           className={classes.radioBtn}
-                          checked={terminal.id === selectedTerminal}
+                          checked={terminal.id === selectedTerminalId}
                           value={terminal.id}
                           name="terminal"
                         />
@@ -240,13 +260,13 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
             )}
             {showTransactionProgressModal && (!isUnknownState || toShowUnknownTransaction) && (
               <TransactionProgressModal
-                terminalId={selectedTerminal}
-                transactionType={currentTerminal?.txFlow?.type ?? ''}
+                terminalId={selectedTerminalId}
+                transactionType={selectedTerminal?.txFlow?.type ?? ''}
                 transactionDesc={receipt?.hostResponseText ?? ''}
                 isFinished={isFinished}
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {
-                  cancelTransaction(selectedTerminal);
+                  cancelTransaction(selectedTerminalId);
                 }}
                 onRetryTransaction={() => {
                   setShowTransactionProgressModal(false);

@@ -4,11 +4,12 @@ import {
   GetOpenTablesResponse,
   OpenTablesEntry,
   Spi as SpiClient,
+  SpiStatus,
   SuccessState,
   TransactionOptions,
 } from '@mx51/spi-client-js';
 import dayjs from 'dayjs';
-import { commonPairErrorMessage, spiEvents, SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
+import { commonPairErrorMessage, spiEvents } from '../../definitions/constants/commonConfigs';
 import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
   FIELD_PRESSED_COLOR,
@@ -252,7 +253,7 @@ class SpiService {
       this.updateTerminalStorage(instanceId, 'posId', posId);
       this.updateTerminalStorage(instanceId, 'serialNumber', serialNumber);
       this.updateTerminalStorage(instanceId, 'testMode', testMode);
-      this.updateTerminalStorage(instanceId, 'status', SPI_PAIR_STATUS.PairedConnecting);
+      this.updateTerminalStorage(instanceId, 'status', SpiStatus.PairedConnecting);
       this.updateTerminalStorage(instanceId, 'reconnecting', true);
 
       if (!autoAddress) this.updateTerminalStorage(instanceId, 'deviceAddress', deviceAddress);
@@ -535,9 +536,9 @@ class SpiService {
 
       // SPI Status Change Listener
       instance.addEventListener(spiEvents.spiStatusChanged, ({ detail: status }: Any) => {
-        if (status === SPI_PAIR_STATUS.PairedConnected) instance.spiClient.AckFlowEndedAndBackToIdle();
+        if (status === SpiStatus.PairedConnected) instance.spiClient.AckFlowEndedAndBackToIdle();
 
-        if (status === SPI_PAIR_STATUS.Unpaired) this.removeTerminalInstance(instanceId);
+        if (status === SpiStatus.Unpaired) this.removeTerminalInstance(instanceId);
 
         this.dispatchAction(
           updatePairingStatus({
@@ -571,16 +572,15 @@ class SpiService {
           settings: null, // not available during pair terminal stage
           status: spiClient?._currentStatus,
           terminalStatus: spiClient?.CurrentFlow,
-          txFlow: getTxFlow(spiClient?.CurrentTxFlowState),
           txMessage: null, // not available during pair terminal stage
         };
 
         // after terminal paired and when page refreshed, update terminal status
-        if (instance.spiClient._currentStatus === SPI_PAIR_STATUS.PairedConnected) {
-          this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.PairedConnected }));
+        if (instance.spiClient._currentStatus === SpiStatus.PairedConnected) {
+          this.dispatchAction(updatePairingStatus({ id: instanceId, status: SpiStatus.PairedConnected }));
           instance.spiClient.GetTerminalStatus(); // for trigger to call TerminalStatusResponse()
         } else {
-          this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
+          this.dispatchAction(updatePairingStatus({ id: instanceId, status: SpiStatus.Unpaired }));
         }
 
         // ensure current terminal redux store instance object is update to date
@@ -718,7 +718,7 @@ class SpiService {
   // * spi library helpers *
 
   handleTerminalPairFailure(instanceId: string, message: string = commonPairErrorMessage) {
-    this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
+    this.dispatchAction(updatePairingStatus({ id: instanceId, status: SpiStatus.Unpaired }));
     this.dispatchAction(
       readTerminalPairError({
         isShown: true,
@@ -743,7 +743,7 @@ class SpiService {
 
   ready(instanceId: string): ITerminal {
     return (
-      this.getCurrentStatus(instanceId) === SPI_PAIR_STATUS.PairedConnected &&
+      this.getCurrentStatus(instanceId) === SpiStatus.PairedConnected &&
       this.readTerminalInstance(instanceId).spiClient._mostRecentPongReceived
     );
   }

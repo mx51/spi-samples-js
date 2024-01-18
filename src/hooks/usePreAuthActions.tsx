@@ -16,7 +16,7 @@ type IPreAuthActionsType = {
   handleSurchargeUpdate: (surchageAmount: number, preAuthId: string) => void;
 };
 
-export const usePreAuthActions = (currentTerminal: ITerminalProps): IPreAuthActionsType => {
+export const usePreAuthActions = (currentTerminal?: ITerminalProps): IPreAuthActionsType => {
   const dispatch = useDispatch();
 
   const preAuthValues = {

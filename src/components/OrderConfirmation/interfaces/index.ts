@@ -1,3 +1,5 @@
+import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
+
 export interface IOrderConfirmation {
   title: string;
   pathname: string;
@@ -12,4 +14,5 @@ export interface ITitleStrategy {
 
 export interface IProps {
   setShowTransactionProgressModal: (show: boolean) => void;
+  selectedTerminal?: ITerminalProps;
 }
