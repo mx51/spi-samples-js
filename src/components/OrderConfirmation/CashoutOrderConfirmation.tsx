@@ -8,12 +8,10 @@ import {
   orderCashoutAmountSelector,
   orderSurchargeAmountSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
-import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 
-const CashoutOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal }) => {
+export const CashoutOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal, selectedTerminal }) => {
   const classes = useStyles();
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
-  const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
 
   return (
@@ -27,7 +25,7 @@ const CashoutOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
         classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
         onClick={() => {
           setShowTransactionProgressModal(true);
-          initiateCashoutOnlyTx(selectedTerminal, cashoutAmount, surchargeAmount);
+          initiateCashoutOnlyTx(selectedTerminal!.serialNumber!, cashoutAmount, surchargeAmount);
         }}
       >
         Cashout
@@ -35,5 +33,3 @@ const CashoutOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
     </Box>
   );
 };
-
-export const CashoutOrderConfirmation = React.memo(CashoutOrderConfirmationComponent, () => true);
