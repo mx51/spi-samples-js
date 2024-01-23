@@ -36,6 +36,21 @@ export class TxLogService {
     );
   }
 
+  static updateTx(txLogItem: TxLogItem): void {
+    const savedTxLog = TxLogService.load();
+    localStorage.setItem(
+      TX_LOG_KEY,
+      JSON.stringify(
+        savedTxLog.map((tx) => {
+          if (tx.posRefId === txLogItem.posRefId) {
+            return txLogItem;
+          }
+          return tx;
+        })
+      )
+    );
+  }
+
   static load(): TxLogItem[] {
     return JSON.parse(localStorage.getItem(TX_LOG_KEY) ?? '[]') as TxLogItem[];
   }

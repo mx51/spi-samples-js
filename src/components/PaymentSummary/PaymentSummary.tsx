@@ -9,7 +9,6 @@ import {
   TEXT_PRE_AUTH,
   PATH_PURCHASE,
 } from '../../definitions/constants/routerConfigs';
-import { messageEvents } from '../../definitions/constants/commonConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
@@ -17,7 +16,7 @@ import { ITxFlow } from '../../redux/reducers/TerminalSlice/interfaces';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
 import OrderSubTotal from '../OrderSubTotal';
-import { getTxTypeByPosRefId } from '../../utils/common/purchase/purchaseHelper';
+import { getTxTypeByPosRefId } from '../../utils/tx-utils';
 
 interface Props {
   typePath: string;

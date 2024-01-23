@@ -536,7 +536,16 @@ class SpiService {
 
       // SPI Status Change Listener
       instance.addEventListener(spiEvents.spiStatusChanged, ({ detail: status }: Any) => {
-        if (status === SpiStatus.PairedConnected) instance.spiClient.AckFlowEndedAndBackToIdle();
+        if (status === SpiStatus.PairedConnected) {
+          instance.spiClient.AckFlowEndedAndBackToIdle();
+
+          const { txFlow } = store.getState().terminals[instanceId];
+
+          // Override dialog option has been chosen.
+          if (txFlow?.override) {
+            instance.spiClient.InitiateGetTx(txFlow.posRefId);
+          }
+        }
 
         if (status === SpiStatus.Unpaired) this.removeTerminalInstance(instanceId);
 
@@ -677,6 +686,7 @@ class SpiService {
             txFlow: getTxFlow(detail),
           })
         );
+        console.log('spiStatusChanged', { detail });
       });
 
       instance.spiClient.TransactionUpdateMessage = ({ Data }: Any) => {
