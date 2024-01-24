@@ -540,10 +540,10 @@ class SpiService {
           instance.spiClient.AckFlowEndedAndBackToIdle();
 
           const { txFlow } = store.getState().terminals[instanceId];
-
-          // Override dialog option has been chosen.
           if (txFlow?.override) {
-            instance.spiClient.InitiateGetTx(txFlow.posRefId);
+            instance.spiClient.InitiateGetTx(txFlow?.posRefId);
+          } else if (txFlow?.finished && txFlow?.success === SuccessState.Unknown) {
+            instance.spiClient.InitiateRecovery(txFlow.posRefId, txFlow.type);
           }
         }
 
@@ -686,7 +686,6 @@ class SpiService {
             txFlow: getTxFlow(detail),
           })
         );
-        console.log('spiStatusChanged', { detail });
       });
 
       instance.spiClient.TransactionUpdateMessage = ({ Data }: Any) => {
