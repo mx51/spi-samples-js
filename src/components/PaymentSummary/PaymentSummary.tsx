@@ -9,7 +9,6 @@ import {
   TEXT_PRE_AUTH,
   PATH_PURCHASE,
 } from '../../definitions/constants/routerConfigs';
-import { messageEvents } from '../../definitions/constants/commonConfigs';
 import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
 import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
@@ -17,21 +16,7 @@ import { ITxFlow } from '../../redux/reducers/TerminalSlice/interfaces';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 import OrderLineItem from '../OrderLineItem';
 import OrderSubTotal from '../OrderSubTotal';
-
-const messageEventsToTransactionType: Record<string, string> = {
-  [messageEvents.preauthCompleteRequest]: 'Preauth Complete',
-  [messageEvents.preauthExtendRequest]: 'Preauth Extend',
-  [messageEvents.preauthCancellationRequest]: 'Preauth Cancel',
-  [messageEvents.preauthTopupRequest]: 'Preauth Topup',
-  [messageEvents.accountVerifyRequest]: 'Account Verified',
-  [messageEvents.preauthPartialCancellationRequest]: 'Preauth Reduce',
-  [messageEvents.preauthOpenRequest]: 'Preauth Open',
-  [messageEvents.purchase]: 'Purchase',
-  [messageEvents.refund]: 'Refund',
-  [messageEvents.cash]: 'Cashout',
-  // In case of any other event, prevent the app from crashing
-  '': '',
-};
+import { getTxTypeByPosRefId } from '../../utils/tx-utils';
 
 interface Props {
   typePath: string;
@@ -57,7 +42,6 @@ export const PaymentSummary: React.FC<Props> = ({
 }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
-  // const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
 
   useEffect(() => {
     dispatch(clearAllProducts());
@@ -88,7 +72,7 @@ export const PaymentSummary: React.FC<Props> = ({
     : subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount;
 
   const transactionStatus = useMemo(() => {
-    const transactionType = messageEventsToTransactionType[txFlow?.request.eventName ?? ''].toUpperCase();
+    const transactionType = getTxTypeByPosRefId(txFlow?.posRefId ?? '').toUpperCase();
     const status = txFlow?.success === 'Success' ? 'APPROVED' : 'DECLINED';
     return `${transactionType} ${status}`;
   }, [txFlow]);

@@ -61,16 +61,17 @@ export const spiEvents = {
 };
 
 export const messageEvents = {
-  accountVerifyRequest: 'account_verify',
-  preauthOpenRequest: 'preauth',
-  preauthTopupRequest: 'preauth_topup',
-  preauthExtendRequest: 'preauth_extend',
-  preauthPartialCancellationRequest: 'preauth_partial_cancellation',
-  preauthCancellationRequest: 'preauth_cancellation',
-  preauthCompleteRequest: 'completion',
+  accountVerify: 'account_verify',
+  preauthOpen: 'preauth',
+  preauthTopup: 'preauth_topup',
+  preauthExtend: 'preauth_extend',
+  preauthPartialCancellation: 'preauth_partial_cancellation',
+  preauthCancellation: 'preauth_cancellation',
+  preauthComplete: 'completion',
   purchase: 'purchase',
   refund: 'refund',
   cash: 'cash',
+  moto: 'moto_purchase',
 };
 
 export const commonPairErrorMessage = 'Unable to pair. Please check your configuration details and try again.';

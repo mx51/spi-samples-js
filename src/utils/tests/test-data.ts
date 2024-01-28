@@ -56,7 +56,6 @@ export const generateTxFlowMockData = ({
   tipAmount = 0,
   bankCashAmount = 0,
   surchargeAmount = 0,
-  balanceAmount = 0,
   override = false,
   type = TransactionType.Purchase,
   eventName = 'purchase',
@@ -74,8 +73,8 @@ export const generateTxFlowMockData = ({
   type?: string;
   eventName?: string;
 }): ITxFlow => ({
-  posRefId: 'purchase-2024-01-15T00:49:56.541Z',
-  id: 'purchase-2024-01-15T00:49:56.541Z',
+  posRefId: `${eventName}-2024-01-15T00:49:56.541Z`,
+  id: `${eventName}-2024-01-15T00:49:56.541Z`,
   type,
   displayMessage: 'Purchase Transaction Ended.',
   amountCents: purchaseAmount,
@@ -92,7 +91,7 @@ export const generateTxFlowMockData = ({
       preAuthAmount,
       reduceAmount,
       topupAmount,
-      posRefId: 'purchase-2024-01-15T00:49:56.541Z',
+      posRefId: `${eventName}-2024-01-15T00:49:56.541Z`,
       purchaseAmount,
       tipAmount,
       bankCashAmount,

@@ -536,7 +536,16 @@ class SpiService {
 
       // SPI Status Change Listener
       instance.addEventListener(spiEvents.spiStatusChanged, ({ detail: status }: Any) => {
-        if (status === SpiStatus.PairedConnected) instance.spiClient.AckFlowEndedAndBackToIdle();
+        if (status === SpiStatus.PairedConnected) {
+          instance.spiClient.AckFlowEndedAndBackToIdle();
+
+          const { txFlow } = store.getState().terminals[instanceId];
+          if (txFlow?.override) {
+            instance.spiClient.InitiateGetTx(txFlow?.posRefId);
+          } else if (txFlow?.finished && txFlow?.success === SuccessState.Unknown) {
+            instance.spiClient.InitiateRecovery(txFlow.posRefId, txFlow.type);
+          }
+        }
 
         if (status === SpiStatus.Unpaired) this.removeTerminalInstance(instanceId);
 

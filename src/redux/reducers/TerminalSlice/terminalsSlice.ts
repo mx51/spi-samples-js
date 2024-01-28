@@ -1,6 +1,6 @@
-import { SpiStatus, SuccessState } from '@mx51/spi-client-js';
+import { SpiStatus, SuccessState, TransactionType } from '@mx51/spi-client-js';
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS, messageEvents } from '../../../definitions/constants/commonConfigs';
 import {
   IAddTerminalAction,
   IBatteryLevel,
@@ -19,8 +19,9 @@ import {
   IUpdateTxFlowAction,
   IUpdateTxMessage,
 } from './interfaces';
-import { TxLogService } from '../../../services/txLogService';
+import { TxLogItem, TxLogService } from '../../../services/txLogService';
 import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../../utils/common/helpers';
+import { getTxTypeByPosRefId } from '../../../utils/tx-utils';
 
 const terminalsSlice = createSlice({
   name: 'terminals',
@@ -191,45 +192,62 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
         posRefId,
         receipt: transactionReceipt,
         override,
-        amountCents,
       },
     } = payload;
 
-    if (finished) {
-      if (override || !isCancelledTx(payload.txFlow)) {
-        const { terminals } = getState() as Any;
-        const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
-          override ? request.data : response.data;
-        const { preAuthId, hostResponseText, transactionType } = response.data;
-        const { posId, merchantId: mid, terminalId: tid } = terminals[id];
-        const total =
-          type === 'CashoutOnly'
-            ? calculateCashoutOnlyTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount })
-            : calculateTotalAmount({ amountCents, surchargeAmount, bankCashAmount, tipAmount });
-        TxLogService.saveAndDeleteYesterdayTx({
-          successState,
-          completedTime,
-          type,
-          posRefId,
-          posId,
-          tid,
-          mid,
-          receipt: transactionReceipt,
-          override,
-          amountCents,
-          purchaseAmount,
-          surchargeAmount,
-          bankCashAmount,
-          tipAmount,
-          preAuthAmount,
-          topupAmount,
-          reduceAmount,
-          preAuthId,
-          hostResponseText,
-          transactionType,
-          total,
-          source: 'Integrated',
-        });
+    if (finished && (override || !isCancelledTx(payload.txFlow))) {
+      const { terminals } = getState() as Any;
+      const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
+        override ? request.data : response.data;
+      const { preAuthId, hostResponseText, transactionType } = response.data;
+
+      const amountCents = payload.txFlow.amountCents || purchaseAmount;
+
+      const { posId, merchantId, terminalId } = terminals[id];
+      const txType = getTxTypeByPosRefId(posRefId);
+      const total =
+        txType === 'Cashout'
+          ? calculateCashoutOnlyTotalAmount({
+              amountCents,
+              surchargeAmount,
+              bankCashAmount,
+              tipAmount,
+            })
+          : calculateTotalAmount({
+              amountCents,
+              surchargeAmount,
+              bankCashAmount,
+              tipAmount,
+            });
+
+      const txLogItem: TxLogItem = {
+        successState,
+        completedTime,
+        type: txType,
+        posRefId,
+        posId,
+        tid: terminalId!,
+        mid: merchantId!,
+        receipt: transactionReceipt,
+        override,
+        amountCents,
+        purchaseAmount,
+        surchargeAmount,
+        bankCashAmount,
+        tipAmount,
+        preAuthAmount,
+        topupAmount,
+        reduceAmount,
+        preAuthId,
+        hostResponseText,
+        transactionType,
+        total,
+        source: 'Integrated',
+      };
+      if ([TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(type)) {
+        TxLogService.updateTx(txLogItem);
+      } else {
+        TxLogService.saveAndDeleteYesterdayTx(txLogItem);
       }
     }
   }
