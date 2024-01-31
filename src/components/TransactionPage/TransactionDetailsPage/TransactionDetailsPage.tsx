@@ -19,7 +19,7 @@ export const TransactionDetailsPage: React.FC = () => {
   const history = useHistory();
   const currentTransactionId = pathname?.split(`${PATH_TRANSACTIONS}/`)[1];
   const [currentTransaction, setcurrentTransaction] = useState<TxLogItem>();
-  const { getTransactionType, getIconByStatus, getStatus } = useGetTxDetails();
+  const { getIconByStatus, getStatus } = useGetTxDetails();
 
   const goToTransactions = (path: string) => {
     history.push(path);
@@ -58,7 +58,7 @@ export const TransactionDetailsPage: React.FC = () => {
                     {getStatus(currentTransaction.override ? SuccessState.Unknown : currentTransaction.successState)}
                   </Typography>
                   <Typography variant="h6" component="h1">
-                    {getTransactionType(currentTransaction.type, currentTransaction.transactionType).toUpperCase()}
+                    {currentTransaction.type.toUpperCase()}
                   </Typography>
                   <Typography className={classes.heading}>
                     {dayjs(currentTransaction.completedTime).format('hh:mm A')}

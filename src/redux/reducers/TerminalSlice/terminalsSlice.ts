@@ -192,10 +192,13 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
         posRefId,
         receipt: transactionReceipt,
         override,
+        isGetTx,
       },
     } = payload;
 
-    if (finished && (override || !isCancelledTx(payload.txFlow))) {
+    if (finished && isGetTx && isCancelledTx(payload.txFlow)) {
+      TxLogService.removeTx(posRefId);
+    } else if (finished && (override || !isCancelledTx(payload.txFlow))) {
       const { terminals } = getState() as Any;
       const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
         override ? request.data : response.data;
@@ -204,9 +207,8 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
       const amountCents = payload.txFlow.amountCents || purchaseAmount;
 
       const { posId, merchantId, terminalId } = terminals[id];
-      const txType = getTxTypeByPosRefId(posRefId);
       const total =
-        txType === 'Cashout'
+        type === TransactionType.CashoutOnly
           ? calculateCashoutOnlyTotalAmount({
               amountCents,
               surchargeAmount,
@@ -223,7 +225,7 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
       const txLogItem: TxLogItem = {
         successState,
         completedTime,
-        type: txType,
+        type: getTxTypeByPosRefId(posRefId),
         posRefId,
         posId,
         tid: terminalId!,
@@ -244,7 +246,7 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
         total,
         source: 'Integrated',
       };
-      if ([TransactionType.GetTransaction, TransactionType.GetLastTransaction].includes(type)) {
+      if (isGetTx) {
         TxLogService.updateTx(txLogItem);
       } else {
         TxLogService.saveAndDeleteYesterdayTx(txLogItem);

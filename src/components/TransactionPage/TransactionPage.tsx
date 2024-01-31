@@ -24,7 +24,7 @@ export const TransactionPage: React.FC = () => {
   const [txLogItems, setTxLogItems] = useState<TxLogItem[]>([]);
   const classes = useTransactionPageStyle();
   const history = useHistory();
-  const { getTransactionType, getIconByStatus } = useGetTxDetails();
+  const { getIconByStatus } = useGetTxDetails();
 
   const goToTransactionDetails = (path: string) => {
     history.push(path);
@@ -63,18 +63,7 @@ export const TransactionPage: React.FC = () => {
               </TableHead>
               <TableBody>
                 {txLogItems.map(
-                  ({
-                    posRefId,
-                    successState,
-                    completedTime,
-                    posId,
-                    type,
-                    tid,
-                    override,
-                    transactionType,
-                    total,
-                    source,
-                  }) => (
+                  ({ posRefId, successState, completedTime, posId, type, tid, override, total, source }) => (
                     <TableRow
                       hover
                       key={posRefId}
@@ -87,7 +76,7 @@ export const TransactionPage: React.FC = () => {
                         </div>
                       </TableCell>
                       <TableCell>{dayjs(completedTime).format('hh:mm A')}</TableCell>
-                      <TableCell>{getTransactionType(type, transactionType)}</TableCell>
+                      <TableCell>{type}</TableCell>
                       <TableCell>{posId}</TableCell>
                       <TableCell>{tid}</TableCell>
                       <TableCell>{currencyFormat(total / 100)}</TableCell>

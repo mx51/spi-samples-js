@@ -54,6 +54,7 @@ export interface ITxFlow {
     requestId: string | undefined;
     receiptToSign: string | undefined;
   } | null;
+  isGetTx?: boolean;
   completedTime: number;
   cancelAttemptTime?: number;
   receipt: string;
@@ -100,6 +101,7 @@ export interface ITxFlow {
       preAuthId: string;
       success: boolean;
       hostResponseCode: string;
+      refundAmount: number;
     };
   };
 }

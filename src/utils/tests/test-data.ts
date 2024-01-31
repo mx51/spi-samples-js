@@ -56,6 +56,7 @@ export const generateTxFlowMockData = ({
   tipAmount = 0,
   bankCashAmount = 0,
   surchargeAmount = 0,
+  refundAmount = 0,
   override = false,
   type = TransactionType.Purchase,
   eventName = 'purchase',
@@ -67,6 +68,7 @@ export const generateTxFlowMockData = ({
   tipAmount?: number;
   bankCashAmount?: number;
   surchargeAmount?: number;
+  refundAmount?: number;
   balanceAmount?: number;
   success: 'Unknown' | 'Success' | 'Failed';
   override?: boolean;
@@ -124,6 +126,7 @@ export const generateTxFlowMockData = ({
       preAuthAmount: override ? 0 : preAuthAmount,
       topupAmount: override ? 0 : topupAmount,
       reduceAmount: override ? 0 : reduceAmount,
+      refundAmount: override ? 0 : refundAmount,
       preAuthId: '',
       success: true,
     },

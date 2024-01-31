@@ -5,38 +5,12 @@ import { ReactComponent as WarningIcon } from '../../images/WarningIcon.svg';
 import { useTransactionPageStyle } from './TransactionPage.style';
 
 type GetTxDetails = {
-  getTransactionType: (txType: string, preAuthTxType: string) => string;
   getIconByStatus: (status: string) => React.ReactElement;
   getStatus: (status: string) => string;
 };
 
 export const useGetTxDetails = (): GetTxDetails => {
   const classes = useTransactionPageStyle();
-
-  const getTransactionType = (txType: string, preAuthTxType: string) => {
-    const preAuthTypeMap = {
-      PCOMP: 'Preauth Complete',
-      'PRE-AUTH EXT': 'Preauth Extend',
-      'PRE-AUTH CANCEL': 'Preauth Cancel',
-      TOPUP: 'Preauth Topup',
-      'A/C VERIFIED': 'Account Verified',
-      CANCEL: 'Preauth Reduce',
-      'PRE-AUTH': 'Preauth Open',
-    } as { [key: string]: string };
-
-    const txTypeMap = {
-      Purchase: 'Purchase',
-      Refund: 'Refund',
-      CashoutOnly: 'Cashout',
-      MOTO: 'MOTO',
-      Preauth: 'Preauth',
-      AccountVerify: 'Account Verify',
-    } as { [key: string]: string };
-
-    const preAuthtype = preAuthTxType ? preAuthTypeMap[preAuthTxType] : 'PREAUTH';
-    const transactionType = txType === 'Preauth' ? preAuthtype : txTypeMap[txType];
-    return transactionType;
-  };
 
   const getIconByStatus = (status: string) => {
     const iconByStatusMap = {
@@ -58,5 +32,5 @@ export const useGetTxDetails = (): GetTxDetails => {
     return successStateMap[status];
   };
 
-  return { getTransactionType, getIconByStatus, getStatus };
+  return { getIconByStatus, getStatus };
 };

@@ -634,51 +634,50 @@ class SpiService {
       // SPI Tx Flow State Change Listener
       instance.addEventListener(spiEvents.spiTxFlowStateChanged, (event: Any) => {
         const { detail } = event;
-
-        const receipt = {
-          accumulatedSettleByAcquirerCount: detail?.Response?.Data?.accumulated_settle_by_acquirer_count,
-          accumulatedSettleByAcquirerValue: detail?.Response?.Data?.accumulated_settle_by_acquirer_value,
-          accumulatedTotalCount: detail?.Response?.Data?.accumulated_total_count,
-          accumulatedTotalValue: detail?.Response?.Data?.accumulated_total_value,
-          bankDate: detail?.Response?.Data?.bank_date,
-          bankTime: detail?.Response?.Data?.bank_time,
-          errorDetail: detail?.Response?.Data?.error_detail,
-          errorReason: detail?.Response?.Data?.error_reason,
-          hostResponseCode: detail?.Response?.Data?.host_response_code,
-          hostResponseText: detail?.Response?.Data?.host_response_text,
-          merchantAcquirer: detail?.Response?.Data?.merchant_acquirer,
-          merchantAddress: detail?.Response?.Data?.merchant_address,
-          merchantCity: detail?.Response?.Data?.merchant_city,
-          merchantCountry: detail?.Response?.Data?.merchant_country,
-          merchantName: detail?.Response?.Data?.merchant_name,
-          merchantPostcode: detail?.Response?.Data?.merchant_postcode,
-          merchantReceipt: detail?.Response?.Data?.merchant_receipt,
-          merchantReceiptPrinted: detail?.Response?.Data?.merchant_receipt_printed,
-          schemes: detail?.Response?.Data?.schemes,
-          settlementPeriodEndDate: detail?.Response?.Data?.settlement_period_end_date,
-          settlementPeriodEndTime: detail?.Response?.Data?.settlement_period_end_time,
-          settlementPeriodStartDate: detail?.Response?.Data?.settlement_period_start_date,
-          settlementPeriodStartTime: detail?.Response?.Data?.settlement_period_start_time,
-          settlementTriggeredDate: detail?.Response?.Data?.settlement_triggered_date,
-          settlementTriggeredTime: detail?.Response?.Data?.settlement_triggered_time,
-          stan: detail?.Response?.Data?.stan,
-          success: detail?.Response?.Data?.success,
-          terminalId: detail?.Response?.Data?.terminal_id,
-          transactionRange: detail?.Response?.Data?.transaction_range,
-        };
-
         if (detail?.Finished) {
           instance.spiClient.AckFlowEndedAndBackToIdle();
         }
 
         // when Response Data available, update transaction flow response data
-        if (detail?.Response?.Data)
+        if (detail?.Response?.Data) {
+          const receipt = {
+            accumulatedSettleByAcquirerCount: detail?.Response?.Data?.accumulated_settle_by_acquirer_count,
+            accumulatedSettleByAcquirerValue: detail?.Response?.Data?.accumulated_settle_by_acquirer_value,
+            accumulatedTotalCount: detail?.Response?.Data?.accumulated_total_count,
+            accumulatedTotalValue: detail?.Response?.Data?.accumulated_total_value,
+            bankDate: detail?.Response?.Data?.bank_date,
+            bankTime: detail?.Response?.Data?.bank_time,
+            errorDetail: detail?.Response?.Data?.error_detail,
+            errorReason: detail?.Response?.Data?.error_reason,
+            hostResponseCode: detail?.Response?.Data?.host_response_code,
+            hostResponseText: detail?.Response?.Data?.host_response_text,
+            merchantAcquirer: detail?.Response?.Data?.merchant_acquirer,
+            merchantAddress: detail?.Response?.Data?.merchant_address,
+            merchantCity: detail?.Response?.Data?.merchant_city,
+            merchantCountry: detail?.Response?.Data?.merchant_country,
+            merchantName: detail?.Response?.Data?.merchant_name,
+            merchantPostcode: detail?.Response?.Data?.merchant_postcode,
+            merchantReceipt: detail?.Response?.Data?.merchant_receipt,
+            merchantReceiptPrinted: detail?.Response?.Data?.merchant_receipt_printed,
+            schemes: detail?.Response?.Data?.schemes,
+            settlementPeriodEndDate: detail?.Response?.Data?.settlement_period_end_date,
+            settlementPeriodEndTime: detail?.Response?.Data?.settlement_period_end_time,
+            settlementPeriodStartDate: detail?.Response?.Data?.settlement_period_start_date,
+            settlementPeriodStartTime: detail?.Response?.Data?.settlement_period_start_time,
+            settlementTriggeredDate: detail?.Response?.Data?.settlement_triggered_date,
+            settlementTriggeredTime: detail?.Response?.Data?.settlement_triggered_time,
+            stan: detail?.Response?.Data?.stan,
+            success: detail?.Response?.Data?.success,
+            terminalId: detail?.Response?.Data?.terminal_id,
+            transactionRange: detail?.Response?.Data?.transaction_range,
+          };
           this.dispatchAction(
             updateTxFlowSettlementResponse({
               id: instanceId,
               receipt,
             })
           );
+        }
 
         this.dispatchAction(
           updateTxFlowWithSideEffect({
