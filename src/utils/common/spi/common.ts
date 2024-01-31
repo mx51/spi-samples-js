@@ -1,4 +1,6 @@
+import { TransactionType } from '@mx51/spi-client-js';
 import { PATH_ORDER_FINISHED, PATH_PAIR } from '../../../definitions/constants/routerConfigs';
+import { getAmountCentsByTxType, getTxTypeByPosRefId } from '../../tx-utils';
 
 function getLocalStorage(name: string): Any {
   return window.localStorage.getItem(name);
@@ -21,6 +23,16 @@ function isShownTerminalDetails(pathname: string): boolean {
 
 function showDeveloperMode(pathname: string): boolean {
   return pathname === PATH_PAIR || pathname === PATH_ORDER_FINISHED || isShownTerminalDetails(pathname);
+}
+
+function mapGetTxToActualTxType(txFlowDetails: Any): Any {
+  const type = getTxTypeByPosRefId(txFlowDetails.posRefId, false);
+  return {
+    ...txFlowDetails,
+    type,
+    isGetTx: [TransactionType.GetTransaction].includes(txFlowDetails.type),
+    amountCents: getAmountCentsByTxType(type, txFlowDetails.response),
+  };
 }
 
 function getTxFlow(detail: Any): Any {
@@ -80,12 +92,13 @@ function getTxFlow(detail: Any): Any {
         topupAmount: detail?.Request?.Data?.topup_amount || 0,
         reduceAmount: detail?.Request?.Data?.preauth_cancel_amount || 0,
         preAuthId: detail?.Response?.Data?.preauth_id,
-        refundAmount: detail?.Request?.Data?.refund_amount || 0,
+        refundAmount: detail?.Response?.Data?.refund_amount || 0,
         balanceAmount: detail?.Response?.Data?.balance_amount || 0,
       },
     },
   };
-  return txFlowDetails;
+
+  return txFlowDetails.request.eventName === 'get_transaction' ? mapGetTxToActualTxType(txFlowDetails) : txFlowDetails;
 }
 
 export {

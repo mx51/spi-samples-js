@@ -55,6 +55,11 @@ export class TxLogService {
     return JSON.parse(localStorage.getItem(TX_LOG_KEY) ?? '[]') as TxLogItem[];
   }
 
+  static removeTx(posRefId: string): void {
+    const savedTxLog = TxLogService.load();
+    localStorage.setItem(TX_LOG_KEY, JSON.stringify(savedTxLog.filter((tx) => tx.posRefId !== posRefId)));
+  }
+
   static findTxByPosRefId(posRefId: string): TxLogItem | undefined {
     return TxLogService.load().find((tx) => tx.posRefId === posRefId);
   }

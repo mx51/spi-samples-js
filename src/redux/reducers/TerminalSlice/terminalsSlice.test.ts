@@ -122,6 +122,7 @@ function mockTxFlow(): ITxFlow {
         preAuthAmount: 0,
         topupAmount: 0,
         reduceAmount: 0,
+        refundAmount: 0,
         preAuthId: 'string',
         success: true,
         hostResponseCode: '',
