@@ -59,23 +59,16 @@ export default {
       icon: <IconPreAuth />,
     },
   ],
-  terminals: [
-    {
-      name: TEXT_TERMINALS,
-      path: PATH_TERMINALS,
-      icon: <IconTerminalsList />,
-    },
-    {
-      name: TEXT_PAIR,
-      path: PATH_PAIR,
-      icon: <IconPairing />,
-    },
-  ],
-  transactions: [
+  transactionsAndTerminals: [
     {
       name: TEXT_TRANSACTIONS,
       path: PATH_TRANSACTIONS,
       icon: <IconTransaction />,
+    },
+    {
+      name: TEXT_TERMINALS,
+      path: PATH_TERMINALS,
+      icon: <IconTerminalsList />,
     },
   ],
   support: [

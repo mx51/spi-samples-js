@@ -1,5 +1,5 @@
 // paths
-export const PATH_PAIR = '/pair';
+export const PATH_PAIR = '/terminals/new';
 export const PATH_TRANSACTIONS = '/transactions';
 export const PATH_ACCOUNT_VERIFY = '/account-verify';
 export const PATH_PRE_AUTH = '/pre-auth';
@@ -23,7 +23,7 @@ export const TEXT_PAT = 'Pay At Table';
 export const TEXT_PURCHASE = 'Purchase';
 export const TEXT_REFUND = 'Refund';
 export const TEXT_CASHOUT = 'Cashout';
-export const TEXT_TERMINALS = 'Terminals List';
+export const TEXT_TERMINALS = 'Terminals';
 export const TEXT_SETTINGS = 'Settings';
 export const TEXT_TRANSACTIONS = 'Transactions';
 export const TEXT_TRANSACTION_DETAILS = 'Transaction Details';

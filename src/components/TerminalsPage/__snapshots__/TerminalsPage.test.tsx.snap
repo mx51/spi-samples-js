@@ -67,7 +67,7 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
           <h1
             class="MuiTypography-root MuiTypography-h6"
           >
-            Terminals list
+            Terminals
           </h1>
         </div>
         <div
@@ -76,14 +76,14 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
           <a
             aria-disabled="false"
             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-            href="/pair"
+            href="/terminals/new"
             role="button"
             tabindex="0"
           >
             <span
               class="MuiButton-label"
             >
-              + Pair terminal
+              + Pair new terminal
             </span>
             <span
               class="MuiTouchRipple-root"
@@ -167,20 +167,6 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
               </td>
             </tr>
           </tbody>
-          <tfoot
-            class="MuiTableFooter-root"
-          >
-            <tr
-              class="MuiTableRow-root MuiTableRow-footer"
-            >
-              <td
-                class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
-                colspan="4"
-              >
-                Page 1
-              </td>
-            </tr>
-          </tfoot>
         </table>
       </div>
     </div>
