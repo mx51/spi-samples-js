@@ -15,7 +15,6 @@ export const PATH_SUPPORT = '/support';
 
 // link names
 export const TEXT_FLEET_SETTINGS = 'Fleet settings';
-export const TEXT_PAIR = 'Pairing';
 export const TEXT_PAY_AT_TABLE = 'Pay at Table';
 export const TEXT_ACCOUNT_VERIFY = 'Account Verify';
 export const TEXT_PRE_AUTH = 'Pre Auth';
