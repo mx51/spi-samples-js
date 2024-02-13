@@ -41,7 +41,9 @@ const PayAtTable: React.FC = () => {
                 title={table.label}
                 totalAmount={table.totalAmount}
                 dueAmount={table.outStandingAmount}
-                operatorIds={spiService.state.patConfig.allowedOperatorIds}
+                operatorIds={
+                  spiService.state.patConfig.operatorIdEnabled ? spiService.state.patConfig.allowedOperatorIds : []
+                }
                 selectedOperatorId={table.operatorId}
                 onOperatorIdChanged={(operatorId) => {
                   dispatch(updateOperatorId({ tableId: table.tableId, operatorId }));
