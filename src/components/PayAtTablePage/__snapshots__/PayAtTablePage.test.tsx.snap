@@ -59,10 +59,15 @@ exports[`Test <PayAtTablePage /> should match PayAtTablePage snapshot test 1`] =
       class="MuiContainer-root makeStyles-container-1 MuiContainer-maxWidthMd"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h6"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-paragraph"
       >
-        Pay At Tables
+        Pay At Table
       </h1>
+      <h2
+        class="MuiTypography-root MuiTypography-h6 MuiTypography-paragraph"
+      >
+        Tables
+      </h2>
       <div
         class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
       />

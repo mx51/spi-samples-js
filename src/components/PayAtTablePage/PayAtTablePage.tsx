@@ -23,8 +23,11 @@ const PayAtTable: React.FC = () => {
   return (
     <Layout>
       <Container className={classes.container} maxWidth="md">
-        <Typography variant="h6" component="h1">
-          Pay At Tables
+        <Typography paragraph variant="h5" component="h1">
+          Pay At Table
+        </Typography>
+        <Typography paragraph variant="h6" component="h2">
+          Tables
         </Typography>
         <Grid container spacing={2}>
           {tables.map((table) => (
