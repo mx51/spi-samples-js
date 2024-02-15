@@ -3,7 +3,12 @@ import { Box, Divider, Grid, Switch, TextField, Typography, Button } from '@mate
 import useStyles from './index.styles';
 import spiService, { PayAtTableConfig } from '../../services/spiService';
 
-const payAtTableFormConfig: Array<{ name: keyof PayAtTableConfig; type: 'switch' | 'text'; label: string }> = [
+const payAtTableFormConfig: Array<{
+  name: keyof PayAtTableConfig;
+  type: 'switch' | 'text';
+  label: string;
+  required?: boolean;
+}> = [
   {
     name: 'payAtTableEnabled',
     type: 'switch',
@@ -12,7 +17,13 @@ const payAtTableFormConfig: Array<{ name: keyof PayAtTableConfig; type: 'switch'
   {
     name: 'operatorIdEnabled',
     type: 'switch',
-    label: 'Require Operator Id',
+    label: 'Require Operator ID',
+  },
+  {
+    name: 'allowedOperatorIds',
+    type: 'text',
+    label: 'Allowed Operator IDs',
+    required: true,
   },
   {
     name: 'equalSplitEnabled',
@@ -54,11 +65,6 @@ const payAtTableFormConfig: Array<{ name: keyof PayAtTableConfig; type: 'switch'
     type: 'text',
     label: 'Table ID label',
   },
-  {
-    name: 'allowedOperatorIds',
-    type: 'text',
-    label: 'Allowed Operator IDs',
-  },
 ];
 
 export const PayAtTablePanel: React.FC = () => {
@@ -93,48 +99,59 @@ export const PayAtTablePanel: React.FC = () => {
       </Typography>
       <Typography>Configure Pay At Table</Typography>
       <Divider className={classes.divider} />
-      <div className={classes.patSettingsFormContainer}>
-        {payAtTableFormConfig.map(({ name, label, type }) => {
-          const textInput = type === 'text';
+      <form
+        onSubmit={(event) => {
+          spiService.updatePatConfig(patConfig);
+          event.preventDefault();
+        }}
+      >
+        <div className={classes.patSettingsFormContainer}>
+          {payAtTableFormConfig
+            .filter(({ name }) => patConfig.payAtTableEnabled || name === 'payAtTableEnabled')
+            .filter(({ name }) => (name === 'allowedOperatorIds' ? patConfig.operatorIdEnabled : true))
+            .map(({ name, label, type, required }) => {
+              const textInput = type === 'text';
 
-          return (
-            <Grid key={name} container alignItems="center">
-              {textInput ? null : (
-                <Grid item xs={4}>
-                  <Typography className={classes.infoText}>{label}</Typography>
+              return (
+                <Grid key={name} container alignItems="center">
+                  {textInput ? null : (
+                    <Grid item xs={4}>
+                      <Typography className={classes.infoText}>{label}</Typography>
+                    </Grid>
+                  )}
+                  <Grid item xs={textInput ? 11 : 7}>
+                    {type === 'switch' ? (
+                      <Switch
+                        name={name}
+                        checked={patConfig[name] as boolean}
+                        onChange={(_, enabled) => {
+                          handleToggleConfigChange(name, enabled);
+                        }}
+                      />
+                    ) : (
+                      <TextField
+                        name={name}
+                        className={classes.textField}
+                        label={label}
+                        required={required}
+                        multiline
+                        fullWidth
+                        placeholder={label}
+                        onChange={(e) => {
+                          handleTextConfigChange(name, e.target.value);
+                        }}
+                        value={patConfig[name] as string}
+                      />
+                    )}
+                  </Grid>
                 </Grid>
-              )}
-              <Grid item xs={textInput ? 11 : 7}>
-                {type === 'switch' ? (
-                  <Switch
-                    name={name}
-                    checked={patConfig[name] as boolean}
-                    onChange={(_, enabled) => {
-                      handleToggleConfigChange(name, enabled);
-                    }}
-                  />
-                ) : (
-                  <TextField
-                    name={name}
-                    className={classes.textField}
-                    label={label}
-                    multiline
-                    fullWidth
-                    placeholder={label}
-                    onChange={(e) => {
-                      handleTextConfigChange(name, e.target.value);
-                    }}
-                    value={patConfig[name] as string}
-                  />
-                )}
-              </Grid>
-            </Grid>
-          );
-        })}
-        <Button onClick={() => spiService.updatePatConfig(patConfig)} color="primary" variant="contained">
-          Save
-        </Button>
-      </div>
+              );
+            })}
+          <Button type="submit" color="primary" variant="contained">
+            Save
+          </Button>
+        </div>
+      </form>
     </Box>
   );
 };

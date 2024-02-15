@@ -92,33 +92,40 @@ export const Table: React.FC<Props> = ({
         <Typography variant="body1" component="p">
           {`Due: ${currencyFormat(dueAmount / 100)}`}
         </Typography>
-        <Input
-          fullWidth
-          value={amount}
-          disabled={locked}
-          onKeyUp={(e) => {
-            e.preventDefault();
+        <FormControl fullWidth>
+          <InputLabel id="add-cost-label">Update amount</InputLabel>
+          <Input
+            disabled={locked}
+            onKeyUp={(e) => {
+              e.preventDefault();
 
-            if (e.key === 'Enter' && amount) {
-              onNewCostAdded(amount * 100);
-              setAmount(0);
-            }
-          }}
-          onChange={(e) => setAmount(Number(e.target.value))}
-          placeholder="Add cost"
-          type="number"
-        />
+              if (e.key === 'Enter' && amount) {
+                onNewCostAdded(amount * 100);
+                setAmount(0);
+              }
+            }}
+            onChange={(e) => {
+              setAmount(Number(e.target.value));
+            }}
+            placeholder="$20"
+            type="number"
+          />
+        </FormControl>
+
         <div style={{ marginTop: 20 }} />
         {operatorIds.length > 0 ? (
           <FormControl disabled={locked} variant="standard" fullWidth>
-            <InputLabel id="demo-simple-select-standard-label">OperatorId</InputLabel>
+            <InputLabel id="demo-simple-select-standard-label">Operator ID</InputLabel>
             <Select
               labelId="demo-simple-select-standard-label"
               id="demo-simple-select-standard"
               value={operatorId}
               onChange={handleChange}
-              label="OperatorId"
+              label="Operator ID"
             >
+              <MenuItem value="">
+                <em>Select</em>
+              </MenuItem>
               {operatorIds.map((id) => (
                 <MenuItem key={id} value={id}>
                   {id}

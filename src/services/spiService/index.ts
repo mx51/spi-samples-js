@@ -35,7 +35,12 @@ import SpiEventTarget from '../../utils/common/spi/eventTarget';
 import { localStorageKeys, posVersion } from '../../utils/constants';
 
 import { ITerminal, ITerminals } from '../interfaces';
-import { addPaymentToTable, lockTable, unlockTable } from '../../redux/reducers/PayAtTableSlice/payAtTableSlice';
+import {
+  addPaymentToTable,
+  closeTable,
+  lockTable,
+  unlockTable,
+} from '../../redux/reducers/PayAtTableSlice/payAtTableSlice';
 import { TxLogService } from '../txLogService';
 
 declare global {
@@ -278,7 +283,7 @@ class SpiService {
 
         if (operatorId && table.operatorId && table.operatorId !== operatorId) {
           return Object.assign(new BillStatusResponse(), {
-            Result: BillRetrievalResult.INVALID_OPERATOR_ID,
+            Result: BillRetrievalResult.INVALID_TABLE_ID,
             OutstandingAmount: table.outStandingAmount,
             TotalAmount: table.totalAmount,
           });
@@ -344,6 +349,10 @@ class SpiService {
           })
         );
 
+        if (outstandingAmount === 0) {
+          this.dispatchAction(closeTable(table.tableId));
+        }
+
         TxLogService.saveAndDeleteYesterdayTx({
           amountCents: PurchaseAmount,
           purchaseAmount: PurchaseAmount,
@@ -379,24 +388,22 @@ class SpiService {
         }
       };
       instance.spiPat.GetOpenTables = (operatorId?: string): GetOpenTablesResponse =>
-        Object.assign(new GetOpenTablesResponse(), {
-          TableData: JSON.stringify(
-            store
-              .getState()
-              .payAtTable.tables.filter(
-                (table) =>
-                  table.outStandingAmount > 0 && (!operatorId || !table.operatorId || table.operatorId === operatorId)
-              )
-              .map(
-                (table) =>
-                  new OpenTablesEntry({
-                    TableId: table.tableId,
-                    Label: table.label,
-                    BillOutstandingAmount: table.totalAmount,
-                  })
-              )
-          ),
-        });
+        new GetOpenTablesResponse(
+          store
+            .getState()
+            .payAtTable.tables.filter(
+              (table) =>
+                table.outStandingAmount > 0 && (!operatorId || !table.operatorId || operatorId === table.operatorId)
+            )
+            .map(
+              (table) =>
+                new OpenTablesEntry({
+                  TableId: String(table.tableId),
+                  Label: table.label,
+                  BillOutstandingAmount: table.outStandingAmount,
+                })
+            )
+        );
 
       // Setup PAT
       if (this.state.patConfig.payAtTableEnabled) {
