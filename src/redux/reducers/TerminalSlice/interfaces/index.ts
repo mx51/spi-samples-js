@@ -98,6 +98,7 @@ export interface ITxFlow {
       preAuthAmount: number;
       topupAmount: number;
       reduceAmount: number;
+      completionAmount?: number;
       preAuthId: string;
       success: boolean;
       hostResponseCode: string;
