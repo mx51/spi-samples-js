@@ -82,6 +82,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const refundAmount: number = useSelector(orderRefundAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const totalAmount = useSelector(orderTotalSelector);
+  const isOverride = selectedTerminal?.txFlow?.override;
 
   const { handleKeypadUpdate } = usePreAuthActions(selectedTerminal);
 
@@ -266,7 +267,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
               <TransactionProgressModal
                 terminalId={selectedTerminalId}
                 transactionType={selectedTerminal?.txFlow?.type ?? ''}
-                transactionDesc={receipt?.hostResponseText ?? ''}
+                transactionDesc={isOverride ? '' : receipt?.hostResponseText ?? ''}
                 isFinished={isFinished}
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {

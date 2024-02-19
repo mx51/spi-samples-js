@@ -22,6 +22,7 @@ import {
 import { TxLogItem, TxLogService } from '../../../services/txLogService';
 import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../../utils/common/helpers';
 import { getTxTypeByPosRefId } from '../../../utils/tx-utils';
+import { addPreAuth, clearPreAuth, reducePreAuth, topupPreAuth } from '../PreAuth/preAuthSlice';
 
 const terminalsSlice = createSlice({
   name: 'terminals',
@@ -248,6 +249,37 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
       };
       if (isGetTx) {
         TxLogService.updateTx(txLogItem);
+
+        const currentTerminal = terminals[id];
+        const preAuthValues = {
+          preAuth: {
+            preAuthRef: currentTerminal?.txFlow?.response?.data?.preAuthId ?? '-',
+            preAuthAmount: currentTerminal?.txFlow?.response?.data?.preAuthAmount ?? 0,
+            topupAmount: currentTerminal?.txFlow?.response?.data?.topupAmount ?? 0,
+            reduceAmount: currentTerminal?.txFlow?.response?.data?.reduceAmount ?? 0,
+            surcharge: currentTerminal?.txFlow?.response?.data?.surchargeAmount ?? 0,
+            verified: currentTerminal?.txFlow?.success === 'Success',
+          },
+        };
+        if (transactionType === 'PRE-AUTH') {
+          dispatch(addPreAuth(preAuthValues));
+        }
+
+        if (transactionType === 'TOPUP') {
+          dispatch(topupPreAuth(preAuthValues));
+        }
+
+        if (transactionType === 'CANCEL') {
+          dispatch(reducePreAuth(preAuthValues));
+        }
+
+        if (transactionType === 'PRE-AUTH CANCEL') {
+          dispatch(clearPreAuth(preAuthValues));
+        }
+
+        if (transactionType === 'PCOMP') {
+          dispatch(clearPreAuth(preAuthValues));
+        }
       } else {
         TxLogService.saveAndDeleteYesterdayTx(txLogItem);
       }
