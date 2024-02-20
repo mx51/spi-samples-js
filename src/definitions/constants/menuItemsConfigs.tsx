@@ -53,11 +53,11 @@ export default {
       path: PATH_PRE_AUTH,
       icon: <IconPreAuth />,
     },
-    {
-      name: TEXT_PAT,
-      path: PATH_PAT,
-      icon: <IconPreAuth />,
-    },
+    // {
+    //   name: TEXT_PAT,
+    //   path: PATH_PAT,
+    //   icon: <IconPreAuth />,
+    // },
   ],
   terminals: [
     {
