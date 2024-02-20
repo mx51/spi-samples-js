@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2024-02-20
+
+### Added
+
+[INTG-754](https://mx51.atlassian.net/browse/INTG-754) Recover overridden transactions
+[INTG-753](https://mx51.atlassian.net/browse/INTG-753) Recover transaction outcome after network outage
+
+### Fixed
+
+[INTG-505](https://mx51.atlassian.net/browse/INTG-505) Blank screen after unknown transaction is overridden
+
 ## [1.4.0] - 2023-12-14
 
 ### Added
