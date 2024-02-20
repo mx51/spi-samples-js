@@ -13,7 +13,7 @@ export interface TabPanelProps {
   title: string;
   value: number;
   receiptToggle?: IReceiptToggles;
-  terminal: ITerminalProps | null;
+  terminal?: ITerminalProps | null;
 }
 
 export interface ITerminalConfigurationConstants {

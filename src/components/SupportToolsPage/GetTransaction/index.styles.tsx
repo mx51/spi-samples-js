@@ -19,15 +19,32 @@ export default makeStyles((theme: Theme) =>
     },
     submitBtn: {
       fontWeight: 300,
-      marginBottom: theme.spacing(0.5),
+      marginBottom: theme.spacing(3),
       textTransform: 'none',
+    },
+    h2: {
+      fontWeight: 500,
+      fontSize: '1.25rem',
+    },
+    label: {
+      marginTop: theme.spacing(6),
+      marginBottom: theme.spacing(0.5),
+    },
+    radioGroup: {
+      flexGrow: 1,
+      overflowY: 'auto',
+      marginTop: theme.spacing(0.5),
+      marginBottom: theme.spacing(2),
+    },
+    radioBtn: {
+      color: theme.palette.primary.main,
     },
     receiptBoxWrapper: {
       height: '100%',
       maxHeight: '100%',
       display: 'flex',
       alignItems: 'center',
-      padding: theme.spacing(6, 2, 6, 0),
+      // padding: theme.spacing(6, 2, 6, 0),
       '& > div': {
         background: theme.palette.common.white,
         border: `1px solid ${theme.palette.secondary.main}`,

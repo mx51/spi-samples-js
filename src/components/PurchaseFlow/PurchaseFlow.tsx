@@ -13,6 +13,7 @@ import currencyFormat from '../../utils/common/intl/currencyFormatter';
 export default function PurchaseFlow(): React.ReactElement {
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  console.log('currentTerminal test=>', currentTerminal);
   const totalAmount = useSelector(terminalTxTotalAmount(selectedTerminal));
   const isSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
   const awaitingSignatureCheck = useSelector(terminalTxFlowAwaitingSignatureTracker(selectedTerminal));
@@ -52,8 +53,8 @@ export default function PurchaseFlow(): React.ReactElement {
 # ----------- STATUS -----------
 
 # WE DID NOT GET PAID :(
-# Error Detail: see 'host_response_text' for details
-# Response: ${spi?.txFlow?.response?.data?.hostResponseText}
+# Error Detail: ${spi?.txFlow?.displayMessage}
+# Host Response: ${spi?.txFlow?.response?.data?.hostResponseText}
 # RRN: ${spi?.txFlow?.response?.data?.rrn}
 `;
 
