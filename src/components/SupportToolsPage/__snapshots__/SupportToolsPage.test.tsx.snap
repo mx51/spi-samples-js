@@ -4,23 +4,23 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
 <div>
   <div>
     <div
-      class="makeStyles-root-2"
+      class="makeStyles-root-5"
     >
       <header
-        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-3 mui-fixed MuiPaper-elevation4"
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-6 mui-fixed MuiPaper-elevation4"
       >
         <div
           class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
         >
           <div
-            class="MuiBox-root MuiBox-root-8 makeStyles-navbar-5"
+            class="MuiBox-root MuiBox-root-11 makeStyles-navbar-8"
           >
             <div
-              class="MuiBox-root MuiBox-root-9"
+              class="MuiBox-root MuiBox-root-12"
             >
               <button
                 aria-label="menu"
-                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-6 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-9 MuiIconButton-colorInherit MuiIconButton-edgeStart"
                 data-test-id="navbarMenuIcon"
                 name="menuIcon"
                 tabindex="0"
@@ -56,211 +56,296 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
       </header>
     </div>
     <div
-      class="MuiContainer-root makeStyles-root-1 MuiContainer-maxWidthLg"
+      class="makeStyles-root-1"
     >
       <div
-        class="MuiBox-root MuiBox-root-25 makeStyles-toolContainer-10"
+        class="MuiTabs-root makeStyles-tabs-2"
+        id="supportTabs"
       >
-        <h1
-          class="MuiTypography-root makeStyles-h1-11 MuiTypography-body1"
-        >
-          Auto address check
-        </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1"
-        >
-          This support tool can be used by Merchants or L2 support users to test Auto address
-        </p>
-        <hr
-          class="MuiDivider-root makeStyles-divider-13"
-        />
         <div
-          class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4"
+          class="MuiTabs-scroller MuiTabs-fixed"
+          style="overflow: hidden;"
         >
           <div
-            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
+            aria-label="support tabs"
+            class="MuiTabs-flexContainer"
+            role="tablist"
           >
-            <h2
-              class="MuiTypography-root makeStyles-h2-12 MuiTypography-body1"
-            >
-              Test Auto address
-            </h2>
-          </div>
-          <div
-            class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7"
-          >
-            <div
-              class="MuiFormControl-root MuiFormControl-marginDense MuiFormControl-fullWidth"
-              data-test-id="autoAddressTenantForm"
-            >
-              <label
-                class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined"
-                data-shrink="false"
-                data-test-id="autoAddressTenantFormLabel"
-              >
-                Tenant
-              </label>
-              <div
-                class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
-                data-test-id="autoAddressTenantSelectorLabel"
-              >
-                <div
-                  aria-haspopup="listbox"
-                  aria-labelledby="autoAddressTenantDropDownLabel"
-                  class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
-                  role="button"
-                  tabindex="0"
-                >
-                  <span>
-                    ​
-                  </span>
-                </div>
-                <input
-                  aria-hidden="true"
-                  class="MuiSelect-nativeInput"
-                  tabindex="-1"
-                  value=""
-                />
-                <svg
-                  aria-hidden="true"
-                  class="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined"
-                  focusable="false"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    d="M7 10l5 5 5-5z"
-                  />
-                </svg>
-                <fieldset
-                  aria-hidden="true"
-                  class="PrivateNotchedOutline-root-26 MuiOutlinedInput-notchedOutline"
-                >
-                  <legend
-                    class="PrivateNotchedOutline-legendLabelled-28"
-                  >
-                    <span>
-                      Tenant
-                    </span>
-                  </legend>
-                </fieldset>
-              </div>
-            </div>
-            <p
-              class="MuiTypography-root makeStyles-infoText-14 MuiTypography-body1"
-            >
-              Select the tenant for the Auto address test
-            </p>
-            <div
-              class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-30 MuiFormControl-marginDense MuiFormControl-fullWidth"
-              data-test-id="autoAddressSerialNumberField"
-              theme="[object Object]"
-            >
-              <label
-                class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined Mui-required Mui-required"
-                data-shrink="false"
-              >
-                Serial Number
-                <span
-                  aria-hidden="true"
-                  class="MuiFormLabel-asterisk MuiInputLabel-asterisk"
-                >
-                   
-                  *
-                </span>
-              </label>
-              <div
-                class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
-              >
-                <input
-                  aria-invalid="false"
-                  class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
-                  required=""
-                  type="text"
-                  value=""
-                />
-                <fieldset
-                  aria-hidden="true"
-                  class="PrivateNotchedOutline-root-26 MuiOutlinedInput-notchedOutline"
-                >
-                  <legend
-                    class="PrivateNotchedOutline-legendLabelled-28"
-                  >
-                    <span>
-                      Serial Number
-                       *
-                    </span>
-                  </legend>
-                </fieldset>
-              </div>
-              
-            </div>
-            <p
-              class="MuiTypography-root makeStyles-infoText-14 MuiTypography-body1"
-            >
-              Enter terminal serial number
-            </p>
-            <div
-              class="MuiFormGroup-root makeStyles-testMode-15"
-            >
-              <label
-                class="MuiFormControlLabel-root"
-              >
-                <span
-                  aria-disabled="false"
-                  class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-31 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
-                  data-test-id="autoAddressCheckbox"
-                >
-                  <span
-                    class="MuiIconButton-label"
-                  >
-                    <input
-                      class="PrivateSwitchBase-input-34"
-                      data-indeterminate="false"
-                      name="testMode"
-                      type="checkbox"
-                      value=""
-                    />
-                    <svg
-                      aria-hidden="true"
-                      class="MuiSvgIcon-root"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
-                      />
-                    </svg>
-                  </span>
-                  <span
-                    class="MuiTouchRipple-root"
-                  />
-                </span>
-                <span
-                  class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
-                >
-                  Test mode
-                </span>
-              </label>
-            </div>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-submitBtn-16 MuiButton-containedPrimary"
-              data-test-id="autoAddressSubmitButton"
+              aria-selected="true"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit Mui-selected"
+              id="autoAddressTab"
+              role="tab"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-label"
+                class="MuiTab-wrapper"
               >
-                Test Auto address
+                Auto Address Check
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </button>
+            <button
+              aria-selected="false"
+              class="MuiButtonBase-root MuiTab-root MuiTab-textColorInherit"
+              id="getTransactionTab"
+              role="tab"
+              tabindex="-1"
+              type="button"
+            >
+              <span
+                class="MuiTab-wrapper"
+              >
+                Get Transaction
               </span>
               <span
                 class="MuiTouchRipple-root"
               />
             </button>
           </div>
+          <span
+            class="PrivateTabIndicator-root-13 PrivateTabIndicator-colorSecondary-15 MuiTabs-indicator"
+            style="left: 0px; width: 0px;"
+          />
         </div>
-        
       </div>
+      <div
+        aria-labelledby="simple-tab-0"
+        id="simple-tabpanel-0"
+        role="tabpanel"
+      >
+        <div
+          class="MuiContainer-root MuiContainer-maxWidthLg"
+        >
+          <div
+            class="MuiGrid-root makeStyles-container-18 MuiGrid-container"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-item"
+            >
+              <div
+                class="MuiBox-root MuiBox-root-40 makeStyles-lookupContainer-21"
+              >
+                <h1
+                  class="MuiTypography-root makeStyles-h1-22 MuiTypography-body1"
+                >
+                  Auto address check
+                </h1>
+                <p
+                  class="MuiTypography-root MuiTypography-body1"
+                >
+                  This support tool can be used by Merchants or L2 support users to test Auto address
+                </p>
+                <hr
+                  class="MuiDivider-root makeStyles-divider-24"
+                />
+                <div
+                  class="MuiGrid-root"
+                >
+                  <div
+                    class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-4"
+                  >
+                    <div
+                      class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
+                    >
+                      <h2
+                        class="MuiTypography-root makeStyles-h2-43 MuiTypography-body1"
+                      >
+                        Test Auto address
+                      </h2>
+                    </div>
+                    <div
+                      class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-7"
+                    >
+                      <div
+                        class="MuiFormControl-root MuiFormControl-marginDense MuiFormControl-fullWidth"
+                        data-test-id="autoAddressTenantForm"
+                      >
+                        <label
+                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined"
+                          data-shrink="false"
+                          data-test-id="autoAddressTenantFormLabel"
+                        >
+                          Tenant
+                        </label>
+                        <div
+                          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+                          data-test-id="autoAddressTenantSelectorLabel"
+                        >
+                          <div
+                            aria-haspopup="listbox"
+                            aria-labelledby="autoAddressTenantDropDownLabel"
+                            class="MuiSelect-root MuiSelect-select MuiSelect-selectMenu MuiSelect-outlined MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+                            role="button"
+                            tabindex="0"
+                          >
+                            <span>
+                              ​
+                            </span>
+                          </div>
+                          <input
+                            aria-hidden="true"
+                            class="MuiSelect-nativeInput"
+                            tabindex="-1"
+                            value=""
+                          />
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root MuiSelect-icon MuiSelect-iconOutlined"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M7 10l5 5 5-5z"
+                            />
+                          </svg>
+                          <fieldset
+                            aria-hidden="true"
+                            class="PrivateNotchedOutline-root-56 MuiOutlinedInput-notchedOutline"
+                          >
+                            <legend
+                              class="PrivateNotchedOutline-legendLabelled-58"
+                            >
+                              <span>
+                                Tenant
+                              </span>
+                            </legend>
+                          </fieldset>
+                        </div>
+                      </div>
+                      <p
+                        class="MuiTypography-root makeStyles-infoText-45 MuiTypography-body1"
+                      >
+                        Select the tenant for the Auto address test
+                      </p>
+                      <div
+                        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-60 MuiFormControl-marginDense MuiFormControl-fullWidth"
+                        data-test-id="autoAddressSerialNumberField"
+                        theme="[object Object]"
+                      >
+                        <label
+                          class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-marginDense MuiInputLabel-outlined Mui-required Mui-required"
+                          data-shrink="false"
+                        >
+                          Serial Number
+                          <span
+                            aria-hidden="true"
+                            class="MuiFormLabel-asterisk MuiInputLabel-asterisk"
+                          >
+                             
+                            *
+                          </span>
+                        </label>
+                        <div
+                          class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-marginDense MuiOutlinedInput-marginDense"
+                        >
+                          <input
+                            aria-invalid="false"
+                            class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMarginDense MuiOutlinedInput-inputMarginDense"
+                            required=""
+                            type="text"
+                            value=""
+                          />
+                          <fieldset
+                            aria-hidden="true"
+                            class="PrivateNotchedOutline-root-56 MuiOutlinedInput-notchedOutline"
+                          >
+                            <legend
+                              class="PrivateNotchedOutline-legendLabelled-58"
+                            >
+                              <span>
+                                Serial Number
+                                 *
+                              </span>
+                            </legend>
+                          </fieldset>
+                        </div>
+                        
+                      </div>
+                      <p
+                        class="MuiTypography-root makeStyles-infoText-45 MuiTypography-body1"
+                      >
+                        Enter terminal serial number
+                      </p>
+                      <div
+                        class="MuiFormGroup-root makeStyles-testMode-46"
+                      >
+                        <label
+                          class="MuiFormControlLabel-root"
+                        >
+                          <span
+                            aria-disabled="false"
+                            class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-61 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+                            data-test-id="autoAddressCheckbox"
+                          >
+                            <span
+                              class="MuiIconButton-label"
+                            >
+                              <input
+                                class="PrivateSwitchBase-input-64"
+                                data-indeterminate="false"
+                                name="testMode"
+                                type="checkbox"
+                                value=""
+                              />
+                              <svg
+                                aria-hidden="true"
+                                class="MuiSvgIcon-root"
+                                focusable="false"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                                />
+                              </svg>
+                            </span>
+                            <span
+                              class="MuiTouchRipple-root"
+                            />
+                          </span>
+                          <span
+                            class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+                          >
+                            Test mode
+                          </span>
+                        </label>
+                      </div>
+                      <button
+                        class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-submitBtn-47 MuiButton-containedPrimary"
+                        data-test-id="autoAddressSubmitButton"
+                        tabindex="0"
+                        type="button"
+                      >
+                        <span
+                          class="MuiButton-label"
+                        >
+                          Test Auto address
+                        </span>
+                        <span
+                          class="MuiTouchRipple-root"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+            <div
+              class="MuiGrid-root makeStyles-panelRow-19 MuiGrid-item"
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        aria-labelledby="simple-tab-1"
+        hidden=""
+        id="simple-tabpanel-1"
+        role="tabpanel"
+      />
     </div>
   </div>
 </div>
