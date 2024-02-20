@@ -96,7 +96,7 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <a
                 aria-disabled="false"
                 class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-                href="/terminals/new"
+                href="/pair"
                 role="button"
                 tabindex="0"
               >

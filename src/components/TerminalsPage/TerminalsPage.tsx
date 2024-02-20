@@ -19,12 +19,12 @@ const Terminals: React.FC = () => {
         <Box display="flex">
           <Box flexGrow={1}>
             <Typography variant="h6" component="h1">
-              Terminals
+              Terminals list
             </Typography>
           </Box>
           <Box>
             <Button variant="contained" color="primary" component={LinkRouter} to={PATH_PAIR}>
-              + Pair new terminal
+              + Pair terminal
             </Button>
           </Box>
         </Box>

@@ -78,6 +78,20 @@ exports[`Test <TerminalList /> should match TerminalList snapshot test 1`] = `
           </td>
         </tr>
       </tbody>
+      <tfoot
+        class="MuiTableFooter-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-footer"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-footer MuiTableCell-alignCenter"
+            colspan="4"
+          >
+            Page 1
+          </td>
+        </tr>
+      </tfoot>
     </table>
   </div>
 </div>

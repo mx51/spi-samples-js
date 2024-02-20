@@ -12,7 +12,7 @@ import MenuItems from './MenuItems';
 
 function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
   const classes = useStyles();
-  const { samplePos, support, transactionsAndTerminals } = menuItems;
+  const { samplePos, terminals, support, transactions } = menuItems;
 
   return (
     <Box className={classes.list} onClick={toggleDrawer} onKeyDown={toggleDrawer}>
@@ -26,7 +26,10 @@ function DrawerList({ toggleDrawer }: IDrawerList): React.ReactElement {
           <Typography className={classes.title}>Sample POS</Typography>
           <MenuItems menuItems={samplePos} />
           <Divider />
-          <MenuItems menuItems={transactionsAndTerminals} />
+          <Typography className={classes.title}>Terminals</Typography>
+          <MenuItems menuItems={terminals} />
+          <Divider />
+          <MenuItems menuItems={transactions} />
         </div>
         <div>
           <MenuItems menuItems={support} />

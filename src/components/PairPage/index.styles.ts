@@ -27,14 +27,7 @@ export default makeStyles((theme: Theme) =>
       marginBottom: -theme.spacing(2), // keep same position with configuration form save settings button
     },
     pairFormContainer: {
-      display: 'block',
-    },
-    backLink: {
-      marginBottom: '16px',
-    },
-    backLinkText: {
-      fontSize: '20px',
-      marginLeft: '10px',
+      display: 'inherit',
     },
     [theme.breakpoints.between(960, 1025)]: {
       root: {

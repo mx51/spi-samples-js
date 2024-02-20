@@ -1,5 +1,6 @@
 import React from 'react';
 import { ReactComponent as IconCashout } from '../../images/CashoutIcon.svg';
+import { ReactComponent as IconPairing } from '../../images/PairingIcon.svg';
 import { ReactComponent as IconPreAuth } from '../../images/PreAuthorisationIcon.svg';
 import { ReactComponent as IconPurchase } from '../../images/PurchaseIcon.svg';
 import { ReactComponent as IconRefund } from '../../images/RefundIcon.svg';
@@ -9,6 +10,7 @@ import { ReactComponent as IconTerminalsList } from '../../images/TerminalsListI
 import { ReactComponent as IconTransaction } from '../../images/Transaction.svg';
 import {
   TEXT_CASHOUT,
+  TEXT_PAIR,
   TEXT_PRE_AUTH,
   TEXT_PURCHASE,
   TEXT_REFUND,
@@ -16,6 +18,7 @@ import {
   TEXT_SETTINGS,
   TEXT_SUPPORT,
   PATH_CASH_OUT,
+  PATH_PAIR,
   PATH_PRE_AUTH,
   PATH_PURCHASE,
   PATH_REFUND,
@@ -56,16 +59,23 @@ export default {
       icon: <IconPreAuth />,
     },
   ],
-  transactionsAndTerminals: [
-    {
-      name: TEXT_TRANSACTIONS,
-      path: PATH_TRANSACTIONS,
-      icon: <IconTransaction />,
-    },
+  terminals: [
     {
       name: TEXT_TERMINALS,
       path: PATH_TERMINALS,
       icon: <IconTerminalsList />,
+    },
+    {
+      name: TEXT_PAIR,
+      path: PATH_PAIR,
+      icon: <IconPairing />,
+    },
+  ],
+  transactions: [
+    {
+      name: TEXT_TRANSACTIONS,
+      path: PATH_TRANSACTIONS,
+      icon: <IconTransaction />,
     },
   ],
   support: [

@@ -53,7 +53,7 @@ describe('Test <Terminals />', () => {
     const mockContainer = mockWithRedux(<Terminals />);
 
     // Assert
-    expect(mockContainer.innerHTML.includes('+ Pair new terminal')).toBeTruthy();
+    expect(mockContainer.innerHTML.includes('+ Pair terminal')).toBeTruthy();
     expect(mockContainer.innerHTML.includes(defaultLocalIP)).toBeFalsy();
   });
 });
