@@ -39,9 +39,10 @@ const payAtTableSlice = createSlice({
   initialState,
   reducers: {
     addNewTable(state) {
+      const tableId = state.tables.length === 0 ? 1 : state.tables[state.tables.length - 1].tableId + 1;
       state.tables.push({
-        tableId: state.tables.length + 1,
-        label: `Table #${state.tables.length + 1}`,
+        tableId,
+        label: `Table #${tableId}`,
         totalAmount: 0,
         outStandingAmount: 0,
         billId: uuid(),
