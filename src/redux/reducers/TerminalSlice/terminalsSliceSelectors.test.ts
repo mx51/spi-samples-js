@@ -1,6 +1,6 @@
 import { cleanup } from '@testing-library/react';
 import {
-  terminalList,
+  terminalMap,
   terminalInstance,
   isTerminalUnpaired,
   pairedConnectedTerminalList,
@@ -43,12 +43,12 @@ describe('Test terminals slice selectors', () => {
 
   test('Test terminalList', () => {
     // Assert
-    expect(terminalList(mockStoreState)).toMatchObject(mockStoreState.terminals);
+    expect(terminalMap(mockStoreState)).toMatchObject(mockStoreState.terminals);
   });
 
   test('Test terminalInstance', () => {
     // Act
-    const actualResult = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(terminalList(mockStoreState));
+    const actualResult = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(terminalMap(mockStoreState));
 
     // Assert
     expect(actualResult).toMatchObject(mockStoreState.terminals[mockTerminalInstanceId]);
@@ -57,7 +57,7 @@ describe('Test terminals slice selectors', () => {
   test('Test isTerminalUnpaired', () => {
     // Act
     const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+      terminalMap(mockStoreState)
     );
     const actualResult = (isTerminalUnpaired(mockTerminalInstanceId) as Any).resultFunc(currentTerminalInstance);
 
@@ -68,7 +68,7 @@ describe('Test terminals slice selectors', () => {
   test('Test terminalTxAmount', () => {
     // Act
     const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+      terminalMap(mockStoreState)
     );
     const actualResult = (terminalTxAmount(mockTerminalInstanceId) as Any).resultFunc(currentTerminalInstance);
 
@@ -79,7 +79,7 @@ describe('Test terminals slice selectors', () => {
   test('Test terminalTxFlowSuccessTracker', () => {
     // Act
     const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+      terminalMap(mockStoreState)
     );
     const actualResult = (terminalTxFlowSuccessTracker(mockTerminalInstanceId) as Any).resultFunc(
       currentTerminalInstance
@@ -92,7 +92,7 @@ describe('Test terminals slice selectors', () => {
   test('Test terminalTxFlowFinishedTracker', () => {
     // Act
     const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+      terminalMap(mockStoreState)
     );
     const actualResult = (terminalTxFlowFinishedTracker(mockTerminalInstanceId) as Any).resultFunc(
       currentTerminalInstance
@@ -105,7 +105,7 @@ describe('Test terminals slice selectors', () => {
   test('Test terminalTxFlowAwaitingSignatureTracker', () => {
     // Act
     const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+      terminalMap(mockStoreState)
     );
     const actualResult = (terminalTxFlowAwaitingSignatureTracker(mockTerminalInstanceId) as Any).resultFunc(
       currentTerminalInstance
@@ -236,7 +236,7 @@ describe('Test terminals slice selectors', () => {
   test('Test terminalTxTotalAmount', () => {
     // Act
     const currentTerminalInstance = (terminalInstance(mockTerminalInstanceId) as Any).resultFunc(
-      terminalList(mockStoreState)
+      terminalMap(mockStoreState)
     );
     const actualResult = (terminalTxTotalAmount(mockTerminalInstanceId) as Any).resultFunc(currentTerminalInstance);
 

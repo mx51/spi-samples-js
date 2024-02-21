@@ -27,7 +27,7 @@ import {
   selectPairFormSerialNumber,
 } from '../../../../redux/reducers/PairFormSlice/PairFormSelectors';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
-import { terminalInstance, terminalList } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { terminalInstance, terminalMap } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
   handlePaymentProviderFieldOnChange,
   handlePaymentProviderSelectorOnChange,
@@ -66,7 +66,7 @@ export default function PairConfiguration(): React.ReactElement {
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));
-  const terminals = useAppSelector(terminalList);
+  const terminals = useAppSelector(terminalMap);
   const [tenantList, setTenantList] = useState<TenantList>([]);
 
   useEffect(() => {

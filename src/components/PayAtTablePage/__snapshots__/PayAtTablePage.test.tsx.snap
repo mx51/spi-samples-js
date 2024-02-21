@@ -63,29 +63,48 @@ exports[`Test <PayAtTablePage /> should match PayAtTablePage snapshot test 1`] =
       >
         Pay At Table
       </h1>
-      <h2
-        class="MuiTypography-root MuiTypography-h6 MuiTypography-paragraph"
-      >
-        Tables
-      </h2>
       <div
-        class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
-      />
-    </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-addButton-2 MuiButton-containedPrimary"
-      tabindex="0"
-      type="button"
-    >
-      <span
-        class="MuiButton-label"
+        class="MuiGrid-root"
       >
-        Add
-      </span>
-      <span
-        class="MuiTouchRipple-root"
-      />
-    </button>
+        <div
+          class="MuiGrid-root MuiGrid-item"
+        >
+          <div
+            class="MuiPaper-root makeStyles-paper-18 MuiPaper-elevation0 MuiPaper-rounded"
+          >
+            <svg>
+              UnpluggedIcon.svg
+            </svg>
+            <h6
+              class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom"
+            >
+              You don't have any terminals paired yet.
+            </h6>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              Fortunately, it's very easy to pair a terminal and start using Espresso POS.
+            </p>
+            <a
+              aria-disabled="false"
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+              href="/terminals"
+              role="button"
+              tabindex="0"
+            >
+              <span
+                class="MuiButton-label"
+              >
+                Go to terminals
+              </span>
+              <span
+                class="MuiTouchRipple-root"
+              />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

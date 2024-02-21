@@ -39,6 +39,7 @@ import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSli
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 import { updateTxFlowWithSideEffect } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import {
+  isPaired,
   pairedConnectedTerminalList,
   terminalInstance,
   terminalTxFlowFinishedTracker,
@@ -56,6 +57,7 @@ import { PayNowOrderConfirmation } from './PayNowOrderConfirmation';
 import { PreAuthOrderConfirmation } from './PreAuthOrderConfirmation';
 import { RefundOrderConfirmation } from './RefundOrderConfirmation';
 import { usePreAuthActions } from '../../hooks/usePreAuthActions';
+import NoTerminalPage from '../NoTerminalPage';
 
 type ComponentByPathNameKeys = typeof PATH_PRE_AUTH | typeof PATH_REFUND | typeof PATH_PAY_NOW | typeof PATH_CASH_OUT;
 
@@ -83,6 +85,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const totalAmount = useSelector(orderTotalSelector);
   const isOverride = selectedTerminal?.txFlow?.override;
+  const isTerminalPaired: boolean = useSelector(isPaired);
 
   const { handleKeypadUpdate } = usePreAuthActions(selectedTerminal);
 
@@ -224,30 +227,36 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
                 </Box>
               </Button>
             </Box>
-            <Typography className={classes.label}>Select terminal</Typography>
-            <Divider />
-            <RadioGroup className={classes.radioGroup} aria-label="terminalList" name="terminalList">
-              <Box>
-                <List>
-                  {terminals.map((terminal) => (
-                    <ListItem key={terminal.id} dense disableGutters onClick={() => selectTerminal(terminal.id)}>
-                      <ListItemIcon>
-                        <Radio
-                          className={classes.radioBtn}
-                          checked={terminal.id === selectedTerminalId}
-                          value={terminal.id}
-                          name="terminal"
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={terminal.posId}
-                        secondary={`${terminal.deviceAddress} S/N ${terminal.serialNumber}`}
-                      />
-                    </ListItem>
-                  ))}
-                </List>
-              </Box>
-            </RadioGroup>
+            {isTerminalPaired ? (
+              <>
+                <Typography className={classes.label}>Select terminal</Typography>
+                <Divider />
+                <RadioGroup className={classes.radioGroup} aria-label="terminalList" name="terminalList">
+                  <Box>
+                    <List>
+                      {terminals.map((terminal) => (
+                        <ListItem key={terminal.id} dense disableGutters onClick={() => selectTerminal(terminal.id)}>
+                          <ListItemIcon>
+                            <Radio
+                              className={classes.radioBtn}
+                              checked={terminal.id === selectedTerminalId}
+                              value={terminal.id}
+                              name="terminal"
+                            />
+                          </ListItemIcon>
+                          <ListItemText
+                            primary={terminal.posId}
+                            secondary={`${terminal.deviceAddress} S/N ${terminal.serialNumber}`}
+                          />
+                        </ListItem>
+                      ))}
+                    </List>
+                  </Box>
+                </RadioGroup>
+              </>
+            ) : (
+              <NoTerminalPage />
+            )}
 
             {renderOrderConfirmationByAction()}
 
