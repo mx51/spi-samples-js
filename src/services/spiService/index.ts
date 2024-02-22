@@ -283,7 +283,7 @@ class SpiService {
 
         if (operatorId && table.operatorId && table.operatorId !== operatorId) {
           return Object.assign(new BillStatusResponse(), {
-            Result: BillRetrievalResult.INVALID_TABLE_ID,
+            Result: BillRetrievalResult.INVALID_OPERATOR_ID,
             OutstandingAmount: table.outStandingAmount,
             TotalAmount: table.totalAmount,
           });
@@ -391,10 +391,7 @@ class SpiService {
         new GetOpenTablesResponse(
           store
             .getState()
-            .payAtTable.tables.filter(
-              (table) =>
-                table.outStandingAmount > 0 && (!operatorId || !table.operatorId || operatorId === table.operatorId)
-            )
+            .payAtTable.tables.filter((table) => !operatorId || !table.operatorId || operatorId === table.operatorId)
             .map(
               (table) =>
                 new OpenTablesEntry({
