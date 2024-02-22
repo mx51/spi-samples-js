@@ -10,7 +10,7 @@ import mockWithRedux, { defaultMockPairFormParams, defaultMockTerminals } from '
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({
-    pathname: '/pair',
+    pathname: '/terminals/new',
   }),
 }));
 

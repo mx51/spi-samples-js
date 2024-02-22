@@ -23,8 +23,11 @@ const PayAtTable: React.FC = () => {
   return (
     <Layout>
       <Container className={classes.container} maxWidth="md">
-        <Typography variant="h6" component="h1">
-          Pay At Tables
+        <Typography paragraph variant="h5" component="h1">
+          Pay At Table
+        </Typography>
+        <Typography paragraph variant="h6" component="h2">
+          Tables
         </Typography>
         <Grid container spacing={2}>
           {tables.map((table) => (
@@ -41,7 +44,9 @@ const PayAtTable: React.FC = () => {
                 title={table.label}
                 totalAmount={table.totalAmount}
                 dueAmount={table.outStandingAmount}
-                operatorIds={spiService.state.patConfig.allowedOperatorIds}
+                operatorIds={
+                  spiService.state.patConfig.operatorIdEnabled ? spiService.state.patConfig.allowedOperatorIds : []
+                }
                 selectedOperatorId={table.operatorId}
                 onOperatorIdChanged={(operatorId) => {
                   dispatch(updateOperatorId({ tableId: table.tableId, operatorId }));

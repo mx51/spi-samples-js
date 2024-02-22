@@ -13,7 +13,7 @@ const panel = {
 
 const SettingsPage: React.FC = () => {
   const classes = useStyles();
-  const [tabIndex, setTabIndex] = useState(panel.payAtTable);
+  const [tabIndex, setTabIndex] = useState(panel.terminalSetting);
 
   const handleTabChange = (event: React.ReactNode, newValue: number) => {
     setTabIndex(newValue);

@@ -1,15 +1,5 @@
 import React from 'react';
-import {
-  Chip,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableFooter,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import { Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
@@ -71,13 +61,6 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
             </TableRow>
           ))}
         </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={4} align="center">
-              Page 1
-            </TableCell>
-          </TableRow>
-        </TableFooter>
       </Table>
     </TableContainer>
   );

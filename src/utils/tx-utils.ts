@@ -12,6 +12,22 @@ export function getAmountCentsByTxType(txType: string, response: ITxFlow['respon
     case TransactionType.Refund:
       return response.data.refundAmount;
     case TransactionType.Preauth:
+      switch (response.data.transactionType) {
+        case 'PRE-AUTH':
+          return response.data.preAuthAmount;
+        case 'TOPUP':
+          return response.data.topupAmount;
+        case 'CANCEL': // PARTIAL CANCELLATION
+          return response.data.reduceAmount;
+        case 'PRE-AUTH EXT':
+          return 0;
+        case 'PCOMP':
+          return response.data.completionAmount;
+        case 'PRE-AUTH CANCEL':
+          return 0; // Balance is 0 after cancellation
+        default:
+          return 0;
+      }
       return response.data.preAuthAmount;
     default:
       return response.data.purchaseAmount;
