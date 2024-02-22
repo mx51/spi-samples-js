@@ -437,7 +437,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                 </div>
               </div>
               <div
-                class="MuiGrid-root makeStyles-receiptPanel-26"
+                class="MuiGrid-root makeStyles-CustomContentPanel-26"
               />
             </div>
           </div>
@@ -464,7 +464,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                 <pre
                   class="makeStyles-flowContent-49"
                 >
-                  
+
 # ----------- STATUS -----------
 
 # POSID: test
@@ -474,7 +474,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
 
 # ------------------------------
 # POS: v1.2.3 Spi: 1.2.2
-  
+
                 </pre>
               </div>
             </div>

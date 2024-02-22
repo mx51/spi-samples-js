@@ -1,6 +1,6 @@
 import React from 'react';
 import { cleanup } from '@testing-library/react';
-import ReceiptPanel from '.';
+import CustomContentPanel from '.';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import mockWithRedux, {
   defaultMockPairFormParams,
@@ -10,20 +10,20 @@ import mockWithRedux, {
   mockTerminalInstanceId,
 } from '../../utils/tests/common';
 
-describe('Test <ReceiptPanel />', () => {
+describe('Test <CustomContentPanel />', () => {
   let mockContainer: Any;
 
   beforeEach(() => {
     mockContainer = mockWithRedux(
-      <ReceiptPanel title="Mock Receipt" css="{}">
+      <CustomContentPanel title="Mock Receipt" css="{}">
         <pre>{mockReceiptContent}</pre>
-      </ReceiptPanel>
+      </CustomContentPanel>
     );
   });
 
   afterEach(cleanup);
 
-  test('should match ReceiptPanel snapshot test', () => {
+  test('should match CustomContentPanel snapshot test', () => {
     // Assert
     expect(mockContainer).toMatchSnapshot();
   });
@@ -50,9 +50,9 @@ describe('Test <ReceiptPanel />', () => {
       dispatch: jest.fn(),
     };
     const newMockContainer = mockWithRedux(
-      <ReceiptPanel title="Mock Receipt" css="{}">
+      <CustomContentPanel title="Mock Receipt" css="{}">
         <pre>{mockReceiptContent}</pre>
-      </ReceiptPanel>,
+      </CustomContentPanel>,
       customizedStore
     );
 
@@ -83,9 +83,9 @@ describe('Test <ReceiptPanel />', () => {
       dispatch: jest.fn(),
     };
     const newMockContainer = mockWithRedux(
-      <ReceiptPanel title="Mock Receipt" css="{}">
+      <CustomContentPanel title="Mock Receipt" css="{}">
         <pre>{fetchingText}</pre>
-      </ReceiptPanel>,
+      </CustomContentPanel>,
       customizedStore
     );
 

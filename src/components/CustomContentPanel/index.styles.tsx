@@ -1,6 +1,6 @@
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 
-export const useReceiptPanelStyles = makeStyles((theme: Theme) =>
+export const useCustomContentPanelStyles = makeStyles((theme: Theme) =>
   createStyles({
     gridContainer: {
       display: 'flex',

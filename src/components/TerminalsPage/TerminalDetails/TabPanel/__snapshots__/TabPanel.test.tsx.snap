@@ -48,7 +48,7 @@ exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
             </div>
           </div>
           <div
-            class="MuiGrid-root makeStyles-receiptPanelOpened-13"
+            class="MuiGrid-root makeStyles-CustomContentPanelOpened-13"
           >
             <div
               class="MuiGrid-root makeStyles-receiptBoxWrapper-15"

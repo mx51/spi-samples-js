@@ -11,16 +11,14 @@ import {
   RadioGroup,
   Typography,
 } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomTextField from '../../CustomTextField';
 import useStyles from './index.styles';
 import selectedTerminalIdSelector from '../../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
 import {
-  isTerminalTxFlowSuccess,
   pairedConnectedTerminalList,
   terminalInstance,
-  terminalTxFlowReceiptContent,
 } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { updateSelectedTerminal } from '../../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
@@ -28,35 +26,33 @@ import spiService from '../../../services/spiService';
 
 type Props = {
   setReceipt: React.Dispatch<React.SetStateAction<string>>;
+  hasSearched: boolean;
+  setHasSearched: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const GetTransactionPanel = ({ setReceipt }: Props) => {
+export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }: Props) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [posRefId, setPosRefId] = useState<string>('');
-
   const terminals = useSelector(pairedConnectedTerminalList);
   const selectedTerminalId = useSelector(selectedTerminalIdSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const isTxSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
-  const receiptContent = useSelector(terminalTxFlowReceiptContent(selectedTerminal));
+
+  useEffect(() => {
+    if (hasSearched) {
+      if (currentTerminal?.txFlow?.isGetTx) {
+        setReceipt(currentTerminal?.txFlow?.response?.data.merchantReceipt);
+      } else {
+        setReceipt('');
+      }
+    }
+  }, [currentTerminal, hasSearched]);
 
   const onSubmitBtnClick = async () => {
     setReceipt('');
-    console.log('onSubmitBtnClick');
-    const getTransaction = await spiService.initiateGetTransaction(selectedTerminalId, posRefId);
-    console.log('getTransaction =>', getTransaction);
-    console.log(
-      'receipt => ',
-      currentTerminal?.txFlow?.isGetTx ? currentTerminal?.txFlow?.response?.data.merchantReceipt : null
-    );
-    if (isTxSuccess && currentTerminal?.txFlow?.isGetTx && receiptContent) {
-      // setReceipt(currentTerminal?.txFlow?.response?.data.merchantReceipt);
-      setReceipt(receiptContent);
-    } else {
-      setReceipt('');
-    }
+    await spiService.initiateGetTransaction(selectedTerminalId, posRefId);
+    setHasSearched(true);
   };
 
   const onSelectTerminal = (terminalId: string) => {
@@ -74,15 +70,12 @@ export const GetTransactionPanel = ({ setReceipt }: Props) => {
 
         <Grid item xs={7}>
           <CustomTextField
-            dataTestId="autoAddressSerialNumberField"
+            dataTestId="getTransactionPosRefIdField"
             fullWidth
             label="pos_ref_id"
             margin="dense"
-            // error={!serialNumber.isValid}
             helperText={currentTerminal?.receipt?.errorDetail}
-            // onChange={onPosRefIdChange}
             onChange={(e) => setPosRefId(e.target.value as string)}
-            // onBlur={(e) => setPosRefId(e.target.value as string)}
             required
             value={posRefId}
             variant="outlined"

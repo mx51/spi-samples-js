@@ -6,9 +6,6 @@ export default makeStyles((theme: Theme) =>
       '& .MuiTabs-indicator': {
         backgroundColor: theme.palette.primary.main,
       },
-      // marginTop: theme.spacing(1),
-      // padding: theme.spacing(3),
-      // width: '80%',
     },
     tabs: {
       backgroundColor: theme.palette.background.paper,

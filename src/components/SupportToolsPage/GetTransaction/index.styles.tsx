@@ -6,9 +6,6 @@ export default makeStyles((theme: Theme) =>
       '& .MuiTabs-indicator': {
         backgroundColor: theme.palette.primary.main,
       },
-      // marginTop: theme.spacing(1),
-      // padding: theme.spacing(3),
-      // width: '80%',
     },
     tabs: {
       backgroundColor: theme.palette.background.paper,
@@ -44,7 +41,6 @@ export default makeStyles((theme: Theme) =>
       maxHeight: '100%',
       display: 'flex',
       alignItems: 'center',
-      // padding: theme.spacing(6, 2, 6, 0),
       '& > div': {
         background: theme.palette.common.white,
         border: `1px solid ${theme.palette.secondary.main}`,

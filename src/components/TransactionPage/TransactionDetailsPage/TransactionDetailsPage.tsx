@@ -9,7 +9,7 @@ import { TxLogItem, TxLogService } from '../../../services/txLogService';
 import Layout from '../../Layout';
 import OrderSubTotal from '../../OrderSubTotal';
 import OrderLineItem from '../../OrderLineItem';
-import ReceiptPanel from '../../ReceiptPanel';
+import CustomContentPanel from '../../CustomContentPanel';
 import { useGetTxDetails } from '../useGetTxDetails';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
 
@@ -95,9 +95,16 @@ export const TransactionDetailsPage: React.FC = () => {
               </Box>
             </Grid>
             <Grid className={classes.gridItem}>
-              <ReceiptPanel title="Receipt" css={classes.receiptBoxWrapper} textReceipt={currentTransaction.receipt}>
+              <CustomContentPanel
+                title="Receipt"
+                css={classes.receiptBoxWrapper}
+                controlledProps={{
+                  isCopiable: true,
+                  content: currentTransaction.receipt,
+                }}
+              >
                 <pre>{currentTransaction.receipt || currentTransaction.hostResponseText}</pre>
-              </ReceiptPanel>
+              </CustomContentPanel>
             </Grid>
           </>
         </Grid>

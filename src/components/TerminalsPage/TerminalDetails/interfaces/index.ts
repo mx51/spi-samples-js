@@ -26,10 +26,3 @@ export interface IAboutTerminal {
   setReceiptToggle: (receiptToggle: IReceiptToggles) => void;
   terminal: ITerminalProps;
 }
-
-export interface IReceiptPanel {
-  children?: React.ReactNode;
-  title: string;
-  css: string;
-  textReceipt?: string;
-}
