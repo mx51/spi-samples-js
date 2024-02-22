@@ -118,7 +118,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
         role="tabpanel"
       >
         <div
-          class="MuiContainer-root MuiContainer-maxWidthLg"
+          class="MuiContainer-root makeStyles-root-17 MuiContainer-maxWidthLg"
         >
           <div
             class="MuiGrid-root makeStyles-container-18 MuiGrid-container"
@@ -127,10 +127,10 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
               class="MuiGrid-root MuiGrid-item"
             >
               <div
-                class="MuiBox-root MuiBox-root-40 makeStyles-lookupContainer-21"
+                class="MuiBox-root MuiBox-root-23 makeStyles-lookupContainer-19"
               >
                 <h1
-                  class="MuiTypography-root makeStyles-h1-22 MuiTypography-body1"
+                  class="MuiTypography-root makeStyles-h1-20 MuiTypography-body1"
                 >
                   Auto address check
                 </h1>
@@ -140,7 +140,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                   This support tool can be used by Merchants or L2 support users to test Auto address
                 </p>
                 <hr
-                  class="MuiDivider-root makeStyles-divider-24"
+                  class="MuiDivider-root makeStyles-divider-22"
                 />
                 <div
                   class="MuiGrid-root"
@@ -152,7 +152,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                       class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
                     >
                       <h2
-                        class="MuiTypography-root makeStyles-h2-43 MuiTypography-body1"
+                        class="MuiTypography-root makeStyles-h2-26 MuiTypography-body1"
                       >
                         Test Auto address
                       </h2>
@@ -204,10 +204,10 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                           </svg>
                           <fieldset
                             aria-hidden="true"
-                            class="PrivateNotchedOutline-root-56 MuiOutlinedInput-notchedOutline"
+                            class="PrivateNotchedOutline-root-39 MuiOutlinedInput-notchedOutline"
                           >
                             <legend
-                              class="PrivateNotchedOutline-legendLabelled-58"
+                              class="PrivateNotchedOutline-legendLabelled-41"
                             >
                               <span>
                                 Tenant
@@ -217,12 +217,12 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                         </div>
                       </div>
                       <p
-                        class="MuiTypography-root makeStyles-infoText-45 MuiTypography-body1"
+                        class="MuiTypography-root makeStyles-infoText-28 MuiTypography-body1"
                       >
                         Select the tenant for the Auto address test
                       </p>
                       <div
-                        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-60 MuiFormControl-marginDense MuiFormControl-fullWidth"
+                        class="MuiFormControl-root MuiTextField-root WithStyles(ForwardRef(TextField))-root-43 MuiFormControl-marginDense MuiFormControl-fullWidth"
                         data-test-id="autoAddressSerialNumberField"
                         theme="[object Object]"
                       >
@@ -251,10 +251,10 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                           />
                           <fieldset
                             aria-hidden="true"
-                            class="PrivateNotchedOutline-root-56 MuiOutlinedInput-notchedOutline"
+                            class="PrivateNotchedOutline-root-39 MuiOutlinedInput-notchedOutline"
                           >
                             <legend
-                              class="PrivateNotchedOutline-legendLabelled-58"
+                              class="PrivateNotchedOutline-legendLabelled-41"
                             >
                               <span>
                                 Serial Number
@@ -266,26 +266,26 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                         
                       </div>
                       <p
-                        class="MuiTypography-root makeStyles-infoText-45 MuiTypography-body1"
+                        class="MuiTypography-root makeStyles-infoText-28 MuiTypography-body1"
                       >
                         Enter terminal serial number
                       </p>
                       <div
-                        class="MuiFormGroup-root makeStyles-testMode-46"
+                        class="MuiFormGroup-root makeStyles-testMode-29"
                       >
                         <label
                           class="MuiFormControlLabel-root"
                         >
                           <span
                             aria-disabled="false"
-                            class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-61 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
+                            class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-44 MuiCheckbox-root MuiCheckbox-colorPrimary MuiIconButton-colorPrimary"
                             data-test-id="autoAddressCheckbox"
                           >
                             <span
                               class="MuiIconButton-label"
                             >
                               <input
-                                class="PrivateSwitchBase-input-64"
+                                class="PrivateSwitchBase-input-47"
                                 data-indeterminate="false"
                                 name="testMode"
                                 type="checkbox"
@@ -314,7 +314,7 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
                         </label>
                       </div>
                       <button
-                        class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-submitBtn-47 MuiButton-containedPrimary"
+                        class="MuiButtonBase-root MuiButton-root MuiButton-contained makeStyles-submitBtn-30 MuiButton-containedPrimary"
                         data-test-id="autoAddressSubmitButton"
                         tabindex="0"
                         type="button"
@@ -335,17 +335,11 @@ exports[`Test <SupportToolsPage /> snapshot for SupportToolsPage component 1`] =
               </div>
             </div>
             <div
-              class="MuiGrid-root makeStyles-panelRow-19 MuiGrid-item"
+              class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-2"
             />
           </div>
         </div>
       </div>
-      <div
-        aria-labelledby="simple-tab-1"
-        hidden=""
-        id="simple-tabpanel-1"
-        role="tabpanel"
-      />
     </div>
   </div>
 </div>
