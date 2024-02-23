@@ -12,7 +12,7 @@ import {
 import FlowPanel from '../FlowPanel';
 import Layout from '../Layout';
 import PurchaseFlow from '../PurchaseFlow';
-import ReceiptPanel from '../ReceiptPanel';
+import CustomContentPanel from '../CustomContentPanel';
 import useStyles from './index.style';
 import { PaymentSummary } from '../PaymentSummary/PaymentSummary';
 
@@ -39,9 +39,9 @@ function OrderFinished(): React.ReactElement {
           />
         </Grid>
         <Grid item xs={3}>
-          <ReceiptPanel title="Receipt" css={classes.receiptBoxWrapper}>
+          <CustomContentPanel title="Receipt" css={classes.receiptBoxWrapper}>
             <pre>{currentTerminal?.txFlow?.response?.data.merchantReceipt}</pre>
-          </ReceiptPanel>
+          </CustomContentPanel>
         </Grid>
         <Grid item xs={4}>
           <FlowPanel>

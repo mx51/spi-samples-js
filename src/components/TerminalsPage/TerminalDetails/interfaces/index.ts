@@ -13,7 +13,7 @@ export interface TabPanelProps {
   title: string;
   value: number;
   receiptToggle?: IReceiptToggles;
-  terminal: ITerminalProps | null;
+  terminal?: ITerminalProps | null;
 }
 
 export interface ITerminalConfigurationConstants {
@@ -25,11 +25,4 @@ export interface IAboutTerminal {
   receiptToggle: IReceiptToggles;
   setReceiptToggle: (receiptToggle: IReceiptToggles) => void;
   terminal: ITerminalProps;
-}
-
-export interface IReceiptPanel {
-  children?: React.ReactNode;
-  title: string;
-  css: string;
-  textReceipt?: string;
 }

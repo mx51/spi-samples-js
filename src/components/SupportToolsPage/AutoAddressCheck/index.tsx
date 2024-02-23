@@ -272,12 +272,7 @@ function AutoAddressCheck(): React.ReactElement {
   const onEnvironmentChange = (e: IFormEventValue) => setSelectedEnvironment(e.target.value as string);
 
   return (
-    <Box className={classes.toolContainer}>
-      <Typography component="h1" className={classes.h1}>
-        Auto address check
-      </Typography>
-      <Typography>This support tool can be used by Merchants or L2 support users to test Auto address</Typography>
-      <Divider className={classes.divider} />
+    <>
       <Grid container spacing={4}>
         <Grid item xs={4}>
           <Typography component="h2" className={classes.h2}>
@@ -390,7 +385,8 @@ function AutoAddressCheck(): React.ReactElement {
         webSocketConnectionFqdn={webSocketConnectionFqdn}
         timeStampIp={timeStampIp}
       />
-    </Box>
+      {/* // </Box> */}
+    </>
   );
 }
 

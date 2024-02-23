@@ -108,12 +108,12 @@ const useStyles = makeStyles((theme: Theme) =>
       }),
       marginRight: 0,
     },
-    receiptPanel: {
+    CustomContentPanel: {
       flexShrink: 0,
       marginLeft: theme.spacing(4),
       width: `${drawerWidth}%`,
     },
-    receiptPanelOpened: {
+    CustomContentPanelOpened: {
       backgroundColor: theme.palette.common.white,
       border: `1px solid ${theme.palette.secondary.main}`,
       borderRadius: theme.spacing(0.5),

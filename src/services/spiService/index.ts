@@ -914,6 +914,11 @@ class SpiService {
     const spi = this.setSpiConfig(instanceId);
     return spi.AcceptSignature(false);
   }
+
+  initiateGetTransaction(instanceId: string, posRefId: string) {
+    const spi = this.readTerminalInstance(instanceId).spiClient;
+    return spi.InitiateGetTx(posRefId);
+  }
 }
 
 const spiService = new SpiService();

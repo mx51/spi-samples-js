@@ -13,7 +13,7 @@ import {
 } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import FlowPanel from '../../../FlowPanel';
 import PairFlow from '../../../FlowPanel/PairFlow';
-import ReceiptPanel from '../../../ReceiptPanel';
+import CustomContentPanel from '../../../CustomContentPanel';
 import { TabPanelProps } from '../interfaces';
 import useStyles from './index.styles';
 
@@ -79,19 +79,19 @@ export default function TabPanel({
                 <Grid
                   className={
                     receiptToggle?.settlement || receiptToggle?.settlementEnquiry
-                      ? classes.receiptPanelOpened
-                      : classes.receiptPanel
+                      ? classes.CustomContentPanelOpened
+                      : classes.CustomContentPanel
                   }
                 >
                   {receiptToggle?.settlement && (
-                    <ReceiptPanel title="Settlement Receipt" css={classes.receiptBoxWrapper}>
+                    <CustomContentPanel title="Settlement Receipt" css={classes.receiptBoxWrapper}>
                       <ReceiptContentDOM />
-                    </ReceiptPanel>
+                    </CustomContentPanel>
                   )}
                   {receiptToggle?.settlementEnquiry && (
-                    <ReceiptPanel title="Settlement Enquiry Receipt" css={classes.receiptBoxWrapper}>
+                    <CustomContentPanel title="Settlement Enquiry Receipt" css={classes.receiptBoxWrapper}>
                       <ReceiptContentDOM />
-                    </ReceiptPanel>
+                    </CustomContentPanel>
                   )}
                 </Grid>
               </Grid>

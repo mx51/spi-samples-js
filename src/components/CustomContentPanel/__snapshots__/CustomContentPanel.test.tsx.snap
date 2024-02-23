@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test <ReceiptPanel /> should match ReceiptPanel snapshot test 1`] = `
+exports[`Test <CustomContentPanel /> should match CustomContentPanel snapshot test 1`] = `
 <div>
   <div
     class="MuiGrid-root {}"

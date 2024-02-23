@@ -52,8 +52,8 @@ export default function PurchaseFlow(): React.ReactElement {
 # ----------- STATUS -----------
 
 # WE DID NOT GET PAID :(
-# Error Detail: see 'host_response_text' for details
-# Response: ${spi?.txFlow?.response?.data?.hostResponseText}
+# Error Detail: ${spi?.txFlow?.displayMessage}
+# Host Response: ${spi?.txFlow?.response?.data?.hostResponseText}
 # RRN: ${spi?.txFlow?.response?.data?.rrn}
 `;
 

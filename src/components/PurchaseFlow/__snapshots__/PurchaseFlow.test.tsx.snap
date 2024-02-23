@@ -31,8 +31,8 @@ exports[`Test <PurchaseFlow /> should show FAILED STATUS contents as snapshot te
 # ----------- STATUS -----------
 
 # WE DID NOT GET PAID :(
-# Error Detail: see 'host_response_text' for details
-# Response: undefined
+# Error Detail: undefined
+# Host Response: undefined
 # RRN: undefined
 
   </pre>
