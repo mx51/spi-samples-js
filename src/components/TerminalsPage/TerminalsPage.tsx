@@ -1,17 +1,16 @@
 import React from 'react';
 import { Box, Button, Container, Typography } from '@material-ui/core';
 import { Link as LinkRouter } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import { PATH_PAIR } from '../../definitions/constants/routerConfigs';
-import { useAppSelector } from '../../redux/hooks';
 import Layout from '../Layout';
-import NoTerminalPage from '../NoTerminalPage';
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
+import { terminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
-  const terminals = useAppSelector((state) => state.terminals);
-  const terminalList = Object.values(terminals);
+  const terminals = useSelector(terminalList);
 
   return (
     <Layout>
@@ -28,7 +27,7 @@ const Terminals: React.FC = () => {
             </Button>
           </Box>
         </Box>
-        {terminalList.length <= 0 ? <NoTerminalPage /> : <TerminalList terminals={terminalList} />}
+        <TerminalList terminals={terminals} />
       </Container>
     </Layout>
   );

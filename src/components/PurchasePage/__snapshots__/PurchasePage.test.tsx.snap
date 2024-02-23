@@ -86,24 +86,24 @@ exports[`Test <PurchasePage /> snapshot for PurchasePage component 1`] = `
               <h6
                 class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom"
               >
-                It looks like you don’t have any terminals paired yet
+                You don't have any terminals paired yet.
               </h6>
               <p
                 class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
               >
-                Fortunately, it’s very easy to pair a terminal and start using our Sample POS.
+                Fortunately, it's very easy to pair a terminal and start using Espresso POS.
               </p>
               <a
                 aria-disabled="false"
                 class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-                href="/terminals/new"
+                href="/terminals"
                 role="button"
                 tabindex="0"
               >
                 <span
                   class="MuiButton-label"
                 >
-                  + Pair terminal
+                  Go to terminals
                 </span>
                 <span
                   class="MuiTouchRipple-root"

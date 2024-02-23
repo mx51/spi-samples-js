@@ -16,13 +16,18 @@ import { TxFlowState } from '../../../definitions/constants/terminalConfigs';
 import { RootState } from '../../store';
 import { IPairingFlow, ITerminalProps, ITerminalReceiptFormatProps, ITerminalState, ITxMessage } from './interfaces';
 
-export const terminalList = (state: RootState): ITerminalState => state.terminals;
+export const terminalMap = (state: RootState): ITerminalState => {
+  const { _persist, ...terminals } = state.terminals;
+  return terminals;
+};
+
+export const terminalList = createSelector(terminalMap, (tMap) => Object.values(tMap));
 
 export const terminalInstance = (instanceId: string): ((state: RootState) => ITerminalProps) =>
-  createSelector(terminalList, (terminals) => terminals[instanceId]);
+  createSelector(terminalMap, (terminals) => terminals[instanceId]);
 
-export const pairedConnectedTerminalList = createSelector(terminalList, (terminals: ITerminalState) =>
-  Object.values(terminals).filter((terminal: ITerminalProps) => terminal.status === SPI_PAIR_STATUS.PairedConnected)
+export const pairedConnectedTerminalList = createSelector(terminalList, (terminals) =>
+  terminals.filter((terminal: ITerminalProps) => terminal.status === SPI_PAIR_STATUS.PairedConnected)
 );
 
 export const isPaired = createSelector(
