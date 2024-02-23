@@ -389,19 +389,15 @@ class SpiService {
       };
       instance.spiPat.GetOpenTables = (operatorId?: string): GetOpenTablesResponse =>
         new GetOpenTablesResponse(
-          store
-            .getState()
-            .payAtTable.tables.filter((table) => !operatorId || !table.operatorId || operatorId === table.operatorId)
-            .map(
-              (table) =>
-                new OpenTablesEntry({
-                  TableId: String(table.tableId),
-                  Label: table.label,
-                  BillOutstandingAmount: table.outStandingAmount,
-                })
-            )
+          store.getState().payAtTable.tables.map(
+            (table) =>
+              new OpenTablesEntry({
+                TableId: String(table.tableId),
+                Label: table.label,
+                BillOutstandingAmount: table.outStandingAmount,
+              })
+          )
         );
-
       // Setup PAT
       if (this.state.patConfig.payAtTableEnabled) {
         instance.spiPat.Config.PayAtTableEnabled = this.state.patConfig.payAtTableEnabled;
