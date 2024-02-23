@@ -916,7 +916,7 @@ class SpiService {
   }
 
   initiateGetTransaction(instanceId: string, posRefId: string) {
-    const spi = this.setSpiConfig(instanceId);
+    const spi = this.readTerminalInstance(instanceId).spiClient;
     return spi.InitiateGetTx(posRefId);
   }
 }

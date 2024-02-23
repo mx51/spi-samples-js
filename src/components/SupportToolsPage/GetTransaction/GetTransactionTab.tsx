@@ -1,7 +1,7 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 import { Container } from '@material-ui/core';
-import { CustomTabPage } from '../../CustomTabPage/CustomTabPage';
+import { CustomTab } from '../../CustomTab/CustomTab';
 import { GetTransactionPanel } from './GetTransactionPanel';
 import CustomContentPanel from '../../CustomContentPanel';
 import PurchaseFlow from '../../PurchaseFlow';
@@ -9,7 +9,7 @@ import { isPaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSe
 import useStyles from './index.styles';
 import NoTerminalPage from '../../NoTerminalPage';
 
-export const GetTransactionPage: React.FC<{ tabIndex: number }> = ({ tabIndex }) => {
+export const GetTransactionTab: React.FC<{ tabIndex: number }> = ({ tabIndex }) => {
   const classes = useStyles();
   const [receipt, setReceipt] = React.useState('');
   const [hasSearched, setHasSearched] = React.useState(false);
@@ -32,7 +32,7 @@ export const GetTransactionPage: React.FC<{ tabIndex: number }> = ({ tabIndex })
   return (
     <>
       {isTerminalPaired ? (
-        <CustomTabPage
+        <CustomTab
           index={1}
           title="Get transaction"
           subtitle="Retrieve status and receipts of a specified transaction"
@@ -40,7 +40,7 @@ export const GetTransactionPage: React.FC<{ tabIndex: number }> = ({ tabIndex })
           customGridPanel={gridComponents()}
         >
           <GetTransactionPanel setReceipt={setReceipt} hasSearched={hasSearched} setHasSearched={setHasSearched} />
-        </CustomTabPage>
+        </CustomTab>
       ) : (
         <>
           {tabIndex === 1 ? (

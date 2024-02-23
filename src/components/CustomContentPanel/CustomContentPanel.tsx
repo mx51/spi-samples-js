@@ -10,17 +10,16 @@ export type CustomContentPanelProps = {
   children: React.ReactNode;
   title: string;
   css: string;
-  controlledProps?: {
-    isCopiable: boolean;
-    content: string;
-  };
+  isCopiable?: boolean;
+  content?: string;
 };
 
 export default function CustomContentPanel({
   children,
   title,
   css,
-  controlledProps,
+  isCopiable,
+  content,
 }: CustomContentPanelProps): React.ReactElement {
   const classes = useCustomContentPanelStyles();
   const [copySuccess, setCopySuccess] = useState<string>('');
@@ -48,8 +47,8 @@ export default function CustomContentPanel({
             {children}
           </Grid>
           <Grid item md={12} className={classes.buttonGrid}>
-            {controlledProps?.isCopiable ? (
-              <Button className={classes.button} onClick={() => copyToClipboard(controlledProps.content)}>
+            {isCopiable && content ? (
+              <Button className={classes.button} onClick={() => copyToClipboard(content)}>
                 {copySuccess ? <TickIcon /> : <CopyIcon />}
                 Copy Receipt
               </Button>

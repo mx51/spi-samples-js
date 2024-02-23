@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Tab, Tabs } from '@material-ui/core';
 import Layout from '../Layout';
 import useStyles from './index.styles';
-import { GetTransactionPage } from './GetTransaction/GetTransactionPage';
-import { AutoAddressCheckPage } from './AutoAddressCheck/AutoAddressCheckPage';
+import { GetTransactionTab } from './GetTransaction/GetTransactionTab';
+import { AutoAddressCheckTab } from './AutoAddressCheck/AutoAddressCheckTab';
 
 const SupportToolsPage: React.FC = () => {
   const classes = useStyles();
@@ -27,8 +27,8 @@ const SupportToolsPage: React.FC = () => {
           <Tab id="getTransactionTab" label="Get Transaction" />
         </Tabs>
 
-        <AutoAddressCheckPage tabIndex={tabIndex} />
-        <GetTransactionPage tabIndex={tabIndex} />
+        <AutoAddressCheckTab tabIndex={tabIndex} />
+        <GetTransactionTab tabIndex={tabIndex} />
       </div>
     </Layout>
   );

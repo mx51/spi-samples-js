@@ -4,7 +4,7 @@ import useStyles from './index.styles';
 import { useAppSelector } from '../../redux/hooks';
 import { selectedShowFlowPanel } from '../../redux/reducers/CommonSlice/commonSliceSelectors';
 
-interface CustomTabPageProps {
+interface CustomTabProps {
   children?: React.ReactNode;
   index: number;
   value: number;
@@ -13,26 +13,12 @@ interface CustomTabPageProps {
   customGridPanel?: React.ReactNode;
 }
 
-export const CustomTabPage = ({
-  children,
-  value,
-  index,
-  title,
-  subtitle,
-  customGridPanel,
-  ...other
-}: CustomTabPageProps) => {
+export const CustomTab = ({ children, value, index, title, subtitle, customGridPanel, ...other }: CustomTabProps) => {
   const showFlowPanel = useAppSelector(selectedShowFlowPanel);
   const classes = useStyles({ showFlowPanel });
 
   return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`simple-tabpanel-${index}`}
-      aria-labelledby={`simple-tab-${index}`}
-      {...other}
-    >
+    <div role="tabpanel" id={`simple-tabpanel-${index}`} aria-labelledby={`simple-tab-${index}`} {...other}>
       {value === index && (
         <Container className={classes.root} maxWidth="lg">
           <Grid container className={classes.container}>

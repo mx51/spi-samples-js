@@ -98,10 +98,8 @@ export const TransactionDetailsPage: React.FC = () => {
               <CustomContentPanel
                 title="Receipt"
                 css={classes.receiptBoxWrapper}
-                controlledProps={{
-                  isCopiable: true,
-                  content: currentTransaction.receipt,
-                }}
+                isCopiable
+                content={currentTransaction.receipt}
               >
                 <pre>{currentTransaction.receipt || currentTransaction.hostResponseText}</pre>
               </CustomContentPanel>
