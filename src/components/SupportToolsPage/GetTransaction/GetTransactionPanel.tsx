@@ -34,7 +34,7 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
   const classes = useStyles();
   const dispatch = useDispatch();
   const [posRefId, setPosRefId] = useState<string>('');
-  const terminals = useSelector(pairedConnectedTerminalList);
+  const pairedConnectedTerminals = useSelector(pairedConnectedTerminalList);
   const selectedTerminalId = useSelector(selectedTerminalIdSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
   const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
@@ -57,6 +57,11 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
 
   const onSelectTerminal = (terminalId: string) => {
     dispatch(updateSelectedTerminal(terminalId));
+  };
+
+  const isTerminalSelectedAndPaired = () => {
+    const userSelectedTerminal = pairedConnectedTerminals.find((terminal) => terminal.id === selectedTerminal);
+    return userSelectedTerminal?.status === 'PairedConnected';
   };
 
   return (
@@ -86,7 +91,7 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
           <RadioGroup className={classes.radioGroup} aria-label="terminalList" name="terminalList">
             <Box>
               <List>
-                {terminals.map((terminal) => (
+                {pairedConnectedTerminals.map((terminal) => (
                   <ListItem key={terminal.id} dense disableGutters onClick={() => onSelectTerminal(terminal.id)}>
                     <ListItemIcon>
                       <Radio
@@ -112,7 +117,7 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
             data-test-id="getTransactionSearchButton"
             onClick={onSubmitBtnClick}
             variant="contained"
-            disabled={!selectedTerminal || !posRefId}
+            disabled={!isTerminalSelectedAndPaired() || !posRefId}
           >
             Search
           </Button>
