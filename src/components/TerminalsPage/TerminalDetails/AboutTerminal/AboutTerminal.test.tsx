@@ -10,6 +10,7 @@ import mockWithRedux, {
   defaultMockTerminals,
   mockSpiClient,
   mockTerminalInstanceId,
+  pairedMockTerminals,
 } from '../../../../utils/tests/common';
 
 describe('Test <AboutTerminal />', () => {
@@ -23,7 +24,7 @@ describe('Test <AboutTerminal />', () => {
           settlementEnquiry: false,
         }}
         setReceiptToggle={jest.fn()}
-        terminal={defaultMockTerminals[mockTerminalInstanceId]}
+        terminal={pairedMockTerminals[mockTerminalInstanceId]}
       />
     );
   });
@@ -141,7 +142,7 @@ describe('Test <AboutTerminal />', () => {
           settlementEnquiry: false,
         }}
         setReceiptToggle={jest.fn()}
-        terminal={defaultMockTerminals[mockTerminalInstanceId]}
+        terminal={pairedMockTerminals[mockTerminalInstanceId]}
       />
     );
     const terminalDetailsSettlementBtnDOM = newMockContainer.querySelector(
@@ -175,7 +176,7 @@ describe('Test <AboutTerminal />', () => {
           settlementEnquiry: true,
         }}
         setReceiptToggle={jest.fn()}
-        terminal={defaultMockTerminals[mockTerminalInstanceId]}
+        terminal={pairedMockTerminals[mockTerminalInstanceId]}
       />
     );
     const terminalDetailsSettlementEnquiryBtnBtnDOM = newMockContainer.querySelector(

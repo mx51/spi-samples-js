@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Button, Container, Grid } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectedShowFlowPanel } from '../../redux/reducers/CommonSlice/commonSliceSelectors';
 import { resetPairForm } from '../../redux/reducers/PairFormSlice/pairFormSlice';
@@ -13,19 +13,25 @@ import useStyles from './index.styles';
 import PairForm from './PairForm';
 import PairStatus from './PairStatus';
 import { PATH_TERMINALS } from '../../definitions/constants/routerConfigs';
+import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
 
 const PairPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const showFlowPanel = useAppSelector(selectedShowFlowPanel);
   const classes = useStyles(showFlowPanel as unknown as IFlowPanel);
+  const { id }: { id: string } = useParams<{ id: string }>();
+  const currentTerminal = id ? useAppSelector<ITerminalProps>(terminalInstance(id)) : undefined;
 
   const goToTerminals = () => {
     history.push(PATH_TERMINALS);
   };
 
   useEffect(() => {
-    dispatch(resetPairForm()); // reset paired form when required
+    if (!currentTerminal) {
+      dispatch(resetPairForm()); // reset paired form when required
+    }
   }, [dispatch]);
 
   return (
@@ -41,7 +47,7 @@ const PairPage: React.FC = () => {
                   </svg>
                   <span className={classes.backLinkText}>Back to Terminals</span>
                 </Button>
-                <PairForm />
+                <PairForm currentTerminal={currentTerminal} />
               </Grid>
               <Grid item sm={4} xs={12} className={classes.pairStatusContainer}>
                 <PairStatus />

@@ -127,13 +127,17 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
               >
                 Serial number
               </th>
+              <th
+                class="MuiTableCell-root MuiTableCell-head"
+                scope="col"
+              />
             </tr>
           </thead>
           <tbody
             class="MuiTableBody-root"
           >
             <tr
-              class="MuiTableRow-root makeStyles-unclickable-20"
+              class="MuiTableRow-root"
               id="terminal_123-123-123"
             >
               <td
@@ -164,6 +168,32 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
                 class="MuiTableCell-root MuiTableCell-body"
               >
                 123-123-123
+              </td>
+              <td
+                class="MuiTableCell-root MuiTableCell-body"
+              >
+                <div>
+                  <button
+                    aria-haspopup="true"
+                    aria-label="menu"
+                    class="MuiButtonBase-root MuiIconButton-root"
+                    data-testid="terminal-action-button-123-123-123"
+                    id="terminal-action-button-123-123-123"
+                    tabindex="0"
+                    type="button"
+                  >
+                    <span
+                      class="MuiIconButton-label"
+                    >
+                      <svg>
+                        MoreVerticalcon.svg
+                      </svg>
+                    </span>
+                    <span
+                      class="MuiTouchRipple-root"
+                    />
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>

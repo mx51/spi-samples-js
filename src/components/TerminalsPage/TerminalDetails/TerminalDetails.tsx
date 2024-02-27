@@ -33,48 +33,44 @@ export default function TerminalDetails(): React.ReactElement {
 
   return (
     <Layout>
-      {currentTerminal?.status === SPI_PAIR_STATUS.PairedConnected ? (
-        <div className={classes.root}>
-          <Tabs
-            aria-label="terminal details tabs"
-            className={classes.tabs}
-            id="terminalDetailsTabs"
-            onChange={handleTabChange}
-            value={tabIndex}
-          >
-            <Tab id="aboutTerminalTab" label="About this terminal" />
-            {/* <Tab id="payAtTableTab" label="Pay at Table" /> */}
-            {/* <Tab id="eftposSettings" label="EFTPOS Settings" /> */}
-          </Tabs>
+      <div className={classes.root}>
+        <Tabs
+          aria-label="terminal details tabs"
+          className={classes.tabs}
+          id="terminalDetailsTabs"
+          onChange={handleTabChange}
+          value={tabIndex}
+        >
+          <Tab id="aboutTerminalTab" label="About this terminal" />
+          {/* <Tab id="payAtTableTab" label="Pay at Table" /> */}
+          {/* <Tab id="eftposSettings" label="EFTPOS Settings" /> */}
+        </Tabs>
 
-          <TabPanel
-            index={0}
-            subtitle="View information about this terminal and the pairing configuration"
-            title="About this terminal"
-            value={tabIndex}
+        <TabPanel
+          index={0}
+          subtitle="View information about this terminal and the pairing configuration"
+          title="About this terminal"
+          value={tabIndex}
+          receiptToggle={receiptToggle}
+          terminal={currentTerminal}
+        >
+          <AboutTerminal
             receiptToggle={receiptToggle}
-            terminal={currentTerminal}
-          >
-            <AboutTerminal
-              receiptToggle={receiptToggle}
-              setReceiptToggle={setReceiptToggle}
-              terminal={currentTerminal as ITerminalProps}
-            />
-          </TabPanel>
+            setReceiptToggle={setReceiptToggle}
+            terminal={currentTerminal as ITerminalProps}
+          />
+        </TabPanel>
 
-          <TabPanel
-            index={1}
-            subtitle="Configure your Pay at Table settings for this terminal"
-            title="Pay at Table"
-            value={tabIndex}
-            terminal={currentTerminal}
-          >
-            <PaTSettings />
-          </TabPanel>
-        </div>
-      ) : (
-        <NotFound />
-      )}
+        <TabPanel
+          index={1}
+          subtitle="Configure your Pay at Table settings for this terminal"
+          title="Pay at Table"
+          value={tabIndex}
+          terminal={currentTerminal}
+        >
+          <PaTSettings />
+        </TabPanel>
+      </div>
     </Layout>
   );
 }

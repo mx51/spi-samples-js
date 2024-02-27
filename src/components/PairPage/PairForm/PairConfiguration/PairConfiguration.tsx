@@ -55,14 +55,34 @@ import {
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
-import { IFormEventCheckbox, IFormEventValue } from '../interfaces';
+import { IFormEventCheckbox, IFormEventValue, ITerminal } from '../interfaces';
+import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfaces';
 
-export default function PairConfiguration(): React.ReactElement {
+export default function PairConfiguration({ currentTerminal }: ITerminal): React.ReactElement {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   // read redux store states
   const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode, environment } =
     useAppSelector(pairForm);
+
+  useEffect(() => {
+    if (currentTerminal) {
+      const keys: (keyof ITerminalProps)[] = ['acquirerCode', 'deviceAddress', 'posId', 'serialNumber', 'testMode'];
+      keys.forEach((key) => {
+        dispatch(
+          updatePairFormParams({
+            key,
+            value: {
+              value: key === 'deviceAddress' ? currentTerminal[key].split('//')[1] : currentTerminal[key],
+              isValid: true,
+              option: key === 'acquirerCode' ? currentTerminal[key] : undefined,
+            },
+          })
+        );
+      });
+    }
+  }, [dispatch]);
+
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));

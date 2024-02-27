@@ -1,16 +1,19 @@
 import React from 'react';
 import { Box, Button, Container, Typography } from '@material-ui/core';
 import { Link as LinkRouter } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 import { PATH_PAIR } from '../../definitions/constants/routerConfigs';
 import Layout from '../Layout';
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
-import { terminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import NoTerminalPage from '../NoTerminalPage';
+import { useAppSelector } from '../../redux/hooks';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
-  const terminals = useSelector(terminalList);
+  const terminals = useAppSelector((state) => state.terminals);
+  const terminalList = Object.entries(terminals)
+    .filter((t) => t[0] !== '_persist' && t[0] !== '') // remove property set by redux-persist
+    .map((t) => t[1]);
 
   return (
     <Layout>
@@ -22,12 +25,16 @@ const Terminals: React.FC = () => {
             </Typography>
           </Box>
           <Box>
-            <Button variant="contained" color="primary" component={LinkRouter} to={PATH_PAIR}>
-              + Pair new terminal
-            </Button>
+            {terminalList.length === 0 ? (
+              ' '
+            ) : (
+              <Button variant="contained" color="primary" component={LinkRouter} to={PATH_PAIR}>
+                + Pair new terminal
+              </Button>
+            )}
           </Box>
         </Box>
-        <TerminalList terminals={terminals} />
+        {terminalList.length <= 0 ? <NoTerminalPage /> : <TerminalList terminals={terminalList} />}
       </Container>
     </Layout>
   );

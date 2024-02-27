@@ -1,20 +1,14 @@
-import React from 'react';
 import { Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
-import { useHistory } from 'react-router-dom';
+import React from 'react';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
-import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
 import { getTitleFromStatus } from '../../../utils/common/pair/pairStatusHelpers';
+import TerminalActionMenu from '../../TerminalActionMenu';
 import useStyles from './index.styles';
 import { ITerminalList } from './interfaces';
 
 function TerminalList({ terminals }: ITerminalList): React.ReactElement {
   const classes = useStyles();
-  const history = useHistory();
-
-  const goToTerminalDetails = (path: string) => {
-    history.push(path);
-  };
 
   const chipStyles = (status: string) => {
     switch (status) {
@@ -38,15 +32,15 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
             <TableCell>Pairing status</TableCell>
             <TableCell>EFTPOS address</TableCell>
             <TableCell>Serial number</TableCell>
+            <TableCell />
           </TableRow>
         </TableHead>
         <TableBody>
           {terminals.map((terminal: ITerminalProps) => (
             <TableRow
-              className={terminal.status !== SPI_PAIR_STATUS.PairedConnected ? classes.unclickable : classes.link}
+              // className={terminal.status !== SPI_PAIR_STATUS.PairedConnected ? classes.unclickable : classes.link}
               id={`terminal_${terminal.serialNumber}`}
               key={`terminal_${terminal.deviceAddress}`}
-              onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
             >
               <TableCell scope="row">{terminal.posId}</TableCell>
               <TableCell>
@@ -58,6 +52,9 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
               </TableCell>
               <TableCell>{terminal.deviceAddress}</TableCell>
               <TableCell>{terminal.serialNumber}</TableCell>
+              <TableCell>
+                <TerminalActionMenu terminal={terminal} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

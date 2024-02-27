@@ -19,10 +19,9 @@ replaceAllInserter.shim();
 describe('Test <PairConfiguration />', () => {
   let dispatch: Any;
   let mockContainer: Any;
-
   beforeEach(() => {
     dispatch = jest.fn();
-    mockContainer = mockWithRedux(<PairConfiguration />);
+    mockContainer = mockWithRedux(<PairConfiguration currentTerminal={undefined} />);
   });
 
   afterEach(cleanup);

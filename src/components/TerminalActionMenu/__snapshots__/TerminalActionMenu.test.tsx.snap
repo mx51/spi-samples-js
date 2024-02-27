@@ -1,0 +1,28 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <TerminalActionMenu /> should match snapshot 1`] = `
+<div>
+  <div>
+    <button
+      aria-haspopup="true"
+      aria-label="menu"
+      class="MuiButtonBase-root MuiIconButton-root"
+      data-testid="terminal-action-button-123-123-123"
+      id="terminal-action-button-123-123-123"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiIconButton-label"
+      >
+        <svg>
+          MoreVerticalcon.svg
+        </svg>
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </div>
+</div>
+`;
