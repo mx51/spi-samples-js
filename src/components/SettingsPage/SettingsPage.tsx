@@ -52,7 +52,7 @@ const SettingsPage: React.FC = () => {
                 value={tabIndex}
               >
                 <Tab label="Terminal Settings" />
-                {/* <Tab label="Pay At Table Settings" /> */}
+                <Tab label="Pay At Table Settings" />
               </Tabs>
               {panelByIndex[tabIndex]}
             </Grid>
