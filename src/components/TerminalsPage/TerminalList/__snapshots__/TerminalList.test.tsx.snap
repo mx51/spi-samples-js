@@ -1,0 +1,84 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <TerminalList /> should match TerminalList snapshot test 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiTableContainer-root makeStyles-table-1 MuiPaper-elevation0 MuiPaper-rounded"
+  >
+    <table
+      class="MuiTable-root"
+    >
+      <thead
+        class="MuiTableHead-root"
+      >
+        <tr
+          class="MuiTableRow-root MuiTableRow-head"
+        >
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            POS ID
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            Pairing status
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            EFTPOS address
+          </th>
+          <th
+            class="MuiTableCell-root MuiTableCell-head"
+            scope="col"
+          >
+            Serial number
+          </th>
+        </tr>
+      </thead>
+      <tbody
+        class="MuiTableBody-root"
+      >
+        <tr
+          class="MuiTableRow-root makeStyles-unclickable-6"
+          id="terminal_123-123-123"
+        >
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+            scope="row"
+          >
+            test
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+          >
+            <div
+              class="MuiChip-root makeStyles-chipUnpaired-4 MuiChip-sizeSmall"
+            >
+              <span
+                class="MuiChip-label MuiChip-labelSmall"
+              >
+                Unpaired
+              </span>
+            </div>
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+          >
+            https://mx51.aar.mock.link
+          </td>
+          <td
+            class="MuiTableCell-root MuiTableCell-body"
+          >
+            123-123-123
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+`;

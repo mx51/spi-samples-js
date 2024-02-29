@@ -1,0 +1,262 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <Order /> snapshot for Order component 1`] = `
+<div>
+  <div
+    class="MuiPaper-root MuiBox-root MuiBox-root-17 makeStyles-root-1 MuiPaper-elevation1 MuiPaper-rounded"
+  >
+    <div
+      class="MuiBox-root MuiBox-root-18 makeStyles-heading-2"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Order
+      </h1>
+      <div
+        class="MuiBox-root MuiBox-root-19"
+      >
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-clear-3"
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiButton-label"
+          >
+            Clear all
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <hr
+      class="MuiDivider-root"
+    />
+    <div
+      class="MuiBox-root MuiBox-root-20 makeStyles-orderList-12"
+    >
+      <ul
+        class="MuiList-root MuiList-padding"
+      />
+    </div>
+    <hr
+      class="MuiDivider-root"
+    />
+    <ul
+      class="MuiList-root MuiList-padding"
+    >
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-subTotal-21 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Subtotal
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root makeStyles-price-22 MuiTypography-body1"
+        >
+          $0.00
+        </p>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-23 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Surcharge
+          </span>
+        </div>
+        <span
+          aria-disabled="false"
+          aria-label="Add Amount"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-27"
+          role="button"
+          tabindex="0"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-23 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Cashout
+          </span>
+        </div>
+        <span
+          aria-disabled="false"
+          aria-label="Add Amount"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-27"
+          role="button"
+          tabindex="0"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+      </li>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-23 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Tip
+          </span>
+        </div>
+        <span
+          aria-disabled="false"
+          aria-label="Add Amount"
+          class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-27"
+          role="button"
+          tabindex="0"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+      </li>
+      <hr
+        class="MuiDivider-root makeStyles-divider-16 MuiDivider-middle"
+      />
+      <label
+        class="MuiFormControlLabel-root makeStyles-checkbox-13"
+      >
+        <span
+          aria-disabled="false"
+          class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-28 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-15 MuiIconButton-colorPrimary"
+        >
+          <span
+            class="MuiIconButton-label"
+          >
+            <input
+              class="PrivateSwitchBase-input-31"
+              data-indeterminate="false"
+              name="Prompt for Cashout"
+              type="checkbox"
+              value=""
+            />
+            <svg
+              aria-hidden="true"
+              class="MuiSvgIcon-root"
+              focusable="false"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+              />
+            </svg>
+          </span>
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </span>
+        <span
+          class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+        >
+          <p
+            class="MuiTypography-root makeStyles-checkboxLabel-14 MuiTypography-body1"
+          >
+            Prompt terminal for cashout
+          </p>
+        </span>
+      </label>
+      <li
+        class="MuiListItem-root MuiListItem-gutters"
+      >
+        <div
+          class="MuiListItemText-root"
+        >
+          <span
+            class="MuiTypography-root MuiListItemText-primary makeStyles-total-5 MuiTypography-body1 MuiTypography-displayBlock"
+          >
+            Total
+          </span>
+        </div>
+        <p
+          class="MuiTypography-root makeStyles-totalPrice-6 MuiTypography-body1"
+        >
+          $0.00
+        </p>
+      </li>
+    </ul>
+    <a
+      aria-disabled="true"
+      class="MuiButtonBase-root MuiButton-root makeStyles-payNowBtn-7 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+      href="/paynow"
+      role="button"
+      tabindex="-1"
+    >
+      <span
+        class="MuiButton-label makeStyles-actionBtnLabel-9"
+      >
+        Pay now
+      </span>
+    </a>
+  </div>
+</div>
+`;

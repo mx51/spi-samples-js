@@ -1,0 +1,386 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <ProductList /> snapshot for ProductList component 1`] = `
+<div>
+  <div
+    class="MuiBox-root MuiBox-root-1"
+  >
+    <div
+      class="MuiBox-root MuiBox-root-6"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Mocha"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-7 makeStyles-productImage-5"
+            >
+              <img
+                alt="Mocha"
+                src="images/product/mocha.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Mocha
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $4.20
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-8"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Honey Latte"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-9 makeStyles-productImage-5"
+            >
+              <img
+                alt="Honey Latte"
+                src="images/product/honeyLatte.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Honey Latte
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $4.80
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-10"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Flat White"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-11 makeStyles-productImage-5"
+            >
+              <img
+                alt="Flat White"
+                src="images/product/flatWhite.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Flat White
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $3.80
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-12"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Chai Latte"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-13 makeStyles-productImage-5"
+            >
+              <img
+                alt="Chai Latte"
+                src="images/product/chaiLatte.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Chai Latte
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $4.50
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-14"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Rose Tea Latte"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-15 makeStyles-productImage-5"
+            >
+              <img
+                alt="Rose Tea Latte"
+                src="images/product/roseTeaLatte.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Rose Tea Latte
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $4.50
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-16"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Cappuccino"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-17 makeStyles-productImage-5"
+            >
+              <img
+                alt="Cappuccino"
+                src="images/product/cap.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Cappuccino
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $3.80
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-18"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Latte"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-19 makeStyles-productImage-5"
+            >
+              <img
+                alt="Latte"
+                src="images/product/latte.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Latte
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $3.80
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+    <div
+      class="MuiBox-root MuiBox-root-20"
+    >
+      <div
+        class="MuiPaper-root MuiCard-root makeStyles-cardStyle-2 MuiPaper-elevation1 MuiPaper-rounded"
+      >
+        <button
+          class="MuiButtonBase-root MuiCardActionArea-root"
+          tabindex="0"
+          type="button"
+        >
+          <div
+            class="MuiCardMedia-root makeStyles-productText-3"
+            title="Espresso"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-21 makeStyles-productImage-5"
+            >
+              <img
+                alt="Espresso"
+                src="images/product/testItem.png"
+              />
+            </div>
+          </div>
+          <div
+            class="MuiCardContent-root"
+          >
+            <h2
+              class="MuiTypography-root makeStyles-productName-4 MuiTypography-h5"
+            >
+              Espresso
+            </h2>
+            <p
+              class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+            >
+              $3.50
+            </p>
+          </div>
+          <span
+            class="MuiCardActionArea-focusHighlight"
+          />
+          <span
+            class="MuiTouchRipple-root"
+          />
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+`;

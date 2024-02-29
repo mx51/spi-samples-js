@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <TabPanel /> should match TabPanel snapshot test 1`] = `
+<div>
+  <div
+    class="makeStyles-root-1 makeStyles-root-16"
+  >
+    <div
+      class="makeStyles-panel-2 makeStyles-panelShift-3"
+    >
+      <div
+        class="MuiContainer-root MuiContainer-maxWidthLg"
+      >
+        <div
+          class="MuiGrid-root makeStyles-detailsPanelContainer-9"
+        >
+          <div
+            class="makeStyles-detailsPanel-10 makeStyles-detailsPanelShift-11"
+          >
+            <div
+              class="MuiGrid-root MuiGrid-container"
+            >
+              <div
+                class="MuiGrid-root makeStyles-tabPanelContainer-4 MuiGrid-item"
+              >
+                <div
+                  class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-1 MuiGrid-direction-xs-column MuiGrid-justify-content-xs-space-between"
+                >
+                  <h1
+                    class="MuiTypography-root MuiTypography-h6"
+                  >
+                    Test tab 1 title
+                  </h1>
+                  <p
+                    class="MuiTypography-root makeStyles-text-6 MuiTypography-body1"
+                  >
+                    Test tab 1 subtitle
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div
+              class="MuiGrid-root"
+            >
+              <div>
+                Test Panel One
+              </div>
+            </div>
+          </div>
+          <div
+            class="MuiGrid-root makeStyles-CustomContentPanelOpened-13"
+          >
+            <div
+              class="MuiGrid-root makeStyles-receiptBoxWrapper-15"
+            >
+              <div
+                class="MuiBox-root MuiBox-root-23 makeStyles-box-22"
+              >
+                <div
+                  class="MuiGrid-root makeStyles-gridContainer-18"
+                >
+                  <div
+                    class="MuiGrid-root makeStyles-receiptGrid-19 MuiGrid-item MuiGrid-grid-md-12"
+                  >
+                    <h1
+                      class="MuiTypography-root MuiTypography-h6"
+                    >
+                      Settlement Receipt
+                    </h1>
+                  </div>
+                  <div
+                    class="MuiGrid-root makeStyles-buttonGrid-20 MuiGrid-item MuiGrid-grid-md-12"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiDrawer-root MuiDrawer-docked makeStyles-drawer-24"
+      data-test-id="flowPanel"
+    >
+      <div
+        class="MuiPaper-root MuiDrawer-paper makeStyles-drawerPaper-25 MuiDrawer-paperAnchorRight MuiDrawer-paperAnchorDockedRight MuiPaper-elevation0"
+      >
+        <div
+          class="MuiBox-root MuiBox-root-29 makeStyles-flowBoxWrapper-26"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-30 makeStyles-flowBox-27"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h6"
+            >
+              Flow
+            </h1>
+            <pre
+              class="makeStyles-flowContent-28"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

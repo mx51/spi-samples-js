@@ -1,0 +1,31 @@
+
+@import '../ColorPalette';
+
+
+fieldset.input {
+  border: 1px solid $secondaryGrey;
+  border-radius: 5px;
+  margin-bottom: .7rem;
+}
+
+fieldset.input:focus-within {
+  border: 1px solid $primary;
+}
+
+
+fieldset.input legend {
+  color: $primary;
+  font-size: 1rem;
+  letter-spacing: 1.25px;
+  margin: 0;
+  padding-right: 0.5rem;
+  padding-left: 0.5rem;
+}
+
+fieldset.input input, fieldset.input textarea  {
+  margin: 0;
+  border: none;
+  font-size: 1rem;
+  outline-width: 0;
+  width: 100%;
+}

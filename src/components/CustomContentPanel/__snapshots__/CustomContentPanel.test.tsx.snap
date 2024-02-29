@@ -1,0 +1,41 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <CustomContentPanel /> should match CustomContentPanel snapshot test 1`] = `
+<div>
+  <div
+    class="MuiGrid-root {}"
+  >
+    <div
+      class="MuiBox-root MuiBox-root-6 makeStyles-box-5"
+    >
+      <div
+        class="MuiGrid-root makeStyles-gridContainer-1"
+      >
+        <div
+          class="MuiGrid-root makeStyles-receiptGrid-2 MuiGrid-item MuiGrid-grid-md-12"
+        >
+          <h1
+            class="MuiTypography-root MuiTypography-h6"
+          >
+            Mock Receipt
+          </h1>
+          <pre>
+            
+EFTPOS FROM TEST TENANT
+Presto VAA Sales
+TEST Street
+Address 0000
+
+
+Country
+
+          </pre>
+        </div>
+        <div
+          class="MuiGrid-root makeStyles-buttonGrid-3 MuiGrid-item MuiGrid-grid-md-12"
+        />
+      </div>
+    </div>
+  </div>
+</div>
+`;

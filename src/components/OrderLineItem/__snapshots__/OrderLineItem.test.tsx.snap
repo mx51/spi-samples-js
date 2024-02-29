@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <OrderLineItem /> snapshot for OrderLineItem component 1`] = `
+<div>
+  <li
+    class="MuiListItem-root MuiListItem-gutters"
+  >
+    <div
+      class="MuiListItemText-root"
+    >
+      <span
+        class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-1 MuiTypography-body1 MuiTypography-displayBlock"
+      >
+        Tip
+      </span>
+    </div>
+    <button
+      class="MuiButtonBase-root MuiButton-root makeStyles-additionalChargeBtn-3 MuiButton-contained MuiButton-containedSizeSmall MuiButton-sizeSmall MuiButton-disableElevation"
+      tabindex="0"
+      type="button"
+    >
+      <span
+        class="MuiButton-label makeStyles-additionalChargeBtnLabel-4"
+      >
+        $0.50
+      </span>
+      <span
+        class="MuiTouchRipple-root"
+      />
+    </button>
+  </li>
+</div>
+`;

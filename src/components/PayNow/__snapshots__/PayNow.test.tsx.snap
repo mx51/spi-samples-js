@@ -1,0 +1,399 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="makeStyles-root-2"
+    >
+      <header
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-3 mui-fixed MuiPaper-elevation4"
+      >
+        <div
+          class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-8 makeStyles-navbar-5"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-9"
+            >
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-6 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </button>
+              <svg
+                height="15"
+                width="48"
+              >
+                PrimaryLogoIcon.svg
+              </svg>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <div
+      class="MuiGrid-root MuiGrid-container"
+    >
+      <div
+        class="MuiGrid-root makeStyles-root-1 MuiGrid-item MuiGrid-grid-xs-4"
+      >
+        <div
+          class="MuiPaper-root MuiBox-root MuiBox-root-26 makeStyles-root-10 MuiPaper-elevation1 MuiPaper-rounded"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-27 makeStyles-heading-11"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h6"
+            >
+              Order
+            </h1>
+            <div
+              class="MuiBox-root MuiBox-root-28"
+            />
+          </div>
+          <hr
+            class="MuiDivider-root"
+          />
+          <div
+            class="MuiBox-root MuiBox-root-29 makeStyles-orderList-21"
+          >
+            <ul
+              class="MuiList-root MuiList-padding"
+            />
+          </div>
+          <hr
+            class="MuiDivider-root"
+          />
+          <ul
+            class="MuiList-root MuiList-padding"
+          >
+            <li
+              class="MuiListItem-root MuiListItem-gutters"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-30 MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Subtotal
+                </span>
+              </div>
+              <span
+                aria-disabled="false"
+                aria-label="Add Amount"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-34"
+                role="button"
+                tabindex="0"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M13 7h-2v4H7v2h4v4h2v-4h4v-2h-4V7zm-1-5C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </span>
+            </li>
+            <li
+              class="MuiListItem-root MuiListItem-gutters"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-31 MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Surcharge
+                </span>
+              </div>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                $0.00
+              </p>
+            </li>
+            <li
+              class="MuiListItem-root MuiListItem-gutters"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-31 MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Cashout
+                </span>
+              </div>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                $0.00
+              </p>
+            </li>
+            <li
+              class="MuiListItem-root MuiListItem-gutters"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-31 MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Tip
+                </span>
+              </div>
+              <p
+                class="MuiTypography-root MuiTypography-body1"
+              >
+                $0.00
+              </p>
+            </li>
+            <hr
+              class="MuiDivider-root makeStyles-divider-25 MuiDivider-middle"
+            />
+            <label
+              class="MuiFormControlLabel-root makeStyles-checkbox-22"
+            >
+              <span
+                aria-disabled="false"
+                class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-35 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-24 MuiIconButton-colorPrimary"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <input
+                    class="PrivateSwitchBase-input-38"
+                    data-indeterminate="false"
+                    name="Prompt for Cashout"
+                    type="checkbox"
+                    value=""
+                  />
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </span>
+              <span
+                class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
+              >
+                <p
+                  class="MuiTypography-root makeStyles-checkboxLabel-23 MuiTypography-body1"
+                >
+                  Prompt terminal for cashout
+                </p>
+              </span>
+            </label>
+            <li
+              class="MuiListItem-root MuiListItem-gutters"
+            >
+              <div
+                class="MuiListItemText-root"
+              >
+                <span
+                  class="MuiTypography-root MuiListItemText-primary makeStyles-total-14 MuiTypography-body1 MuiTypography-displayBlock"
+                >
+                  Total
+                </span>
+              </div>
+              <p
+                class="MuiTypography-root makeStyles-totalPrice-15 MuiTypography-body1"
+              >
+                $0.00
+              </p>
+            </li>
+          </ul>
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root makeStyles-amendBtn-17 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+            href="/"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label makeStyles-actionBtnLabel-18"
+            >
+              &lt; Amend order
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-8"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+        >
+          <div
+            class="MuiGrid-root makeStyles-gridStyles-41 MuiGrid-item MuiGrid-grid-xs-7"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-60 makeStyles-root-39"
+            >
+              <div
+                class="MuiBox-root MuiBox-root-61"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-62"
+                >
+                  <p
+                    class="MuiTypography-root makeStyles-payLabel-42 MuiTypography-body1"
+                  >
+                    Pay
+                  </p>
+                </div>
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-44 Mui-disabled Mui-disabled"
+                  data-testid="orderTotalButton"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label"
+                  >
+                    <div
+                      class="MuiPaper-root MuiBox-root MuiBox-root-63 makeStyles-paper-43 MuiPaper-elevation1 MuiPaper-rounded"
+                    >
+                      <div
+                        class="MuiBox-root MuiBox-root-64 makeStyles-orderTotalInputField-46"
+                      >
+                        $0.00
+                      </div>
+                    </div>
+                  </span>
+                </button>
+              </div>
+              <div
+                class="MuiGrid-root"
+              >
+                <div
+                  class="MuiGrid-root MuiGrid-item"
+                >
+                  <div
+                    class="MuiPaper-root makeStyles-paper-65 MuiPaper-elevation0 MuiPaper-rounded"
+                  >
+                    <svg>
+                      UnpluggedIcon.svg
+                    </svg>
+                    <h6
+                      class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom"
+                    >
+                      You don't have any terminals paired yet.
+                    </h6>
+                    <p
+                      class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+                    >
+                      Fortunately, it's very easy to pair a terminal and start using Espresso POS.
+                    </p>
+                    <a
+                      aria-disabled="false"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+                      href="/terminals"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <span
+                        class="MuiButton-label"
+                      >
+                        Go to terminals
+                      </span>
+                      <span
+                        class="MuiTouchRipple-root"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <p
+                class="MuiTypography-root makeStyles-label-47 MuiTypography-body1"
+              >
+                Select payment method
+              </p>
+              <hr
+                class="MuiDivider-root"
+              />
+              <div
+                class="MuiBox-root MuiBox-root-66"
+              >
+                <button
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-49 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-48"
+                  >
+                    Card
+                  </span>
+                </button>
+                <button
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-49 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-48"
+                  >
+                    Moto
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

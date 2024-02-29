@@ -1,0 +1,305 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
+<div>
+  <div
+    class="MuiGrid-root MuiGrid-container"
+  >
+    <div
+      class="MuiGrid-root makeStyles-sectionSpacing-3 MuiGrid-item"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Terminal information
+      </h1>
+      <p
+        class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+      >
+        Information about this terminal
+      </p>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Pairing status
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-12 makeStyles-statusBox-6"
+          >
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
+            >
+              <svg
+                class="makeStyles-failedIcon-9"
+              >
+                FailedIcon.svg
+              </svg>
+            </p>
+            <div
+              class="MuiBox-root MuiBox-root-13"
+            >
+              <h5
+                class="MuiTypography-root makeStyles-statusTitle-7 MuiTypography-h5"
+              >
+                Disconnected
+              </h5>
+              <span
+                class="MuiTypography-root makeStyles-statusText-8"
+              >
+                Unpaired
+              </span>
+            </div>
+          </div>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
+            data-test-id="terminalDetailsSettlementBtn"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Settlement
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <button
+            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
+            data-test-id="terminalDetailsSettlementEnquiryBtn"
+            tabindex="0"
+            type="button"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Settlement enquiry
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </button>
+          <a
+            aria-disabled="false"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
+            data-test-id="terminalDetailsUnpairBtn"
+            href="/terminals"
+            role="button"
+            tabindex="0"
+          >
+            <span
+              class="MuiButton-label"
+            >
+              Unpair terminal
+            </span>
+            <span
+              class="MuiTouchRipple-root"
+            />
+          </a>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Merchant ID
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            -
+          </p>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Terminal ID
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            -
+          </p>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Serial number
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            123-123-123
+          </p>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Battery
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            -
+          </p>
+        </div>
+      </div>
+    </div>
+    <div
+      class="MuiGrid-root makeStyles-sectionSpacing-3 MuiGrid-item"
+    >
+      <h1
+        class="MuiTypography-root MuiTypography-h6"
+      >
+        Pairing configuration
+      </h1>
+      <p
+        class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+      >
+        To update the Pairing configuration you need to unpair this terminal using the Unpair button above
+      </p>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Payment provider
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            test
+          </p>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            Configuration option
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            No
+          </p>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            EFTPOS address
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            192.168.1.10
+          </p>
+        </div>
+      </div>
+      <div
+        class="MuiGrid-root makeStyles-detailRow-2 MuiGrid-container"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-4"
+        >
+          <p
+            class="MuiTypography-root MuiTypography-body1"
+          >
+            POS ID
+          </p>
+        </div>
+        <div
+          class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12 MuiGrid-grid-md-8"
+        >
+          <p
+            class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
+          >
+            test
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
