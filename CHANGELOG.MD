@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+[INTG-706](https://mx51.atlassian.net/browse/INTG-706) Merged long running feature branch into main branch
+
 ## [1.6.0] - 2024-02-28
 
 ### Added
