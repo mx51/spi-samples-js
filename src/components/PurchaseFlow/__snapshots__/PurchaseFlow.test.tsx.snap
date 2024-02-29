@@ -1,0 +1,59 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <PurchaseFlow /> should match SUCCESS STATUS contents as snapshot test 1`] = `
+<div>
+  <pre>
+    
+# ----------- STATUS -----------
+
+# WOOHOO - WE GOT PAID!
+# POS Reference: undefined
+# Response: undefined
+# RRN: undefined
+# Scheme: undefined
+
+# ----------- Customer Receipt -----------
+
+# PURCHASE: $0.00
+# TIP: $0.00
+# SURCHARGE: $0.00
+# CASHOUT: $0.00
+
+
+  </pre>
+</div>
+`;
+
+exports[`Test <PurchaseFlow /> should show FAILED STATUS contents as snapshot test 1`] = `
+<div>
+  <pre>
+    
+# ----------- STATUS -----------
+
+# WE DID NOT GET PAID :(
+# Error Detail: undefined
+# Host Response: undefined
+# RRN: undefined
+
+  </pre>
+</div>
+`;
+
+exports[`Test <PurchaseFlow /> should show TX PROCESS UPDATE contents as snapshot test 1`] = `
+<div>
+  <pre>
+    
+### TX PROCESS UPDATE ###
+
+# undefined
+# Request Id: undefined
+# PosRefId: undefined
+# Type: undefined
+# Request Amount: $NaN
+# Waiting For Signature: false
+# Finished: true
+# Success: Success
+
+  </pre>
+</div>
+`;

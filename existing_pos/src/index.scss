@@ -1,0 +1,97 @@
+@import-normalize "opinionated.css";
+@import './components/ColorPalette';
+
+$theme-colors: (
+  'primary': $primary,
+  'secondary': $tertiary
+);
+
+
+@import '~bootstrap/scss/bootstrap.scss';
+@import url('https://fonts.googleapis.com/css?family=IBM+Plex+Mono|Muli&display=swap');
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $background;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
+  height: 100vh;
+  margin: 0;
+  width: 100%;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+.btn-primary:not(:disabled):not(.disabled):active,
+.btn-primary:not(:disabled):not(.disabled).active,
+.show > .btn-primary.dropdown-toggle {
+  background-color: $primary;
+  border-color: $primary;
+}
+div button.btn-custom,
+.btn-custom:hover,
+button.btn-custom:active,
+button.btn-custom:visited {
+  background-color: $primary;
+  border-color: $primary;
+  border: 1px solid rgb(184, 184, 184);
+}
+h2.sub-header {
+  font-size: 1.5rem;
+  text-align: center;
+  margin-top: 2rem;
+  background-color: $tertiaryGrey;
+  color: $secondary;
+  font-family: 'Muli-Regular', 'Muli';
+  margin: 0;
+  padding: 1.3rem;
+  font-size: 1rem;
+  letter-spacing: 0.1rem;
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+}
+
+div.sub-column {
+  border-right: 1px solid $secondaryGrey;
+  min-height: 100vh;
+  background-color: $background;
+  font-family: 'Muli-Regular', 'Muli';
+  padding: 0;
+  color: $primary;
+}
+
+button {
+  padding: 0.5em;
+  width: 150px;
+}
+
+button.primary-button {
+  background-color: $primary;
+  border-color: $primary;
+  color: $background;
+  margin-top: 0.3rem;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  border-left-color: $secondaryGrey;
+}
+button.primary-button:disabled {
+  background-color: $primaryGrey;
+}
+
+label.form-check-label {
+  margin-left: 0.5rem;
+}
+
+
+.btn.btn-primary[disabled] {
+  background-color: $primaryGrey;
+  border-color: $primaryGrey ;
+}

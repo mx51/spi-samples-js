@@ -1,0 +1,192 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
+<div>
+  <div>
+    <div
+      class="makeStyles-root-1"
+    >
+      <header
+        class="MuiPaper-root MuiAppBar-root MuiAppBar-positionFixed MuiAppBar-colorPrimary makeStyles-navbar-2 mui-fixed MuiPaper-elevation4"
+      >
+        <div
+          class="MuiToolbar-root MuiToolbar-dense MuiToolbar-gutters"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-7 makeStyles-navbar-4"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-8"
+            >
+              <button
+                aria-label="menu"
+                class="MuiButtonBase-root MuiIconButton-root makeStyles-menuButton-5 MuiIconButton-colorInherit MuiIconButton-edgeStart"
+                data-test-id="navbarMenuIcon"
+                name="menuIcon"
+                tabindex="0"
+                type="button"
+              >
+                <span
+                  class="MuiIconButton-label"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root"
+                />
+              </button>
+              <svg
+                height="15"
+                width="48"
+              >
+                PrimaryLogoIcon.svg
+              </svg>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <div
+      class="MuiGrid-root MuiGrid-container"
+    >
+      <div
+        class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-12"
+      >
+        <div
+          class="MuiGrid-root MuiGrid-container MuiGrid-justify-content-xs-center"
+        >
+          <div
+            class="MuiGrid-root makeStyles-gridStyles-11 MuiGrid-item MuiGrid-grid-xs-7"
+          >
+            <div
+              class="MuiBox-root MuiBox-root-30 makeStyles-root-9"
+            >
+              <div
+                class="MuiBox-root MuiBox-root-31"
+              >
+                <div
+                  class="MuiBox-root MuiBox-root-32"
+                >
+                  <p
+                    class="MuiTypography-root makeStyles-payLabel-12 MuiTypography-body1"
+                  >
+                    Cashout
+                  </p>
+                </div>
+                <button
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-orderTotalBtn-14"
+                  data-testid="orderTotalButton"
+                  tabindex="0"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label"
+                  >
+                    <div
+                      class="MuiPaper-root MuiBox-root MuiBox-root-33 makeStyles-paper-13 MuiPaper-elevation1 MuiPaper-rounded"
+                    >
+                      <div
+                        class="MuiBox-root MuiBox-root-34 makeStyles-orderTotalInputField-16"
+                      >
+                        $0.00
+                      </div>
+                      <div
+                        class="MuiBox-root MuiBox-root-35"
+                      >
+                        <span
+                          aria-hidden="true"
+                          class="material-icons MuiIcon-root"
+                        >
+                          <svg
+                            aria-hidden="true"
+                            class="MuiSvgIcon-root"
+                            focusable="false"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34a.9959.9959 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </span>
+                  <span
+                    class="MuiTouchRipple-root"
+                  />
+                </button>
+              </div>
+              <div
+                class="MuiGrid-root"
+              >
+                <div
+                  class="MuiGrid-root MuiGrid-item"
+                >
+                  <div
+                    class="MuiPaper-root makeStyles-paper-36 MuiPaper-elevation0 MuiPaper-rounded"
+                  >
+                    <svg>
+                      UnpluggedIcon.svg
+                    </svg>
+                    <h6
+                      class="MuiTypography-root MuiTypography-subtitle1 MuiTypography-gutterBottom"
+                    >
+                      You don't have any terminals paired yet.
+                    </h6>
+                    <p
+                      class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+                    >
+                      Fortunately, it's very easy to pair a terminal and start using Espresso POS.
+                    </p>
+                    <a
+                      aria-disabled="false"
+                      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
+                      href="/terminals"
+                      role="button"
+                      tabindex="0"
+                    >
+                      <span
+                        class="MuiButton-label"
+                      >
+                        Go to terminals
+                      </span>
+                      <span
+                        class="MuiTouchRipple-root"
+                      />
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="MuiBox-root MuiBox-root-37"
+              >
+                <button
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-19 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  disabled=""
+                  tabindex="-1"
+                  type="button"
+                >
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-18"
+                  >
+                    Cashout
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

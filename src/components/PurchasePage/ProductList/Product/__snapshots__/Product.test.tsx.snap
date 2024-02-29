@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test <Product /> snapshot for Product component 1`] = `
+<div>
+  <div
+    class="MuiBox-root MuiBox-root-5"
+  >
+    <div
+      class="MuiPaper-root MuiCard-root makeStyles-cardStyle-1 MuiPaper-elevation1 MuiPaper-rounded"
+    >
+      <button
+        class="MuiButtonBase-root MuiCardActionArea-root"
+        tabindex="0"
+        type="button"
+      >
+        <div
+          class="MuiCardMedia-root makeStyles-productText-2"
+          title="Mocha"
+        >
+          <div
+            class="MuiBox-root MuiBox-root-6 makeStyles-productImage-4"
+          >
+            <img
+              alt="Mocha"
+              src="images/product/mocha.png"
+            />
+          </div>
+        </div>
+        <div
+          class="MuiCardContent-root"
+        >
+          <h2
+            class="MuiTypography-root makeStyles-productName-3 MuiTypography-h5"
+          >
+            Mocha
+          </h2>
+          <p
+            class="MuiTypography-root MuiTypography-body2 MuiTypography-colorTextSecondary"
+          >
+            $4.20
+          </p>
+        </div>
+        <span
+          class="MuiCardActionArea-focusHighlight"
+        />
+        <span
+          class="MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+`;

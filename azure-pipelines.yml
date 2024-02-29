@@ -1,0 +1,143 @@
+pool:
+  vmImage: 'ubuntu-latest'
+
+pr: none
+
+trigger:
+  branches:
+    include:
+      - '*'
+  tags:
+    include: ['*.*.*', 'v*.*.*'] # Consider using v*.*.* tag names
+
+variables:
+  - group: spi-samples-js-variables
+
+  - name: ARTIFACT_NAME
+    value: spi-samples-js
+  - name: BRANCH_NAME
+    value: $[variables['Build.SourceBranch']]
+
+stages:
+  - stage: build
+    displayName: Build
+    jobs:
+      - job: build
+        cancelTimeoutInMinutes: 5
+        displayName: Build
+        steps:
+          - task: Npm@1
+            displayName: Install dependencies
+            inputs:
+              command: 'install'
+
+          - task: Npm@1
+            displayName: Build project
+            inputs:
+              command: 'custom'
+              customCommand: 'run build'
+
+          - task: Npm@1
+            displayName: Run unit tests
+            inputs:
+              command: 'custom'
+              customCommand: 'run test:deploy'
+
+          - task: PublishTestResults@2
+            displayName: Publish unit test results
+            inputs:
+              testResultsFormat: 'JUnit'
+              testResultsFiles: '**/junit.xml'
+
+          - task: PublishCodeCoverageResults@1
+            displayName: 'Publish code coverage results'
+            inputs:
+              codeCoverageTool: 'Cobertura'
+              summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
+              reportDirectory: '$(System.DefaultWorkingDirectory)/coverage'
+
+          - script: |
+              echo " * Storing Git Ref in version.txt: $BUILD_SOURCEBRANCH"
+              echo "$BUILD_SOURCEBRANCH" > build/version.txt
+            displayName: 'Store git ref value in release package'
+
+          - publish: $(System.DefaultWorkingDirectory)/build
+            artifact: $(ARTIFACT_NAME)
+            displayName: Publish Artifact
+
+          - script: ./scripts/failure-alert.py
+            env:
+              PYTHONUNBUFFERED: '1'
+              ALERT_MESSAGE: 'Build pipeline failure'
+            displayName: 'Pipeline failure build stage alert'
+            condition: failed()
+
+  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/feature/sample-pos-two'), startsWith(variables['build.sourceBranch'], 'refs/tags/'))  }}:
+      - stage: deploy_dev
+        displayName: 'Stage: Deploy (DEV)'
+        dependsOn: build
+        jobs:
+          - deployment: Deploy_Dev
+            environment: cdn-dev
+            pool: shared
+            workspace:
+              clean: all
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+
+                    - download: current
+                      artifact: $(ARTIFACT_NAME)
+                      displayName: 'Fetch current package from Azure (dev)'
+
+                    - script: make deploy
+                      env:
+                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE)
+                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
+                        S3_BUCKET: $(S3_BUCKET_DEV)
+                      displayName: 'Deploy package (dev)'
+
+                    - script: ./scripts/failure-alert.py
+                      env:
+                        PYTHONUNBUFFERED: '1'
+                        ALERT_MESSAGE: 'Deploy pipeline failure (dev)'
+                      displayName: 'Pipeline failure deploy stage alert (dev)'
+                      condition: failed()
+
+  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
+      - stage: deploy_live
+        displayName: 'Stage: Deploy (Production)'
+        dependsOn: [build, deploy_dev]
+        jobs:
+          - deployment: Deploy_Prod
+            environment: cdn-live
+            pool: shared
+            workspace:
+              clean: all
+            strategy:
+              runOnce:
+                deploy:
+                  steps:
+                    - checkout: self
+
+                    - download: current
+                      artifact: $(ARTIFACT_NAME)
+                      displayName: 'Fetch current package from Azure (live)'
+
+                    - script: make deploy
+                      env:
+                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE)
+                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_LIVE)
+                        S3_BUCKET: $(S3_BUCKET_LIVE)
+                      displayName: 'Deploy package (live)'
+
+                    - script: ./scripts/failure-alert.py
+                      env:
+                        PYTHONUNBUFFERED: '1'
+                        ALERT_MESSAGE: 'Deploy pipeline failure (live)'
+                      displayName: 'Pipeline failure deploy stage alert (live)'
+                      condition: failed()

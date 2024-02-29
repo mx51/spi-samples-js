@@ -1,0 +1,69 @@
+@import '../ColorPalette';
+
+.radio-button {
+  label {
+    cursor: pointer;
+    display: block;
+    font-size: 1rem;
+    line-height: 1rem;
+    padding-left: 2rem;
+    position: relative;
+    user-select: none;
+
+    // On mouse-over, add a grey background color
+    &:hover input ~ .radio-button-indicator {
+      background-color: $tertiary;
+    }
+  }
+
+  // Hide the default radio button
+  input[type=radio] {
+    cursor: pointer;
+    height: 0;
+    opacity: 0;
+    position: absolute;
+    width: 0;
+
+    // When the radio button is checked, add a background
+    &:checked {
+      & ~ span.radio-button-indicator {
+        background-color: $primary;
+      }
+
+      // Disabled state
+      & ~ .disabled {
+        background-color: $primaryGrey;
+      }
+
+      // Show the indicatior when checked
+      & ~ .radio-button-indicator:after {
+        display: block;
+      }
+    }
+  }
+}
+
+// Create a custom radio button indicator
+.radio-button-indicator {
+  background-color: $background;
+  border-radius: 50%;
+  border: 2px solid $primary;
+  height: 1rem;
+  left: 0;
+  position: absolute;
+  top: calc(50% - 0.5rem);
+  width: 1rem;
+
+  // Style the indicator
+  &:after {
+    content: '';
+    position: absolute;
+    display: none;
+    border-radius: 50%;
+    border: 2px solid white;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 100%;
+  }
+}
