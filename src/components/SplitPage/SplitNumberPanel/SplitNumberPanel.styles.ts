@@ -1,0 +1,35 @@
+import { makeStyles, Theme } from '@material-ui/core';
+import { createStyles } from '@material-ui/core/styles';
+import { FONT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
+
+export const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    dividerLabel: {
+      marginTop: theme.spacing(4.5),
+      marginBottom: theme.spacing(0.5),
+      color: FONT_COLOR,
+    },
+    divider: {
+      marginBottom: theme.spacing(2),
+    },
+    panel: {
+      display: 'flex',
+      alignItems: 'center',
+    },
+    splitNumber: {
+      display: 'inline-flex',
+      justifyContent: 'center',
+      width: '100px',
+      margin: theme.spacing(0, 1),
+      fontSize: '56px',
+      weight: 400,
+    },
+    splitAmount: {
+      marginLeft: 'auto',
+      display: 'inline-flex',
+      alignItems: 'end',
+      height: '36px',
+      color: FONT_COLOR,
+    },
+  })
+);

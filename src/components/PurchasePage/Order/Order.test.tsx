@@ -13,7 +13,7 @@ describe('Test <Order />', () => {
     const { container } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
-          <Order disablePayNow={false} />
+          <Order disablePayNow={false} isSubtotalEditable={false} bottomButton="payNow" />
         </Router>
       </ReduxProvider>
     );
@@ -28,7 +28,7 @@ describe('Test <Order />', () => {
     const { getByText } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
-          <Order disablePayNow={false} />
+          <Order disablePayNow={false} isSubtotalEditable={false} bottomButton="payNow" />
         </Router>
       </ReduxProvider>
     );
@@ -46,7 +46,7 @@ describe('Test <Order />', () => {
     const { getByLabelText, getAllByLabelText, getByText } = render(
       <ReduxProvider reduxStore={store}>
         <Router>
-          <Order disablePayNow={false} />
+          <Order disablePayNow={false} isSubtotalEditable={false} bottomButton="payNow" />
         </Router>
       </ReduxProvider>
     );

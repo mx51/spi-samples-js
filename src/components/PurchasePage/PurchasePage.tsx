@@ -26,7 +26,7 @@ function Purchase(): React.ReactElement {
           <ProductList />
         </Grid>
         <Grid item xs={4}>
-          <Order disablePayNow={false} />
+          <Order disablePayNow={false} isSubtotalEditable={false} bottomButton="payNow" />
         </Grid>
       </Grid>
     </Layout>

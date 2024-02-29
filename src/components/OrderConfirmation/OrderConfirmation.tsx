@@ -18,6 +18,7 @@ import {
 import CreateIcon from '@material-ui/icons/Create';
 import { useDispatch, useSelector } from 'react-redux';
 import { SpiStatus } from '@mx51/spi-client-js';
+import { useHistory } from 'react-router-dom';
 import {
   PATH_CASH_OUT,
   PATH_REFUND,
@@ -26,6 +27,7 @@ import {
   TEXT_REFUND,
   TEXT_CASHOUT,
   PATH_PAY_NOW,
+  PATH_ORDER_FINISHED,
 } from '../../definitions/constants/routerConfigs';
 import { TxFlowState } from '../../definitions/constants/terminalConfigs';
 import {
@@ -67,6 +69,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const refundPage = pathname === PATH_REFUND;
   const preAuthPage = pathname === PATH_PRE_AUTH;
 
+  const history = useHistory();
   const dispatch = useDispatch();
   const classes = useStyles();
   const terminals = useSelector(pairedConnectedTerminalList);
@@ -287,6 +290,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
                 }}
                 onDone={() => {
                   setShowTransactionProgressModal(false);
+                  history.push(PATH_ORDER_FINISHED);
                 }}
               />
             )}
