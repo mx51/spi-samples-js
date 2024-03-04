@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.1] - 2024-03-04
+
+### Added
+
+- [INTG-794](https://mx51.atlassian.net/browse/INTG-794) About page available for terminals in all pairing states
+- [INTG-702](https://mx51.atlassian.net/browse/INTG-702) Terminals list actions
+- [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
+
 ## [1.5.0] - 2024-02-20
 
 ### Added
