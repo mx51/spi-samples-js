@@ -50,6 +50,10 @@ export interface IPairFormState {
   terminal: ITerminalProps;
 }
 
+export interface ITerminal {
+  currentTerminal?: ITerminalProps;
+}
+
 export interface IUpdatePairFormParams {
   key: string;
   value: { value: string | boolean; option?: string; isValid: boolean };

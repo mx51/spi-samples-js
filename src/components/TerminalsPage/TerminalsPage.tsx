@@ -4,14 +4,14 @@ import { Link as LinkRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { PATH_PAIR } from '../../definitions/constants/routerConfigs';
 import Layout from '../Layout';
+import { terminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
-import { terminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
   const terminals = useSelector(terminalList);
-
   return (
     <Layout>
       <Container maxWidth="md" className={classes.root}>

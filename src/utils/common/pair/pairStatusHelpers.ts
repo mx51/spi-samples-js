@@ -1,6 +1,6 @@
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { IPairFormValues } from '../../../redux/reducers/PairFormSlice/interfaces';
-import { addTerminal, updatePairingStatus } from '../../../redux/reducers/TerminalSlice/terminalsSlice';
+import { addTerminal, removeTerminal, updatePairingStatus } from '../../../redux/reducers/TerminalSlice/terminalsSlice';
 import { AppDispatch } from '../../../redux/store';
 import spiService from '../../../services/spiService';
 
@@ -54,6 +54,11 @@ function handleUnPairClick(dispatch: AppDispatch, instanceId: string): void {
   dispatch(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.Unpaired }));
 }
 
+// remove terminal
+function handleRemoveClick(dispatch: AppDispatch, instanceId: string): void {
+  dispatch(removeTerminal({ id: instanceId }));
+}
+
 function getTitleFromStatus(status: string, reconnecting: boolean): string {
   if (status === SPI_PAIR_STATUS.PairedConnecting && reconnecting) {
     return 'Reconnecting';
@@ -67,4 +72,4 @@ function getTitleFromStatus(status: string, reconnecting: boolean): string {
   return 'Unpaired';
 }
 
-export { handleCancelPairClick, handlePairClick, handleUnPairClick, getTitleFromStatus };
+export { handleCancelPairClick, handlePairClick, handleUnPairClick, getTitleFromStatus, handleRemoveClick };

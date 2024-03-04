@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- [INTG-794](https://mx51.atlassian.net/browse/INTG-794) About page available for terminals in all pairing states
+- [INTG-702](https://mx51.atlassian.net/browse/INTG-702) Terminals list actions
+- [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
+
 ### Changed
 
 [INTG-706](https://mx51.atlassian.net/browse/INTG-706) Merged long running feature branch into main branch

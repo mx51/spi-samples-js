@@ -1,5 +1,5 @@
 import React from 'react';
-import { cleanup, fireEvent } from '@testing-library/react';
+import { cleanup, fireEvent, screen } from '@testing-library/react';
 import TerminalList from '.';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import { defaultAAR } from '../../../definitions/constants/spiConfigs';
@@ -29,26 +29,44 @@ describe('Test <TerminalList />', () => {
     jest.clearAllMocks();
   });
 
-  test('should match TerminalList snapshot test', () => {
+  test('should open terminal action menu', async () => {
     // Arrange
-    const terminalNotConnectedClass = 'makeStyles-unclickable';
-
-    // Assert
-    expect(mockContainer).toMatchSnapshot();
-    expect(mockContainer.innerHTML.includes(terminalNotConnectedClass)).toBeTruthy();
-  });
-
-  test('should be able to click current un-pair terminal instance', () => {
-    // Arrange
-    const terminalRecord = document.querySelector(`#terminal_${mockTerminalInstanceId}`) as Element;
-    const goToTerminalDetails = jest.fn();
+    const terminalActionButtonTestId = `terminal-action-button-${mockTerminalInstanceId}`;
 
     // Act
-    fireEvent.click(terminalRecord);
-    goToTerminalDetails();
+    fireEvent.click(screen.getByTestId(terminalActionButtonTestId));
+    const menuItemAbout = await screen.getByText('About this terminal');
+
+    // Assert
+    expect(menuItemAbout).toBeInTheDocument();
+  });
+
+  test('should navigate to about page from action menu', async () => {
+    // Arrange
+    const terminalActionButtonTestId = `terminal-action-button-${mockTerminalInstanceId}`;
+
+    // Act
+    fireEvent.click(screen.getByTestId(terminalActionButtonTestId));
+
+    const menuItemAbout = await screen.getByText('About this terminal');
+    fireEvent.click(menuItemAbout);
 
     // Assert
     expect(window.location.href.includes('/terminals/123-123-123')).toBeTruthy();
+  });
+
+  test('should navigate to pairing page from action menu', async () => {
+    // Arrange
+    const terminalActionButtonTestId = `terminal-action-button-${mockTerminalInstanceId}`;
+
+    // Act
+    fireEvent.click(screen.getByTestId(terminalActionButtonTestId));
+
+    const menuPair = await screen.getByText('Pair terminal');
+    fireEvent.click(menuPair);
+
+    // Assert
+    expect(window.location.href.includes('/terminals/new/123-123-123')).toBeTruthy();
   });
 
   test('should not display any record if terminal number does not exist', () => {
@@ -63,19 +81,6 @@ describe('Test <TerminalList />', () => {
 
     // Assert
     expect(terminalRecord).toBeNull();
-  });
-
-  test('should be unclickable when terminal status is unpaired', () => {
-    // Arrange
-    const terminalConnectedClass = 'makeStyles-link';
-    const newNockTerminalConfig = {
-      ...mockTerminalConfig,
-      status: SPI_PAIR_STATUS.PairedConnected,
-    };
-    const newMockContainer = mockWithRedux(<TerminalList terminals={[newNockTerminalConfig]} />);
-
-    // Assert
-    expect(newMockContainer.innerHTML.includes(terminalConnectedClass)).toBeTruthy();
   });
 
   test('should show chipPending classname when terminal status is PairedConnecting', () => {

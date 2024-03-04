@@ -22,7 +22,7 @@ const NoTerminalPage: React.FC = () => {
           <Typography gutterBottom variant="subtitle1">
             {terminalCount === 0
               ? "You don't have any terminals paired yet."
-              : "You current don't have any terminals connected"}
+              : "You currently don't have any terminals connected"}
           </Typography>
           <Typography variant="body2" color="textSecondary">
             {terminalCount === 0

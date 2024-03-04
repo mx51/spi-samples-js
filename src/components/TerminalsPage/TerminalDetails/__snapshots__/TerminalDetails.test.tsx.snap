@@ -223,13 +223,11 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                               class="MuiTouchRipple-root"
                             />
                           </button>
-                          <a
-                            aria-disabled="false"
+                          <button
                             class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-36"
                             data-test-id="terminalDetailsUnpairBtn"
-                            href="/terminals"
-                            role="button"
                             tabindex="0"
+                            type="button"
                           >
                             <span
                               class="MuiButton-label"
@@ -239,7 +237,7 @@ exports[`Test <TerminalDetails /> should match TerminalDetails snapshot tes 1`] 
                             <span
                               class="MuiTouchRipple-root"
                             />
-                          </a>
+                          </button>
                         </div>
                       </div>
                       <div

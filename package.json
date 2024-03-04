@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "1.7.1",
+  "version": "1.7.0",
   "private": true,
   "engines": {
     "node": ">=16"

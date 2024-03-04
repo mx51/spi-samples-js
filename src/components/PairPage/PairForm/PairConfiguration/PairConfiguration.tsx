@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
+import React, { useEffect, useState } from 'react';
 
 import {
   acquirerCodeToEnvOptions,
@@ -29,20 +29,20 @@ import {
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
 import { terminalInstance, terminalMap } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
-  handlePaymentProviderFieldOnChange,
-  handlePaymentProviderSelectorOnChange,
-  handlePaymentProviderFieldOnBlur,
-  handleTestModeCheckboxOnChange,
   handleAddressTypeSelectorOnBlur,
   handleAddressTypeSelectorOnChange,
-  handleDeviceAddressFieldOnChange,
   handleDeviceAddressFieldOnBlur,
-  handleSerialNumberFieldOnBlur,
-  handleSerialNumberFieldOnChange,
+  handleDeviceAddressFieldOnChange,
+  handleEnvironmentChanged,
+  handlePaymentProviderFieldOnBlur,
+  handlePaymentProviderFieldOnChange,
+  handlePaymentProviderSelectorOnChange,
   handlePosIdFieldOnBlur,
   handlePosIdFieldOnChange,
+  handleSerialNumberFieldOnBlur,
+  handleSerialNumberFieldOnChange,
+  handleTestModeCheckboxOnChange,
   isHttps,
-  handleEnvironmentChanged,
 } from '../../../../utils/common/pair/pairFormHelpers';
 import {
   eftposAddressValidator,
@@ -63,6 +63,7 @@ export default function PairConfiguration(): React.ReactElement {
   // read redux store states
   const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode, environment } =
     useAppSelector(pairForm);
+
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminal = useAppSelector(terminalInstance(pairFormSerialNumber));

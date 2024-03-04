@@ -49,6 +49,12 @@ export const pairFormSlice = createSlice({
       state.error = error;
     },
     resetPairForm: () => initialState,
+    updatePairForm(state: IPairFormParams, action: PayloadAction<Partial<IPairFormParams>>) {
+      return {
+        ...state,
+        ...action.payload,
+      };
+    },
     updatePairFormParams(state: IPairFormParams, action: PayloadAction<Partial<IFormParamsAction>>) {
       const { key, value } = action.payload;
 
@@ -98,6 +104,6 @@ export const pairFormSlice = createSlice({
   },
 });
 
-export const { readTerminalPairError, resetPairForm, updatePairFormParams } = pairFormSlice.actions;
+export const { readTerminalPairError, resetPairForm, updatePairFormParams, updatePairForm } = pairFormSlice.actions;
 
 export default pairFormSlice.reducer;

@@ -1,6 +1,6 @@
-import { version } from '../../package.json';
+import packageJson from '../../package.json';
 
-export const posVersion = version;
+export const posVersion = packageJson.version;
 
 export const localStorageKeys = {
   receiptConfig: 'Receipt Config',

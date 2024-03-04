@@ -42,7 +42,7 @@ const AppRoutes = (): React.ReactElement => (
   <Router>
     <Suspense fallback={<Loading />}>
       <Switch>
-        <Route exact path={PATH_PAIR} component={Pair} />
+        <Route exact path={`${PATH_PAIR}/:id?`} component={Pair} />
         <Route exact path={PATH_TRANSACTIONS} component={TransactionPage} />
         <Route exact path={`${PATH_TRANSACTIONS}/:id`} component={TransactionDetailsPage} />
         <Route exact path={PATH_PAT} component={PayAtTablePage} />

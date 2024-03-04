@@ -12,15 +12,16 @@ import { handlePairClick } from '../../../utils/common/pair/pairStatusHelpers';
 import useStyles from './index.styles';
 import PairConfiguration from './PairConfiguration';
 import PaymentType from './PaymentType';
+import { ITerminal } from './interfaces';
 
-const PairForm: React.FC = () => {
+const PairForm: React.FC<ITerminal> = ({ currentTerminal }: ITerminal) => {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   // read redux store states
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminalUnpaired = useAppSelector(isTerminalUnpaired(pairFormSerialNumber));
   const pairFormValues = useAppSelector(selectPairFormValues);
-  const pairBtnDisabled = useAppSelector(isPairDisabled);
+  const pairDisabled = useAppSelector(isPairDisabled);
 
   const handlePair = () => handlePairClick(dispatch, pairFormValues);
 
@@ -32,7 +33,7 @@ const PairForm: React.FC = () => {
         <Button
           className={classes.pairBtn}
           color="primary"
-          disabled={pairBtnDisabled || terminalUnpaired}
+          disabled={(!currentTerminal && pairDisabled) || terminalUnpaired}
           data-test-id="pairBtn"
           onClick={handlePair}
           variant="contained"

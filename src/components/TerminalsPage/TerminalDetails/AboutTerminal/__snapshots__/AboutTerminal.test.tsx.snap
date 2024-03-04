@@ -40,9 +40,9 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
               class="MuiTypography-root MuiTypography-body1 MuiTypography-alignRight"
             >
               <svg
-                class="makeStyles-failedIcon-9"
+                class="makeStyles-successIcon-11"
               >
-                FailedIcon.svg
+                SuccessIcon.svg
               </svg>
             </p>
             <div
@@ -51,12 +51,12 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
               <h5
                 class="MuiTypography-root makeStyles-statusTitle-7 MuiTypography-h5"
               >
-                Disconnected
+                Connected
               </h5>
               <span
                 class="MuiTypography-root makeStyles-statusText-8"
               >
-                Unpaired
+                Ready
               </span>
             </div>
           </div>
@@ -90,13 +90,11 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
               class="MuiTouchRipple-root"
             />
           </button>
-          <a
-            aria-disabled="false"
+          <button
             class="MuiButtonBase-root MuiButton-root MuiButton-text makeStyles-actionButton-5"
             data-test-id="terminalDetailsUnpairBtn"
-            href="/terminals"
-            role="button"
             tabindex="0"
+            type="button"
           >
             <span
               class="MuiButton-label"
@@ -106,7 +104,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
             <span
               class="MuiTouchRipple-root"
             />
-          </a>
+          </button>
         </div>
       </div>
       <div
@@ -127,7 +125,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            -
+            123456789
           </p>
         </div>
       </div>
@@ -149,7 +147,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            -
+            987654321
           </p>
         </div>
       </div>
@@ -193,7 +191,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
           <p
             class="MuiTypography-root makeStyles-text-1 MuiTypography-body1"
           >
-            -
+            40%
           </p>
         </div>
       </div>

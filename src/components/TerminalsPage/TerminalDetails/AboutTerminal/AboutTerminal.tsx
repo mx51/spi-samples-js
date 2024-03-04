@@ -3,7 +3,8 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
-import { PATH_TERMINALS } from '../../../../definitions/constants/routerConfigs';
+import { SpiStatus } from '@mx51/spi-client-js';
+import { PATH_PAIR, PATH_TERMINALS } from '../../../../definitions/constants/routerConfigs';
 import {
   terminalConfigurationsPartOne,
   terminalConfigurationsPartTwo,
@@ -57,29 +58,43 @@ export default function AboutTerminal({
             </Grid>
             <Grid item md={8} xs={12}>
               <StatusBox status={terminal?.status} />
-              <Button
-                className={classes.actionButton}
-                data-test-id="terminalDetailsSettlementBtn"
-                onClick={handleSettlementDisplay}
-              >
-                Settlement
-              </Button>
-              <Button
-                className={classes.actionButton}
-                data-test-id="terminalDetailsSettlementEnquiryBtn"
-                onClick={handleSettlementEnquiryDisplay}
-              >
-                Settlement enquiry
-              </Button>
-              <Button
-                className={classes.actionButton}
-                component={Link}
-                data-test-id="terminalDetailsUnpairBtn"
-                onClick={() => handleUnPairClick(dispatch, terminal.id)}
-                to={PATH_TERMINALS}
-              >
-                Unpair terminal
-              </Button>
+              {terminal.status === SpiStatus.PairedConnected && (
+                <>
+                  <Button
+                    className={classes.actionButton}
+                    data-test-id="terminalDetailsSettlementBtn"
+                    onClick={handleSettlementDisplay}
+                  >
+                    Settlement
+                  </Button>
+                  <Button
+                    className={classes.actionButton}
+                    data-test-id="terminalDetailsSettlementEnquiryBtn"
+                    onClick={handleSettlementEnquiryDisplay}
+                  >
+                    Settlement enquiry
+                  </Button>
+                </>
+              )}
+              {[SpiStatus.PairedConnected, SpiStatus.PairedConnecting].includes(terminal.status) && (
+                <Button
+                  className={classes.actionButton}
+                  data-test-id="terminalDetailsUnpairBtn"
+                  onClick={() => handleUnPairClick(dispatch, terminal.id)}
+                >
+                  Unpair terminal
+                </Button>
+              )}
+              {terminal.status === SpiStatus.Unpaired && (
+                <Button
+                  className={classes.actionButton}
+                  component={Link}
+                  data-test-id="terminalDetailsPairBtn"
+                  to={`${PATH_PAIR}/${terminal.serialNumber}`}
+                >
+                  Pair terminal
+                </Button>
+              )}
             </Grid>
           </Grid>
           {terminalConfigurationsPartOne(terminal).map(({ title, content }) => (
