@@ -72,7 +72,7 @@ stages:
             displayName: 'Pipeline failure build stage alert'
             condition: failed()
 
-  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/feature/sample-pos-two'), startsWith(variables['build.sourceBranch'], 'refs/tags/'))  }}:
+  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/main'), startsWith(variables['build.sourceBranch'], 'refs/tags/'))  }}:
       - stage: deploy_dev
         displayName: 'Stage: Deploy (DEV)'
         dependsOn: build

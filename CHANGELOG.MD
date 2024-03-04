@@ -5,13 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.1] - 2024-03-04
+## [Unreleased]
 
 ### Added
 
 - [INTG-794](https://mx51.atlassian.net/browse/INTG-794) About page available for terminals in all pairing states
 - [INTG-702](https://mx51.atlassian.net/browse/INTG-702) Terminals list actions
 - [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
+
+### Changed
+
+[INTG-706](https://mx51.atlassian.net/browse/INTG-706) Merged long running feature branch into main branch
+
+## [1.6.0] - 2024-02-28
+
+### Added
+
+- [INTG-711](https://mx51.atlassian.net/browse/INTG-711) Migrate Table POS into Espresso POS
 
 ## [1.5.0] - 2024-02-20
 
