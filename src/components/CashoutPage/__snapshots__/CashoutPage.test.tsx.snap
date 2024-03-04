@@ -150,14 +150,14 @@ exports[`Test <Cashout /> should match Cashout snapshot test 1`] = `
                     <a
                       aria-disabled="false"
                       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary"
-                      href="/terminals/new"
+                      href="/terminals"
                       role="button"
                       tabindex="0"
                     >
                       <span
                         class="MuiButton-label"
                       >
-                        + Pair new terminal
+                        Go to terminals
                       </span>
                       <span
                         class="MuiTouchRipple-root"

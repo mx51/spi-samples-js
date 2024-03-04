@@ -21,7 +21,7 @@ const PairForm: React.FC<ITerminal> = ({ currentTerminal }: ITerminal) => {
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
   const terminalUnpaired = useAppSelector(isTerminalUnpaired(pairFormSerialNumber));
   const pairFormValues = useAppSelector(selectPairFormValues);
-  const pairBtnDisabled = !currentTerminal && useAppSelector(isPairDisabled);
+  const pairDisabled = useAppSelector(isPairDisabled);
 
   const handlePair = () => handlePairClick(dispatch, pairFormValues);
 
@@ -29,11 +29,11 @@ const PairForm: React.FC<ITerminal> = ({ currentTerminal }: ITerminal) => {
     <Grid container direction="column" className={classes.formContainer}>
       <form autoComplete="off" className={classes.pairForm}>
         <PaymentType />
-        <PairConfiguration currentTerminal={currentTerminal} />
+        <PairConfiguration />
         <Button
           className={classes.pairBtn}
           color="primary"
-          disabled={pairBtnDisabled || terminalUnpaired}
+          disabled={(!currentTerminal && pairDisabled) || terminalUnpaired}
           data-test-id="pairBtn"
           onClick={handlePair}
           variant="contained"

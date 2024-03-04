@@ -3,7 +3,7 @@ import { Button, Container, Grid } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectedShowFlowPanel } from '../../redux/reducers/CommonSlice/commonSliceSelectors';
-import { resetPairForm } from '../../redux/reducers/PairFormSlice/pairFormSlice';
+import { resetPairForm, updatePairForm, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import FlowPanel from '../FlowPanel';
 import { IFlowPanel } from '../FlowPanel/interfaces';
 import PairFlow from '../FlowPanel/PairFlow';
@@ -15,14 +15,17 @@ import PairStatus from './PairStatus';
 import { PATH_TERMINALS } from '../../definitions/constants/routerConfigs';
 import { terminalInstance } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
+import { IPairFormParams } from '../../redux/reducers/PairFormSlice/interfaces';
 
 const PairPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const history = useHistory();
   const showFlowPanel = useAppSelector(selectedShowFlowPanel);
   const classes = useStyles(showFlowPanel as unknown as IFlowPanel);
-  const { id }: { id: string } = useParams<{ id: string }>();
-  const currentTerminal = id ? useAppSelector<ITerminalProps>(terminalInstance(id)) : undefined;
+  const { id } = useParams<{ id: string }>();
+  const currentTerminal = useAppSelector<ITerminalProps | undefined>((state) =>
+    id ? terminalInstance(id)(state) : undefined
+  );
 
   const goToTerminals = () => {
     history.push(PATH_TERMINALS);
@@ -31,6 +34,28 @@ const PairPage: React.FC = () => {
   useEffect(() => {
     if (!currentTerminal) {
       dispatch(resetPairForm()); // reset paired form when required
+    } else {
+      const action: Partial<IPairFormParams> = {
+        acquirerCode: {
+          value: currentTerminal.acquirerCode,
+          isValid: true,
+          option: currentTerminal.acquirerCode,
+        },
+        deviceAddress: {
+          value: currentTerminal.deviceAddress.split('//')[1],
+          isValid: true,
+        },
+        posId: {
+          value: currentTerminal.posId,
+          isValid: true,
+        },
+        serialNumber: {
+          value: currentTerminal.serialNumber,
+          isValid: true,
+        },
+        testMode: currentTerminal.testMode,
+      };
+      dispatch(updatePairForm(action));
     }
   }, [dispatch]);
 

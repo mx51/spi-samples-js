@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import Checkbox from '@material-ui/core/Checkbox';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -8,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import Typography from '@material-ui/core/Typography';
 import { Spi as SpiClient } from '@mx51/spi-client-js';
+import React, { useEffect, useState } from 'react';
 
 import {
   acquirerCodeToEnvOptions,
@@ -29,20 +29,20 @@ import {
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
 import { terminalInstance, terminalMap } from '../../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import {
-  handlePaymentProviderFieldOnChange,
-  handlePaymentProviderSelectorOnChange,
-  handlePaymentProviderFieldOnBlur,
-  handleTestModeCheckboxOnChange,
   handleAddressTypeSelectorOnBlur,
   handleAddressTypeSelectorOnChange,
-  handleDeviceAddressFieldOnChange,
   handleDeviceAddressFieldOnBlur,
-  handleSerialNumberFieldOnBlur,
-  handleSerialNumberFieldOnChange,
+  handleDeviceAddressFieldOnChange,
+  handleEnvironmentChanged,
+  handlePaymentProviderFieldOnBlur,
+  handlePaymentProviderFieldOnChange,
+  handlePaymentProviderSelectorOnChange,
   handlePosIdFieldOnBlur,
   handlePosIdFieldOnChange,
+  handleSerialNumberFieldOnBlur,
+  handleSerialNumberFieldOnChange,
+  handleTestModeCheckboxOnChange,
   isHttps,
-  handleEnvironmentChanged,
 } from '../../../../utils/common/pair/pairFormHelpers';
 import {
   eftposAddressValidator,
@@ -55,33 +55,14 @@ import {
 import CustomTextField from '../../../CustomTextField';
 import ErrorInputAdornment from '../../../CustomTextField/ErrorInputAdornment';
 import useStyles from '../index.styles';
-import { IFormEventCheckbox, IFormEventValue, ITerminal } from '../interfaces';
-import { ITerminalProps } from '../../../../redux/reducers/TerminalSlice/interfaces';
+import { IFormEventCheckbox, IFormEventValue } from '../interfaces';
 
-export default function PairConfiguration({ currentTerminal }: ITerminal): React.ReactElement {
+export default function PairConfiguration(): React.ReactElement {
   const classes = useStyles();
   const dispatch = useAppDispatch();
   // read redux store states
   const { acquirerCode, addressType, deviceAddress, posId, serialNumber, testMode, environment } =
     useAppSelector(pairForm);
-
-  useEffect(() => {
-    if (currentTerminal) {
-      const keys: (keyof ITerminalProps)[] = ['acquirerCode', 'deviceAddress', 'posId', 'serialNumber', 'testMode'];
-      keys.forEach((key) => {
-        dispatch(
-          updatePairFormParams({
-            key,
-            value: {
-              value: key === 'deviceAddress' ? currentTerminal[key].split('//')[1] : currentTerminal[key],
-              isValid: true,
-              option: key === 'acquirerCode' ? currentTerminal[key] : undefined,
-            },
-          })
-        );
-      });
-    }
-  }, [dispatch]);
 
   const pairFormDeviceAddress = useAppSelector(selectPairFormDeviceAddress);
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);

@@ -21,7 +21,7 @@ describe('Test <PairConfiguration />', () => {
   let mockContainer: Any;
   beforeEach(() => {
     dispatch = jest.fn();
-    mockContainer = mockWithRedux(<PairConfiguration currentTerminal={undefined} />);
+    mockContainer = mockWithRedux(<PairConfiguration />);
   });
 
   afterEach(cleanup);
