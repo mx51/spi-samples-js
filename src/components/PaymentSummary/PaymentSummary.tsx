@@ -68,7 +68,7 @@ export const PaymentSummary: React.FC<Props> = ({
   const refundAmount = amountSummaryInformation('refundAmount');
 
   const originalTotalAmount = [PATH_PRE_AUTH, PATH_ACCOUNT_VERIFY].includes(typePath)
-    ? txFlow?.amountCents
+    ? txFlow?.amountCents + surchangeAmount
     : subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount;
 
   const transactionStatus = useMemo(() => {
