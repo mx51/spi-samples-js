@@ -16,6 +16,7 @@ import { settlement, settlementEnquiry } from '../../../../utils/common/terminal
 import { IAboutTerminal } from '../interfaces';
 import useStyles from './index.styles';
 import StatusBox from './StatusBox';
+import { SPI_PAIR_STATUS } from '../../../../definitions/constants/commonConfigs';
 
 export default function AboutTerminal({
   receiptToggle,
@@ -112,9 +113,13 @@ export default function AboutTerminal({
           <Typography variant="h6" component="h1">
             Pairing configuration
           </Typography>
-          <Typography className={classes.text}>
-            To update the Pairing configuration you need to unpair this terminal using the Unpair button above
-          </Typography>
+          {terminal?.status === SPI_PAIR_STATUS.Unpaired ? (
+            ''
+          ) : (
+            <Typography className={classes.text}>
+              To update the Pairing configuration you need to unpair this terminal using the Unpair button above
+            </Typography>
+          )}
           {terminalConfigurationsPartTwo(terminal).map(({ title, content }) => (
             <Grid className={classes.detailRow} container key={title}>
               <Grid item md={4} xs={12}>

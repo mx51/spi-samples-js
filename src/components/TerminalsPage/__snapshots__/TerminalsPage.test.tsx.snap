@@ -141,13 +141,13 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
               id="terminal_123-123-123"
             >
               <td
-                class="MuiTableCell-root MuiTableCell-body"
+                class="MuiTableCell-root MuiTableCell-body makeStyles-link-19"
                 scope="row"
               >
                 test
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body"
+                class="MuiTableCell-root MuiTableCell-body makeStyles-link-19"
               >
                 <div
                   class="MuiChip-root makeStyles-chipUnpaired-18 MuiChip-sizeSmall"
@@ -160,12 +160,12 @@ exports[`Test <Terminals /> should match TerminalsPage snapshot test 1`] = `
                 </div>
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body"
+                class="MuiTableCell-root MuiTableCell-body makeStyles-link-19"
               >
                 192.168.1.10
               </td>
               <td
-                class="MuiTableCell-root MuiTableCell-body"
+                class="MuiTableCell-root MuiTableCell-body makeStyles-link-19"
               >
                 123-123-123
               </td>

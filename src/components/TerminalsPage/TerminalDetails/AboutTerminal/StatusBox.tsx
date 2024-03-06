@@ -38,7 +38,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
               Connecting
             </Typography>
             <Typography variant="inherit" className={classes.statusText}>
-              Pairing
+              Not Ready
             </Typography>
           </Box>
         </Box>
@@ -54,7 +54,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
               Disconnected
             </Typography>
             <Typography variant="inherit" className={classes.statusText}>
-              Unpaired
+              Not Ready
             </Typography>
           </Box>
         </Box>
