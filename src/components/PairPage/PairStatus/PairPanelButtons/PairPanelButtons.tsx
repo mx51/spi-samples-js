@@ -30,7 +30,7 @@ export default function PairPanelButtons(
     return {
       statusTitle: getTitleFromStatus(SPI_PAIR_STATUS.PairedConnecting, reconnecting),
       statusIcon: <ReconnectingIcon className={classes.reconnectIcon} />,
-      statusText: '-',
+      statusText: 'Not Ready',
       button: (
         <Button
           className={classes.cancelPairingBtn}
@@ -86,7 +86,7 @@ export default function PairPanelButtons(
   return {
     statusTitle: SPI_PAIR_STATUS.Unpaired,
     statusIcon: <FailedIcon className={classes.failedIcon} />,
-    statusText: '-',
+    statusText: 'Not Ready',
     button: null,
   };
 }
