@@ -19,7 +19,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
             <Typography variant="h5" className={classes.statusTitle}>
-              Connected
+              Paired
             </Typography>
             <Typography variant="inherit" className={classes.statusText}>
               Ready
@@ -35,7 +35,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
             <Typography variant="h5" className={classes.statusTitle}>
-              Connecting
+              Reconnecting
             </Typography>
             <Typography variant="inherit" className={classes.statusText}>
               Not Ready
@@ -51,7 +51,7 @@ export default function StatusBox({ status }: { status: string }): React.ReactEl
           </Typography>
           <Box display="flex" flexDirection="column" marginLeft={2}>
             <Typography variant="h5" className={classes.statusTitle}>
-              Disconnected
+              Unpaired
             </Typography>
             <Typography variant="inherit" className={classes.statusText}>
               Not Ready

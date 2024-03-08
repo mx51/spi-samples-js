@@ -9,7 +9,7 @@ describe('Test <StatusBox />', () => {
   test('should display different status UI DOMs', () => {
     // Arrange
     const statusOptions = Object.values(SPI_PAIR_STATUS);
-    const responses = ['Connected', 'Connecting', 'Disconnected'];
+    const responses = ['Paired', 'Reconnecting', 'Unpaired'];
 
     for (let index = 0; index < statusOptions.length; index += 1) {
       const { container } = render(<StatusBox status={statusOptions[index]} />);
