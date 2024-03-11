@@ -51,7 +51,7 @@ exports[`Test <AboutTerminal /> should match AboutTerminal snapshot test 1`] = `
               <h5
                 class="MuiTypography-root makeStyles-statusTitle-7 MuiTypography-h5"
               >
-                Connected
+                Paired
               </h5>
               <span
                 class="MuiTypography-root makeStyles-statusText-8"
