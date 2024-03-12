@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Box, Button, Divider, Typography } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { SpiStatus } from '@mx51/spi-client-js';
+import { Link } from 'react-router-dom';
 import useStyles from './index.styles';
 import {
   orderCashoutAmountSelector,
@@ -12,6 +12,7 @@ import {
 } from '../../redux/reducers/ProductSlice/productSelector';
 import { initiateMotoPurchase, initiatePurchase } from '../../utils/common/purchase/purchaseHelper';
 import { IProps } from './interfaces';
+import { PATH_SPLIT } from '../../definitions/constants/routerConfigs';
 
 export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal, selectedTerminal }) => {
   const classes = useStyles();
@@ -23,6 +24,16 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
 
   const selectedTerminalId = selectedTerminal?.serialNumber;
 
+  const isCardDisabled = useMemo(() => !selectedTerminal || subtotalAmount <= 0, [selectedTerminal, subtotalAmount]);
+  const isMotoDisabled = useMemo(
+    () => !selectedTerminal || subtotalAmount <= 0 || cashoutAmount > 0 || tipAmount > 0,
+    [selectedTerminal, subtotalAmount, cashoutAmount, tipAmount]
+  );
+  const isSplitDisabled = useMemo(
+    () => !selectedTerminal || subtotalAmount <= 0 || surchargeAmount > 0 || cashoutAmount > 0 || tipAmount > 0,
+    [selectedTerminal, subtotalAmount, surchargeAmount, cashoutAmount, tipAmount]
+  );
+
   return (
     <>
       <Typography className={classes.label}>Select payment method</Typography>
@@ -32,7 +43,7 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           variant="contained"
           color="primary"
           size="large"
-          disabled={subtotalAmount <= 0 || !selectedTerminal}
+          disabled={isCardDisabled}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
@@ -53,7 +64,7 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           variant="contained"
           color="primary"
           size="large"
-          disabled={subtotalAmount <= 0 || tipAmount > 0 || cashoutAmount > 0 || !selectedTerminal}
+          disabled={isMotoDisabled}
           focusRipple
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
@@ -62,6 +73,18 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           }}
         >
           Moto
+        </Button>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          disabled={isSplitDisabled}
+          focusRipple
+          classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
+          component={Link}
+          to={PATH_SPLIT}
+        >
+          Split
         </Button>
       </Box>
     </>

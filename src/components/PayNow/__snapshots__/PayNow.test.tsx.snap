@@ -388,6 +388,19 @@ exports[`Test <PayNow /> should match PayNowPage snapshot test 1`] = `
                     Moto
                   </span>
                 </button>
+                <a
+                  aria-disabled="true"
+                  class="MuiButtonBase-root MuiButton-root makeStyles-paymentTypeBtn-49 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge Mui-disabled Mui-disabled"
+                  href="/paynow/split"
+                  role="button"
+                  tabindex="-1"
+                >
+                  <span
+                    class="MuiButton-label makeStyles-paymentTypeBtnLabel-48"
+                  >
+                    Split
+                  </span>
+                </a>
               </div>
             </div>
           </div>

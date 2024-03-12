@@ -42,7 +42,7 @@ import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
 import { IOrderProps } from './interface';
 
-function Order({ disablePayNow }: IOrderProps): React.ReactElement {
+function Order({ disablePayNow, isSubtotalEditable, bottomButton }: IOrderProps): React.ReactElement {
   const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT';
   const CASHOUT_AMOUNT = 'CASHOUT_AMOUNT';
   const TIP_AMOUNT = 'TIP_AMOUNT';
@@ -152,8 +152,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
         </Box>
         <Divider />
         <List>
-          {!disablePayNow && <OrderSubTotal label="Subtotal" amount={subtotalAmount} />}
-          {disablePayNow && (
+          {isSubtotalEditable ? (
             <OrderLineItem
               label="Subtotal"
               amount={subtotalAmount}
@@ -163,6 +162,8 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
               disabled={false}
               viewOnly={false}
             />
+          ) : (
+            <OrderSubTotal label="Subtotal" amount={subtotalAmount} />
           )}
 
           <OrderLineItem
@@ -208,7 +209,7 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
             <Typography className={classes.totalPrice}>{currencyFormat(totalAmount / 100)}</Typography>
           </ListItem>
         </List>
-        {!disablePayNow ? (
+        {bottomButton === 'payNow' && (
           <Button
             variant="contained"
             color="primary"
@@ -220,7 +221,8 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
           >
             Pay now
           </Button>
-        ) : (
+        )}
+        {bottomButton === 'amendOrder' && (
           <Button
             variant="contained"
             color="primary"
@@ -230,6 +232,18 @@ function Order({ disablePayNow }: IOrderProps): React.ReactElement {
             to={PATH_PURCHASE}
           >
             &lt; Amend order
+          </Button>
+        )}
+        {bottomButton === 'cancelSplit' && (
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            classes={{ root: classes.amendBtn, label: classes.actionBtnLabel }}
+            component={LinkRouter}
+            to={PATH_PURCHASE}
+          >
+            Cancel split
           </Button>
         )}
       </Box>

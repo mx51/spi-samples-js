@@ -8,11 +8,10 @@ import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import CloseIcon from '@material-ui/icons/Close';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link as LinkRouter } from 'react-router-dom';
 import useStyles from './index.styles';
 import { TransactionProgressModalProps } from './interfaces';
 import { SPI_TRANSACTION_TYPES } from '../../definitions/constants/commonConfigs';
-import { PATH_ORDER_FINISHED, TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
+import { TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
 import { clearKeypadAmount } from '../../redux/reducers/PreAuth/preAuthSlice';
@@ -34,6 +33,7 @@ function TransactionProgressModal({
   isSuccess,
   onCancelTransaction,
   onRetryTransaction,
+  onDone,
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
@@ -147,12 +147,11 @@ function TransactionProgressModal({
             <Button
               color="primary"
               variant="contained"
-              component={LinkRouter}
-              to={PATH_ORDER_FINISHED}
               className={classes.modalBtn}
               onClick={() => {
                 handlePreAuthActions();
                 dispatch(clearKeypadAmount());
+                onDone();
               }}
             >
               Done
@@ -163,11 +162,10 @@ function TransactionProgressModal({
               <Button
                 color="primary"
                 variant="contained"
-                component={LinkRouter}
-                to={PATH_ORDER_FINISHED}
                 className={classes.modalBtn}
                 onClick={() => {
                   dispatch(clearKeypadAmount());
+                  onDone();
                 }}
               >
                 Done

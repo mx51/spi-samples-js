@@ -14,6 +14,7 @@ import {
   PATH_SETTINGS,
   PATH_TRANSACTIONS,
   PATH_PAT,
+  PATH_SPLIT,
 } from '../definitions/constants/routerConfigs';
 import PayAtTablePage from '../components/PayAtTablePage';
 import OrderFinished from '../components/OrderFinished/OrderFinished';
@@ -26,6 +27,7 @@ const Terminals = React.lazy(() => import('../components/TerminalsPage'));
 const TerminalsDetails = React.lazy(() => import('../components/TerminalsPage/TerminalDetails'));
 const NotFound = React.lazy(() => import('../components/NotFoundPage'));
 const PayNow = React.lazy(() => import('../components/PayNow'));
+const Split = React.lazy(() => import('../components/SplitPage'));
 const Cashout = React.lazy(() => import('../components/CashoutPage'));
 const Settings = React.lazy(() => import('../components/SettingsPage'));
 const SupportTool = React.lazy(() => import('../components/SupportToolsPage'));
@@ -53,6 +55,7 @@ const AppRoutes = (): React.ReactElement => (
         <Route exact path={PATH_TERMINALS} component={Terminals} />
         <Route exact path={`${PATH_TERMINALS}/:id`} component={TerminalsDetails} />
         <Route exact path={PATH_PAY_NOW} component={PayNow} />
+        <Route exact path={PATH_SPLIT} component={Split} />
         <Route exact path={PATH_CASH_OUT} component={Cashout} />
         <Route exact path={PATH_ORDER_FINISHED} component={OrderFinished} />
         <Route exact path={PATH_SETTINGS} component={Settings} />

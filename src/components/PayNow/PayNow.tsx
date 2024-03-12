@@ -13,7 +13,7 @@ function PayNow(): React.ReactElement {
     <Layout>
       <Grid container>
         <Grid item xs={4} className={classes.root}>
-          <Order disablePayNow />
+          <Order disablePayNow isSubtotalEditable bottomButton="amendOrder" />
         </Grid>
         <Grid item xs={8}>
           <OrderConfirmation title="Pay" pathname={PATH_PAY_NOW} editSubtotal={false} />

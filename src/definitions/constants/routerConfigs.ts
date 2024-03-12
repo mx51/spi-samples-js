@@ -8,6 +8,7 @@ export const PATH_PURCHASE = '/';
 export const PATH_REFUND = '/refund';
 export const PATH_TERMINALS = '/terminals';
 export const PATH_PAY_NOW = '/paynow';
+export const PATH_SPLIT = '/paynow/split';
 export const PATH_CASH_OUT = '/cashout';
 export const PATH_ORDER_FINISHED = '/order-finished';
 export const PATH_SETTINGS = '/settings';
