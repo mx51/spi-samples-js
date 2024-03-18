@@ -57,6 +57,7 @@ export const spiEvents = {
   spiTerminalStatusChanged: 'TerminalStatusChanged',
   spiTxFlowStateChanged: 'TxFlowStateChanged',
   spiTxUpdateMessage: 'TransactionUpdateMessage',
+  spiCancelTransactionResponse: 'cancel_response',
   TerminalStatusResponse: 'terminal_status',
 };
 

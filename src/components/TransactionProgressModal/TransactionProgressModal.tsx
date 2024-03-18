@@ -16,7 +16,7 @@ import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
 import { clearKeypadAmount } from '../../redux/reducers/PreAuth/preAuthSlice';
 import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
-import { ITerminalProps } from '../../redux/reducers/TerminalSlice/interfaces';
+import { ITerminalProps, ITxFlow, ITxMessage } from '../../redux/reducers/TerminalSlice/interfaces';
 import {
   terminalTxFlowAwaitingSignatureTracker,
   terminalTxMessage,
@@ -48,9 +48,31 @@ function TransactionProgressModal({
   const handleApprove = () => {
     approveSignature(terminalId);
   };
-
   const handleDecline = () => {
     declineSignature(terminalId);
+  };
+
+  const disableCancelButton = !!(
+    !currentTerminal?.txFlow?.attemptingToCancel && currentTerminal?.txFlow?.cancelAttemptTime
+  );
+
+  const getTxFlowMessage = (txFlowArg?: ITxFlow | null, txMessageArg?: ITxMessage | null) => {
+    if (!txFlowArg) {
+      return <p>{txMessageArg?.displayMessageText}</p>;
+    }
+    const { attemptingToCancel, displayMessage, cancelAttemptTime, finished } = txFlowArg;
+    if (!finished) {
+      if (txMessageArg && !cancelAttemptTime) {
+        return <p>{txMessageArg.displayMessageText}</p>;
+      }
+      if (attemptingToCancel) {
+        return <p>{displayMessage}</p>;
+      }
+      if (!attemptingToCancel && cancelAttemptTime) {
+        return <p>Transaction has passed the point of no return. Please press “cancel” from terminal.</p>;
+      }
+    }
+    return null;
   };
 
   return (
@@ -97,7 +119,7 @@ function TransactionProgressModal({
                   In progress
                 </Typography>
                 <Typography variant="body2" className={classes.modalDescription}>
-                  {txMessage?.displayMessageText}
+                  {getTxFlowMessage(currentTerminal?.txFlow, txMessage)}
                 </Typography>
               </div>
             </>
@@ -138,7 +160,13 @@ function TransactionProgressModal({
             </>
           )}
           {!isFinished && (
-            <Button color="primary" variant="outlined" onClick={onCancelTransaction} className={classes.modalBtn}>
+            <Button
+              color="primary"
+              variant="outlined"
+              onClick={onCancelTransaction}
+              className={classes.modalBtn}
+              disabled={disableCancelButton}
+            >
               Cancel transaction
             </Button>
           )}

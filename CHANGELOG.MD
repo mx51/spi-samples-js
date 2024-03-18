@@ -15,6 +15,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
 - [INTG-843](https://mx51.atlassian.net/browse/INTG-843) Pairing status discrepancy between "pairing screen" and "About this terminal" page
 
+### Fixed
+
+- [INTG-812](https://mx51.atlassian.net/browse/INTG-812) POS does not display any error when the user attempts to cancel the flow outside the MXA
+
 ### Changed
 
 [INTG-706](https://mx51.atlassian.net/browse/INTG-706) Merged long running feature branch into main branch
