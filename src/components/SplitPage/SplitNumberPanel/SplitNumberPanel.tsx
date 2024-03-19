@@ -33,7 +33,7 @@ export const SplitNumberPanel: React.FC<SplitNumberPanelProps> = ({
 
   const changeNumberOfSplits = (addend: number) => {
     const newNumber = numberOfSplits + addend;
-    onNumberOfSplitsChange(newNumber < 0 ? 0 : newNumber);
+    onNumberOfSplitsChange(newNumber < 2 ? 2 : newNumber);
   };
 
   return (
@@ -56,13 +56,10 @@ export const SplitNumberPanel: React.FC<SplitNumberPanelProps> = ({
         >
           <AddIcon />
         </SquareIconButton>
-        {numberOfSplits > 0 && (
-          <span className={classes.amountPerSplit}>
-            approximately {currencyFormat(totalAmount / numberOfSplits / 100)} per split
-          </span>
-        )}
+        <span className={classes.amountPerSplit}>
+          approximately {currencyFormat(totalAmount / numberOfSplits / 100)} per split
+        </span>
       </Box>
-      {numberOfSplits <= 0 && <FormHelperText error>Please select number of splits to continue</FormHelperText>}
     </>
   );
 };

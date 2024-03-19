@@ -17,7 +17,7 @@ export const InitialSplitPanel: React.FC<InitialSplitPanelProps> = ({ totalAmoun
   const classes = useStyles();
 
   const [splitMode, setSplitMode] = useState<SplitMode>('splitEvenly');
-  const [numberOfSplits, setNumberOfSplits] = useState(0);
+  const [numberOfSplits, setNumberOfSplits] = useState(2);
   const [splitAmount, setSplitAmount] = useState(totalAmount);
 
   const handleClick = () => {
