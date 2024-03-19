@@ -4,6 +4,11 @@ import { FONT_COLOR } from '../../../definitions/constants/themeStylesConfigs';
 
 export const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    keypadDrawerPaper: {
+      width: '33.34%',
+      backgroundColor: 'transparent',
+      border: 0,
+    },
     dividerLabel: {
       marginTop: theme.spacing(4.5),
       marginBottom: theme.spacing(0.5),
@@ -16,20 +21,24 @@ export const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
     },
-    numberOfSplits: {
-      display: 'inline-flex',
-      justifyContent: 'center',
-      width: '100px',
-      margin: theme.spacing(0, 1),
-      fontSize: '56px',
-      weight: 400,
+    splitAmountButton: {
+      backgroundColor: 'rgba(57, 63, 115, 0.1)',
+      borderRadius: '8px',
     },
-    amountPerSplit: {
+    splitAmountButtonLabel: {
+      fontWeight: 400,
+      fontSize: '3rem',
+      lineHeight: '4rem',
+    },
+    outstandingAmount: {
       marginLeft: 'auto',
       display: 'inline-flex',
       alignItems: 'end',
       height: '36px',
       color: FONT_COLOR,
+    },
+    errorText: {
+      marginTop: theme.spacing(1),
     },
   })
 );

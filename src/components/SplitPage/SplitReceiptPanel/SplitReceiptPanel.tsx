@@ -8,14 +8,16 @@ import { ReactComponent as SuccessIcon } from '../../../images/SuccessIcon.svg';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
 import OrderSubTotal from '../../OrderSubTotal';
 import OrderLineItem from '../../OrderLineItem';
+import { SplitMode } from '../interfaces';
 
 export type SplitReceiptPanelProps = {
   currentTerminal: ITerminalProps;
   isTxFinished: boolean;
   isTxSuccess: boolean;
-  currentSplitNumber: number;
-  totalSplitNumber: number;
-  amount: number;
+  splitMode: SplitMode;
+  splitIndex: number;
+  numberOfSplits: number;
+  splitAmount: number;
   outstandingAmount: number;
   onClickNext: () => void;
 };
@@ -24,9 +26,10 @@ export const SplitReceiptPanel: React.FC<SplitReceiptPanelProps> = ({
   currentTerminal,
   isTxFinished,
   isTxSuccess,
-  currentSplitNumber,
-  totalSplitNumber,
-  amount,
+  splitMode,
+  splitIndex,
+  numberOfSplits,
+  splitAmount,
   outstandingAmount,
   onClickNext,
 }) => {
@@ -61,10 +64,10 @@ export const SplitReceiptPanel: React.FC<SplitReceiptPanelProps> = ({
             {deviceAddress} | S/N {serialNumber}
           </Typography>
           <Box className={classes.paper} component={Paper}>
-            <span className={classes.splitNumberRow}>
-              Split {currentSplitNumber + 1} of {totalSplitNumber}
+            <span className={classes.splitIndexRow}>
+              Split {splitIndex + 1} {splitMode === 'splitEvenly' && `of ${numberOfSplits}`}
             </span>
-            {currencyFormat(amount / 100)}
+            {currencyFormat(splitAmount / 100)}
             <Box className={classes.outstandingAmountRow}>
               <span>Outstanding amount</span>
               <span>{currencyFormat(outstandingAmount / 100)}</span>
@@ -83,7 +86,7 @@ export const SplitReceiptPanel: React.FC<SplitReceiptPanelProps> = ({
             classes={{ root: classes.actionBtn }}
             onClick={onClickNext}
           >
-            {currentSplitNumber >= totalSplitNumber - 1 ? 'Finish' : `Next (Split #${currentSplitNumber + 2})`}
+            {outstandingAmount <= 0 ? 'Finish' : `Next (Split #${splitIndex + 2})`}
           </Button>
         </Box>
       </Grid>
