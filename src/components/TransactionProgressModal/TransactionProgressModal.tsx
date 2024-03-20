@@ -52,10 +52,6 @@ function TransactionProgressModal({
     declineSignature(terminalId);
   };
 
-  const disableCancelButton = !!(
-    !currentTerminal?.txFlow?.attemptingToCancel && currentTerminal?.txFlow?.cancelAttemptTime
-  );
-
   const getTxFlowMessage = (txFlowArg?: ITxFlow | null, txMessageArg?: ITxMessage | null) => {
     if (!txFlowArg) {
       return <p>{txMessageArg?.displayMessageText}</p>;
@@ -163,9 +159,12 @@ function TransactionProgressModal({
             <Button
               color="primary"
               variant="outlined"
-              onClick={onCancelTransaction}
+              onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                const target = e.currentTarget as HTMLButtonElement;
+                target.disabled = true;
+                onCancelTransaction();
+              }}
               className={classes.modalBtn}
-              disabled={disableCancelButton}
             >
               Cancel transaction
             </Button>

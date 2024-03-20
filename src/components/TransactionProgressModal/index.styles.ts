@@ -22,13 +22,18 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     modalBtn: {
       margin: theme.spacing(2, 0, 0, 0),
+      '&:disabled': {
+        color: theme.palette.text.hint,
+        borderColor: theme.palette.text.hint,
+        background: 'none',
+      },
     },
     btnWithLeftMargin: {
       marginLeft: theme.spacing(3),
     },
     transactionProgressModalContent: {
       width: '27.5rem',
-      height: '19.6rem',
+      height: '21.6rem',
       textAlign: 'center',
       display: 'flex',
       flexDirection: 'column',
