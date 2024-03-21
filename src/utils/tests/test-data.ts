@@ -5,6 +5,7 @@ import {
   ITerminalReceiptFormatProps,
   ITxFlow,
 } from '../../redux/reducers/TerminalSlice/interfaces';
+import { TxLogItem } from '../../services/txLogService';
 
 export function generateTerminalMockData({
   terminalId,
@@ -46,6 +47,77 @@ export function generateTerminalMockData({
     receipt,
   };
 }
+
+export const generateTxLogItemMockData = ({
+  amountCents = 0,
+  purchaseAmount = 0,
+  surchargeAmount = 0,
+  bankCashAmount = 0,
+  tipAmount = 0,
+  hostResponseText = 'Approved',
+  successState = 'Success',
+  type = 'type',
+  transactionType = TransactionType.Purchase,
+  completedTime = Date.now(),
+  receipt = 'receipt',
+  tid = 'tid',
+  mid = 'mid',
+  posId = 'posId',
+  posRefId = 'posRefId',
+  override = false,
+  source = 'Integrated',
+  total = 0,
+  preAuthAmount = 0,
+  topupAmount = 0,
+  reduceAmount = 0,
+  preAuthId = 'preAuthId',
+}: {
+  amountCents?: number;
+  purchaseAmount?: number;
+  surchargeAmount?: number;
+  bankCashAmount?: number;
+  tipAmount?: number;
+  hostResponseText?: string;
+  successState?: string;
+  type?: string;
+  transactionType?: string;
+  completedTime?: number;
+  receipt?: string;
+  tid?: string;
+  mid?: string;
+  posId?: string;
+  posRefId?: string;
+  override?: boolean;
+  source?: 'Integrated' | 'Pay At Table';
+  total?: number;
+  preAuthAmount?: number;
+  topupAmount?: number;
+  reduceAmount?: number;
+  preAuthId?: string;
+}): TxLogItem => ({
+  completedTime,
+  mid,
+  posId,
+  posRefId,
+  receipt,
+  successState,
+  tid,
+  type,
+  override,
+  amountCents,
+  purchaseAmount,
+  surchargeAmount,
+  bankCashAmount,
+  tipAmount,
+  preAuthAmount,
+  topupAmount,
+  reduceAmount,
+  preAuthId,
+  hostResponseText,
+  transactionType,
+  total,
+  source,
+});
 
 export const generateTxFlowMockData = ({
   success,

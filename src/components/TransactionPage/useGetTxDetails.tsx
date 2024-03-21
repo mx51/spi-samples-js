@@ -14,9 +14,9 @@ export const useGetTxDetails = (): GetTxDetails => {
 
   const getIconByStatus = (status: string) => {
     const iconByStatusMap = {
-      Success: <SuccessIcon className={classes.successIcon} />,
-      Failed: <FailedIcon className={classes.failedIcon} />,
-      Unknown: <WarningIcon className={classes.failedIcon} />,
+      Success: <SuccessIcon className={classes.successIcon} data-testid="success-icon" />,
+      Failed: <FailedIcon className={classes.failedIcon} data-testid="fail-icon" />,
+      Unknown: <WarningIcon className={classes.failedIcon} data-testid="fail-icon" />,
     } as { [key: string]: React.ReactElement };
 
     return iconByStatusMap[status];

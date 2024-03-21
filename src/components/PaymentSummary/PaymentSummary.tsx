@@ -1,173 +1,89 @@
-import React, { useEffect, useMemo } from 'react';
-import { Box, Button, Divider, Grid, Paper, Typography } from '@material-ui/core';
+import { Box, Button, Container, Grid } from '@material-ui/core';
+import React, { useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Link as LinkRouter } from 'react-router-dom';
-import useStyles from './index.style';
-import {
-  PATH_ACCOUNT_VERIFY,
-  PATH_PRE_AUTH,
-  TEXT_PRE_AUTH,
-  PATH_PURCHASE,
-} from '../../definitions/constants/routerConfigs';
-import { ReactComponent as FailedIcon } from '../../images/FailedIcon.svg';
-import { ReactComponent as SuccessIcon } from '../../images/SuccessIcon.svg';
+import { TxLogItem } from '../../services/txLogService';
+import { useTransactionDetailPageStyle } from '../TransactionPage/TransactionDetailsPage/TransactionDetailsPage.style';
+import { OrderStatus } from './OrderStatus';
+import { OrderSummary } from './OrderSummary';
+import CustomContentPanel from '../CustomContentPanel';
+
+import { PATH_TRANSACTIONS } from '../../definitions/constants/routerConfigs';
+import { OrderInfo } from './OrderInfo';
+import { SplitSummary } from './SplitSummary';
+import { OrderButtons } from './OrderButtons';
 import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
-import { ITxFlow } from '../../redux/reducers/TerminalSlice/interfaces';
-import currencyFormat from '../../utils/common/intl/currencyFormatter';
-import OrderLineItem from '../OrderLineItem';
-import OrderSubTotal from '../OrderSubTotal';
-import { getTxTypeByPosRefId } from '../../utils/tx-utils';
 
-interface Props {
-  typePath: string;
-  isTxFinished: boolean;
-  isTxSuccess: boolean;
+type Props = {
+  currentTransaction: TxLogItem;
+  transactionHistory?: boolean;
+  splitTransaction?: {
+    currentSplitNumber: number;
+    totalSplitNumber: number;
+    amount: number;
+    outstandingAmount: number;
+    onClickNext: () => void;
+  };
+  typePath?: string;
+};
 
-  // TODO: confirm with product about the expected behaviour if the page is refresh
-  // i.e no information on the last txFlow, posId, ...
-  posId?: string;
-  deviceAddress?: string;
-  serialNumber?: string;
-  txFlow: ITxFlow | null;
-}
-
-export const PaymentSummary: React.FC<Props> = ({
-  typePath,
-  isTxFinished,
-  isTxSuccess,
-  posId,
-  deviceAddress,
-  serialNumber,
-  txFlow,
-}) => {
-  const classes = useStyles();
+export const PaymentSummary = ({ currentTransaction, transactionHistory, splitTransaction, typePath }: Props) => {
+  const classes = useTransactionDetailPageStyle();
+  const { receipt, hostResponseText } = currentTransaction;
+  const history = useHistory();
   const dispatch = useDispatch();
+
+  const goToTransactions = (path: string) => {
+    history.push(path);
+  };
 
   useEffect(() => {
     dispatch(clearAllProducts());
   }, []);
 
-  const amountSummaryInformation = (type: string) => {
-    const responseData = txFlow?.override ? txFlow?.request.data : txFlow?.response.data;
-    if (responseData) return (responseData as Any)[type] ?? 0;
-    return 0;
-  };
-
-  const pathNameFormatter = (path: string) => {
-    if (path) {
-      const pathName = path.split('/')[1];
-      return pathName.charAt(0).toUpperCase() + pathName.slice(1);
-    }
-    return '';
-  };
-
-  const subTotal = amountSummaryInformation('purchaseAmount');
-  const surchangeAmount = amountSummaryInformation('surchargeAmount');
-  const cashoutAmount = amountSummaryInformation('bankCashAmount');
-  const tipAmount = amountSummaryInformation('tipAmount');
-  const refundAmount = amountSummaryInformation('refundAmount');
-
-  const originalTotalAmount = [PATH_PRE_AUTH, PATH_ACCOUNT_VERIFY].includes(typePath)
-    ? txFlow?.amountCents + surchangeAmount
-    : subTotal + surchangeAmount + cashoutAmount + tipAmount + refundAmount;
-
-  const transactionStatus = useMemo(() => {
-    const transactionType = getTxTypeByPosRefId(txFlow?.posRefId ?? '').toUpperCase();
-    const status = txFlow?.success === 'Success' ? 'APPROVED' : 'DECLINED';
-    return `${transactionType} ${status}`;
-  }, [txFlow]);
+  const isCashoutOnly = currentTransaction?.type === 'CashoutOnly';
 
   return (
-    <Box className={`${classes.root} ${typePath !== PATH_PURCHASE && classes.alignTop}`}>
-      <Box flexGrow="2" className={classes.roots}>
-        {isTxFinished && isTxSuccess && (
-          <>
-            <SuccessIcon data-testid="success-icon" className={classes.successIcon} />
-            <Typography variant="h5" component="h1">
-              {transactionStatus}
-            </Typography>
-          </>
-        )}
-        {isTxFinished && !isTxSuccess && (
-          <>
-            <FailedIcon data-testid="fail-icon" className={classes.failedIcon} />
-            <Typography variant="h5" component="h1">
-              {transactionStatus}
-            </Typography>
-          </>
-        )}
-        <Typography className={classes.heading}>Terminal: {posId}</Typography>
+    <Container className={classes.container} maxWidth="md">
+      {transactionHistory ? (
+        <Button className={classes.backLink} onClick={() => goToTransactions(PATH_TRANSACTIONS)}>
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M20 11H7.83L13.42 5.41L12 4L4 12L12 20L13.41 18.59L7.83 13H20V11Z" fill="#393F73" />
+          </svg>
+          Back to Transaction history
+        </Button>
+      ) : null}
+      <Grid container spacing={1} className={classes.gridContainer}>
+        <>
+          <Grid item xs={6} className={classes.gridItem}>
+            <Box className={classes.root}>
+              <Box flexGrow="2" className={classes.roots}>
+                <OrderStatus currentTransaction={currentTransaction} />
 
-        <Typography className={classes.subheading}>
-          {deviceAddress} | S/N {serialNumber}
-        </Typography>
-        <Box data-testid="total" className={classes.paper} component={Paper}>
-          {currencyFormat((Number.isNaN(originalTotalAmount) ? 0 : originalTotalAmount) / 100)}
-        </Box>
-        {typePath === PATH_PURCHASE ? (
-          <>
-            <Typography className={classes.orderSummery}>Order Summary</Typography>
-            <Divider variant="middle" />
-            <OrderSubTotal
-              data-testid="subTotal"
-              label="Subtotal"
-              amount={amountSummaryInformation('purchaseAmount')}
-            />
-            <OrderLineItem
-              data-testid="surchage"
-              disabled
-              label="Surcharge"
-              amount={amountSummaryInformation('surchargeAmount')}
-              viewOnly
-            />
-            <OrderLineItem
-              data-testid="cashout"
-              disabled
-              label="Cashout"
-              amount={amountSummaryInformation('bankCashAmount')}
-              viewOnly
-            />
-            <OrderLineItem
-              data-testid="tip"
-              disabled
-              label="Tip"
-              amount={amountSummaryInformation('tipAmount')}
-              viewOnly
-            />
-          </>
-        ) : (
-          <br />
-        )}
-        <Grid container spacing={1}>
-          {typePath !== PATH_PURCHASE && (
-            <Grid item xs={6}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                classes={{ root: classes.actionBtn }}
-                component={LinkRouter}
-                to={typePath !== PATH_ACCOUNT_VERIFY ? typePath : PATH_PRE_AUTH}
-              >
-                {typePath !== PATH_ACCOUNT_VERIFY ? pathNameFormatter(typePath) : TEXT_PRE_AUTH}
-              </Button>
-            </Grid>
-          )}
-          <Grid item xs={typePath !== PATH_PURCHASE ? 6 : 12}>
-            <Button
-              data-test-id="newOrderBtn"
-              variant="contained"
-              color="primary"
-              size="large"
-              classes={{ root: classes.actionBtn }}
-              component={LinkRouter}
-              to={PATH_PURCHASE}
-            >
-              New Order
-            </Button>
+                {splitTransaction ? (
+                  <SplitSummary
+                    currentSplitNumber={splitTransaction.currentSplitNumber}
+                    totalSplitNumber={splitTransaction.totalSplitNumber}
+                    amount={splitTransaction.amount}
+                    outstandingAmount={splitTransaction.outstandingAmount}
+                  />
+                ) : (
+                  <OrderInfo currentTransaction={currentTransaction} />
+                )}
+
+                <OrderSummary currentTransaction={currentTransaction} isCashoutOnly={isCashoutOnly} />
+
+                {transactionHistory ? null : <OrderButtons typePath={typePath} splitTransaction={splitTransaction} />}
+              </Box>
+            </Box>
           </Grid>
-        </Grid>
-      </Box>
-    </Box>
+          <Grid className={classes.gridItem}>
+            <CustomContentPanel title="Receipt" css={classes.receiptBoxWrapper} isCopiable content={receipt}>
+              <pre>{receipt || hostResponseText}</pre>
+            </CustomContentPanel>
+          </Grid>
+        </>
+      </Grid>
+    </Container>
   );
 };

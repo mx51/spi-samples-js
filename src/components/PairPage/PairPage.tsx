@@ -3,7 +3,7 @@ import { Button, Container, Grid } from '@material-ui/core';
 import { useHistory, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { selectedShowFlowPanel } from '../../redux/reducers/CommonSlice/commonSliceSelectors';
-import { resetPairForm, updatePairForm, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
+import { resetPairForm, updatePairForm } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import FlowPanel from '../FlowPanel';
 import { IFlowPanel } from '../FlowPanel/interfaces';
 import PairFlow from '../FlowPanel/PairFlow';
