@@ -18,11 +18,14 @@ type Props = {
   currentTransaction: TxLogItem;
   transactionHistory?: boolean;
   splitTransaction?: {
-    currentSplitNumber: number;
-    totalSplitNumber: number;
-    amount: number;
+    // currentSplitNumber: number;
+    // totalSplitNumber: number;
+    splitAmount: number;
     outstandingAmount: number;
     onClickNext: () => void;
+    splitMode: string;
+    numberOfSplits: number;
+    splitIndex: number;
   };
   typePath?: string;
 };
@@ -62,10 +65,11 @@ export const PaymentSummary = ({ currentTransaction, transactionHistory, splitTr
 
                 {splitTransaction ? (
                   <SplitSummary
-                    currentSplitNumber={splitTransaction.currentSplitNumber}
-                    totalSplitNumber={splitTransaction.totalSplitNumber}
-                    amount={splitTransaction.amount}
+                  splitAmount={splitTransaction.splitAmount}
                     outstandingAmount={splitTransaction.outstandingAmount}
+                    splitIndex={splitTransaction.splitIndex}
+                    splitMode="splitEvenly"
+                    numberOfSplits={splitTransaction.numberOfSplits}
                   />
                 ) : (
                   <OrderInfo currentTransaction={currentTransaction} />

@@ -9,15 +9,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- [INTG-784](https://mx51.atlassian.net/browse/INTG-784) Split by amount feature
 - [INTG-803](https://mx51.atlassian.net/browse/INTG-803) Split evenly feature
 - [INTG-794](https://mx51.atlassian.net/browse/INTG-794) About page available for terminals in all pairing states
 - [INTG-702](https://mx51.atlassian.net/browse/INTG-702) Terminals list actions
 - [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
 - [INTG-843](https://mx51.atlassian.net/browse/INTG-843) Pairing status discrepancy between "pairing screen" and "About this terminal" page
 
+### Fixed
+
+- [INTG-812](https://mx51.atlassian.net/browse/INTG-812) POS does not display any error when the user attempts to cancel the flow outside the MXA
+
 ### Changed
 
 [INTG-706](https://mx51.atlassian.net/browse/INTG-706) Merged long running feature branch into main branch
+[INTG-845](https://mx51.atlassian.net/browse/INTG-845) Refactored PaymentSummary page into reusable component for consistency across transaction types
 
 ## [1.6.0] - 2024-02-28
 

@@ -4,21 +4,24 @@ import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces
 import Layout from '../../Layout';
 import { PaymentSummary } from '../../PaymentSummary/PaymentSummary';
 import { TxLogItem, TxLogService } from '../../../services/txLogService';
+import { SplitMode } from '../interfaces';
 
 export type SplitReceiptPanelProps = {
   currentTerminal: ITerminalProps;
-  currentSplitNumber: number;
-  totalSplitNumber: number;
-  amount: number;
+  splitMode: SplitMode;
+  splitIndex: number;
+  numberOfSplits: number;
+  splitAmount: number;
   outstandingAmount: number;
   onClickNext: () => void;
 };
 
 export const SplitReceiptPanel: React.FC<SplitReceiptPanelProps> = ({
   currentTerminal,
-  currentSplitNumber,
-  totalSplitNumber,
-  amount,
+  splitMode,
+  splitIndex,
+  numberOfSplits,
+  splitAmount,
   outstandingAmount,
   onClickNext,
 }) => {
@@ -40,7 +43,7 @@ export const SplitReceiptPanel: React.FC<SplitReceiptPanelProps> = ({
       <PaymentSummary
         currentTransaction={currentTransaction}
         typePath={pathname}
-        splitTransaction={{ currentSplitNumber, totalSplitNumber, amount, outstandingAmount, onClickNext }}
+        splitTransaction={{ splitAmount, outstandingAmount, onClickNext, splitMode, numberOfSplits, splitIndex }}
       />
     </Layout>
   );

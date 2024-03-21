@@ -4,21 +4,22 @@ import { useStyles } from '../SplitPage/SplitReceiptPanel/SplitReceiptPanel.styl
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
 
 type Props = {
-  currentSplitNumber: number;
-  totalSplitNumber: number;
-  amount: number;
+  splitAmount: number;
   outstandingAmount: number;
+  splitIndex: number;
+  splitMode: string;
+  numberOfSplits: number;
 };
 
-export const SplitSummary = ({ currentSplitNumber, totalSplitNumber, amount, outstandingAmount }: Props) => {
+export const SplitSummary = ({ splitAmount, outstandingAmount, splitIndex, splitMode, numberOfSplits }: Props) => {
   const classes = useStyles();
 
   return (
     <Box className={classes.paper} component={Paper}>
-      <span className={classes.splitNumberRow}>
-        Split {currentSplitNumber + 1} of {totalSplitNumber}
+      <span className={classes.splitIndexRow}>
+        Split {splitIndex + 1} {splitMode === 'splitEvenly' && `of ${numberOfSplits}`}
       </span>
-      {currencyFormat(amount / 100)}
+      {currencyFormat(splitAmount / 100)}
       <Box className={classes.outstandingAmountRow}>
         <span>Outstanding amount</span>
         <span>{currencyFormat(outstandingAmount / 100)}</span>

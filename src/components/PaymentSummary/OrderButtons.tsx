@@ -11,11 +11,12 @@ import {
 
 type Props = {
   splitTransaction?: {
-    currentSplitNumber: number;
-    totalSplitNumber: number;
-    amount: number;
+    splitAmount: number;
     outstandingAmount: number;
     onClickNext: () => void;
+    splitMode: string;
+    numberOfSplits: number;
+    splitIndex: number;
   };
   typePath?: string;
   classes?: Record<string, string>;
@@ -38,9 +39,7 @@ const SplitTransactionButton = ({ splitTransaction, classes }: Props) =>
       classes={{ root: classes?.actionBtn }}
       onClick={splitTransaction.onClickNext}
     >
-      {splitTransaction.currentSplitNumber >= splitTransaction.totalSplitNumber - 1
-        ? 'Finish'
-        : `Next (Split #${splitTransaction.currentSplitNumber + 2})`}
+      {splitTransaction.outstandingAmount <= 0 ? 'Finish' : `Next (Split #${splitTransaction.splitIndex + 2})`}
     </Button>
   ) : null;
 

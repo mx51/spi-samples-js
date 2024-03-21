@@ -52,7 +52,7 @@ export const useStyles = makeStyles((theme: Theme) =>
       fontSize: '3rem',
       fontWeight: 'normal',
     },
-    splitNumberRow: {
+    splitIndexRow: {
       fontSize: '1rem',
       fontWeight: 400,
       lineHeight: '1.5rem',

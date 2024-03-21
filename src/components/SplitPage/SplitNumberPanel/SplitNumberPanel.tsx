@@ -20,20 +20,20 @@ const SquareIconButton = withStyles({
 
 export type SplitNumberPanelProps = {
   totalAmount: number;
-  splitNumber: number;
-  onSplitNumberChange: (splitNumber: number) => void;
+  numberOfSplits: number;
+  onNumberOfSplitsChange: (numberOfSplits: number) => void;
 };
 
 export const SplitNumberPanel: React.FC<SplitNumberPanelProps> = ({
   totalAmount,
-  splitNumber,
-  onSplitNumberChange,
+  numberOfSplits,
+  onNumberOfSplitsChange,
 }) => {
   const classes = useStyles();
 
-  const changeSplitNumber = (addend: number) => {
-    const newSplitNumber = splitNumber + addend;
-    onSplitNumberChange(newSplitNumber < 0 ? 0 : newSplitNumber);
+  const changeNumberOfSplits = (addend: number) => {
+    const newNumber = numberOfSplits + addend;
+    onNumberOfSplitsChange(newNumber < 0 ? 0 : newNumber);
   };
 
   return (
@@ -41,20 +41,28 @@ export const SplitNumberPanel: React.FC<SplitNumberPanelProps> = ({
       <Typography className={classes.dividerLabel}>Number of splits</Typography>
       <Divider className={classes.divider} />
       <Box className={classes.panel}>
-        <SquareIconButton aria-label="decrease number of splits" color="primary" onClick={() => changeSplitNumber(-1)}>
+        <SquareIconButton
+          aria-label="decrease number of splits"
+          color="primary"
+          onClick={() => changeNumberOfSplits(-1)}
+        >
           <RemoveIcon />
         </SquareIconButton>
-        <span className={classes.splitNumber}>{splitNumber}</span>
-        <SquareIconButton aria-label="decrease number of splits" color="primary" onClick={() => changeSplitNumber(1)}>
+        <span className={classes.numberOfSplits}>{numberOfSplits}</span>
+        <SquareIconButton
+          aria-label="decrease number of splits"
+          color="primary"
+          onClick={() => changeNumberOfSplits(1)}
+        >
           <AddIcon />
         </SquareIconButton>
-        {splitNumber > 0 && (
-          <span className={classes.splitAmount}>
-            approximately {currencyFormat(totalAmount / splitNumber / 100)} per split
+        {numberOfSplits > 0 && (
+          <span className={classes.amountPerSplit}>
+            approximately {currencyFormat(totalAmount / numberOfSplits / 100)} per split
           </span>
         )}
       </Box>
-      {splitNumber <= 0 && <FormHelperText error>Please select number of splits to continue</FormHelperText>}
+      {numberOfSplits <= 0 && <FormHelperText error>Please select number of splits to continue</FormHelperText>}
     </>
   );
 };

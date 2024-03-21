@@ -6,23 +6,25 @@ import { SplitOptionsPanel } from '../SplitOptionsPanel/SplitOptionsPanel';
 import { SplitNumberPanel } from '../SplitNumberPanel/SplitNumberPanel';
 import { SplitMode } from '../interfaces';
 import { useStyles } from './InitialSplitPanel.styles';
+import { SplitAmountPanel } from '../SplitAmountPanel/SplitAmountPanel';
 
 export type InitialSplitPanelProps = {
   totalAmount: number;
-  onClickNext: (splitMode: SplitMode, splitNumber: number) => void;
+  onClickNext: (splitMode: SplitMode, numberOfSplits: number, splitAmount: number) => void;
 };
 
 export const InitialSplitPanel: React.FC<InitialSplitPanelProps> = ({ totalAmount, onClickNext }) => {
   const classes = useStyles();
 
   const [splitMode, setSplitMode] = useState<SplitMode>('splitEvenly');
-  const [splitNumber, setSplitNumber] = useState(0);
+  const [numberOfSplits, setNumberOfSplits] = useState(0);
+  const [splitAmount, setSplitAmount] = useState(totalAmount);
 
   const handleClick = () => {
-    onClickNext(splitMode, splitNumber);
+    onClickNext(splitMode, numberOfSplits, splitAmount);
   };
 
-  const isNextButtonDisabled = totalAmount <= 0 || (splitMode === 'splitEvenly' && splitNumber <= 0);
+  const isNextButtonDisabled = totalAmount <= 0 || (splitMode === 'splitEvenly' && numberOfSplits <= 0);
 
   return (
     <Grid container>
@@ -36,8 +38,15 @@ export const InitialSplitPanel: React.FC<InitialSplitPanelProps> = ({ totalAmoun
           {splitMode === 'splitEvenly' && (
             <SplitNumberPanel
               totalAmount={totalAmount}
-              splitNumber={splitNumber}
-              onSplitNumberChange={setSplitNumber}
+              numberOfSplits={numberOfSplits}
+              onNumberOfSplitsChange={setNumberOfSplits}
+            />
+          )}
+          {splitMode === 'splitByAmount' && (
+            <SplitAmountPanel
+              totalAmount={totalAmount}
+              splitAmount={splitAmount}
+              onSplitAmountChange={setSplitAmount}
             />
           )}
           <Box className={classes.nextButtonRow}>

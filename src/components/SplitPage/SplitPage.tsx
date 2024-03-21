@@ -25,25 +25,26 @@ type Stage = 'initialSplit' | 'splitConfirmation' | 'splitReceipt';
 type State = {
   stage: Stage;
   splitMode: SplitMode;
-  splitArray: number[];
-  currentSplitNumber: number;
+  splitAmountArray: number[];
+  splitIndex: number;
+  currentSplitAmount: number;
   outstandingAmount: number;
-  showModal?: boolean;
+  showModal: boolean;
 };
 
 type Action =
-  | { type: 'startSplit'; splitMode: SplitMode; splitNumber: number }
-  | { type: 'startTransaction' }
+  | { type: 'startSplit'; splitMode: SplitMode; numberOfSplits: number; splitAmount: number }
+  | { type: 'startTransaction'; currentSplitAmount: number; outstandingAmount: number }
   | { type: 'showReceipt' }
   | { type: 'nextSplit' };
 
-function calculateSplitArray(totalAmount: number, splitNumber: number): number[] {
-  if (splitNumber === 1) {
+function calculateSplitArray(totalAmount: number, numberOfSplits: number): number[] {
+  if (numberOfSplits === 1) {
     return [totalAmount];
   }
 
-  const result = Array(splitNumber).fill(Math.floor(totalAmount / splitNumber));
-  result[0] = totalAmount - (splitNumber - 1) * Math.floor(totalAmount / splitNumber);
+  const result = Array(numberOfSplits).fill(Math.floor(totalAmount / numberOfSplits));
+  result[0] = totalAmount - (numberOfSplits - 1) * Math.floor(totalAmount / numberOfSplits);
   return result;
 }
 
@@ -65,45 +66,56 @@ export const SplitPage: React.FC = () => {
 
   const reducer = (currentState: State, action: Action): State => {
     if (action.type === 'startSplit') {
-      if (action.splitMode === 'splitEvenly') {
-        return {
-          stage: 'splitConfirmation',
-          splitMode: action.splitMode,
-          splitArray: calculateSplitArray(totalAmount, action.splitNumber),
-          currentSplitNumber: 0,
-          outstandingAmount: totalAmount,
-        };
+      const splitAmountArray =
+        action.splitMode === 'splitEvenly' ? calculateSplitArray(totalAmount, action.numberOfSplits) : [];
+      const currentSplitAmount = action.splitMode === 'splitEvenly' ? splitAmountArray[0] : action.splitAmount;
+
+      if (action.splitMode === 'splitByAmount') {
+        initiatePurchase(selectedTerminalId, currentSplitAmount, 0, 0, 0, promptForCashout);
       }
-      return currentState;
+
+      return {
+        stage: 'splitConfirmation',
+        splitMode: action.splitMode,
+        splitAmountArray,
+        splitIndex: 0,
+        currentSplitAmount,
+        outstandingAmount: totalAmount - currentSplitAmount,
+        showModal: action.splitMode === 'splitByAmount',
+      };
     }
     if (action.type === 'startTransaction') {
-      const splitAmount = currentState.splitArray[currentState.currentSplitNumber];
-      initiatePurchase(selectedTerminalId, splitAmount, 0, 0, 0, promptForCashout);
+      initiatePurchase(selectedTerminalId, action.currentSplitAmount, 0, 0, 0, promptForCashout);
 
       return {
         ...currentState,
+        currentSplitAmount: action.currentSplitAmount,
+        outstandingAmount: action.outstandingAmount,
         showModal: true,
       };
     }
     if (action.type === 'showReceipt') {
-      const splitAmount = currentState.splitArray[currentState.currentSplitNumber];
-
       return {
         ...currentState,
         stage: 'splitReceipt',
-        outstandingAmount: currentState.outstandingAmount - splitAmount,
         showModal: false,
       };
     }
     if (action.type === 'nextSplit') {
-      if (currentState.currentSplitNumber >= currentState.splitArray.length - 1) {
+      if (currentState.outstandingAmount <= 0) {
         appDispatch(clearAllProducts());
         backToPurchase();
       }
+
+      const { splitMode, splitAmountArray, splitIndex, outstandingAmount } = currentState;
+      const currentSplitAmount = splitMode === 'splitEvenly' ? splitAmountArray[splitIndex + 1] : outstandingAmount;
+
       return {
         ...currentState,
         stage: 'splitConfirmation',
-        currentSplitNumber: currentState.currentSplitNumber + 1,
+        splitIndex: splitIndex + 1,
+        currentSplitAmount,
+        outstandingAmount: outstandingAmount - currentSplitAmount,
       };
     }
     return currentState;
@@ -111,9 +123,11 @@ export const SplitPage: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, {
     stage: 'initialSplit',
     splitMode: 'splitEvenly',
-    splitArray: [],
-    currentSplitNumber: 0,
+    splitAmountArray: [],
+    splitIndex: 0,
+    currentSplitAmount: 0,
     outstandingAmount: 0,
+    showModal: false,
   });
 
   return (
@@ -121,11 +135,12 @@ export const SplitPage: React.FC = () => {
       {state.stage === 'initialSplit' && (
         <InitialSplitPanel
           totalAmount={totalAmount}
-          onClickNext={(splitMode, splitNumber) => {
+          onClickNext={(splitMode, numberOfSplits, splitAmount) => {
             dispatch({
               type: 'startSplit',
               splitMode,
-              splitNumber,
+              numberOfSplits,
+              splitAmount,
             });
           }}
         />
@@ -133,11 +148,15 @@ export const SplitPage: React.FC = () => {
 
       {state.stage === 'splitConfirmation' && (
         <SplitConfirmationPanel
-          splitNumber={state.currentSplitNumber}
-          splitAmount={state.splitArray[state.currentSplitNumber]}
-          onClickNext={() => {
+          splitMode={state.splitMode}
+          splitIndex={state.splitIndex}
+          splitAmount={state.currentSplitAmount}
+          totalAmount={state.outstandingAmount + state.currentSplitAmount}
+          onClickNext={(splitAmount, outstandingAmount) => {
             dispatch({
               type: 'startTransaction',
+              currentSplitAmount: splitAmount,
+              outstandingAmount,
             });
           }}
         />
@@ -146,9 +165,10 @@ export const SplitPage: React.FC = () => {
       {state.stage === 'splitReceipt' && (
         <SplitReceiptPanel
           currentTerminal={selectedTerminal}
-          currentSplitNumber={state.currentSplitNumber}
-          totalSplitNumber={state.splitArray.length}
-          amount={state.splitArray[state.currentSplitNumber]}
+          splitIndex={state.splitIndex}
+          splitMode={state.splitMode}
+          numberOfSplits={state.splitAmountArray.length}
+          splitAmount={state.currentSplitAmount}
           outstandingAmount={state.outstandingAmount}
           onClickNext={() => {
             dispatch({
@@ -170,7 +190,7 @@ export const SplitPage: React.FC = () => {
             backToPurchase();
           }}
           onRetryTransaction={() => {
-            initiatePurchase(selectedTerminalId, state.splitArray[state.currentSplitNumber], 0, 0, 0, promptForCashout);
+            initiatePurchase(selectedTerminalId, state.currentSplitAmount, 0, 0, 0, promptForCashout);
           }}
           onDone={() => {
             if (isTxSuccess) {
