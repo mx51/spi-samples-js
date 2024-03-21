@@ -1,5 +1,5 @@
-import { Box, Button, Container, Grid } from '@material-ui/core';
-import React, { useState } from 'react';
+import { Box, Button, Container, FormHelperText, Grid } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import Order from '../../PurchasePage/Order';
 import { SummaryPanel } from '../SummaryPanel/SummaryPanel';
 import { SplitOptionsPanel } from '../SplitOptionsPanel/SplitOptionsPanel';
@@ -18,13 +18,20 @@ export const InitialSplitPanel: React.FC<InitialSplitPanelProps> = ({ totalAmoun
 
   const [splitMode, setSplitMode] = useState<SplitMode>('splitEvenly');
   const [numberOfSplits, setNumberOfSplits] = useState(2);
-  const [splitAmount, setSplitAmount] = useState(totalAmount);
+  const [splitAmount, setSplitAmount] = useState(0);
 
   const handleClick = () => {
     onClickNext(splitMode, numberOfSplits, splitAmount);
   };
 
-  const isNextButtonDisabled = totalAmount <= 0 || (splitMode === 'splitEvenly' && numberOfSplits <= 0);
+  useEffect(() => {
+    setSplitAmount(0);
+  }, [totalAmount]);
+
+  const isNextButtonDisabled =
+    totalAmount <= 0 ||
+    (splitMode === 'splitEvenly' && numberOfSplits <= 0) ||
+    (splitMode === 'splitByAmount' && splitAmount <= 0);
 
   return (
     <Grid container>
@@ -48,6 +55,11 @@ export const InitialSplitPanel: React.FC<InitialSplitPanelProps> = ({ totalAmoun
               splitAmount={splitAmount}
               onSplitAmountChange={setSplitAmount}
             />
+          )}
+          {totalAmount <= 0 && (
+            <FormHelperText error className={classes.errorText}>
+              Please set a value for the subtotal amount
+            </FormHelperText>
           )}
           <Box className={classes.nextButtonRow}>
             <Button

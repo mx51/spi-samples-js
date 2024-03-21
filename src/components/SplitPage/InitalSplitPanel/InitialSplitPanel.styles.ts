@@ -30,5 +30,8 @@ export const useStyles = makeStyles((theme: Theme) =>
       lineHeight: '1.5rem',
       color: 'white',
     },
+    errorText: {
+      marginTop: theme.spacing(1),
+    },
   })
 );
