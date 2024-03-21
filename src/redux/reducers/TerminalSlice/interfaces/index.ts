@@ -56,6 +56,7 @@ export interface ITxFlow {
   } | null;
   isGetTx?: boolean;
   completedTime: number;
+  attemptingToCancel?: boolean;
   cancelAttemptTime?: number;
   receipt: string;
   override?: boolean;
