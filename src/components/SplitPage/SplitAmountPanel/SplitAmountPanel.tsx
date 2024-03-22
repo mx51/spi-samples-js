@@ -30,7 +30,7 @@ export const SplitAmountPanel: React.FC<SplitAmountPanelProps> = ({
           open={displayKeypad}
           title="Split"
           subtitle="Enter split amount"
-          defaultAmount={0}
+          defaultAmount={splitAmount}
           onClose={() => {
             setDisplayKeypad(false);
           }}
@@ -58,7 +58,7 @@ export const SplitAmountPanel: React.FC<SplitAmountPanelProps> = ({
 
         <span className={classes.outstandingAmount}>{currencyFormat((totalAmount - splitAmount) / 100)} remaining</span>
       </Box>
-      {splitAmount <= 0 && (
+      {totalAmount > 0 && splitAmount <= 0 && (
         <FormHelperText error className={classes.errorText}>
           Please enter an amount to continue
         </FormHelperText>

@@ -9,10 +9,10 @@ exports[`InitialSplitPanel should render the component 1`] = `
       class="MuiGrid-root MuiGrid-item MuiGrid-grid-xs-4"
     >
       <div
-        class="MuiPaper-root MuiBox-root MuiBox-root-21 makeStyles-root-5 MuiPaper-elevation1 MuiPaper-rounded"
+        class="MuiPaper-root MuiBox-root MuiBox-root-22 makeStyles-root-6 MuiPaper-elevation1 MuiPaper-rounded"
       >
         <div
-          class="MuiBox-root MuiBox-root-22 makeStyles-heading-6"
+          class="MuiBox-root MuiBox-root-23 makeStyles-heading-7"
         >
           <h1
             class="MuiTypography-root MuiTypography-h6"
@@ -20,14 +20,14 @@ exports[`InitialSplitPanel should render the component 1`] = `
             Order
           </h1>
           <div
-            class="MuiBox-root MuiBox-root-23"
+            class="MuiBox-root MuiBox-root-24"
           />
         </div>
         <hr
           class="MuiDivider-root"
         />
         <div
-          class="MuiBox-root MuiBox-root-24 makeStyles-orderList-16"
+          class="MuiBox-root MuiBox-root-25 makeStyles-orderList-17"
         >
           <ul
             class="MuiList-root MuiList-padding"
@@ -46,7 +46,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
               class="MuiListItemText-root"
             >
               <span
-                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-25 MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesEnable-26 MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Subtotal
               </span>
@@ -54,7 +54,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
             <span
               aria-disabled="false"
               aria-label="Add Amount"
-              class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-29"
+              class="MuiButtonBase-root MuiIconButton-root makeStyles-addAmountBtn-30"
               role="button"
               tabindex="0"
             >
@@ -84,7 +84,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
               class="MuiListItemText-root"
             >
               <span
-                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-26 MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-27 MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Surcharge
               </span>
@@ -102,7 +102,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
               class="MuiListItemText-root"
             >
               <span
-                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-26 MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-27 MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Cashout
               </span>
@@ -120,7 +120,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
               class="MuiListItemText-root"
             >
               <span
-                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-26 MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary makeStyles-additionalChargesDisable-27 MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Tip
               </span>
@@ -132,20 +132,20 @@ exports[`InitialSplitPanel should render the component 1`] = `
             </p>
           </li>
           <hr
-            class="MuiDivider-root makeStyles-divider-20 MuiDivider-middle"
+            class="MuiDivider-root makeStyles-divider-21 MuiDivider-middle"
           />
           <label
-            class="MuiFormControlLabel-root makeStyles-checkbox-17"
+            class="MuiFormControlLabel-root makeStyles-checkbox-18"
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-30 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-19 MuiIconButton-colorPrimary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-31 MuiCheckbox-root MuiCheckbox-colorPrimary makeStyles-checkboxBase-20 MuiIconButton-colorPrimary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  class="PrivateSwitchBase-input-33"
+                  class="PrivateSwitchBase-input-34"
                   data-indeterminate="false"
                   name="Prompt for Cashout"
                   type="checkbox"
@@ -170,7 +170,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
               class="MuiTypography-root MuiFormControlLabel-label MuiTypography-body1"
             >
               <p
-                class="MuiTypography-root makeStyles-checkboxLabel-18 MuiTypography-body1"
+                class="MuiTypography-root makeStyles-checkboxLabel-19 MuiTypography-body1"
               >
                 Prompt terminal for cashout
               </p>
@@ -183,13 +183,13 @@ exports[`InitialSplitPanel should render the component 1`] = `
               class="MuiListItemText-root"
             >
               <span
-                class="MuiTypography-root MuiListItemText-primary makeStyles-total-9 MuiTypography-body1 MuiTypography-displayBlock"
+                class="MuiTypography-root MuiListItemText-primary makeStyles-total-10 MuiTypography-body1 MuiTypography-displayBlock"
               >
                 Total
               </span>
             </div>
             <p
-              class="MuiTypography-root makeStyles-totalPrice-10 MuiTypography-body1"
+              class="MuiTypography-root makeStyles-totalPrice-11 MuiTypography-body1"
             >
               $0.00
             </p>
@@ -197,13 +197,13 @@ exports[`InitialSplitPanel should render the component 1`] = `
         </ul>
         <a
           aria-disabled="false"
-          class="MuiButtonBase-root MuiButton-root makeStyles-amendBtn-12 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
+          class="MuiButtonBase-root MuiButton-root makeStyles-amendBtn-13 MuiButton-contained MuiButton-containedPrimary MuiButton-containedSizeLarge MuiButton-sizeLarge"
           href="/"
           role="button"
           tabindex="0"
         >
           <span
-            class="MuiButton-label makeStyles-actionBtnLabel-13"
+            class="MuiButton-label makeStyles-actionBtnLabel-14"
           >
             &lt; Amend order
           </span>
@@ -220,26 +220,26 @@ exports[`InitialSplitPanel should render the component 1`] = `
         class="MuiContainer-root makeStyles-container-1 MuiContainer-maxWidthLg"
       >
         <div
-          class="MuiBox-root MuiBox-root-37 makeStyles-panel-34"
+          class="MuiBox-root MuiBox-root-38 makeStyles-panel-35"
         >
           <p
-            class="MuiTypography-root makeStyles-label-35 MuiTypography-body1"
+            class="MuiTypography-root makeStyles-label-36 MuiTypography-body1"
           >
             Split
           </p>
           <div
-            class="MuiPaper-root makeStyles-amount-36 MuiPaper-elevation1 MuiPaper-rounded"
+            class="MuiPaper-root makeStyles-amount-37 MuiPaper-elevation1 MuiPaper-rounded"
           >
             $1.00
           </div>
         </div>
         <p
-          class="MuiTypography-root makeStyles-dividerLabel-38 MuiTypography-body1"
+          class="MuiTypography-root makeStyles-dividerLabel-39 MuiTypography-body1"
         >
           Options
         </p>
         <hr
-          class="MuiDivider-root makeStyles-divider-39"
+          class="MuiDivider-root makeStyles-divider-40"
         />
         <div
           class="MuiFormGroup-root"
@@ -250,20 +250,20 @@ exports[`InitialSplitPanel should render the component 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-30 MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-checked-31 Mui-checked MuiIconButton-colorPrimary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-31 MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-checked-32 Mui-checked MuiIconButton-colorPrimary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
                   checked=""
-                  class="PrivateSwitchBase-input-33"
+                  class="PrivateSwitchBase-input-34"
                   name="splitOptions"
                   type="radio"
                   value="splitEvenly"
                 />
                 <div
-                  class="PrivateRadioButtonIcon-root-40 PrivateRadioButtonIcon-checked-42"
+                  class="PrivateRadioButtonIcon-root-41 PrivateRadioButtonIcon-checked-43"
                 >
                   <svg
                     aria-hidden="true"
@@ -277,7 +277,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-41"
+                    class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-42"
                     focusable="false"
                     viewBox="0 0 24 24"
                   >
@@ -302,19 +302,19 @@ exports[`InitialSplitPanel should render the component 1`] = `
           >
             <span
               aria-disabled="false"
-              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-30 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
+              class="MuiButtonBase-root MuiIconButton-root PrivateSwitchBase-root-31 MuiRadio-root MuiRadio-colorPrimary MuiIconButton-colorPrimary"
             >
               <span
                 class="MuiIconButton-label"
               >
                 <input
-                  class="PrivateSwitchBase-input-33"
+                  class="PrivateSwitchBase-input-34"
                   name="splitOptions"
                   type="radio"
                   value="splitByAmount"
                 />
                 <div
-                  class="PrivateRadioButtonIcon-root-40"
+                  class="PrivateRadioButtonIcon-root-41"
                 >
                   <svg
                     aria-hidden="true"
@@ -328,7 +328,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-41"
+                    class="MuiSvgIcon-root PrivateRadioButtonIcon-layer-42"
                     focusable="false"
                     viewBox="0 0 24 24"
                   >
@@ -350,19 +350,19 @@ exports[`InitialSplitPanel should render the component 1`] = `
           </label>
         </div>
         <p
-          class="MuiTypography-root makeStyles-dividerLabel-43 MuiTypography-body1"
+          class="MuiTypography-root makeStyles-dividerLabel-44 MuiTypography-body1"
         >
           Number of splits
         </p>
         <hr
-          class="MuiDivider-root makeStyles-divider-44"
+          class="MuiDivider-root makeStyles-divider-45"
         />
         <div
-          class="MuiBox-root MuiBox-root-48 makeStyles-panel-45"
+          class="MuiBox-root MuiBox-root-49 makeStyles-panel-46"
         >
           <button
             aria-label="decrease number of splits"
-            class="MuiButtonBase-root MuiIconButton-root WithStyles(ForwardRef(IconButton))-root-49 MuiIconButton-colorPrimary"
+            class="MuiButtonBase-root MuiIconButton-root WithStyles(ForwardRef(IconButton))-root-50 MuiIconButton-colorPrimary"
             tabindex="0"
             type="button"
           >
@@ -385,13 +385,13 @@ exports[`InitialSplitPanel should render the component 1`] = `
             />
           </button>
           <span
-            class="makeStyles-numberOfSplits-46"
+            class="makeStyles-numberOfSplits-47"
           >
             2
           </span>
           <button
             aria-label="decrease number of splits"
-            class="MuiButtonBase-root MuiIconButton-root WithStyles(ForwardRef(IconButton))-root-49 MuiIconButton-colorPrimary"
+            class="MuiButtonBase-root MuiIconButton-root WithStyles(ForwardRef(IconButton))-root-50 MuiIconButton-colorPrimary"
             tabindex="0"
             type="button"
           >
@@ -414,7 +414,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
             />
           </button>
           <span
-            class="makeStyles-amountPerSplit-47"
+            class="makeStyles-amountPerSplit-48"
           >
             approximately 
             $0.50
@@ -422,7 +422,7 @@ exports[`InitialSplitPanel should render the component 1`] = `
           </span>
         </div>
         <div
-          class="MuiBox-root MuiBox-root-50 makeStyles-nextButtonRow-2"
+          class="MuiBox-root MuiBox-root-51 makeStyles-nextButtonRow-2"
         >
           <button
             class="MuiButtonBase-root MuiButton-root makeStyles-nextBtn-3 MuiButton-contained"

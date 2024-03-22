@@ -65,7 +65,8 @@ export const SplitReceiptPanel: React.FC<SplitReceiptPanelProps> = ({
           </Typography>
           <Box className={classes.paper} component={Paper}>
             <span className={classes.splitIndexRow}>
-              Split {splitIndex + 1} {splitMode === 'splitEvenly' && `of ${numberOfSplits}`}
+              Split {splitMode === 'splitByAmount' && '#'}
+              {splitIndex + 1} {splitMode === 'splitEvenly' && `of ${numberOfSplits}`}
             </span>
             {currencyFormat(splitAmount / 100)}
             <Box className={classes.outstandingAmountRow}>

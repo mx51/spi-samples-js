@@ -21,6 +21,6 @@ describe('InitialSplitPanel', () => {
     fireEvent.click(screen.getByText('Next'));
 
     // Assert that onClickNext is called with the correct parameters
-    expect(onClickNext).toHaveBeenCalledWith('splitEvenly', 2, 100);
+    expect(onClickNext).toHaveBeenCalledWith('splitEvenly', 2, 0);
   });
 });
