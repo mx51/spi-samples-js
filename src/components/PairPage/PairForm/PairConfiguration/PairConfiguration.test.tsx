@@ -1,8 +1,10 @@
 import React from 'react';
+import SpiClient from '@mx51/spi-client-js';
 import { cleanup, fireEvent, screen } from '@testing-library/react';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import replaceAllInserter from 'string.prototype.replaceall';
+import { act } from 'react-dom/test-utils';
 import PairConfiguration from '.';
 import {
   TEXT_FORM_CONFIGURATION_EFTPOS_ADDRESS_VALUE,
@@ -14,14 +16,36 @@ import { defaultLocalIP } from '../../../../definitions/constants/spiConfigs';
 import { updatePairFormParams } from '../../../../redux/reducers/PairFormSlice/pairFormSlice';
 import mockWithRedux, { mockTerminalInstanceId } from '../../../../utils/tests/common';
 
+jest.mock('@mx51/spi-client-js', () => ({
+  ...jest.requireActual('@mx51/spi-client-js'),
+}));
+
+afterAll(() => {
+  jest.resetAllMocks();
+});
+
 replaceAllInserter.shim();
 
 describe('Test <PairConfiguration />', () => {
   let dispatch: Any;
   let mockContainer: Any;
-  beforeEach(() => {
+  beforeEach(async () => {
+    SpiClient.Spi.GetAvailableTenants = jest.fn().mockResolvedValueOnce({
+      Data: [
+        { code: 'cba', name: 'CommBank Smart' },
+        { code: 'fisvau', name: 'Fiserv Australia' },
+        { code: 'gko', name: 'Gecko Demo Bank' },
+        { code: 'next', name: 'Next Payments' },
+        { code: 'till', name: 'Till Payments' },
+        { code: 'wbc', name: 'Westpac Presto' },
+      ],
+    });
+
     dispatch = jest.fn();
-    mockContainer = mockWithRedux(<PairConfiguration />);
+
+    await act(async () => {
+      mockContainer = await mockWithRedux(<PairConfiguration />);
+    });
   });
 
   afterEach(cleanup);
