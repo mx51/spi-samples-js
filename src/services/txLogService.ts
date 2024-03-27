@@ -1,4 +1,8 @@
 import dayjs from 'dayjs';
+import { TransactionType } from '@mx51/spi-client-js';
+import { ITxFlow } from '../redux/reducers/TerminalSlice/interfaces';
+import { getTxTypeByPosRefId } from '../utils/tx-utils';
+import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../utils/common/helpers';
 
 export const TX_LOG_KEY = 'TransactionLog';
 
@@ -64,3 +68,66 @@ export class TxLogService {
     return TxLogService.load().find((tx) => tx.posRefId === posRefId);
   }
 }
+
+export const TxLogServiceMapper = {
+  toTxLogItem({ txFlow, posId, tid, mid }: { txFlow: ITxFlow; posId: string; tid: string; mid: string }): TxLogItem {
+    const {
+      request,
+      response,
+      success: successState,
+      completedTime,
+      type,
+      posRefId,
+      receipt: transactionReceipt,
+      override,
+    } = txFlow;
+    const { preAuthId, hostResponseText, transactionType } = response.data;
+
+    const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
+      override ? request.data : response.data;
+
+    const amountCents = txFlow.amountCents || purchaseAmount;
+
+    // TODO: put this logic into a normalized calculate total
+    // instead of splitting it out.
+    const total =
+      type === TransactionType.CashoutOnly
+        ? calculateCashoutOnlyTotalAmount({
+            amountCents,
+            surchargeAmount,
+            bankCashAmount,
+            tipAmount,
+          })
+        : calculateTotalAmount({
+            amountCents,
+            surchargeAmount,
+            bankCashAmount,
+            tipAmount,
+          });
+
+    return {
+      successState,
+      completedTime,
+      type: getTxTypeByPosRefId(posRefId),
+      posRefId,
+      posId,
+      tid,
+      mid,
+      receipt: transactionReceipt,
+      override,
+      amountCents,
+      purchaseAmount,
+      surchargeAmount,
+      bankCashAmount,
+      tipAmount,
+      preAuthAmount,
+      topupAmount,
+      reduceAmount,
+      preAuthId,
+      hostResponseText,
+      transactionType,
+      total,
+      source: 'Integrated',
+    };
+  },
+};

@@ -22,7 +22,7 @@ export const OrderSummary = ({ currentTransaction, isCashoutOnly }: Props) => {
       <Typography variant="h6" component="h1" data-testid="total">
         {currencyFormat(total / 100)}
       </Typography>
-      <OrderSubTotal label="Subtotal" amount={amountCents} data-testid="subtotal" />
+      <OrderSubTotal label="Subtotal" amount={amountCents} data-testid="subTotal" />
       {surchargeAmount ? (
         <OrderLineItem disabled label="Surcharge" amount={surchargeAmount} viewOnly data-testid="surcharge" />
       ) : null}

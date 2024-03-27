@@ -57,36 +57,34 @@ export const PaymentSummary = ({ currentTransaction, transactionHistory, splitTr
         </Button>
       ) : null}
       <Grid container spacing={1} className={classes.gridContainer}>
-        <>
-          <Grid item xs={6} className={classes.gridItem}>
-            <Box className={classes.root}>
-              <Box flexGrow="2" className={classes.roots}>
-                <OrderStatus currentTransaction={currentTransaction} />
+        <Grid item xs={6} className={classes.gridItem}>
+          <Box className={classes.root}>
+            <Box flexGrow="2" className={classes.roots}>
+              <OrderStatus currentTransaction={currentTransaction} />
 
-                {splitTransaction ? (
-                  <SplitSummary
-                    splitAmount={splitTransaction.splitAmount}
-                    outstandingAmount={splitTransaction.outstandingAmount}
-                    splitIndex={splitTransaction.splitIndex}
-                    splitMode="splitEvenly"
-                    numberOfSplits={splitTransaction.numberOfSplits}
-                  />
-                ) : (
-                  <OrderInfo currentTransaction={currentTransaction} />
-                )}
+              {splitTransaction ? (
+                <SplitSummary
+                  splitAmount={splitTransaction.splitAmount}
+                  outstandingAmount={splitTransaction.outstandingAmount}
+                  splitIndex={splitTransaction.splitIndex}
+                  splitMode="splitEvenly"
+                  numberOfSplits={splitTransaction.numberOfSplits}
+                />
+              ) : (
+                <OrderInfo currentTransaction={currentTransaction} />
+              )}
 
-                <OrderSummary currentTransaction={currentTransaction} isCashoutOnly={isCashoutOnly} />
+              <OrderSummary currentTransaction={currentTransaction} isCashoutOnly={isCashoutOnly} />
 
-                {transactionHistory ? null : <OrderButtons typePath={typePath} splitTransaction={splitTransaction} />}
-              </Box>
+              {transactionHistory ? null : <OrderButtons typePath={typePath} splitTransaction={splitTransaction} />}
             </Box>
-          </Grid>
-          <Grid className={classes.gridItem}>
-            <CustomContentPanel title="Receipt" css={classes.receiptBoxWrapper} isCopiable content={receipt}>
-              <pre>{receipt || hostResponseText}</pre>
-            </CustomContentPanel>
-          </Grid>
-        </>
+          </Box>
+        </Grid>
+        <Grid className={classes.gridItem}>
+          <CustomContentPanel title="Receipt" css={classes.receiptBoxWrapper} isCopiable content={receipt}>
+            <pre>{receipt || hostResponseText}</pre>
+          </CustomContentPanel>
+        </Grid>
       </Grid>
     </Container>
   );

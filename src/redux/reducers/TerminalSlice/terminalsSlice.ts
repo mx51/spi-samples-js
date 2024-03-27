@@ -19,9 +19,7 @@ import {
   IUpdateTxFlowAction,
   IUpdateTxMessage,
 } from './interfaces';
-import { TxLogItem, TxLogService } from '../../../services/txLogService';
-import { calculateCashoutOnlyTotalAmount, calculateTotalAmount } from '../../../utils/common/helpers';
-import { getTxTypeByPosRefId } from '../../../utils/tx-utils';
+import { TxLogService, TxLogServiceMapper } from '../../../services/txLogService';
 import { addPreAuth, clearPreAuth, reducePreAuth, topupPreAuth } from '../PreAuth/preAuthSlice';
 
 const terminalsSlice = createSlice({
@@ -181,72 +179,24 @@ export const updateTxFlowWithSideEffect = createAsyncThunk(
   'terminals/updateTxFlowWithSideEffect',
   async (payload: IUpdateTxFlowAction, { dispatch, getState }) => {
     dispatch(terminalsSlice.actions.updateTxFlow(payload));
-    const {
-      id,
-      txFlow: {
-        finished,
-        request,
-        response,
-        success: successState,
-        completedTime,
-        type,
-        posRefId,
-        receipt: transactionReceipt,
-        override,
-        isGetTx,
-      },
-    } = payload;
+    const { id, txFlow } = payload;
 
-    if (finished && isGetTx && isCancelledTx(payload.txFlow)) {
+    const { finished, response, posRefId, override, isGetTx } = txFlow;
+
+    if (finished && isGetTx && isCancelledTx(txFlow)) {
       TxLogService.removeTx(posRefId);
-    } else if (finished && (override || !isCancelledTx(payload.txFlow))) {
+    } else if (finished && (override || !isCancelledTx(txFlow))) {
       const { terminals } = getState() as Any;
-      const { purchaseAmount, surchargeAmount, bankCashAmount, tipAmount, preAuthAmount, topupAmount, reduceAmount } =
-        override ? request.data : response.data;
-      const { preAuthId, hostResponseText, transactionType } = response.data;
+      const { transactionType } = response.data;
+      const { posId, merchantId: mid, terminalId: tid } = terminals[id];
 
-      const amountCents = payload.txFlow.amountCents || purchaseAmount;
-
-      const { posId, merchantId, terminalId } = terminals[id];
-      const total =
-        type === TransactionType.CashoutOnly
-          ? calculateCashoutOnlyTotalAmount({
-              amountCents,
-              surchargeAmount,
-              bankCashAmount,
-              tipAmount,
-            })
-          : calculateTotalAmount({
-              amountCents,
-              surchargeAmount,
-              bankCashAmount,
-              tipAmount,
-            });
-
-      const txLogItem: TxLogItem = {
-        successState,
-        completedTime,
-        type: getTxTypeByPosRefId(posRefId),
-        posRefId,
+      const txLogItem = TxLogServiceMapper.toTxLogItem({
+        txFlow,
         posId,
-        tid: terminalId!,
-        mid: merchantId!,
-        receipt: transactionReceipt,
-        override,
-        amountCents,
-        purchaseAmount,
-        surchargeAmount,
-        bankCashAmount,
-        tipAmount,
-        preAuthAmount,
-        topupAmount,
-        reduceAmount,
-        preAuthId,
-        hostResponseText,
-        transactionType,
-        total,
-        source: 'Integrated',
-      };
+        mid,
+        tid,
+      });
+
       if (isGetTx) {
         TxLogService.updateTx(txLogItem);
 
