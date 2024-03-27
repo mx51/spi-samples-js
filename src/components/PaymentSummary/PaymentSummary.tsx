@@ -65,7 +65,7 @@ export const PaymentSummary = ({ currentTransaction, transactionHistory, splitTr
 
                 {splitTransaction ? (
                   <SplitSummary
-                  splitAmount={splitTransaction.splitAmount}
+                    splitAmount={splitTransaction.splitAmount}
                     outstandingAmount={splitTransaction.outstandingAmount}
                     splitIndex={splitTransaction.splitIndex}
                     splitMode="splitEvenly"

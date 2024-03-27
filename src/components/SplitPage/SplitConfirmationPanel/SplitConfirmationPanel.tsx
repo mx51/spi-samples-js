@@ -51,6 +51,7 @@ export const SplitConfirmationPanel: React.FC<SplitConfirmationPanelProps> = ({
               focusRipple
               classes={{ root: classes.nextBtn, label: classes.nextBtnLabel }}
               onClick={() => onClickNext(newSplitAmount, totalAmount - newSplitAmount)}
+              disabled={newSplitAmount <= 0}
             >
               Next
             </Button>

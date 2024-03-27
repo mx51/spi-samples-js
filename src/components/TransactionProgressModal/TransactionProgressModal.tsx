@@ -102,7 +102,7 @@ function TransactionProgressModal({
             <>
               <img
                 className={classes.modalImage}
-                src="images/transactionStatus/inProgress.gif"
+                src="/images/transactionStatus/inProgress.gif"
                 alt="Transaction in progress img"
                 width="56"
                 height="56"
@@ -124,7 +124,7 @@ function TransactionProgressModal({
             <>
               <img
                 className={classes.modalImage}
-                src="images/transactionStatus/approved.gif"
+                src="/images/transactionStatus/approved.gif"
                 alt="Transaction in progress img"
                 width="56"
                 height="56"
@@ -141,7 +141,7 @@ function TransactionProgressModal({
             <>
               <img
                 className={classes.modalImage}
-                src="images/transactionStatus/declined.gif"
+                src="/images/transactionStatus/declined.gif"
                 alt="Transaction in progress img"
                 width="56"
                 height="56"
