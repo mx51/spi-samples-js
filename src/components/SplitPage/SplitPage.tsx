@@ -165,8 +165,6 @@ export const SplitPage: React.FC = () => {
       {state.stage === 'splitReceipt' && (
         <SplitReceiptPanel
           currentTerminal={selectedTerminal}
-          isTxSuccess={isTxSuccess}
-          isTxFinished={isTxFinished}
           splitIndex={state.splitIndex}
           splitMode={state.splitMode}
           numberOfSplits={state.splitAmountArray.length}

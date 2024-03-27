@@ -9,8 +9,6 @@ import {
   FormControlLabel,
   FormGroup,
   Button,
-  Box,
-  Divider,
   Grid,
 } from '@material-ui/core';
 import { Spi as SpiClient } from '@mx51/spi-client-js';

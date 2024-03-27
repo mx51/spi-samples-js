@@ -4,7 +4,7 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 import { SpiStatus } from '@mx51/spi-client-js';
-import { PATH_PAIR, PATH_TERMINALS } from '../../../../definitions/constants/routerConfigs';
+import { PATH_PAIR } from '../../../../definitions/constants/routerConfigs';
 import {
   terminalConfigurationsPartOne,
   terminalConfigurationsPartTwo,

@@ -29,13 +29,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PURCHASE APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PURCHASE')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$9.60');
     expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
-    expect(screen.getByTestId('surchage')).toHaveTextContent('$0.00');
-    expect(screen.getByTestId('cashout')).toHaveTextContent('$0.00');
-    expect(screen.getByTestId('tip')).toHaveTextContent('$0.00');
+    expect(screen.queryByTestId('surcharge')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
   });
 
   test('render correctly for a successful purchase transaction with tip', () => {
@@ -58,13 +58,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PURCHASE APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PURCHASE')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$10.60');
     expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
-    expect(screen.getByTestId('surchage')).toHaveTextContent('$0.00');
-    expect(screen.getByTestId('cashout')).toHaveTextContent('$0.00');
     expect(screen.getByTestId('tip')).toHaveTextContent('$1.00');
+    expect(screen.queryByTestId('surcharge')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
   });
 
   test('render correctly for a successful purchase transaction with surcharge', () => {
@@ -87,13 +87,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PURCHASE APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PURCHASE')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$10.60');
     expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
-    expect(screen.getByTestId('surchage')).toHaveTextContent('$1.00');
-    expect(screen.getByTestId('cashout')).toHaveTextContent('$0.00');
-    expect(screen.getByTestId('tip')).toHaveTextContent('$0.00');
+    expect(screen.getByTestId('surcharge')).toHaveTextContent('$1.00');
+    expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
   });
 
   test('render correctly for a successful purchase transaction with cashout', () => {
@@ -116,13 +116,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PURCHASE APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PURCHASE')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$30.00');
     expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
-    expect(screen.getByTestId('surchage')).toHaveTextContent('$0.00');
     expect(screen.getByTestId('cashout')).toHaveTextContent('$20.40');
-    expect(screen.getByTestId('tip')).toHaveTextContent('$0.00');
+    expect(screen.queryByTestId('surcharge')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
   });
 
   test('render correctly for a failed purchase transaction', () => {
@@ -144,13 +144,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PURCHASE DECLINED')).toBeInTheDocument();
+    expect(screen.getByText('PURCHASE')).toBeInTheDocument();
     expect(screen.getByTestId('fail-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$9.60');
     expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
-    expect(screen.getByTestId('surchage')).toHaveTextContent('$0.00');
-    expect(screen.getByTestId('cashout')).toHaveTextContent('$0.00');
-    expect(screen.getByTestId('tip')).toHaveTextContent('$0.00');
+    expect(screen.queryByTestId('surcharge')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
   });
 
   test('render correctly for an override purchase transaction', () => {
@@ -175,13 +175,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PURCHASE APPROVED')).toBeInTheDocument();
-    expect(screen.getByTestId('success-icon')).toBeInTheDocument();
+    expect(screen.getByText('PURCHASE')).toBeInTheDocument();
+    expect(screen.getByTestId('warning-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$20.00');
     expect(screen.getByTestId('subTotal')).toHaveTextContent('$20.00');
-    expect(screen.getByTestId('surchage')).toHaveTextContent('$0');
-    expect(screen.getByTestId('cashout')).toHaveTextContent('$0');
-    expect(screen.getByTestId('tip')).toHaveTextContent('$0');
+    expect(screen.queryByTestId('surcharge')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
+    expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
   });
 
   test('render correctly for a successful refund transaction', () => {
@@ -204,10 +204,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('REFUND APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('REFUND')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$9.60');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -233,10 +233,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('REFUND DECLINED')).toBeInTheDocument();
+    expect(screen.getByText('REFUND')).toBeInTheDocument();
     expect(screen.getByTestId('fail-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$9.60');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$9.60');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -252,7 +252,7 @@ describe('Page: /order-finished', () => {
             terminalId,
             pairingFlow: null,
             txFlow: generateTxFlowMockData({
-              purchaseAmount: 0,
+              purchaseAmount: 1000,
               override: false,
               bankCashAmount: 1000,
               success: 'Success',
@@ -264,12 +264,13 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('CASHOUT APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('CASHOUT')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$10.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$10.00');
+    expect(screen.getByTestId('cashout')).toHaveTextContent('$10.00');
+
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
-    expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: /Cashout/ })).toBeInTheDocument();
   });
@@ -296,10 +297,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('ACCOUNT VERIFIED APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('ACCOUNT VERIFIED')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$0.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$0.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -326,10 +327,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PREAUTH OPEN APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PREAUTH OPEN')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$10.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$10.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -355,10 +356,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PREAUTH EXTEND APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PREAUTH EXTEND')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$0.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$0.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -385,10 +386,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PREAUTH CANCEL APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PREAUTH CANCEL')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$0.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$0.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -419,10 +420,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PREAUTH TOPUP APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PREAUTH TOPUP')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$10.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$10.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -449,10 +450,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PREAUTH REDUCE APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PREAUTH REDUCE')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$5.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$5.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();
@@ -478,10 +479,10 @@ describe('Page: /order-finished', () => {
       },
     });
 
-    expect(screen.getByText('PREAUTH COMPLETE APPROVED')).toBeInTheDocument();
+    expect(screen.getByText('PREAUTH COMPLETE')).toBeInTheDocument();
     expect(screen.getByTestId('success-icon')).toBeInTheDocument();
     expect(screen.getByTestId('total')).toHaveTextContent('$5.00');
-    expect(screen.queryByTestId('subTotal')).not.toBeInTheDocument();
+    expect(screen.getByTestId('subTotal')).toHaveTextContent('$5.00');
     expect(screen.queryByTestId('surchage')).not.toBeInTheDocument();
     expect(screen.queryByTestId('cashout')).not.toBeInTheDocument();
     expect(screen.queryByTestId('tip')).not.toBeInTheDocument();

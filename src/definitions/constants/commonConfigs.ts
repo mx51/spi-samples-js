@@ -42,7 +42,7 @@ export const SPI_TRANSACTION_TYPES = {
   ZipRefund: TransactionType.ZipRefund,
 };
 // pair flow drawer width 4/12 (based on design required)
-export const drawerWidth = 33.33333;
+export const drawerWidth = 25;
 // spi service constants
 export const spiEvents = {
   spiAutoAddressResolutionFailed: 'AutoAddressResolutionFailed',

@@ -1,4 +1,4 @@
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, Theme, createStyles, alpha } from '@material-ui/core/styles';
 
 export const useTransactionDetailPageStyle = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,6 +21,11 @@ export const useTransactionDetailPageStyle = makeStyles((theme: Theme) =>
     },
     iconContainer: {
       display: 'flex',
+    },
+    orderInfo: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'start',
     },
     backLink: {
       color: theme.palette.primary.main,
@@ -52,6 +57,12 @@ export const useTransactionDetailPageStyle = makeStyles((theme: Theme) =>
     body: {
       marginTop: theme.spacing(2),
     },
+    summary: {
+      display: 'flex',
+      flexDirection: 'column',
+      width: 'auto',
+      paddingTop: theme.spacing(1),
+    },
     paper: {
       border: 'none',
       alignItems: 'center',
@@ -82,6 +93,16 @@ export const useTransactionDetailPageStyle = makeStyles((theme: Theme) =>
     },
     divider: {
       margin: theme.spacing(2, 0),
+    },
+    actionBtn: {
+      padding: theme.spacing(2),
+      borderRadius: 0,
+      backgroundColor: theme.palette.error.dark,
+      '&:hover, &:active, &:focus': {
+        background: alpha(theme.palette.error.dark, 0.75),
+        color: theme.palette.common.white,
+      },
+      width: '100%',
     },
   })
 );

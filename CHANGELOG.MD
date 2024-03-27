@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 [INTG-706](https://mx51.atlassian.net/browse/INTG-706) Merged long running feature branch into main branch
+[INTG-845](https://mx51.atlassian.net/browse/INTG-845) Refactored PaymentSummary page into reusable component for consistency across transaction types
 
 ## [1.6.0] - 2024-02-28
 
