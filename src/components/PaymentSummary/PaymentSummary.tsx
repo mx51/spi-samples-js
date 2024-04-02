@@ -1,7 +1,6 @@
 import { Box, Button, Container, Grid } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
 import { TxLogItem } from '../../services/txLogService';
 import { useTransactionDetailPageStyle } from '../TransactionPage/TransactionDetailsPage/TransactionDetailsPage.style';
 import { OrderStatus } from './OrderStatus';
@@ -12,7 +11,6 @@ import { PATH_TRANSACTIONS } from '../../definitions/constants/routerConfigs';
 import { OrderInfo } from './OrderInfo';
 import { SplitSummary } from './SplitSummary';
 import { OrderButtons } from './OrderButtons';
-import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice';
 
 type Props = {
   currentTransaction: TxLogItem;
@@ -34,15 +32,10 @@ export const PaymentSummary = ({ currentTransaction, transactionHistory, splitTr
   const classes = useTransactionDetailPageStyle();
   const { receipt, hostResponseText } = currentTransaction;
   const history = useHistory();
-  const dispatch = useDispatch();
 
   const goToTransactions = (path: string) => {
     history.push(path);
   };
-
-  useEffect(() => {
-    dispatch(clearAllProducts());
-  }, []);
 
   const isCashoutOnly = currentTransaction?.type === 'CashoutOnly';
 
@@ -67,7 +60,7 @@ export const PaymentSummary = ({ currentTransaction, transactionHistory, splitTr
                   splitAmount={splitTransaction.splitAmount}
                   outstandingAmount={splitTransaction.outstandingAmount}
                   splitIndex={splitTransaction.splitIndex}
-                  splitMode="splitEvenly"
+                  splitMode={splitTransaction.splitMode}
                   numberOfSplits={splitTransaction.numberOfSplits}
                 />
               ) : (

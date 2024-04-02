@@ -17,7 +17,7 @@ export const SplitSummary = ({ splitAmount, outstandingAmount, splitIndex, split
   return (
     <Box className={classes.paper} component={Paper}>
       <span className={classes.splitIndexRow}>
-        Split {splitIndex + 1} {splitMode === 'splitEvenly' && `of ${numberOfSplits}`}
+        Split #{splitIndex + 1} {splitMode === 'splitEvenly' && `of ${numberOfSplits}`}
       </span>
       {currencyFormat(splitAmount / 100)}
       <Box className={classes.outstandingAmountRow}>
