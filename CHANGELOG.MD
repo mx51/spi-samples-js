@@ -5,20 +5,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.7.6] - 2024-04-09 
 
 ### Added
 
+- [INTG-702](https://mx51.atlassian.net/browse/INTG-702) Terminals list actions
+- [INTG-651](https://mx51.atlassian.net/browse/INTG-651) Store terminal profiles to allow for faster pairing
+- [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
+- [INTG-729](https://mx51.atlassian.net/browse/INTG-729) Get transaction functionality
+- [INTG-794](https://mx51.atlassian.net/browse/INTG-794) About page available for terminals in all pairing states
 - [INTG-784](https://mx51.atlassian.net/browse/INTG-784) Split by amount feature
 - [INTG-803](https://mx51.atlassian.net/browse/INTG-803) Split evenly feature
-- [INTG-794](https://mx51.atlassian.net/browse/INTG-794) About page available for terminals in all pairing states
-- [INTG-702](https://mx51.atlassian.net/browse/INTG-702) Terminals list actions
-- [INTG-793](https://mx51.atlassian.net/browse/INTG-793) Notification when no terminals are available to transact
-- [INTG-843](https://mx51.atlassian.net/browse/INTG-843) Pairing status discrepancy between "pairing screen" and "About this terminal" page
 
 ### Fixed
 
 - [INTG-812](https://mx51.atlassian.net/browse/INTG-812) POS does not display any error when the user attempts to cancel the flow outside the MXA
+- [INTG-666](https://mx51.atlassian.net/browse/INTG-666) Pre Auth Complete final screen does not include the surcharge amount
+- [INTG-843](https://mx51.atlassian.net/browse/INTG-843) Pairing status discrepancy between "pairing screen" and "About this terminal" page
 
 ### Changed
 
