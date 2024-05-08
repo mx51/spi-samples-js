@@ -264,7 +264,7 @@ class SpiService {
       if (!autoAddress) this.updateTerminalStorage(instanceId, 'deviceAddress', deviceAddress);
 
       // instantiate spi library
-      instance.spiClient = new SpiClient(posId, serialNumber, deviceAddress, secrets);
+      instance.spiClient = new SpiClient(posId, serialNumber, deviceAddress, secrets, instanceId);
       instance.spiPat = instance.spiClient.EnablePayAtTable();
 
       instance.spiPat.GetBillStatus = (
