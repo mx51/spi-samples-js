@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.7] - 2024-05-08
+
+### Changed
+
+- [INTG-880](https://mx51.atlassian.net/browse/INTG-880) Bump SPI version to 2.9.12
+
 ## [1.7.6] - 2024-04-09 
 
 ### Added
