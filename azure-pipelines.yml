@@ -94,7 +94,7 @@ stages:
 
                     - script: make deploy
                       env:
-                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE)
+                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_NONPROD)
                         ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
                         CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
                         S3_BUCKET: $(S3_BUCKET_DEV)
@@ -129,7 +129,7 @@ stages:
 
                     - script: make deploy
                       env:
-                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE)
+                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_PROD)
                         ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
                         CLOUDFRONT_ID: $(CLOUDFRONT_ID_LIVE)
                         S3_BUCKET: $(S3_BUCKET_LIVE)
