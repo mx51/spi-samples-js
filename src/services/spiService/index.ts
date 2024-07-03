@@ -9,7 +9,7 @@ import {
   TransactionOptions,
 } from '@mx51/spi-client-js';
 import dayjs from 'dayjs';
-import { commonPairErrorMessage, spiEvents } from '../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS, commonPairErrorMessage, spiEvents } from '../../definitions/constants/commonConfigs';
 import { defaultApikey, defaultLocalIP, defaultPosName } from '../../definitions/constants/spiConfigs';
 import {
   FIELD_PRESSED_COLOR,
@@ -17,19 +17,20 @@ import {
   PRIMARY_THEME_COLOR,
 } from '../../definitions/constants/themeStylesConfigs';
 import { setConfirmPairingFlow } from '../../redux/reducers/CommonSlice/commonSlice';
-import { IPairFormValues } from '../../redux/reducers/PairFormSlice/interfaces';
 import { readTerminalPairError, updatePairFormParams } from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import {
+  updateDeviceAddress,
   updatePairingFlow,
   updatePairingStatus,
   updateTerminal,
   updateTerminalBatteryLevel,
   updateTerminalConfigurations,
+  updateTerminalSecret,
   updateTxFlowSettlementResponse,
   updateTxFlowWithSideEffect,
   updateTxMessage,
 } from '../../redux/reducers/TerminalSlice/terminalsSlice';
-import { store } from '../../redux/store';
+import { persistor, store } from '../../redux/store';
 import { getLocalStorage, setLocalStorage, getTxFlow } from '../../utils/common/spi/common';
 import SpiEventTarget from '../../utils/common/spi/eventTarget';
 import { localStorageKeys, posVersion } from '../../utils/constants';
@@ -84,7 +85,7 @@ class SpiService {
 
   print: Console = console;
 
-  terminals: ITerminals = {};
+  spiInstances: ITerminals = {};
 
   /**
    *
@@ -129,7 +130,7 @@ class SpiService {
 
   // sets the receipt configuration for the terminal instance
   setSpiConfig(instanceId: string) {
-    const spi = this.readTerminalInstance(instanceId).spiClient;
+    const spi = this.readSpiInstance(instanceId).spiClient;
     const { receiptConfig } = this.state;
     spi.Config.PromptForCustomerCopyOnEftpos = receiptConfig.eftposCustomerCopy;
     spi.Config.SignatureFlowOnEftpos = receiptConfig.eftposSignatureFlow;
@@ -139,7 +140,7 @@ class SpiService {
 
   // sets the receipt configuration for the preauth instance
   setPreAuthConfig(instanceId: string) {
-    const spi = this.readTerminalInstance(instanceId).spiPreAuth;
+    const spi = this.readSpiInstance(instanceId).spiPreAuth;
     const { receiptConfig } = this.state;
     spi.Config.PromptForCustomerCopyOnEftpos = receiptConfig.eftposCustomerCopy;
     spi.Config.SignatureFlowOnEftpos = receiptConfig.eftposSignatureFlow;
@@ -150,62 +151,21 @@ class SpiService {
   start(dispatch: Any): void {
     // start to render existed terminal instance(s)
     this.dispatchAction = dispatch;
-
-    if (!getLocalStorage('terminals')) setLocalStorage('terminals', '{}');
-
-    const recordedTerminals = JSON.parse(getLocalStorage('terminals') as string);
-
-    if (Object.keys(recordedTerminals).length > 0) {
-      // read existed/created terminal instances
-      Object.values(recordedTerminals).forEach(async (terminal: Any) => {
-        const instanceId = terminal.serialNumber;
-        this.createLibraryInstance(instanceId);
-      });
-    }
   }
 
-  // read local storage terminals list: all the terminal instances localStorage data
-  readTerminalList(): ITerminals {
-    this.print.log(getLocalStorage('terminals'));
-    return JSON.parse(getLocalStorage('terminals') || '{}');
+  readSpiInstance(instanceId: string): ITerminal {
+    return this.spiInstances[instanceId];
   }
 
-  // remove terminal record from localStorage
-  removeUnpairedTerminalLocalStorage(instanceId: string): void {
-    this.print.log(getLocalStorage('terminals'));
-    const recordedTerminals = JSON.parse(getLocalStorage('terminals') as string);
-    delete recordedTerminals[instanceId];
-    setLocalStorage('terminals', JSON.stringify(recordedTerminals));
-  }
-
-  // read current terminal instance
-  readTerminalInstance(instanceId: string): ITerminal {
-    return this.terminals[instanceId];
-  }
-
-  // remove instance record from localStorage
-  removeTerminalInstance(instanceId: string): void {
-    const currentTerminals = JSON.parse(getLocalStorage('terminals'));
-    delete currentTerminals[instanceId];
-
-    this.print.log(`%cSPI terminal instances: ${getLocalStorage('terminals')}`);
-
-    setLocalStorage('terminals', JSON.stringify(currentTerminals));
-  }
-
-  // update localStorage current terminal configs
-  updateTerminalStorage(instanceId: string, key: string, value: Any): void {
-    const currentTerminals = this.readTerminalList();
-
-    if (Object.keys(currentTerminals).indexOf(instanceId) > -1) {
-      (currentTerminals as Any)[instanceId][key] = value;
-      setLocalStorage('terminals', JSON.stringify(currentTerminals));
-    }
+  createLibraryInstances(instanceIds: string[]): void {
+    instanceIds.forEach((instanceId) => {
+      this.createLibraryInstance(instanceId);
+    });
   }
 
   updatePatConfig(config: PayAtTableConfig) {
-    Object.keys(this.terminals).forEach((terminalId) => {
-      const terminal = this.terminals[terminalId];
+    Object.keys(this.spiInstances).forEach((terminalId) => {
+      const terminal = this.spiInstances[terminalId];
       if (terminal.spiPat) {
         terminal.spiPat.Config.PayAtTableEnabled = config.payAtTableEnabled;
         terminal.spiPat.Config.OperatorIdEnabled = config.operatorIdEnabled;
@@ -226,45 +186,32 @@ class SpiService {
     });
   }
 
-  async createLibraryInstance(instanceId: string, pairForm?: IPairFormValues): Promise<ITerminal> {
+  async createLibraryInstance(instanceId: string): Promise<ITerminal> {
     try {
-      const terminalsStorage = this.readTerminalList();
+      const { terminals } = store.getState();
       const instance = new SpiEventTarget() as Any; // instantiate event target class for spi library event handlings
 
-      this.terminals[instanceId] = instance;
+      this.spiInstances[instanceId] = instance;
 
-      // if terminal instance already been saved in localStorage, use this.readTerminalList() for reading terminal instance
-      // if terminal is not paired yet (no localStorage record being found), use pairForm for pair instance creation
-      const terminalFormParams: Any =
-        Object.keys(terminalsStorage).indexOf(instanceId) > -1 ? terminalsStorage[instanceId] : pairForm;
-
-      // get current terminal settings
       const { acquirerCode, autoAddress, deviceAddress, posId, serialNumber, testMode, secrets, environment } =
-        terminalFormParams;
-
-      // create localStorage instance if no terminal instance has been found inside current local terminals storage
-      if (Object.keys(terminalsStorage).indexOf(instanceId) <= -1) {
-        setLocalStorage(
-          'terminals',
-          JSON.stringify({
-            ...terminalsStorage,
-            [instanceId]: {},
-          })
-        );
-      }
-
-      // save acquirerCode & posId & serialNumber & testMode into localStorage
-      this.updateTerminalStorage(instanceId, 'acquirerCode', acquirerCode);
-      this.updateTerminalStorage(instanceId, 'posId', posId);
-      this.updateTerminalStorage(instanceId, 'serialNumber', serialNumber);
-      this.updateTerminalStorage(instanceId, 'testMode', testMode);
-      this.updateTerminalStorage(instanceId, 'status', SpiStatus.PairedConnecting);
-      this.updateTerminalStorage(instanceId, 'reconnecting', true);
-
-      if (!autoAddress) this.updateTerminalStorage(instanceId, 'deviceAddress', deviceAddress);
+        terminals[instanceId];
 
       // instantiate spi library
-      instance.spiClient = new SpiClient(posId, serialNumber, deviceAddress, secrets, instanceId);
+      instance.spiClient = new SpiClient(
+        posId,
+        serialNumber,
+        deviceAddress,
+        secrets
+          ? {
+              EncKey: secrets.encKey,
+              HmacKey: secrets.hmacKey,
+            }
+          : null,
+        instanceId
+      );
+
+      this.dispatchAction(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.PairedConnecting }));
+
       instance.spiPat = instance.spiClient.EnablePayAtTable();
 
       instance.spiPat.GetBillStatus = (
@@ -426,15 +373,11 @@ class SpiService {
       instance.spiClient.EnvironmentCode = environment;
       instance.spiClient.SetTestMode(testMode);
 
-      // setup terminal id in localStorage
-      this.updateTerminalStorage(instanceId, 'id', serialNumber);
-
       if (autoAddress) {
         // setup auto address resolution when user selected auto address in pair form
         const eftposAddress = await this.getTerminalAddress(instanceId);
 
         if (!eftposAddress) {
-          this.removeTerminalInstance(instanceId);
           this.handleTerminalPairFailure(instanceId);
         }
 
@@ -458,11 +401,9 @@ class SpiService {
 
       // SPI Device Address Change Listener
       instance.addEventListener(spiEvents.spiDeviceAddressChanged, ({ detail: address }: Any) => {
-        const EftposAddress = address.fqdn || address.ip || defaultLocalIP;
+        const newDeviceAddress = address.fqdn || address.ip || defaultLocalIP;
 
-        if (!EftposAddress) {
-          // remove localStorage record for pair failed terminal instance
-          this.removeTerminalInstance(instanceId);
+        if (!newDeviceAddress) {
           this.handleTerminalPairFailure(
             instanceId,
             'Acquiring EFTPOS address is failed. Please check the pair form configurations and retry it later.'
@@ -470,24 +411,27 @@ class SpiService {
         }
 
         // Only first time pair show the eftpos address (When form reset, no eftpos address will be shown)
-        if (EftposAddress && !getLocalStorage('terminals').includes(EftposAddress))
+        if (newDeviceAddress && !deviceAddress)
           this.dispatchAction(
             updatePairFormParams({
               key: 'deviceAddress',
               value: {
-                value: EftposAddress,
+                value: newDeviceAddress,
                 isValid: true,
               },
             })
           );
 
-        // save eftposAddress (deviceAddress) into localStorage
-        this.updateTerminalStorage(instanceId, 'deviceAddress', EftposAddress);
+        this.dispatchAction(
+          updateDeviceAddress({
+            id: instanceId,
+            deviceAddress: newDeviceAddress,
+          })
+        );
       });
 
       // SPI Auto Address Failed Result Listener
       instance.addEventListener(spiEvents.spiAutoAddressResolutionFailed, ({ detail: error }: Any) => {
-        this.removeTerminalInstance(instanceId);
         this.handleTerminalPairFailure(instanceId, error?.message);
         this.print.error(`%cautoAddressResolutionFailed: ${JSON.stringify(error)}`, `color: ${PRIMARY_ERROR_COLOR};`);
       });
@@ -519,7 +463,6 @@ class SpiService {
 
         if (detail?.Message === 'Pairing Failed') {
           this.handleTerminalPairFailure(instanceId, detail?.Message);
-          this.removeTerminalInstance(instanceId);
         }
 
         this.print.log(`%cspiPairingFlowStateChanged: ${JSON.stringify(detail)}`, `color: ${PRIMARY_THEME_COLOR}`);
@@ -527,15 +470,22 @@ class SpiService {
 
       // SPI Secrets Change Listener
       instance.addEventListener(spiEvents.spiSecretsChanged, ({ detail }: Any) => {
-        // save secrets into localStorage
-        this.updateTerminalStorage(instanceId, 'secrets', detail);
+        this.dispatchAction(
+          updateTerminalSecret({
+            id: instanceId,
+            secrets: detail
+              ? {
+                  encKey: detail.EncKey,
+                  hmacKey: detail.HmacKey,
+                }
+              : null,
+          })
+        );
 
         this.print.info(
           `%cspiSecretsChanged: ${JSON.stringify(instance.spiClient._secrets)}`,
           `color: ${FIELD_PRESSED_COLOR}`
         );
-
-        if (!instance.spiClient._secrets) this.removeTerminalInstance(instanceId);
       });
 
       // SPI Status Change Listener
@@ -550,8 +500,6 @@ class SpiService {
             instance.spiClient.InitiateRecovery(txFlow.posRefId, txFlow.type);
           }
         }
-
-        if (status === SpiStatus.Unpaired) this.removeTerminalInstance(instanceId);
 
         this.dispatchAction(
           updatePairingStatus({
@@ -572,7 +520,7 @@ class SpiService {
         const terminalConfigurations = {
           acquirerCode: spiClient?._tenantCode,
           autoAddress: spiClient?._autoAddressResolutionEnabled,
-          deviceAddress: spiClient?._eftposAddress,
+          deviceAddress: spiClient?._eftposAddress?.replace(/^wss?:\/\//, ''),
           posId: spiClient?._posId,
           secureWebSocket: spiClient?._forceSecureWebSockets,
           serialNumber: spiClient?._serialNumber,
@@ -581,7 +529,12 @@ class SpiService {
           id: spiClient?._serialNumber,
           pairingFlow: spiClient?.CurrentPairingFlowState,
           posVersion: spiClient?._posVersion,
-          secrets: spiClient?._secrets,
+          secrets: spiClient?._secrets
+            ? {
+                encKey: spiClient._secrets.EncKey,
+                hmacKey: spiClient._secrets.HmacKey,
+              }
+            : null,
           settings: null, // not available during pair terminal stage
           status: spiClient?._currentStatus,
           terminalStatus: spiClient?.CurrentFlow,
@@ -716,8 +669,6 @@ class SpiService {
 
       return instance;
     } catch (error: Any) {
-      // remove localStorage record for pair failed terminal instance
-      this.removeTerminalInstance(instanceId);
       // update terminal connection status after terminal instance creation process failed
       this.handleTerminalPairFailure(instanceId);
 
@@ -740,56 +691,58 @@ class SpiService {
   }
 
   async getTerminalAddress(instanceId: string): Promise<string> {
-    const aar = await this.readTerminalInstance(instanceId).spiClient.GetTerminalAddress();
+    const aar = await this.readSpiInstance(instanceId).spiClient.GetTerminalAddress();
     return aar;
   }
 
   getCurrentTxFlow(instanceId: string): ITerminal {
-    const instance = this.readTerminalInstance(instanceId);
+    const instance = this.readSpiInstance(instanceId);
     return instance.currentTxFlowStateOverride || instance.spiClient.CurrentTxFlowState;
   }
 
   getTerminalStatus(instanceId: string): ITerminal {
-    return this.ready(instanceId) && this.readTerminalInstance(instanceId).spiClient.GetTerminalStatus();
+    return this.ready(instanceId) && this.readSpiInstance(instanceId).spiClient.GetTerminalStatus();
   }
 
   ready(instanceId: string): ITerminal {
     return (
       this.getCurrentStatus(instanceId) === SpiStatus.PairedConnected &&
-      this.readTerminalInstance(instanceId).spiClient._mostRecentPongReceived
+      this.readSpiInstance(instanceId).spiClient._mostRecentPongReceived
     );
   }
 
   getCurrentStatus(instanceId: string): string {
-    return this.readTerminalInstance(instanceId).spiClient.CurrentStatus;
+    return this.readSpiInstance(instanceId).spiClient.CurrentStatus;
   }
 
   // * terminal related operations *
 
-  async spiTerminalPair(instanceId: string, pairForm: IPairFormValues): Promise<void> {
-    await this.createLibraryInstance(instanceId, pairForm);
-    this.readTerminalInstance(instanceId).spiClient.Pair();
+  async spiTerminalPair(instanceId: string): Promise<void> {
+    await this.createLibraryInstance(instanceId);
+    this.readSpiInstance(instanceId).spiClient.Pair();
   }
 
   spiTerminalCancelPair(instanceId: string): void {
-    this.readTerminalInstance(instanceId).spiClient.PairingCancel();
-    this.removeUnpairedTerminalLocalStorage(instanceId);
+    this.readSpiInstance(instanceId).spiClient.PairingCancel();
   }
 
   spiTerminalUnPair(instanceId: string): void {
-    this.readTerminalInstance(instanceId).spiClient.Unpair();
-    this.removeUnpairedTerminalLocalStorage(instanceId);
+    this.readSpiInstance(instanceId).spiClient.Unpair();
+  }
+
+  removeSpiInstance(instanceId: string): void {
+    delete this.spiInstances[instanceId];
   }
 
   // * Purchase related operations *
 
   spiCancelTransaction(instanceId: string) {
-    const spi = this.readTerminalInstance(instanceId).spiClient;
+    const spi = this.readSpiInstance(instanceId).spiClient;
     spi.CancelTransaction();
   }
 
   spiSetTerminalToIdle(instanceId: string) {
-    const spi = this.readTerminalInstance(instanceId).spiClient;
+    const spi = this.readSpiInstance(instanceId).spiClient;
     spi.AckFlowEndedAndBackToIdle();
   }
 
@@ -916,12 +869,25 @@ class SpiService {
   }
 
   initiateGetTransaction(instanceId: string, posRefId: string) {
-    const spi = this.readTerminalInstance(instanceId).spiClient;
+    const spi = this.spiInstances[instanceId].spiClient;
     return spi.InitiateGetTx(posRefId);
   }
 }
 
 const spiService = new SpiService();
 spiService.start(store.dispatch);
+
+persistor.subscribe(() => {
+  const { bootstrapped } = persistor.getState();
+  if (bootstrapped) {
+    const { terminals } = store.getState();
+
+    spiService.createLibraryInstances(
+      Object.values(terminals)
+        .filter(({ secrets }) => secrets)
+        .map(({ id }) => id)
+    );
+  }
+});
 
 export { spiService as default };

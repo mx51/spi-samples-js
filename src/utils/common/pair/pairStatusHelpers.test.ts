@@ -4,6 +4,8 @@ import { defaultLocalIP } from '../../../definitions/constants/spiConfigs';
 import spiService from '../../../services/spiService';
 import { defaultMockPairFormParams, mockTerminalInstance, mockTerminalInstanceId } from '../../tests/common';
 import { handleCancelPairClick, handlePairClick, handleUnPairClick } from './pairStatusHelpers';
+import { store } from '../../../redux/store';
+import { resetTerminalsSlice } from '../../../redux/reducers/TerminalSlice/terminalsSlice';
 
 const mockPairSettings = {
   provider: { isValid: true, option: TEXT_FORM_DEFAULT_VALUE, value: 'test' },
@@ -15,10 +17,12 @@ const mockPairSettings = {
 };
 
 describe('Test pairStatusHelpers functions', () => {
-  const dispatch = jest.fn();
   const mockInstanceId = mockPairSettings.serialNumber.value;
 
   afterEach(cleanup);
+  afterAll(() => {
+    store.dispatch(resetTerminalsSlice());
+  });
 
   test('test handlePairClick()', () => {
     // Arrange
@@ -31,20 +35,21 @@ describe('Test pairStatusHelpers functions', () => {
       testMode: defaultMockPairFormParams.testMode,
       secrets: null,
     };
+
     // Act
-    handlePairClick(dispatch, mockPairForm);
+    handlePairClick(store.dispatch, mockPairForm);
 
     spiService.dispatchAction = jest.fn();
     spiService.createLibraryInstance = jest.fn().mockImplementationOnce(() => mockTerminalInstance);
     spiService.createLibraryInstance(mockInstanceId);
 
-    // Assert
+    // // Assert
     expect(spiService.createLibraryInstance).toHaveBeenCalledTimes(1);
   });
 
   test('test handleCancelPairClick()', () => {
     // Act
-    handleCancelPairClick(dispatch, mockTerminalInstanceId);
+    handleCancelPairClick(store.dispatch, mockTerminalInstanceId);
 
     spiService.spiTerminalCancelPair = jest.fn();
     spiService.spiTerminalCancelPair(mockInstanceId);
@@ -55,7 +60,7 @@ describe('Test pairStatusHelpers functions', () => {
 
   test('test handleUnPairClick()', () => {
     // Act
-    handleUnPairClick(dispatch, mockTerminalInstanceId);
+    handleUnPairClick(store.dispatch, mockTerminalInstanceId);
 
     spiService.spiTerminalUnPair = jest.fn();
     spiService.spiTerminalUnPair(mockInstanceId);

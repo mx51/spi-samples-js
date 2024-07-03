@@ -1,6 +1,6 @@
-import { SpiStatus, SuccessState, TransactionType } from '@mx51/spi-client-js';
+import { SpiStatus, SuccessState } from '@mx51/spi-client-js';
 import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
-import { SPI_PAIR_STATUS, messageEvents } from '../../../definitions/constants/commonConfigs';
+import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
 import {
   IAddTerminalAction,
   IBatteryLevel,
@@ -26,6 +26,9 @@ const terminalsSlice = createSlice({
   name: 'terminals',
   initialState: {},
   reducers: {
+    resetTerminalsSlice() {
+      return {};
+    },
     addTerminal(state: ITerminalState, action: PayloadAction<IAddTerminalAction>) {
       const { id, terminalConfigs } = action.payload;
 
@@ -253,6 +256,7 @@ export const {
   updateTxFlowSettlementResponse,
   updateTxFlow,
   updateTxMessage,
+  resetTerminalsSlice,
 } = terminalsSlice.actions;
 
 export default terminalsSlice.reducer;

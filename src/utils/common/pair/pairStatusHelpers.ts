@@ -23,19 +23,18 @@ async function handlePairClick(dispatch: AppDispatch, pairFormValues: IPairFormV
     id: instanceId,
     pairingFlow: null,
     posVersion: '',
-    secrets: pairFormValues?.secrets,
+    secrets: null,
     settings: null, // not available during pair terminal stage
     status: SPI_PAIR_STATUS.Unpaired,
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage
+    environment: pairFormValues?.environment,
   };
 
   dispatch(addTerminal({ id: instanceId, terminalConfigs }));
   // start pairing
-  spiService.spiTerminalPair(instanceId, pairFormValues);
-  // update terminal connection status when starting to pair a terminal
-  dispatch(updatePairingStatus({ id: instanceId, status: SPI_PAIR_STATUS.PairedConnecting }));
+  spiService.spiTerminalPair(instanceId);
 }
 
 // cancel terminal pairing

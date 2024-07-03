@@ -69,7 +69,7 @@ describe('Test <AboutTerminal />', () => {
     const handleUnPairClick = jest.fn();
     const terminalDetailsUnpairBtnDOM = mockContainer.querySelector('[data-test-id="terminalDetailsUnpairBtn"]');
 
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         Unpair: jest.fn(),
@@ -82,7 +82,7 @@ describe('Test <AboutTerminal />', () => {
 
     // Assert
     expect(handleUnPairClick).toBeDefined();
-    expect(spiService.readTerminalInstance(mockTerminalInstanceId).spiClient.Unpair).toBeCalled();
+    expect(spiService.readSpiInstance(mockTerminalInstanceId).spiClient.Unpair).toBeCalled();
   });
 
   test('should toggle settlement panel when clicked settlement button', () => {
@@ -91,7 +91,7 @@ describe('Test <AboutTerminal />', () => {
     const terminalDetailsSettlementBtnDOM = mockContainer.querySelector(
       '[data-test-id="terminalDetailsSettlementBtn"]'
     );
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettleTx: jest.fn(),
@@ -104,7 +104,7 @@ describe('Test <AboutTerminal />', () => {
 
     // Assert
     expect(handleSettlementDisplay).toBeDefined();
-    expect(spiService.readTerminalInstance(mockTerminalInstanceId).spiClient.InitiateSettleTx).toBeCalled();
+    expect(spiService.readSpiInstance(mockTerminalInstanceId).spiClient.InitiateSettleTx).toBeCalled();
   });
 
   test('should toggle settlementEnquiry panel when clicked settlementEnquiry button', () => {
@@ -113,7 +113,7 @@ describe('Test <AboutTerminal />', () => {
     const terminalDetailsSettlementEnquiryBtnBtnDOM = mockContainer.querySelector(
       '[data-test-id="terminalDetailsSettlementEnquiryBtn"]'
     );
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettlementEnquiry: jest.fn(),
@@ -126,7 +126,7 @@ describe('Test <AboutTerminal />', () => {
 
     // Assert
     expect(handleSettlementEnquiryDisplay).toBeDefined();
-    expect(spiService.readTerminalInstance(mockTerminalInstanceId).spiClient.InitiateSettlementEnquiry).toBeCalled();
+    expect(spiService.readSpiInstance(mockTerminalInstanceId).spiClient.InitiateSettlementEnquiry).toBeCalled();
   });
 
   test('should call settlement() when settlement value is true', () => {
@@ -148,7 +148,7 @@ describe('Test <AboutTerminal />', () => {
     const terminalDetailsSettlementBtnDOM = newMockContainer.querySelector(
       '[data-test-id="terminalDetailsSettlementBtn"]'
     );
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettleTx: jest.fn(),
@@ -182,7 +182,7 @@ describe('Test <AboutTerminal />', () => {
     const terminalDetailsSettlementEnquiryBtnBtnDOM = newMockContainer.querySelector(
       '[data-test-id="terminalDetailsSettlementEnquiryBtn"]'
     );
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettlementEnquiry: jest.fn(),

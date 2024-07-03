@@ -167,6 +167,7 @@ export const defaultMockTerminals = {
     terminalStatus: '',
     txFlow: null,
     txMessage: null, // not available during pair terminal stage
+    posVersion: '',
   },
 };
 

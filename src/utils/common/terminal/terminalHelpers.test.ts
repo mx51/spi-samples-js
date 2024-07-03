@@ -8,7 +8,7 @@ describe('Test terminalHelpers()', () => {
 
   test('should settlement() be defined when calling initTxSettlement() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettleTx: jest.fn(),
@@ -26,7 +26,7 @@ describe('Test terminalHelpers()', () => {
 
   test('should settlementEnquiry() be defined when calling initTxSettlementEnquiry() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettlementEnquiry: jest.fn(),
@@ -44,7 +44,7 @@ describe('Test terminalHelpers()', () => {
 
   test('should approveSignature() be defined when calling signatureForApprove() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         AcceptSignature: jest.fn(),
@@ -62,7 +62,7 @@ describe('Test terminalHelpers()', () => {
 
   test('should declineSignature() be defined when calling signatureForDecline() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         AcceptSignature: jest.fn(),

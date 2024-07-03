@@ -42,7 +42,7 @@ const PairPage: React.FC = () => {
           option: currentTerminal.acquirerCode,
         },
         deviceAddress: {
-          value: currentTerminal.deviceAddress.split('//')[1],
+          value: currentTerminal.deviceAddress,
           isValid: true,
         },
         posId: {
