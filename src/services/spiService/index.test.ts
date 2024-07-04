@@ -5,7 +5,6 @@ import { defaultLocalIP } from '../../definitions/constants/spiConfigs';
 import { updatePairingStatus } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { setLocalStorage } from '../../utils/common/spi/common';
 import {
-  defaultMockPairFormParams,
   mockCashoutAmount,
   mockPosRefId,
   mockPromptForCashout,
