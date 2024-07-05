@@ -1,5 +1,5 @@
 import { AnyAction, Reducer, combineReducers, configureStore } from '@reduxjs/toolkit';
-import { persistReducer, persistStore } from 'redux-persist';
+import { createMigrate, persistReducer, persistStore } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import hardSet from 'redux-persist/es/stateReconciler/hardSet';
 import commonReducer from './reducers/CommonSlice/commonSlice';
@@ -12,6 +12,23 @@ import { IPreAuthState } from './reducers/PreAuth/interfaces';
 import { PayAtTableState, payAtTableReducer } from './reducers/PayAtTableSlice/payAtTableSlice';
 import { ITerminalState } from './reducers/TerminalSlice/interfaces';
 
+const terminalReducerMigration: Any = {
+  0: (state: ITerminalState) => {
+    Object.keys(state).forEach((key) => {
+      if (state[key] && state[key].deviceAddress) {
+        state[key].deviceAddress = state[key].deviceAddress.replace(/^wss?:\/\//, '');
+      }
+      if (state[key] && state[key].secrets) {
+        state[key].secrets = {
+          encKey: (state[key].secrets as Any).EncKey,
+          hmacKey: (state[key].secrets as Any).HmacKey,
+        };
+      }
+    });
+    return state;
+  },
+};
+
 const rootReducer = combineReducers({
   common: commonReducer,
   pairForm: pairFormReducer,
@@ -19,8 +36,10 @@ const rootReducer = combineReducers({
   terminals: persistReducer<ITerminalState, AnyAction>(
     {
       key: 'terminals',
+      version: 0,
       storage,
       stateReconciler: hardSet,
+      migrate: createMigrate(terminalReducerMigration, { debug: false }),
     },
     terminalReducer
   ) as unknown as Reducer<ITerminalState>,

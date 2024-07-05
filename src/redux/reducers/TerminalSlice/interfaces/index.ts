@@ -22,6 +22,7 @@ export interface ITerminalProps {
   terminalStatus: string | null;
   txFlow: ITxFlow | null;
   txMessage: ITxMessage | null;
+  environment?: string;
 }
 
 export interface ITerminalState {
@@ -183,7 +184,7 @@ export interface IUpdateTerminalSerialNumberAction {
 }
 export interface IUpdateTerminalSecretAction {
   id: string;
-  secrets: ISecrets;
+  secrets: ISecrets | null;
 }
 export interface IClearTransactionAction {
   id: string;

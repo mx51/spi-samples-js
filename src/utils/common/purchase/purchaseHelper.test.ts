@@ -16,7 +16,7 @@ describe('Test purchaseHelper()', () => {
 
   test('should initiatePurchase() be defined when calling initiatePurchaseTransaction() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         initiatePurchase: jest.fn(),
@@ -40,7 +40,7 @@ describe('Test purchaseHelper()', () => {
   });
   test('should initiateMotoPurchase() be defined when calling initiateMotoPurchaseTransaction() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         initiateMotoPurchaseTransaction: jest.fn(),
@@ -58,7 +58,7 @@ describe('Test purchaseHelper()', () => {
 
   test('should setTerminalToIdle() be defined when calling spiSetTerminalToIdle() function', () => {
     // Arrange
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         spiSetTerminalToIdle: jest.fn(),

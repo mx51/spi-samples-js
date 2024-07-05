@@ -5,7 +5,6 @@ import { defaultLocalIP } from '../../definitions/constants/spiConfigs';
 import { updatePairingStatus } from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import { setLocalStorage } from '../../utils/common/spi/common';
 import {
-  defaultMockPairFormParams,
   mockCashoutAmount,
   mockPosRefId,
   mockPromptForCashout,
@@ -46,7 +45,7 @@ describe('Test SpiService functionalities', () => {
 
   test('test function getCurrentTxFlow()', () => {
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: mockSpiClient,
       currentTxFlowStateOverride: null,
     });
@@ -60,7 +59,7 @@ describe('Test SpiService functionalities', () => {
 
   test('test function getTerminalStatus()', () => {
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: mockSpiClient,
     });
     spiService.ready = jest.fn().mockReturnValue(true);
@@ -75,7 +74,7 @@ describe('Test SpiService functionalities', () => {
   test('test function ready()', async () => {
     // Act
     spiService.getCurrentStatus = jest.fn().mockReturnValue(SPI_PAIR_STATUS.PairedConnecting);
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         BatteryLevelChanged: jest.fn(),
@@ -91,7 +90,7 @@ describe('Test SpiService functionalities', () => {
 
   test('test function getCurrentStatus()', () => {
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         BatteryLevelChanged: jest.fn(),
@@ -109,7 +108,7 @@ describe('Test SpiService functionalities', () => {
     // Arrange
     const mockAddress = 'address string';
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: mockSpiClient,
     });
 
@@ -121,37 +120,13 @@ describe('Test SpiService functionalities', () => {
     expect(addressString).toEqual(mockAddress);
   });
 
-  test('test function updateTerminalStorage()', () => {
-    // Arrange
-    const deviceAddressKey = 'deviceAddress';
-    const deviceAddressValue = defaultLocalIP;
-
+  test('test function readSpiInstance()', () => {
     // Act
-    spiService.readTerminalList = jest.fn().mockReturnValue({});
-
-    const mockUpdateTerminalStorage = jest.spyOn(spiService, 'updateTerminalStorage');
-    spiService.updateTerminalStorage(mockTerminalInstanceId, deviceAddressKey, deviceAddressValue);
+    const mockReadSpiInstance = jest.spyOn(spiService, 'readSpiInstance');
+    spiService.readSpiInstance(mockTerminalInstanceId);
 
     // Assert
-    expect(mockUpdateTerminalStorage).toHaveBeenCalled();
-  });
-
-  test('test function readTerminalInstance()', () => {
-    // Act
-    const mockReadTerminalInstance = jest.spyOn(spiService, 'readTerminalInstance');
-    spiService.readTerminalInstance(mockTerminalInstanceId);
-
-    // Assert
-    expect(mockReadTerminalInstance).toHaveBeenCalled();
-  });
-
-  test('test function readTerminalList()', () => {
-    // Act
-    const mockReadTerminalList = jest.spyOn(spiService, 'readTerminalList');
-    spiService.readTerminalList();
-
-    // Assert
-    expect(mockReadTerminalList).toHaveBeenCalled();
+    expect(mockReadSpiInstance).toHaveBeenCalled();
   });
 
   test('test function createLibraryInstance()', async () => {
@@ -174,10 +149,7 @@ describe('Test SpiService functionalities', () => {
       })
     );
 
-    // Act
-    spiService.readTerminalList();
-
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         GetTerminalAddress: () => defaultLocalIP,
@@ -233,24 +205,15 @@ describe('Test SpiService functionalities', () => {
   test('test function spiTerminalPair()', async () => {
     // Act
     const mockSpiTerminalPair = jest.spyOn(spiService, 'spiTerminalPair');
-    const mockPairForm = {
-      acquirerCode: defaultMockPairFormParams.acquirerCode.value,
-      autoAddress: false,
-      deviceAddress: defaultMockPairFormParams.deviceAddress.value,
-      posId: defaultMockPairFormParams.posId.value,
-      serialNumber: defaultMockPairFormParams.serialNumber.value,
-      testMode: defaultMockPairFormParams.testMode,
-      secrets: null,
-    };
 
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         Pair: jest.fn(),
       },
     });
 
-    await spiService.spiTerminalPair(mockTerminalInstanceId, mockPairForm);
+    await spiService.spiTerminalPair(mockTerminalInstanceId);
 
     // Assert
     expect(mockSpiTerminalPair).toHaveBeenCalled();
@@ -260,7 +223,7 @@ describe('Test SpiService functionalities', () => {
     // Act
     const mockSpiTerminalCancelPair = jest.spyOn(spiService, 'spiTerminalCancelPair');
 
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         PairingCancel: jest.fn(),
@@ -277,7 +240,7 @@ describe('Test SpiService functionalities', () => {
     // Act
     const mockSpiTerminalUnPair = jest.spyOn(spiService, 'spiTerminalUnPair');
 
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         Unpair: jest.fn(),
@@ -295,7 +258,7 @@ describe('Test SpiService functionalities', () => {
     const mockInitTxSettlement = jest.spyOn(spiService, 'initTxSettlement');
 
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettleTx: jest.fn(),
@@ -313,7 +276,7 @@ describe('Test SpiService functionalities', () => {
     const mockInitTxSettlementEnquiry = jest.spyOn(spiService, 'initTxSettlementEnquiry');
 
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateSettlementEnquiry: jest.fn(),
@@ -331,7 +294,7 @@ describe('Test SpiService functionalities', () => {
     const mockInitTxPurchase = jest.spyOn(spiService, 'initiatePurchaseTransaction');
 
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiatePurchaseTxV2: jest.fn(),
@@ -357,7 +320,7 @@ describe('Test SpiService functionalities', () => {
     const mockInitTxMoto = jest.spyOn(spiService, 'initiateMotoPurchaseTransaction');
 
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         InitiateMotoPurchaseTx: jest.fn(),
@@ -380,7 +343,7 @@ describe('Test SpiService functionalities', () => {
     const mockCancelTransaction = jest.spyOn(spiService, 'spiCancelTransaction');
 
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         CancelTransaction: jest.fn(),
@@ -398,7 +361,7 @@ describe('Test SpiService functionalities', () => {
     const mockSetTerminalIdle = jest.spyOn(spiService, 'spiSetTerminalToIdle');
 
     // Act
-    spiService.readTerminalInstance = jest.fn().mockReturnValue({
+    spiService.readSpiInstance = jest.fn().mockReturnValue({
       spiClient: {
         ...mockSpiClient,
         AckFlowEndedAndBackToIdle: jest.fn(),
