@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.9] - 2024-05-09
+
+### Fixed
+
+- [INTG-962](https://mx51.atlassian.net/browse/INTG-962) Unable to unpair POS when the data/cache has been cleared
+
+
 ## [1.7.8] - 2024-05-09
 
 ### Changed
