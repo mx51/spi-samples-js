@@ -14,6 +14,9 @@ export const PATH_ORDER_FINISHED = '/order-finished';
 export const PATH_SETTINGS = '/settings';
 export const PATH_SUPPORT = '/support';
 
+export const PATH_SPI_CLOUD_PAIRING = '/spicloud';
+export const PATH_SPI_CLOUD_PAIRING_NEW = '/spicloud/new';
+
 // link names
 export const TEXT_FLEET_SETTINGS = 'Fleet settings';
 export const TEXT_PAY_AT_TABLE = 'Pay at Table';

@@ -25,3 +25,6 @@ yarn-error.log*
 # custom
 junit.xml
 src/pos_version.json
+
+# webstorm
+.idea
