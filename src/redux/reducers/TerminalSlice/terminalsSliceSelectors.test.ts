@@ -26,6 +26,7 @@ const mockStoreState = {
   common: defaultMockCommonState,
   pairForm: defaultMockPairFormParams,
   products: mockDefaultProducts,
+  pairings: {},
   terminals: {
     ...defaultMockTerminals,
     [mockTerminalInstanceId]: {
@@ -129,6 +130,7 @@ describe('Test terminals slice selectors', () => {
         subtotalAmount: 0,
         overrideSubtotalAmount: false,
       },
+      pairings: {},
       pairForm: {
         acquirerCode: {
           value: 'string',

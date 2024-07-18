@@ -41,6 +41,7 @@ describe('Test PairFormSelectors', () => {
       common: defaultMockCommonState,
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
+      pairings: {},
       products: {
         keypadAmount: 0,
         tipAmount: 0,
@@ -83,6 +84,7 @@ describe('Test PairFormSelectors', () => {
         secrets: null,
       },
       terminals: {},
+      pairings: {},
       products: {
         keypadAmount: 0,
         tipAmount: 0,
