@@ -42,6 +42,13 @@ describe('Test PairFormSelectors', () => {
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
       pairings: {},
+      spiCloudSettings: {
+        dev: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+      },
       products: {
         keypadAmount: 0,
         tipAmount: 0,
@@ -85,6 +92,13 @@ describe('Test PairFormSelectors', () => {
       },
       terminals: {},
       pairings: {},
+      spiCloudSettings: {
+        dev: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+      },
       products: {
         keypadAmount: 0,
         tipAmount: 0,

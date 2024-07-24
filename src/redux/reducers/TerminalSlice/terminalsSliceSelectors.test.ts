@@ -27,6 +27,13 @@ const mockStoreState = {
   pairForm: defaultMockPairFormParams,
   products: mockDefaultProducts,
   pairings: {},
+  spiCloudSettings: {
+    dev: {
+      apiBaseUrl: '',
+      apiKey: '',
+      secretPartA: '',
+    },
+  },
   terminals: {
     ...defaultMockTerminals,
     [mockTerminalInstanceId]: {
@@ -131,6 +138,13 @@ describe('Test terminals slice selectors', () => {
         overrideSubtotalAmount: false,
       },
       pairings: {},
+      spiCloudSettings: {
+        dev: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+      },
       pairForm: {
         acquirerCode: {
           value: 'string',
@@ -220,6 +234,7 @@ describe('Test terminals slice selectors', () => {
         merchantId: '7487584',
         terminalId: '8547584',
         batteryLevel: '70%',
+
         flow: null,
         id: 'mx51',
         pairingFlow: null,

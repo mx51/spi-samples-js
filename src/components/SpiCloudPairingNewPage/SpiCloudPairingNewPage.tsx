@@ -96,8 +96,30 @@ const SpiCloudPairingNewPage: React.FC = () => {
           </svg>
           <span className={classes.backLinkText}>Back to SPI Cloud Pairing</span>
         </Button>
-
-        {!pairSuccess && (
+        {pairSuccess ? (
+          <div aria-live="polite">
+            <Typography variant="h6" component="h1" className={classes.defaultMargin}>
+              Confirm Pairing
+            </Typography>
+            <p
+              className={classes.defaultMargin}
+            >{`Please confirm that this code is showing on your payment terminal before you start using the integration `}</p>
+            <Typography className={classes.defaultMargin} variant="body1">
+              Confirmation Code: <strong>{pairingResponse?.data.confirmation_code}</strong>
+            </Typography>
+            <Button color="primary" data-test-id="pairBtn" onClick={() => handleConfirmation()} variant="contained">
+              Confirm
+            </Button>
+            <Button
+              className={classes.cancelPairingBtn}
+              data-test-id="cancelPairBtn"
+              onClick={() => onCancel()}
+              variant="outlined"
+            >
+              Cancel Pairing
+            </Button>
+          </div>
+        ) : (
           <>
             <Typography variant="h6" component="h1" className={classes.defaultMargin}>
               New SPI Cloud Pairing
@@ -126,30 +148,6 @@ const SpiCloudPairingNewPage: React.FC = () => {
               Pair
             </Button>
           </>
-        )}
-        {pairSuccess && (
-          <div aria-live="polite">
-            <Typography variant="h6" component="h1" className={classes.defaultMargin}>
-              Confirm Pairing
-            </Typography>
-            <p
-              className={classes.defaultMargin}
-            >{`Please confirm that this code is showing on your payment terminal before you start using the integration `}</p>
-            <Typography className={classes.defaultMargin} variant="body1">
-              Confirmation Code: <strong>{pairingResponse?.data.confirmation_code}</strong>
-            </Typography>
-            <Button color="primary" data-test-id="pairBtn" onClick={() => handleConfirmation()} variant="contained">
-              Confirm
-            </Button>
-            <Button
-              className={classes.cancelPairingBtn}
-              data-test-id="cancelPairBtn"
-              onClick={() => onCancel()}
-              variant="outlined"
-            >
-              Cancel Pairing
-            </Button>
-          </div>
         )}
       </Container>
     </Layout>
