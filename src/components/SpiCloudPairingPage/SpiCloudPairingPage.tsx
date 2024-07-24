@@ -17,13 +17,19 @@ import { Link as LinkRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Layout from '../Layout';
 import useStyles from './index.styles';
-import { PATH_SPI_CLOUD_PAIRING_NEW } from '../../definitions/constants/routerConfigs';
+import { PATH_SPI_CLOUD_PAIRING_NEW, PATH_SPI_CLOUD_SETTINGS } from '../../definitions/constants/routerConfigs';
 import { pairingsList } from '../../redux/reducers/PairingSlice/pairingSelectors';
 import { IPairingProps } from '../../redux/reducers/PairingSlice/interfaces';
 
 const SpiCloudPairingPage: React.FC = () => {
   const classes = useStyles();
   const pairings = useSelector(pairingsList);
+
+  const getHexCode = (pairingId: string) => {
+    const color = pairingId.slice(-6);
+    return `#${color}`;
+  };
+
   return (
     <Layout>
       <Container maxWidth="md" className={classes.root}>
@@ -34,6 +40,14 @@ const SpiCloudPairingPage: React.FC = () => {
             </Typography>
           </Box>
           <Box>
+            <Button
+              className={classes.marginRight}
+              variant="outlined"
+              component={LinkRouter}
+              to={PATH_SPI_CLOUD_SETTINGS}
+            >
+              Settings
+            </Button>
             <Button variant="contained" color="primary" component={LinkRouter} to={PATH_SPI_CLOUD_PAIRING_NEW}>
               + Pair SPI Cloud
             </Button>
@@ -49,7 +63,10 @@ const SpiCloudPairingPage: React.FC = () => {
             <TableBody>
               {pairings.map((pairing: IPairingProps) => (
                 <TableRow key={`pairing_${pairing.pairing_id}`}>
-                  <TableCell scope="row">{pairing.pairing_id}</TableCell>
+                  <TableCell scope="row">
+                    <span className={classes.pairingIcon} style={{ backgroundColor: getHexCode(pairing.pairing_id) }} />
+                    {pairing.pairing_id}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

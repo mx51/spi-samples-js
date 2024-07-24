@@ -10,6 +10,8 @@ import { PATH_SPI_CLOUD_PAIRING } from '../../definitions/constants/routerConfig
 import CustomTextField from '../CustomTextField';
 import { IFormEventValue } from '../PairPage/PairForm/interfaces';
 import { addPairing } from '../../redux/reducers/PairingSlice/pairingSlice';
+import { useAppSelector } from '../../redux/hooks';
+import { selectSpiCloudSettingsDev } from '../../redux/reducers/SpiCloudSettingsSlice/spiCloudSettingsSelectors';
 
 interface PairingResponse {
   data: {
@@ -28,40 +30,40 @@ const SpiCloudPairingNewPage: React.FC = () => {
   const [spiPairCode, setSpiPairCode] = React.useState<string>('');
   const [pairSuccess, setPairSuccess] = React.useState<boolean>(false);
   const [pairingResponse, setPairingResponse] = React.useState<PairingResponse>();
+  const devSettings = useAppSelector(selectSpiCloudSettingsDev);
 
   const goToSpiCloudPairing = () => {
     history.push(PATH_SPI_CLOUD_PAIRING);
   };
 
   const onCancel = () => {
+    console.log('onCancel');
     setSpiPairCode('');
     setPairingResponse(undefined);
     setPairSuccess(false);
   };
 
   const handlePairing = async () => {
-    const pairingUrl = 'https://spi-cloud-pairing-api-dev.integration-nonprod.mspenv.io/api/v1/progress-pairing';
-
-    const ApiKey = 'replace-me';
-
     try {
-      const response = await fetch(pairingUrl, {
+      const response = await fetch(devSettings.apiBaseUrl, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `ApiKey ${ApiKey}`,
+          Authorization: `ApiKey ${devSettings.apiKey}`,
         },
         body: JSON.stringify({
           pairing_code: spiPairCode,
         }),
       });
       if (!response.ok) {
+        alert(`Response status: ${response.status}`);
         throw new Error(`Response status: ${response.status}`);
       }
       const result = await response.json();
       setPairSuccess(true);
       setPairingResponse(result);
     } catch (error) {
+      alert(`Error pairing - ${error}`);
       console.error('Error pairing', error);
     }
   };
@@ -116,6 +118,10 @@ const SpiCloudPairingNewPage: React.FC = () => {
               variant="outlined"
             />
 
+            <p className={classes.defaultMargin}>
+              {`Remember to click 'start' on your terminal before clicking pair below.`}
+            </p>
+
             <Button color="primary" data-test-id="pairBtn" onClick={() => handlePairing()} variant="contained">
               Pair
             </Button>
@@ -138,7 +144,7 @@ const SpiCloudPairingNewPage: React.FC = () => {
             <Button
               className={classes.cancelPairingBtn}
               data-test-id="cancelPairBtn"
-              onClick={() => onCancel}
+              onClick={() => onCancel()}
               variant="outlined"
             >
               Cancel Pairing
