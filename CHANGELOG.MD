@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.9] - 2024-07-19
+
+### Fixed
+
+- [FEBAU-567](https://mx51.atlassian.net/browse/FEBAU-567) Hot Loading causes the app to freeze.
+
 ## [1.7.9] - 2024-05-09
 
 ### Fixed

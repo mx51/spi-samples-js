@@ -32,6 +32,7 @@ export default function CustomContentPanel({
         setCopySuccess('');
       }, 1000);
     } catch (err) {
+      // eslint-disable-next-line
       console.log('Failed to copy: ', err);
     }
   };

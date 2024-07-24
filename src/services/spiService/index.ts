@@ -113,7 +113,7 @@ class SpiService {
   }
 
   // updates receipt config when state changes in useLocalSate hook
-  updateReceiptConfig(config: any) {
+  updateReceiptConfig(config: Any) {
     this.state.receiptConfig = config;
   }
 
