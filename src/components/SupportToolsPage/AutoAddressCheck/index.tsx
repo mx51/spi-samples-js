@@ -107,7 +107,7 @@ async function fetchFqdn(
         }
       }
     }
-  } catch (error: any) {
+  } catch (error: Any) {
     const data = {
       error: error.message,
       error_code: 401,
@@ -150,7 +150,7 @@ async function fetchIp(
       setErrorResponse(data);
       setResult('error');
     }
-  } catch (error: any) {
+  } catch (error: Any) {
     const data = {
       error: error.message,
       error_code: 401,

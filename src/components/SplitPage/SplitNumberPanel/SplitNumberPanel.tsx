@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Divider, FormHelperText, IconButton, Typography, withStyles } from '@material-ui/core';
+import { Box, Divider, IconButton, Typography, withStyles } from '@material-ui/core';
 import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
