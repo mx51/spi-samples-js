@@ -17,6 +17,12 @@ variables:
     value: spi-samples-js
   - name: BRANCH_NAME
     value: $[variables['Build.SourceBranch']]
+    # Is a tag or a branch
+  - name: DEPLOY_DEV
+    value: $[ or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/SPIC-158-add-env-meta'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) ]
+    # Is a tag only
+  - name: DEPLOY_LIVE
+    value: $[ startsWith(variables['build.sourceBranch'], 'refs/tags/') ]
 
 stages:
   - stage: build
@@ -26,6 +32,10 @@ stages:
         cancelTimeoutInMinutes: 5
         displayName: Build
         steps:
+          - script: |
+              echo "DEPLOY_DEV: $(DEPLOY_DEV)"
+              echo "DEPLOY_LIVE: $(DEPLOY_LIVE)"
+            displayName: 'Print Environment Variables'
           - task: Npm@1
             displayName: Install dependencies
             inputs:
@@ -61,6 +71,23 @@ stages:
               echo "$BUILD_SOURCEBRANCH" > build/version.txt
             displayName: 'Store git ref value in release package'
 
+          - script: |
+              echo "//registry.npmjs.org/:_authToken=$(NPM_TOKEN)" > ~/.npmrc
+            displayName: 'Authenticate with npm'
+
+          - script: |
+              if [ "$(DEPLOY_LIVE)" = "true" ]; then
+              ENV=LIVE
+              else
+              ENV=DEV
+              fi
+
+              echo "DEPLOY_LIVE: $(DEPLOY_LIVE)"
+              echo "ENV: $ENV"
+
+              npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=/build/index.html --var "ENV=$ENV" --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+            displayName: 'Inject environment variable in index.html'
+
           - publish: $(System.DefaultWorkingDirectory)/build
             artifact: $(ARTIFACT_NAME)
             displayName: Publish Artifact
@@ -72,7 +99,7 @@ stages:
             displayName: 'Pipeline failure build stage alert'
             condition: failed()
 
-  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/main'), startsWith(variables['build.sourceBranch'], 'refs/tags/'))  }}:
+  - ${{ if eq(variables['DEPLOY_DEV'], 'true')  }}:
       - stage: deploy_dev
         displayName: 'Stage: Deploy (DEV)'
         dependsOn: build
@@ -87,7 +114,6 @@ stages:
                 deploy:
                   steps:
                     - checkout: self
-
                     - download: current
                       artifact: $(ARTIFACT_NAME)
                       displayName: 'Fetch current package from Azure (dev)'
@@ -107,7 +133,7 @@ stages:
                       displayName: 'Pipeline failure deploy stage alert (dev)'
                       condition: failed()
 
-  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
+  - ${{ if eq(variables['DEPLOY_LIVE'], 'true') }}:
       - stage: deploy_live
         displayName: 'Stage: Deploy (Production)'
         dependsOn: [build, deploy_dev]
