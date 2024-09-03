@@ -99,71 +99,71 @@ stages:
             displayName: 'Pipeline failure build stage alert'
             condition: failed()
 
-  - ${{ if eq(variables['DEPLOY_DEV'], 'true')  }}:
-      - stage: deploy_dev
-        displayName: 'Stage: Deploy (DEV)'
-        dependsOn: build
-        jobs:
-          - deployment: Deploy_Dev
-            environment: cdn-dev
-            pool: shared
-            workspace:
-              clean: all
-            strategy:
-              runOnce:
-                deploy:
-                  steps:
-                    - checkout: self
-                    - download: current
-                      artifact: $(ARTIFACT_NAME)
-                      displayName: 'Fetch current package from Azure (dev)'
+  - stage: deploy_dev
+    condition: eq(variables['DEPLOY_DEV'], true)
+    displayName: 'Stage: Deploy (DEV)'
+    dependsOn: build
+    jobs:
+      - deployment: Deploy_Dev
+        environment: cdn-dev
+        pool: shared
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - download: current
+                  artifact: $(ARTIFACT_NAME)
+                  displayName: 'Fetch current package from Azure (dev)'
 
-                    - script: make deploy
-                      env:
-                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_NONPROD)
-                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
-                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
-                        S3_BUCKET: $(S3_BUCKET_DEV)
-                      displayName: 'Deploy package (dev)'
+                - script: make deploy
+                  env:
+                    ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_NONPROD)
+                    ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
+                    S3_BUCKET: $(S3_BUCKET_DEV)
+                  displayName: 'Deploy package (dev)'
 
-                    - script: ./scripts/failure-alert.py
-                      env:
-                        PYTHONUNBUFFERED: '1'
-                        ALERT_MESSAGE: 'Deploy pipeline failure (dev)'
-                      displayName: 'Pipeline failure deploy stage alert (dev)'
-                      condition: failed()
+                - script: ./scripts/failure-alert.py
+                  env:
+                    PYTHONUNBUFFERED: '1'
+                    ALERT_MESSAGE: 'Deploy pipeline failure (dev)'
+                  displayName: 'Pipeline failure deploy stage alert (dev)'
+                  condition: failed()
 
-  - ${{ if eq(variables['DEPLOY_LIVE'], 'true') }}:
-      - stage: deploy_live
-        displayName: 'Stage: Deploy (Production)'
-        dependsOn: [build, deploy_dev]
-        jobs:
-          - deployment: Deploy_Prod
-            environment: cdn-live
-            pool: shared
-            workspace:
-              clean: all
-            strategy:
-              runOnce:
-                deploy:
-                  steps:
-                    - checkout: self
+  - stage: deploy_live
+    condition: eq(variables['DEPLOY_LIVE'], true)
+    displayName: 'Stage: Deploy (Production)'
+    dependsOn: [build, deploy_dev]
+    jobs:
+      - deployment: Deploy_Prod
+        environment: cdn-live
+        pool: shared
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
 
-                    - download: current
-                      artifact: $(ARTIFACT_NAME)
-                      displayName: 'Fetch current package from Azure (live)'
+                - download: current
+                  artifact: $(ARTIFACT_NAME)
+                  displayName: 'Fetch current package from Azure (live)'
 
-                    - script: make deploy
-                      env:
-                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_PROD)
-                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
-                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_LIVE)
-                        S3_BUCKET: $(S3_BUCKET_LIVE)
-                      displayName: 'Deploy package (live)'
+                - script: make deploy
+                  env:
+                    ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_PROD)
+                    ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    CLOUDFRONT_ID: $(CLOUDFRONT_ID_LIVE)
+                    S3_BUCKET: $(S3_BUCKET_LIVE)
+                  displayName: 'Deploy package (live)'
 
-                    - script: ./scripts/failure-alert.py
-                      env:
-                        PYTHONUNBUFFERED: '1'
-                        ALERT_MESSAGE: 'Deploy pipeline failure (live)'
-                      displayName: 'Pipeline failure deploy stage alert (live)'
-                      condition: failed()
+                - script: ./scripts/failure-alert.py
+                  env:
+                    PYTHONUNBUFFERED: '1'
+                    ALERT_MESSAGE: 'Deploy pipeline failure (live)'
+                  displayName: 'Pipeline failure deploy stage alert (live)'
+                  condition: failed()
