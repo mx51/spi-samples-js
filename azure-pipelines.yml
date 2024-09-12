@@ -111,7 +111,7 @@ stages:
                     ARTIFACT_PATH: $(Pipeline.Workspace)
 
                 - script: |
-                    docker run --rm -v ${ARTIFACT_PATH}:/spi-samples-js -w /spi-samples-js/build --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+                    docker run --rm -v ${ARTIFACT_PATH}:/spi-samples-js -w /spi-samples-js --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=build/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
                   displayName: 'Inject ENV Vars'
                   env:
                     ARTIFACT_PATH: $(Pipeline.Workspace)
