@@ -111,6 +111,14 @@ stages:
                     ARTIFACT_PATH: $(Pipeline.Workspace)
 
                 - script: |
+                    echo "Checking directories"
+                    echo "Pipeline.Workspace"
+                    ls -la $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    echo "Pipeline.Workspace)/ARTIFACT_NAME"
+                    ls -la $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                  displayName: 'Check directories'
+
+                - script: |
                     docker run --rm -v ${ARTIFACT_PATH}:/workspace -w /workspace/spi-samples-js --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=build/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
                   displayName: 'Inject ENV Vars'
                   env:
