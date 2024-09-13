@@ -19,7 +19,7 @@ variables:
     value: $[variables['Build.SourceBranch']]
     # Is a tag or a branch
   - name: DEPLOY_DEV
-    value: $[ or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/SPIC-158-add-env-meta'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) ]
+    value: $[ or(startsWith(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) ]
     # Is a tag only
   - name: DEPLOY_LIVE
     value: $[ startsWith(variables['build.sourceBranch'], 'refs/tags/') ]
