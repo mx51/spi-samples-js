@@ -111,14 +111,6 @@ stages:
                     ARTIFACT_PATH: $(Pipeline.Workspace)
 
                 - script: |
-                    echo "Checking directories"
-                    echo "Pipeline.Workspace"
-                    ls -la $(Pipeline.Workspace)
-                    echo "Pipeline.Workspace)/ARTIFACT_NAME"
-                    ls -la $(Pipeline.Workspace)/$(ARTIFACT_NAME)
-                  displayName: 'Check directories'
-
-                - script: |
                     docker run --rm -v ${ARTIFACT_PATH}:/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=spi-samples-js/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
                   displayName: 'Inject ENV Vars'
                   env:
@@ -167,13 +159,13 @@ stages:
                     echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ${ARTIFACT_PATH}/.npmrc
                   displayName: 'Authenticate with npm'
                   env:
-                    ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    ARTIFACT_PATH: $(Pipeline.Workspace)
 
                 - script: |
-                    docker run --rm -v ${ARTIFACT_PATH}:/build -w /build --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=index.html --var 'ENV=LIVE' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+                    docker run --rm -v ${ARTIFACT_PATH}:/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=spi-samples-js/index.html --var 'ENV=LIVE' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
                   displayName: 'Inject ENV Vars'
                   env:
-                    ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    ARTIFACT_PATH: $(Pipeline.Workspace)
                     NPM_TOKEN: $(NPM_TOKEN)
 
                 - script: make deploy
