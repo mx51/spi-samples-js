@@ -17,6 +17,12 @@ variables:
     value: spi-samples-js
   - name: BRANCH_NAME
     value: $[variables['Build.SourceBranch']]
+    # Is a tag or a branch
+  - name: DEPLOY_DEV
+    value: $[ or(startsWith(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) ]
+    # Is a tag only
+  - name: DEPLOY_LIVE
+    value: $[ startsWith(variables['build.sourceBranch'], 'refs/tags/') ]
 
 stages:
   - stage: build
@@ -26,6 +32,10 @@ stages:
         cancelTimeoutInMinutes: 5
         displayName: Build
         steps:
+          - script: |
+              echo "DEPLOY_DEV: $(DEPLOY_DEV)"
+              echo "DEPLOY_LIVE: $(DEPLOY_LIVE)"
+            displayName: 'Print Environment Variables'
           - task: Npm@1
             displayName: Install dependencies
             inputs:
@@ -72,72 +82,97 @@ stages:
             displayName: 'Pipeline failure build stage alert'
             condition: failed()
 
-  - ${{ if or(startsWith(variables['build.sourceBranch'], 'refs/heads/main'), startsWith(variables['build.sourceBranch'], 'refs/tags/'))  }}:
-      - stage: deploy_dev
-        displayName: 'Stage: Deploy (DEV)'
-        dependsOn: build
-        jobs:
-          - deployment: Deploy_Dev
-            environment: cdn-dev
-            pool: shared
-            workspace:
-              clean: all
-            strategy:
-              runOnce:
-                deploy:
-                  steps:
-                    - checkout: self
+  - stage: deploy_dev
+    condition: eq(variables['DEPLOY_DEV'], true)
+    displayName: 'Stage: Deploy (DEV)'
+    dependsOn: build
+    jobs:
+      - deployment: Deploy_Dev
+        environment: cdn-dev
+        pool: shared
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
+                - download: current
+                  artifact: $(ARTIFACT_NAME)
+                  displayName: 'Fetch current package from Azure (dev)'
 
-                    - download: current
-                      artifact: $(ARTIFACT_NAME)
-                      displayName: 'Fetch current package from Azure (dev)'
+                # We specify a literal value of ${NPM_TOKEN}.
+                # The npm cli will replace this value with the contents of the NPM_TOKEN environment variable.
+                # We do not write this token value to this file.
+                - script: |
+                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > $(Pipeline.Workspace)/.npmrc
+                  displayName: 'Authenticate with npm'
 
-                    - script: make deploy
-                      env:
-                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_NONPROD)
-                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
-                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
-                        S3_BUCKET: $(S3_BUCKET_DEV)
-                      displayName: 'Deploy package (dev)'
+                - script: |
+                    docker run --rm -v $(Pipeline.Workspace):/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=$(ARTIFACT_NAME)/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+                  displayName: 'Inject ENV Vars'
+                  env:
+                    NPM_TOKEN: $(NPM_TOKEN)
 
-                    - script: ./scripts/failure-alert.py
-                      env:
-                        PYTHONUNBUFFERED: '1'
-                        ALERT_MESSAGE: 'Deploy pipeline failure (dev)'
-                      displayName: 'Pipeline failure deploy stage alert (dev)'
-                      condition: failed()
+                - script: make deploy
+                  env:
+                    ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_NONPROD)
+                    ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    CLOUDFRONT_ID: $(CLOUDFRONT_ID_DEV)
+                    S3_BUCKET: $(S3_BUCKET_DEV)
+                  displayName: 'Deploy package (dev)'
 
-  - ${{ if startsWith(variables['build.sourceBranch'], 'refs/tags/') }}:
-      - stage: deploy_live
-        displayName: 'Stage: Deploy (Production)'
-        dependsOn: [build, deploy_dev]
-        jobs:
-          - deployment: Deploy_Prod
-            environment: cdn-live
-            pool: shared
-            workspace:
-              clean: all
-            strategy:
-              runOnce:
-                deploy:
-                  steps:
-                    - checkout: self
+                - script: ./scripts/failure-alert.py
+                  env:
+                    PYTHONUNBUFFERED: '1'
+                    ALERT_MESSAGE: 'Deploy pipeline failure (dev)'
+                  displayName: 'Pipeline failure deploy stage alert (dev)'
+                  condition: failed()
 
-                    - download: current
-                      artifact: $(ARTIFACT_NAME)
-                      displayName: 'Fetch current package from Azure (live)'
+  - stage: deploy_live
+    condition: eq(variables['DEPLOY_LIVE'], true)
+    displayName: 'Stage: Deploy (Production)'
+    dependsOn: [build, deploy_dev]
+    jobs:
+      - deployment: Deploy_Prod
+        environment: cdn-live
+        pool: shared
+        workspace:
+          clean: all
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - checkout: self
 
-                    - script: make deploy
-                      env:
-                        ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_PROD)
-                        ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
-                        CLOUDFRONT_ID: $(CLOUDFRONT_ID_LIVE)
-                        S3_BUCKET: $(S3_BUCKET_LIVE)
-                      displayName: 'Deploy package (live)'
+                - download: current
+                  artifact: $(ARTIFACT_NAME)
+                  displayName: 'Fetch current package from Azure (live)'
 
-                    - script: ./scripts/failure-alert.py
-                      env:
-                        PYTHONUNBUFFERED: '1'
-                        ALERT_MESSAGE: 'Deploy pipeline failure (live)'
-                      displayName: 'Pipeline failure deploy stage alert (live)'
-                      condition: failed()
+                # We specify a literal value of ${NPM_TOKEN}.
+                # The npm cli will replace this value with the contents of the NPM_TOKEN environment variable.
+                # We do not write this token value to this file.
+                - script: |
+                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > $(Pipeline.Workspace)/.npmrc
+                  displayName: 'Authenticate with npm'
+
+                - script: |
+                    docker run --rm -v $(Pipeline.Workspace):/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=$(ARTIFACT_NAME)/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+                  displayName: 'Inject ENV Vars'
+                  env:
+                    NPM_TOKEN: $(NPM_TOKEN)
+
+                - script: make deploy
+                  env:
+                    ASSUMED_ROLE: $(AWS_ASSUMED_ROLE_PROD)
+                    ARTIFACT_PATH: $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    CLOUDFRONT_ID: $(CLOUDFRONT_ID_LIVE)
+                    S3_BUCKET: $(S3_BUCKET_LIVE)
+                  displayName: 'Deploy package (live)'
+
+                - script: ./scripts/failure-alert.py
+                  env:
+                    PYTHONUNBUFFERED: '1'
+                    ALERT_MESSAGE: 'Deploy pipeline failure (live)'
+                  displayName: 'Pipeline failure deploy stage alert (live)'
+                  condition: failed()

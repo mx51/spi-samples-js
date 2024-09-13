@@ -5,7 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.7.9] - 2024-07-19
+## [1.7.11] - 2024-09-03
+
+### Added
+
+- [SPIC-158](hhttps://mx51.atlassian.net/browse/SPIC-158) Update pipeline to inject env var
+
+## [1.7.10] - 2024-07-19
 
 ### Fixed
 
