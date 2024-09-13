@@ -113,7 +113,7 @@ stages:
                 - script: |
                     echo "Checking directories"
                     echo "Pipeline.Workspace"
-                    ls -la $(Pipeline.Workspace)/$(ARTIFACT_NAME)
+                    ls -la $(Pipeline.Workspace)
                     echo "Pipeline.Workspace)/ARTIFACT_NAME"
                     ls -la $(Pipeline.Workspace)/$(ARTIFACT_NAME)
                   displayName: 'Check directories'
