@@ -19,7 +19,7 @@ variables:
     value: $[variables['Build.SourceBranch']]
     # Is a tag or a branch
   - name: DEPLOY_DEV
-    value: $[ or(startsWith(variables['Build.SourceBranch'], 'refs/heads/main'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) ]
+    value: $[ or(startsWith(variables['Build.SourceBranch'], 'refs/heads/feature/SPIC-158-add-env-meta'), startsWith(variables['Build.SourceBranch'], 'refs/tags/')) ]
     # Is a tag only
   - name: DEPLOY_LIVE
     value: $[ startsWith(variables['build.sourceBranch'], 'refs/tags/') ]
@@ -105,16 +105,13 @@ stages:
                 # The npm cli will replace this value with the contents of the NPM_TOKEN environment variable.
                 # We do not write this token value to this file.
                 - script: |
-                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ${ARTIFACT_PATH}/.npmrc
+                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > $(Pipeline.Workspace)/.npmrc
                   displayName: 'Authenticate with npm'
-                  env:
-                    ARTIFACT_PATH: $(Pipeline.Workspace)
 
                 - script: |
-                    docker run --rm -v ${ARTIFACT_PATH}:/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=spi-samples-js/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+                    docker run --rm -v $(Pipeline.Workspace):/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=$(ARTIFACT_NAME)/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
                   displayName: 'Inject ENV Vars'
                   env:
-                    ARTIFACT_PATH: $(Pipeline.Workspace)
                     NPM_TOKEN: $(NPM_TOKEN)
 
                 - script: make deploy
@@ -156,16 +153,13 @@ stages:
                 # The npm cli will replace this value with the contents of the NPM_TOKEN environment variable.
                 # We do not write this token value to this file.
                 - script: |
-                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > ${ARTIFACT_PATH}/.npmrc
+                    echo "//registry.npmjs.org/:_authToken=\${NPM_TOKEN}" > $(Pipeline.Workspace)/.npmrc
                   displayName: 'Authenticate with npm'
-                  env:
-                    ARTIFACT_PATH: $(Pipeline.Workspace)
 
                 - script: |
-                    docker run --rm -v ${ARTIFACT_PATH}:/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=spi-samples-js/index.html --var 'ENV=LIVE' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
+                    docker run --rm -v $(Pipeline.Workspace):/workspace -w /workspace --env NPM_TOKEN=${NPM_TOKEN} node:20 npx --yes @mx51/cli@^1.5.2 inject-inline-variables --file=$(ARTIFACT_NAME)/index.html --var 'ENV=DEV' --searchString='<script type="application/json" data-inline-id="env-var"></script>' --keys=ENV
                   displayName: 'Inject ENV Vars'
                   env:
-                    ARTIFACT_PATH: $(Pipeline.Workspace)
                     NPM_TOKEN: $(NPM_TOKEN)
 
                 - script: make deploy
