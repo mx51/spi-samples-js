@@ -15,7 +15,6 @@ export const PATH_SETTINGS = '/settings';
 export const PATH_SUPPORT = '/support';
 
 export const PATH_SPI_CLOUD_PAIRING = '/spicloud';
-export const PATH_SPI_CLOUD_PAIRING_NEW = '/spicloud/new';
 export const PATH_SPI_CLOUD_SETTINGS = '/spicloud/settings';
 
 // link names

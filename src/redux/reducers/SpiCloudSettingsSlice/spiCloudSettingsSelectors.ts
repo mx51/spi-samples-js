@@ -1,7 +1,13 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
-import { ISpiCloudSettingsProps } from './interfaces';
+import { ISpiCloudSettingsProps, SpiCloudEnvironment } from './interfaces';
 
-export const spiCloudSettingsForm = (state: RootState): ISpiCloudSettingsProps => state.spiCloudSettings;
+const spiCloudSettingsForm = (state: RootState): ISpiCloudSettingsProps => state.spiCloudSettings;
 
-export const selectSpiCloudSettingsDev = createSelector(spiCloudSettingsForm, (params) => params.dev);
+export const selectSpiCloudSettingsHasValues = (env: SpiCloudEnvironment) =>
+  createSelector(
+    spiCloudSettingsForm,
+    (params) => params[env].apiBaseUrl !== '' && params[env].apiKey !== '' && params[env].secretPartA !== ''
+  );
+
+export const selectSpiCloudSettings = createSelector(spiCloudSettingsForm, (params) => params);

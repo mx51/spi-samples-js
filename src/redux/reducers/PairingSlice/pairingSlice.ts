@@ -9,8 +9,8 @@ const pairingSlice = createSlice({
       return {};
     },
     addPairing(state: IPairingState, action) {
-      const { id, pairingConfig } = action.payload;
-      state[id] = { ...pairingConfig };
+      const { posNickname, id, pairingConfig } = action.payload;
+      state[id] = { posNickname, ...pairingConfig };
     },
     removePairing(state: IPairingState, action) {
       delete state[action.payload];

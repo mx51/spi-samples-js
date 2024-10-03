@@ -33,11 +33,6 @@ function PairStatus(): React.ReactElement {
 
   return (
     <Grid container direction="column" className={classes.flowBox} id="pairStatus">
-      <Grid container direction="row" justifyContent="space-between" alignItems="center" className={classes.title}>
-        <Typography variant="h6" component="h1">
-          Pairing status
-        </Typography>
-      </Grid>
       <Grid container direction="column" className={classes.statusPanel}>
         <Box display="flex" alignItems="center" className={classes.statusBox}>
           <Typography align="right">
@@ -74,8 +69,9 @@ function PairStatus(): React.ReactElement {
           ))}
         {terminal?.pairingFlow?.message === 'Confirm that the following Code is showing on the Terminal' && (
           <Box display="flex" flexDirection="column" marginLeft={2}>
+            Code:
             <Typography variant="h5" className={classes.pairingCode}>
-              Pairing code: {terminal?.pairingFlow?.confirmationCode}
+              {terminal?.pairingFlow?.confirmationCode}
             </Typography>
           </Box>
         )}

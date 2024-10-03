@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "1.7.11",
+  "version": "1.7.12",
   "private": true,
   "engines": {
     "node": ">=16"
@@ -8,6 +8,7 @@
   "dependencies": {
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
+    "@material-ui/lab": "^4.0.0-alpha.61",
     "@mx51/spi-client-js": "^2.9.13",
     "@reduxjs/toolkit": "^1.6.0",
     "@testing-library/jest-dom": "^5.11.4",

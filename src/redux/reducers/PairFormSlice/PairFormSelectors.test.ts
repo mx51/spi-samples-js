@@ -38,12 +38,28 @@ describe('Test PairFormSelectors', () => {
     );
 
     const mockState = {
+      currentEnv: { env: 'DEV' },
       common: defaultMockCommonState,
       pairForm: { ...mockPairFormParamsState, secrets: null },
       terminals: {},
       pairings: {},
       spiCloudSettings: {
         dev: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        qa: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        live: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        other: {
           apiBaseUrl: '',
           apiKey: '',
           secretPartA: '',
@@ -78,6 +94,7 @@ describe('Test PairFormSelectors', () => {
   test('test isPairDisabled() and return true as result', () => {
     // Arrange
     const mockState = {
+      currentEnv: { env: 'DEV' },
       common: defaultMockCommonState,
       pairForm: {
         ...customMockPairFormParamsState(
@@ -94,6 +111,21 @@ describe('Test PairFormSelectors', () => {
       pairings: {},
       spiCloudSettings: {
         dev: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        qa: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        live: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        other: {
           apiBaseUrl: '',
           apiKey: '',
           secretPartA: '',

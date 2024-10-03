@@ -11,7 +11,6 @@ import { isTerminalUnpaired } from '../../../redux/reducers/TerminalSlice/termin
 import { handlePairClick } from '../../../utils/common/pair/pairStatusHelpers';
 import useStyles from './index.styles';
 import PairConfiguration from './PairConfiguration';
-import PaymentType from './PaymentType';
 import { ITerminal } from './interfaces';
 
 const PairForm: React.FC<ITerminal> = ({ currentTerminal }: ITerminal) => {
@@ -27,8 +26,7 @@ const PairForm: React.FC<ITerminal> = ({ currentTerminal }: ITerminal) => {
 
   return (
     <Grid container direction="column" className={classes.formContainer}>
-      <form autoComplete="off" className={classes.pairForm}>
-        <PaymentType />
+      <form autoComplete="off">
         <PairConfiguration />
         <Button
           className={classes.pairBtn}

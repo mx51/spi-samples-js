@@ -34,6 +34,22 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(3),
       width: '100%',
     },
+    envSettingsContainer: {
+      backgroundColor: theme.palette.grey[100],
+      borderRadius: theme.spacing(0.5),
+      padding: theme.spacing(3),
+      width: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: theme.spacing(1),
+    },
+    spiCloudSettingHeader: {
+      display: 'flex',
+      justifyContent: 'space-between',
+    },
+    defaultMargin: {
+      marginBottom: theme.spacing(2),
+    },
     h1: {
       fontWeight: 500,
       fontSize: '1.5rem',

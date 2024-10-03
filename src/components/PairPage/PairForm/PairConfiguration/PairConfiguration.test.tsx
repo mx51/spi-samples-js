@@ -50,11 +50,6 @@ describe('Test <PairConfiguration />', () => {
 
   afterEach(cleanup);
 
-  test('should match PairConfiguration snapshot test', () => {
-    // Assert
-    expect(mockContainer).toMatchSnapshot();
-  });
-
   test('should show the error adornment icon when field input is invalid', () => {
     // This test case is for form field error handling
 

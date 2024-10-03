@@ -76,7 +76,7 @@ export default function PairPanelButtons(
             Unpair
           </Button>
           <Button className={classes.pairBtn} color="primary" component={Link} to={PATH_PURCHASE} variant="contained">
-            Go to Sample POS
+            Go to purchase
           </Button>
         </Box>
       ),

@@ -60,7 +60,7 @@ export const SettingsPanel: React.FC<Props> = ({ title, subtitle }) => {
       <Divider className={classes.divider} />
       <Grid container spacing={4}>
         {receiptConfigKeys.map((configOption) => (
-          <Grid container alignItems="center">
+          <Grid key={configOption} container alignItems="center">
             <Grid item xs={4}>
               <Typography className={classes.infoText}>{configOption}</Typography>
             </Grid>

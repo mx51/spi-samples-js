@@ -16,8 +16,6 @@ import {
   PATH_PAT,
   PATH_SPLIT,
   PATH_SPI_CLOUD_PAIRING,
-  PATH_SPI_CLOUD_PAIRING_NEW,
-  PATH_SPI_CLOUD_SETTINGS,
 } from '../definitions/constants/routerConfigs';
 import PayAtTablePage from '../components/PayAtTablePage';
 import OrderFinished from '../components/OrderFinished/OrderFinished';
@@ -43,8 +41,6 @@ const TransactionDetailsPage = React.lazy(() =>
   }))
 );
 const SpiCloudPairingPage = React.lazy(() => import('../components/SpiCloudPairingPage'));
-const SpiCloudPairingNewPage = React.lazy(() => import('../components/SpiCloudPairingNewPage'));
-const SpiCloudSettingsPage = React.lazy(() => import('../components/SpiCloudSettingsPage'));
 
 const AppRoutes = (): React.ReactElement => (
   <Router>
@@ -64,11 +60,9 @@ const AppRoutes = (): React.ReactElement => (
         <Route exact path={PATH_SPLIT} component={Split} />
         <Route exact path={PATH_CASH_OUT} component={Cashout} />
         <Route exact path={PATH_ORDER_FINISHED} component={OrderFinished} />
-        <Route exact path={PATH_SETTINGS} component={Settings} />
+        <Route path={PATH_SETTINGS} component={Settings} />
         <Route exact path={PATH_SUPPORT} component={SupportTool} />
         <Route exact path={PATH_SPI_CLOUD_PAIRING} component={SpiCloudPairingPage} />
-        <Route exact path={PATH_SPI_CLOUD_PAIRING_NEW} component={SpiCloudPairingNewPage} />
-        <Route exact path={PATH_SPI_CLOUD_SETTINGS} component={SpiCloudSettingsPage} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>
