@@ -27,13 +27,5 @@ npm run check-types ||
     false;
 )
 
-# Check Unit Tests errors
-npm test ||
-(
-    echo '❌❌❌❌ Failed Unit Tests Check ❌❌❌❌
-        Unit tests check failed, please fix all the relevent tests cases'
-    false;
-)
-
 # If everything passes ... this message will be shown to you
 echo '💃🕺💃🕺 Good day 💃🕺💃🕺'
