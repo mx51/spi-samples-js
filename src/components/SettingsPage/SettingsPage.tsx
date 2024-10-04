@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Box, Grid, Tab, Tabs, Typography } from '@material-ui/core';
-import { Route, Switch, useHistory, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Layout from '../Layout';
 import useStyles from './index.styles';
 import { SettingsPanel } from './SettingsPanel/SettingsPanel';
@@ -27,7 +27,7 @@ const SettingsPage: React.FC = () => {
     { label: 'Integration Settings', route: '/settings/integration-settings' },
   ];
 
-  useEffect(() => {
+  useMemo(() => {
     let activeTabIndex;
     switch (location.pathname) {
       case '/settings':
@@ -89,6 +89,7 @@ const SettingsPage: React.FC = () => {
                 <Route path="/settings/integration-settings">
                   <IntegrationsSettingsPanel />
                 </Route>
+                <Redirect from="*" to="/settings" />
               </Switch>
             </Grid>
           </Grid>

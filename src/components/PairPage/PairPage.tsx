@@ -20,7 +20,8 @@ import { selectPairFormSerialNumber } from '../../redux/reducers/PairFormSlice/P
 import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import PaymentTypeComponent, { PAYMENT_TYPE } from './PaymentType/PaymentType';
 import { SpiCloudPairingSteps, SpiPairingSteps } from './PairingSteps';
-import { SpiCloudPairingForm } from './SpiCloudPairingForm/SpiCloudPairingForm';
+import { SpiCloudPairingForm } from './SpiCloudPairing/SpiCloudPairingForm';
+import { SpiCloudPairing } from './SpiCloudPairing/SpiCloudPairing';
 
 const PairPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -86,7 +87,7 @@ const PairPage: React.FC = () => {
                   </svg>
                   <span className={classes.backLinkText}>Back to Terminals</span>
                 </Button>
-                <PaymentTypeComponent value={paymentType} handleChange={onPaymentTypeChange} />
+                <PaymentTypeComponent value={paymentType} onChange={onPaymentTypeChange} />
               </Grid>
               {paymentType === PAYMENT_TYPE.SPI && (
                 <>
@@ -106,7 +107,7 @@ const PairPage: React.FC = () => {
               {paymentType === PAYMENT_TYPE.SPI_CLOUD && (
                 <>
                   <Grid item sm={8} xs={12} className={classes.pairFormContainer}>
-                    <SpiCloudPairingForm />
+                    <SpiCloudPairing />
                   </Grid>
                   <Grid item sm={4} xs={12} className={classes.pairStatusContainer}>
                     <SpiCloudPairingSteps />

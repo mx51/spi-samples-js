@@ -8,7 +8,6 @@ import { useDispatch } from 'react-redux';
 import Snackbar from '@material-ui/core/Snackbar';
 import Alert from '@material-ui/lab/Alert';
 import { Prompt, useLocation } from 'react-router-dom';
-import { Action, Location } from 'history';
 import useStyles from './index.styles';
 import { IFormEventValue } from '../PairPage/PairForm/interfaces';
 import { useAppSelector } from '../../redux/hooks';
@@ -33,6 +32,7 @@ export const IntegrationsSettingsPanel: React.FC = () => {
   const dispatchUpdate = () => {
     dispatch(setPairingSettings(settings));
     setShowSnackbar(true);
+    setIsBlocking(false);
   };
 
   const handleSettingsUpdate = (environment: SpiCloudEnvironment, key: string, value: string) => {
@@ -45,8 +45,6 @@ export const IntegrationsSettingsPanel: React.FC = () => {
       },
     }));
   };
-
-  const handleBlockedNavigation = () => `You have unsaved changes. Are you sure you want to go to leave this page?`;
 
   /**
    Handle blocking page refresh if unsaved changes
@@ -155,7 +153,7 @@ export const IntegrationsSettingsPanel: React.FC = () => {
         </Alert>
       </Snackbar>
       {/** Prompt to confirm navigation when there are unsaved changes  */}
-      <Prompt when={isBlocking} message={handleBlockedNavigation} />
+      <Prompt when={isBlocking} message="You have unsaved changes. Are you sure you want to go to leave this page?" />
     </>
   );
 };

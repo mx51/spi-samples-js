@@ -22,11 +22,11 @@ export enum PAYMENT_TYPE {
 }
 
 type paymentTypeRadioProps = {
-  handleChange: (event: ChangeEvent<HTMLInputElement>, value: string) => void;
+  onChange: (event: ChangeEvent<HTMLInputElement>, value: string) => void;
   value: PAYMENT_TYPE;
 };
 
-const PaymentTypeComponent: React.FC<paymentTypeRadioProps> = ({ handleChange, value }) => {
+const PaymentTypeComponent: React.FC<paymentTypeRadioProps> = ({ onChange, value }) => {
   const classes = useStyles();
   // read redux store states
   const pairFormSerialNumber = useAppSelector(selectPairFormSerialNumber);
@@ -42,7 +42,7 @@ const PaymentTypeComponent: React.FC<paymentTypeRadioProps> = ({ handleChange, v
       <Grid container direction="column">
         <Grid container direction="row" className={classes.fieldSpace}>
           <FormControl className={classes.paymentTypeWrapper} component="fieldset" fullWidth>
-            <RadioGroup aria-label="paymentType" name="paymentType" value={value} onChange={handleChange}>
+            <RadioGroup aria-label="paymentType" name="paymentType" value={value} onChange={onChange}>
               <FormControlLabel
                 className={classes.paymentTypeRadioButton}
                 control={<Radio color="primary" />}
