@@ -83,7 +83,7 @@ export default function PairConfiguration(): React.ReactElement {
   return (
     <>
       <Grid item className={classes.title}>
-        <Typography variant="h6" component="h1" className={classes.configurationTitle}>
+        <Typography variant="h6" component="h1">
           Pairing configuration
         </Typography>
       </Grid>

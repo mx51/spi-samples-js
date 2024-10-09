@@ -17,7 +17,7 @@ import { Link as LinkRouter } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import Layout from '../Layout';
 import useStyles from './index.styles';
-import { PATH_SPI_CLOUD_PAIRING_NEW, PATH_SPI_CLOUD_SETTINGS } from '../../definitions/constants/routerConfigs';
+import { PATH_SETTINGS, PATH_SPI_CLOUD_SETTINGS } from '../../definitions/constants/routerConfigs';
 import { pairingsList } from '../../redux/reducers/PairingSlice/pairingSelectors';
 import { IPairingProps } from '../../redux/reducers/PairingSlice/interfaces';
 
@@ -40,16 +40,8 @@ const SpiCloudPairingPage: React.FC = () => {
             </Typography>
           </Box>
           <Box>
-            <Button
-              className={classes.marginRight}
-              variant="outlined"
-              component={LinkRouter}
-              to={PATH_SPI_CLOUD_SETTINGS}
-            >
+            <Button className={classes.marginRight} variant="outlined" component={LinkRouter} to={PATH_SETTINGS}>
               Settings
-            </Button>
-            <Button variant="contained" color="primary" component={LinkRouter} to={PATH_SPI_CLOUD_PAIRING_NEW}>
-              + Pair SPI Cloud
             </Button>
           </Box>
         </Box>

@@ -7,10 +7,12 @@ import ReduxProvider from './redux/ReduxProvider';
 import { persistor, store } from './redux/store';
 
 import AppRoutes from './router';
+import CurrentEnvInitializer from './components/CurrentEnvInitializer/CurrentEnvInitialiser';
 
 ReactDOM.render(
   <ThemeStyles>
     <ReduxProvider reduxStore={store}>
+      <CurrentEnvInitializer />
       <PersistGate loading={null} persistor={persistor}>
         <AppRoutes />
       </PersistGate>

@@ -15,6 +15,7 @@ import { PayAtTableState, payAtTableReducer } from './reducers/PayAtTableSlice/p
 import { ITerminalState } from './reducers/TerminalSlice/interfaces';
 import { IPairingState } from './reducers/PairingSlice/interfaces';
 import { ISpiCloudSettingsProps } from './reducers/SpiCloudSettingsSlice/interfaces';
+import currentEnvReducer from './reducers/CurrentEnvSlice/currentEnvSlice';
 
 const terminalReducerMigration: Any = {
   0: (state: ITerminalState) => {
@@ -34,6 +35,7 @@ const terminalReducerMigration: Any = {
 };
 
 const rootReducer = combineReducers({
+  currentEnv: currentEnvReducer,
   common: commonReducer,
   pairForm: pairFormReducer,
   products: productSlice,

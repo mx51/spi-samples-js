@@ -3,22 +3,9 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formContainer: {
-      paddingRight: theme.spacing(8),
       '& .MuiInputBase-input': {
         textOverflow: 'ellipsis',
       },
-    },
-    pairForm: {
-      marginBottom: -theme.spacing(2),
-    },
-    title: {
-      marginBottom: theme.spacing(1.5),
-    },
-    configurationTitle: {
-      marginTop: theme.spacing(1),
-    },
-    fieldSpace: {
-      marginBottom: theme.spacing(1.5),
     },
     '.MuiFormHelperText-contained, .MuiFormHelperText-root.Mui-error': {
       margin: 0,
@@ -58,31 +45,6 @@ const useStyles = makeStyles((theme: Theme) =>
       '&:hover .MuiOutlinedInput-notchedOutline': {
         borderColor: theme.palette.info.main,
       },
-    },
-    paymentTypeWrapper: {
-      backgroundColor: theme.palette.common.white,
-      borderRadius: theme.spacing(0.5),
-      '&.MuiFormControl-root': {
-        border: `1px solid ${theme.palette.secondary.main}`,
-        marginTop: theme.spacing(1),
-        padding: theme.spacing(0, 1),
-      },
-      '& .MuiFormControlLabel-root': {
-        margin: theme.spacing(0, 2),
-      },
-    },
-    paymentTypeRadioButton: {
-      borderBottom: `1px solid ${theme.palette.secondary.main}`,
-      padding: theme.spacing(1, 0),
-      '&:last-child': {
-        borderBottom: 'none',
-      },
-      '& .MuiRadio-root': {
-        marginLeft: theme.spacing(-1.5),
-      },
-    },
-    paymentTypeRadioButtonIcon: {
-      maxHeight: '1.875rem',
     },
     [theme.breakpoints.between(960, 1024)]: {
       formContainer: {

@@ -2,24 +2,27 @@ import React from 'react';
 import ThemeTextField from './index.styles';
 import { ICustomTextField } from './interfaces';
 
-function CustomTextField({
-  className,
-  disabled,
-  error,
-  fullWidth,
-  helperText,
-  dataTestId,
-  InputProps,
-  inputProps,
-  label,
-  margin,
-  onBlur,
-  onChange,
-  required,
-  value,
-  variant,
-}: ICustomTextField): React.ReactElement {
-  return (
+const CustomTextField = React.forwardRef<HTMLInputElement, ICustomTextField>(
+  (
+    {
+      className,
+      disabled,
+      error,
+      fullWidth,
+      helperText,
+      dataTestId,
+      InputProps,
+      inputProps,
+      label,
+      margin,
+      onBlur,
+      onChange,
+      required,
+      value,
+      variant,
+    },
+    ref
+  ): React.ReactElement => (
     <ThemeTextField
       className={className}
       data-test-id={dataTestId}
@@ -36,8 +39,9 @@ function CustomTextField({
       required={required}
       value={value}
       variant={variant}
+      inputRef={ref}
     />
-  );
-}
+  )
+);
 
 export default CustomTextField;

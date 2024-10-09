@@ -1,34 +1,52 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { Box, Grid, Tab, Tabs, Typography } from '@material-ui/core';
+import { Redirect, Route, Switch, useHistory, useLocation } from 'react-router-dom';
 import Layout from '../Layout';
 import useStyles from './index.styles';
 import { SettingsPanel } from './SettingsPanel/SettingsPanel';
 import { PayAtTablePanel } from './PayAtTablePanel';
+import { IntegrationsSettingsPanel } from './IntegrationSettingsPanel';
 
 const panel = {
   terminalSetting: 0,
   payAtTable: 1,
+  integrationSettings: 2,
 };
 
 const SettingsPage: React.FC = () => {
+  const location = useLocation();
+  const history = useHistory();
+
   const classes = useStyles();
   const [tabIndex, setTabIndex] = useState(panel.terminalSetting);
 
-  const handleTabChange = (event: React.ReactNode, newValue: number) => {
-    setTabIndex(newValue);
-  };
+  const tabs = [
+    { label: 'Terminal Settings', route: '/settings' },
+    { label: 'Pay At Table', route: '/settings/pay-at-table' },
+    { label: 'Integration Settings', route: '/settings/integration-settings' },
+  ];
 
-  const panelByIndex = {
-    [panel.terminalSetting]: (
-      <SettingsPanel
-        index={tabIndex}
-        subtitle="Configure the terminal settings and customise the EFTPOS receipts."
-        title="Terminal Settings"
-        value={tabIndex}
-      />
-    ),
-    [panel.payAtTable]: <PayAtTablePanel />,
+  useMemo(() => {
+    let activeTabIndex;
+    switch (location.pathname) {
+      case '/settings':
+        activeTabIndex = panel.terminalSetting;
+        break;
+      case '/settings/integration-settings':
+        activeTabIndex = panel.integrationSettings;
+        break;
+      case '/settings/pay-at-table':
+        activeTabIndex = panel.payAtTable;
+        break;
+      default:
+        activeTabIndex = panel.terminalSetting;
+    }
+    setTabIndex(activeTabIndex);
+  }, [location.pathname]);
+
+  const handleTabChange = (event: React.ReactNode, newValue: number) => {
+    history.push(tabs[newValue].route);
   };
 
   return (
@@ -53,8 +71,26 @@ const SettingsPage: React.FC = () => {
               >
                 <Tab label="Terminal Settings" />
                 <Tab label="Pay At Table Settings" />
+                <Tab label="Integration Settings" />
               </Tabs>
-              {panelByIndex[tabIndex]}
+
+              <Switch>
+                <Route path="/settings" exact>
+                  <SettingsPanel
+                    index={tabIndex}
+                    subtitle="Configure the terminal settings and customise the EFTPOS receipts."
+                    title="Terminal Settings"
+                    value={tabIndex}
+                  />
+                </Route>
+                <Route path="/settings/pay-at-table">
+                  <PayAtTablePanel />
+                </Route>
+                <Route path="/settings/integration-settings">
+                  <IntegrationsSettingsPanel />
+                </Route>
+                <Redirect from="*" to="/settings" />
+              </Switch>
             </Grid>
           </Grid>
         </Grid>

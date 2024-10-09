@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.12] - 2024-10-02
+
+### Added
+
+- [INTG-1040](https://mx51.atlassian.net/browse/INTG-1040) Add SPI Cloud settings page
+- [INTG-1038](https://mx51.atlassian.net/browse/INTG-1038) Add SPI Cloud pairing payment type
+
 ## [1.7.11] - 2024-09-03
 
 ### Added

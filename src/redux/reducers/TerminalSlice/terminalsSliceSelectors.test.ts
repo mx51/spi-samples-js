@@ -23,12 +23,28 @@ import {
 } from '../../../utils/tests/common';
 
 const mockStoreState = {
+  currentEnv: { env: 'DEV' },
   common: defaultMockCommonState,
   pairForm: defaultMockPairFormParams,
   products: mockDefaultProducts,
   pairings: {},
   spiCloudSettings: {
     dev: {
+      apiBaseUrl: '',
+      apiKey: '',
+      secretPartA: '',
+    },
+    qa: {
+      apiBaseUrl: '',
+      apiKey: '',
+      secretPartA: '',
+    },
+    live: {
+      apiBaseUrl: '',
+      apiKey: '',
+      secretPartA: '',
+    },
+    other: {
       apiBaseUrl: '',
       apiKey: '',
       secretPartA: '',
@@ -125,6 +141,7 @@ describe('Test terminals slice selectors', () => {
 
   test('should return terminal which are paired connected', () => {
     const state = {
+      currentEnv: { env: 'DEV' },
       common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
       pair: { status: '' },
       products: {
@@ -140,6 +157,21 @@ describe('Test terminals slice selectors', () => {
       pairings: {},
       spiCloudSettings: {
         dev: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        qa: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        live: {
+          apiBaseUrl: '',
+          apiKey: '',
+          secretPartA: '',
+        },
+        other: {
           apiBaseUrl: '',
           apiKey: '',
           secretPartA: '',

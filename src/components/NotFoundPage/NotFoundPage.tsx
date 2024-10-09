@@ -29,7 +29,7 @@ const NotFound: React.FC = () => {
           The page you are looking for doesn’t exist or another error occurred.
         </Typography>
         <Button color="primary" component={Link} to={PATH_PURCHASE} variant="contained">
-          Go to Sample POS
+          Go to purchase
         </Button>
       </Grid>
     </Layout>
