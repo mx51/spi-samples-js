@@ -37,8 +37,7 @@ export const SpiCloudPairing: React.FC = () => {
         }),
       });
       if (!response.ok) {
-        dispatch({ type: 'error' });
-        return;
+        throw new Error(response.statusText);
       }
       const result = await response.json();
       dispatch({ type: 'success', payload: { pairingResponse: result, posNickname: data.posNickname } });

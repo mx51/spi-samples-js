@@ -4,11 +4,11 @@ import useStyles from './index.styles';
 import { ReactComponent as ReconnectingIcon } from '../../../images/ReconnectingIcon.svg';
 import { PairingResponse } from './SpiCloudPairingReducer';
 
-type Props = {
+interface Props {
   pairingResponse: PairingResponse | undefined;
   onCancel: () => void;
   onConfirmation: () => void;
-};
+}
 
 export const SpiCloudPairingConfirmation: React.FC<Props> = ({ pairingResponse, onConfirmation, onCancel }) => {
   const classes = useStyles();
