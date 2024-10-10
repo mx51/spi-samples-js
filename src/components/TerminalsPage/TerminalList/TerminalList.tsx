@@ -1,4 +1,14 @@
-import { Chip, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core';
+import {
+  Chip,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { SPI_PAIR_STATUS } from '../../../definitions/constants/commonConfigs';
@@ -31,57 +41,62 @@ function TerminalList({ terminals }: ITerminalList): React.ReactElement {
   };
 
   return (
-    <TableContainer component={Paper} className={classes.table} elevation={0}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>POS ID</TableCell>
-            <TableCell>Pairing status</TableCell>
-            <TableCell>EFTPOS address</TableCell>
-            <TableCell>Serial number</TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {terminals.map((terminal: ITerminalProps) => (
-            <TableRow id={`terminal_${terminal.serialNumber}`} key={`terminal_${terminal.deviceAddress}`}>
-              <TableCell
-                className={classes.link}
-                onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
-                scope="row"
-              >
-                {terminal.posId}
-              </TableCell>
-              <TableCell
-                className={classes.link}
-                onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
-              >
-                <Chip
-                  size="small"
-                  label={getTitleFromStatus(terminal.status, terminal.reconnecting)}
-                  className={chipStyles(terminal.status)}
-                />
-              </TableCell>
-              <TableCell
-                className={classes.link}
-                onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
-              >
-                {terminal.deviceAddress}
-              </TableCell>
-              <TableCell
-                className={classes.link}
-                onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
-              >
-                {terminal.serialNumber}
-              </TableCell>
-              <TableCell>
-                <TerminalActionMenu terminal={terminal} />
-              </TableCell>
+    <>
+      <Typography variant="h3" className={classes.tableHeading}>
+        Simple Payments Integration
+      </Typography>
+      <TableContainer component={Paper} className={classes.table} elevation={0}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>POS ID</TableCell>
+              <TableCell>Pairing status</TableCell>
+              <TableCell>EFTPOS address</TableCell>
+              <TableCell>Serial number</TableCell>
+              <TableCell />
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {terminals.map((terminal: ITerminalProps) => (
+              <TableRow id={`terminal_${terminal.serialNumber}`} key={`terminal_${terminal.deviceAddress}`}>
+                <TableCell
+                  className={classes.link}
+                  onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
+                  scope="row"
+                >
+                  {terminal.posId}
+                </TableCell>
+                <TableCell
+                  className={classes.link}
+                  onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
+                >
+                  <Chip
+                    size="small"
+                    label={getTitleFromStatus(terminal.status, terminal.reconnecting)}
+                    className={chipStyles(terminal.status)}
+                  />
+                </TableCell>
+                <TableCell
+                  className={classes.link}
+                  onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
+                >
+                  {terminal.deviceAddress}
+                </TableCell>
+                <TableCell
+                  className={classes.link}
+                  onClick={() => goToTerminalDetails(`${PATH_TERMINALS}/${terminal.serialNumber}`)}
+                >
+                  {terminal.serialNumber}
+                </TableCell>
+                <TableCell>
+                  <TerminalActionMenu terminal={terminal} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </>
   );
 }
 

@@ -5,6 +5,7 @@ export interface PairingResponse {
     pairing_id: string;
     signing_secret_part_b: string;
     spi_cloud_api_base_url: string;
+    tid: string;
   };
 }
 
