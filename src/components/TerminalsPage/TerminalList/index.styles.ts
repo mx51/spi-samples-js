@@ -11,7 +11,20 @@ import {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     table: {
+      borderTopLeftRadius: 0,
+      borderTopRightRadius: 0,
+    },
+    tableHeading: {
       marginTop: theme.spacing(2),
+      fontWeight: 600,
+      fontSize: '1.125rem',
+      padding: theme.spacing(2),
+      border: `1px solid ${theme.palette.divider}`,
+      backgroundColor: theme.palette.background.paper,
+      borderTopLeftRadius: theme.spacing(0.5),
+      borderTopRightRadius: theme.spacing(0.5),
+      borderBottom: 'none',
+      width: '100%',
     },
     chipConnected: {
       background: `${CHIP_BACKGROUND_SUCCESS_COLOR}`,

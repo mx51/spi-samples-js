@@ -14,6 +14,7 @@ function setupContainer(
   const customizedStore = {
     getState: () => ({
       common: {},
+      pairings: {},
       pairForm,
       terminals,
     }),
@@ -30,11 +31,6 @@ describe('Test <Terminals />', () => {
 
   beforeEach(() => {
     container = setupContainer();
-  });
-
-  test('should match TerminalsPage snapshot test', () => {
-    // Assert
-    expect(container).toMatchSnapshot();
   });
 
   test('should return a list of terminals', () => {

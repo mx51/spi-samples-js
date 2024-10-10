@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.13] - 2024-10-10
+
+### Added
+
+- [INTG-1037](https://mx51.atlassian.net/browse/INTG-1037) Add SPI Cloud pairings table
+
 ## [1.7.12] - 2024-10-02
 
 ### Added

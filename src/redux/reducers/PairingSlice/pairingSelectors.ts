@@ -1,9 +1,8 @@
 import { createSelector } from '@reduxjs/toolkit';
 import { RootState } from '../../store';
+import { SpiCloudPairingState } from './interfaces';
 
-import { IPairingState } from './interfaces';
-
-export const pairingsMap = (state: RootState): IPairingState => {
+export const pairingsMap = (state: RootState): SpiCloudPairingState => {
   const { _persist, ...pairings } = state.pairings;
   return pairings;
 };

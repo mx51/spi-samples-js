@@ -1,18 +1,32 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { IPairingState } from './interfaces';
+import { SpiCloudPairing, SpiCloudPairingState } from './interfaces';
+
+const testPairing: SpiCloudPairing = {
+  posNickname: 'posNickname',
+  hexCode: '#449DD1',
+  tid: 'tid',
+  tenant: 'tenant',
+  environment: 'environment',
+  pairingId: 'pairingId',
+  signingSecretPartB: 'signingSecretPartB',
+  spiCloudApiBaseUrl: 'spiCloud',
+};
+
+const testPairingSlice: SpiCloudPairingState = {
+  testKey: testPairing,
+};
 
 const pairingSlice = createSlice({
   name: 'pairing',
-  initialState: {},
+  initialState: testPairingSlice,
   reducers: {
     resetPairingSlice() {
-      return {};
+      return testPairingSlice;
     },
-    addPairing(state: IPairingState, action) {
-      const { posNickname, id, pairingConfig } = action.payload;
-      state[id] = { posNickname, ...pairingConfig };
+    addPairing(state: SpiCloudPairingState, action: { payload: SpiCloudPairing }) {
+      state[action.payload.pairingId] = action.payload;
     },
-    removePairing(state: IPairingState, action) {
+    removePairing(state: SpiCloudPairingState, action: { payload: string }) {
       delete state[action.payload];
     },
   },

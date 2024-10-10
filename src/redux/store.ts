@@ -13,9 +13,9 @@ import spiCloudSettingsReducer from './reducers/SpiCloudSettingsSlice/spiCloudSe
 import { IPreAuthState } from './reducers/PreAuth/interfaces';
 import { PayAtTableState, payAtTableReducer } from './reducers/PayAtTableSlice/payAtTableSlice';
 import { ITerminalState } from './reducers/TerminalSlice/interfaces';
-import { IPairingState } from './reducers/PairingSlice/interfaces';
 import { ISpiCloudSettingsProps } from './reducers/SpiCloudSettingsSlice/interfaces';
 import currentEnvReducer from './reducers/CurrentEnvSlice/currentEnvSlice';
+import { SpiCloudPairingState } from './reducers/PairingSlice/interfaces';
 
 const terminalReducerMigration: Any = {
   0: (state: ITerminalState) => {
@@ -49,7 +49,7 @@ const rootReducer = combineReducers({
     },
     terminalReducer
   ) as unknown as Reducer<ITerminalState>,
-  pairings: persistReducer<IPairingState, AnyAction>(
+  pairings: persistReducer<SpiCloudPairingState, AnyAction>(
     {
       key: 'pairings',
       version: 0,
@@ -57,7 +57,7 @@ const rootReducer = combineReducers({
       stateReconciler: hardSet,
     },
     pairingReducer
-  ) as unknown as Reducer<IPairingState>,
+  ) as unknown as Reducer<SpiCloudPairingState>,
   spiCloudSettings: persistReducer<ISpiCloudSettingsProps, AnyAction>(
     {
       key: 'spiCloudSettings',
