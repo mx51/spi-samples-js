@@ -15,7 +15,6 @@ import {
   PATH_TRANSACTIONS,
   PATH_PAT,
   PATH_SPLIT,
-  PATH_SPI_CLOUD_PAIRING,
 } from '../definitions/constants/routerConfigs';
 import PayAtTablePage from '../components/PayAtTablePage';
 import OrderFinished from '../components/OrderFinished/OrderFinished';
@@ -40,7 +39,6 @@ const TransactionDetailsPage = React.lazy(() =>
     default: module.TransactionDetailsPage,
   }))
 );
-const SpiCloudPairingPage = React.lazy(() => import('../components/SpiCloudPairingPage'));
 
 const AppRoutes = (): React.ReactElement => (
   <Router>
@@ -62,7 +60,6 @@ const AppRoutes = (): React.ReactElement => (
         <Route exact path={PATH_ORDER_FINISHED} component={OrderFinished} />
         <Route path={PATH_SETTINGS} component={Settings} />
         <Route exact path={PATH_SUPPORT} component={SupportTool} />
-        <Route exact path={PATH_SPI_CLOUD_PAIRING} component={SpiCloudPairingPage} />
         <Route component={NotFound} />
       </Switch>
     </Suspense>

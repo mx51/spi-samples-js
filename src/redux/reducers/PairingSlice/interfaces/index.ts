@@ -1,9 +1,14 @@
-export interface IPairingProps {
-  pairing_id: string;
-  signing_secret_part_b: string;
-  spi_cloud_api_base_url: string;
+export interface SpiCloudPairing {
+  posNickname: string;
+  hexCode: string;
+  tid: string;
+  tenant: string;
+  environment: string;
+  pairingId: string;
+  signingSecretPartB: string;
+  spiCloudApiBaseUrl: string;
 }
 
-export interface IPairingState {
-  [key: string]: IPairingProps;
+export interface SpiCloudPairingState {
+  [key: string]: SpiCloudPairing;
 }

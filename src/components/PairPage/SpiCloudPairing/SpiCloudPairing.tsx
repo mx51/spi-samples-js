@@ -11,7 +11,7 @@ import { useAppSelector } from '../../../redux/hooks';
 import { selectSpiCloudSettings } from '../../../redux/reducers/SpiCloudSettingsSlice/spiCloudSettingsSelectors';
 import { SpiCloudEnvironment } from '../../../redux/reducers/SpiCloudSettingsSlice/interfaces';
 import { addPairing } from '../../../redux/reducers/PairingSlice/pairingSlice';
-import { PATH_SPI_CLOUD_PAIRING } from '../../../definitions/constants/routerConfigs';
+import { PATH_TERMINALS } from '../../../definitions/constants/routerConfigs';
 
 export const SpiCloudPairing: React.FC = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -20,7 +20,7 @@ export const SpiCloudPairing: React.FC = () => {
   const history = useHistory();
 
   const goToSpiCloudPairing = () => {
-    history.push(PATH_SPI_CLOUD_PAIRING);
+    history.push(PATH_TERMINALS);
   };
 
   const onFormSubmit = async (env: SpiCloudEnvironment, data: { pairingCode: string; posNickname: string }) => {
@@ -56,20 +56,29 @@ export const SpiCloudPairing: React.FC = () => {
     if (!state.pairingResponse) {
       return;
     }
-    const { pairing_id, signing_secret_part_b, spi_cloud_api_base_url } = state.pairingResponse.data;
+    const {
+      pairing_id: pairingId,
+      signing_secret_part_b: signingSecretPartB,
+      spi_cloud_api_base_url: spiCloudApiBaseUrl,
+      tid,
+    } = state.pairingResponse.data;
 
+    const hexCode = `#${pairingId.slice(-6)}`;
+
+    // TODO: env, tenant and tid still to be implemented.
     globalDispatch(
       addPairing({
         posNickname: state.posNickname,
-        id: pairing_id,
-        pairingConfig: {
-          pairing_id,
-          signing_secret_part_b,
-          spi_cloud_api_base_url,
-        },
+        pairingId,
+        signingSecretPartB,
+        spiCloudApiBaseUrl,
+        environment: '',
+        tenant: '',
+        tid: tid || '',
+        hexCode,
       })
     );
-    // TODO: [INTG-259] Replace this with a link to the regular terminals page
+
     goToSpiCloudPairing();
   };
 
