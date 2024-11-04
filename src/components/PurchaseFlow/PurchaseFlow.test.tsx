@@ -22,7 +22,7 @@ describe('Test <PurchaseFlow />', () => {
           txFlow,
         },
       },
-      selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+      selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
     }),
     subscribe: jest.fn(),
     dispatch: jest.fn(),

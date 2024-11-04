@@ -25,13 +25,14 @@ const defaultState = {
     cashoutAmount: 1000,
     products: [],
   },
-  selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+  selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
   preAuth: {
     preAuthRef: 'Test',
     amount: 1000,
     surcharge: 200,
     verified: true,
   },
+  pairings: {},
 };
 
 describe('Test <OrderConfirmation />', () => {
@@ -79,7 +80,10 @@ describe('Test <OrderConfirmation />', () => {
     // Assert
     expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({
-      payload: '123-123-123',
+      payload: {
+        id: '123-123-123',
+        connection: 'local',
+      },
       type: 'selectedTerminal/updateSelectedTerminal',
     });
   });
@@ -92,7 +96,10 @@ describe('Test <OrderConfirmation />', () => {
     // Assert
     expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({
-      payload: '123-123-123',
+      payload: {
+        id: '123-123-123',
+        connection: 'local',
+      },
       type: 'selectedTerminal/updateSelectedTerminal',
     });
   });
@@ -141,7 +148,7 @@ describe('Test <OrderConfirmation />', () => {
           subtotalAmount: 500,
           products: [],
         },
-        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
         preAuth: {
           preAuthRef: 'Test',
           amount: 1000,
@@ -217,13 +224,14 @@ describe('Test <OrderConfirmation />', () => {
           cashoutAmount: 0,
           products: [],
         },
-        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
         preAuth: {
           preAuthRef: 'Test',
           amount: 1000,
           surcharge: 200,
           verified: true,
         },
+        pairings: {},
       }),
     });
     const mockTerminals = {
