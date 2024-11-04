@@ -1,4 +1,4 @@
-import { ITerminalProps } from '../../../redux/reducers/TerminalSlice/interfaces';
+import { TransactionHandler } from '../../../transaction-handling/transaction-handler';
 
 export interface IOrderConfirmation {
   title: string;
@@ -14,5 +14,5 @@ export interface ITitleStrategy {
 
 export interface IProps {
   setShowTransactionProgressModal: (show: boolean) => void;
-  selectedTerminal?: ITerminalProps;
+  transactionHandler?: TransactionHandler<unknown>;
 }

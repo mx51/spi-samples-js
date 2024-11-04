@@ -5,7 +5,7 @@ import { CustomTab } from '../../CustomTab/CustomTab';
 import { GetTransactionPanel } from './GetTransactionPanel';
 import CustomContentPanel from '../../CustomContentPanel';
 import PurchaseFlow from '../../PurchaseFlow';
-import { isPaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { selectHasPairedTerminals } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import useStyles from './index.styles';
 import NoTerminalPage from '../../NoTerminalPage';
 
@@ -13,7 +13,8 @@ export const GetTransactionTab: React.FC<{ tabIndex: number }> = ({ tabIndex }) 
   const classes = useStyles();
   const [receipt, setReceipt] = React.useState('');
   const [hasSearched, setHasSearched] = React.useState(false);
-  const isTerminalPaired: boolean = useSelector(isPaired);
+  // TODO: Check cloud pairings too?
+  const isTerminalPaired: boolean = useSelector(selectHasPairedTerminals);
 
   const gridComponents = () => {
     if (hasSearched) {

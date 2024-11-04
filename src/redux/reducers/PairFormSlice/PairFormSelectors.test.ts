@@ -11,6 +11,7 @@ import {
   mockTerminalInstanceId,
   defaultMockPayAtTableState,
 } from '../../../utils/tests/common';
+import { TerminalConnection } from '../../../transaction-handling/terminal-connection';
 
 describe('Test PairFormSelectors', () => {
   test('test isPairDisabled() and return false as result', () => {
@@ -75,7 +76,7 @@ describe('Test PairFormSelectors', () => {
         subtotalAmount: 0,
         overrideSubtotalAmount: false,
       },
-      selectedTerminal: { selectedTerminalId: '' },
+      selectedTerminal: { id: '', connection: 'local' as TerminalConnection },
       preAuth: {
         openPreAuths: [],
         keyPadAmount: 0,
@@ -141,7 +142,7 @@ describe('Test PairFormSelectors', () => {
         subtotalAmount: 0,
         overrideSubtotalAmount: false,
       },
-      selectedTerminal: { selectedTerminalId: '' },
+      selectedTerminal: { id: '', connection: 'local' as TerminalConnection },
       preAuth: {
         openPreAuths: [],
         keyPadAmount: 0,

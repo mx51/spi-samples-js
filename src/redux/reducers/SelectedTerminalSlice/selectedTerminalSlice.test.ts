@@ -2,6 +2,7 @@ import { cleanup } from '@testing-library/react';
 import { mockTerminalInstanceId } from '../../../utils/tests/common';
 import { ISelectedTerminalState } from './interface';
 import reducer, { updateSelectedTerminal } from './selectedTerminalSlice';
+import { TerminalConnection } from '../../../transaction-handling/terminal-connection';
 
 describe('Test selected terminals slice selectors', () => {
   afterEach(cleanup);
@@ -9,26 +10,34 @@ describe('Test selected terminals slice selectors', () => {
   test('should handle when terminal is selected', () => {
     // Arrange
     const previousState = {
-      selectedTerminalId: '',
+      id: '',
+      connection: 'local' as TerminalConnection,
     };
-    const updateSelectedTerminalAction = '111';
+    const updateSelectedTerminalAction = { id: '111', connection: 'local' as TerminalConnection };
 
     // Assert
     expect(reducer(previousState, updateSelectedTerminal(updateSelectedTerminalAction))).toEqual({
-      selectedTerminalId: '111',
+      id: '111',
+      connection: 'local',
     });
   });
 
   test('should return correct response when run updateSelectedTerminal()', () => {
     // Arrange
-    const initialState: ISelectedTerminalState = { selectedTerminalId: '' };
-    const result = { payload: mockTerminalInstanceId, type: 'selectedTerminal/updateSelectedTerminal' };
+    const initialState: ISelectedTerminalState = { id: '', connection: 'local' };
+    const result = {
+      payload: { id: mockTerminalInstanceId, connection: 'local' },
+      type: 'selectedTerminal/updateSelectedTerminal',
+    };
     const expectedResponse = {
-      selectedTerminalId: mockTerminalInstanceId,
+      id: mockTerminalInstanceId,
+      connection: 'local',
     };
 
     // Assert
-    expect(updateSelectedTerminal(mockTerminalInstanceId)).toMatchObject(result);
-    expect(reducer(initialState, updateSelectedTerminal(mockTerminalInstanceId))).toEqual(expectedResponse);
+    expect(updateSelectedTerminal({ id: mockTerminalInstanceId, connection: 'local' })).toMatchObject(result);
+    expect(reducer(initialState, updateSelectedTerminal({ id: mockTerminalInstanceId, connection: 'local' }))).toEqual(
+      expectedResponse
+    );
   });
 });

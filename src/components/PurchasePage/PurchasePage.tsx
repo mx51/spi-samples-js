@@ -2,7 +2,8 @@ import React from 'react';
 import { Backdrop, Grid, Typography } from '@material-ui/core';
 import { useSelector } from 'react-redux';
 import { orderOverrideSubtotalSelector } from '../../redux/reducers/ProductSlice/productSelector';
-import { isPaired } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { selectHasPairedTerminals } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { selectHasCloudPairings } from '../../redux/reducers/PairingSlice/pairingSelectors';
 import Layout from '../Layout';
 import NoTerminalPage from '../NoTerminalPage';
 import useStyles from './index.styles';
@@ -11,8 +12,10 @@ import ProductList from './ProductList';
 
 function Purchase(): React.ReactElement {
   const classes = useStyles();
-  const isTerminalPaired: boolean = useSelector(isPaired);
+  const hasPairedTerminals = useSelector(selectHasPairedTerminals);
   const isOverrideSubtotalAmount = useSelector(orderOverrideSubtotalSelector);
+  const hasCloudPairings = useSelector(selectHasCloudPairings);
+  const hasNoPairings = !hasPairedTerminals && !hasCloudPairings;
 
   return (
     <Layout>
@@ -22,7 +25,7 @@ function Purchase(): React.ReactElement {
           <Typography variant="h6" component="h1">
             Purchase
           </Typography>
-          {!isTerminalPaired && <NoTerminalPage />}
+          {hasNoPairings && <NoTerminalPage />}
           <ProductList />
         </Grid>
         <Grid item xs={4}>

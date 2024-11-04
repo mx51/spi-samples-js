@@ -8,13 +8,13 @@ import { terminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceS
 
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
-import { pairingsList } from '../../redux/reducers/PairingSlice/pairingSelectors';
+import { selectCloudPairings } from '../../redux/reducers/PairingSlice/pairingSelectors';
 import SpiCloudPairingList from './SpiCloudPairingList/SpiCloudPairingList';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
   const terminals = useSelector(terminalList);
-  const spiCloudTerminals = useSelector(pairingsList);
+  const spiCloudTerminals = useSelector(selectCloudPairings);
   const [tabIndex, setActiveTab] = useState(0);
 
   const handleTabChange = (event: React.ReactNode, newValue: number) => {

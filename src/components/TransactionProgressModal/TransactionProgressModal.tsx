@@ -15,15 +15,15 @@ import { TEXT_CASHOUT } from '../../definitions/constants/routerConfigs';
 import { ReactComponent as IconWarning } from '../../images/WarningIcon.svg';
 import { useAppSelector } from '../../redux/hooks';
 import { clearKeypadAmount } from '../../redux/reducers/PreAuth/preAuthSlice';
-import selectedTerminalIdSelector from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
-import { ITerminalProps, ITxFlow, ITxMessage } from '../../redux/reducers/TerminalSlice/interfaces';
+import selectSelectedTerminal from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSliceSelector';
+import { ITxFlow, ITxMessage } from '../../redux/reducers/TerminalSlice/interfaces';
 import {
   terminalTxFlowAwaitingSignatureTracker,
   terminalTxMessage,
-  terminalInstance,
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { approveSignature, declineSignature } from '../../utils/common/terminal/terminalHelpers';
 import { usePreAuthActions } from '../../hooks/usePreAuthActions';
+import { useTransactionHandler } from '../../transaction-handling/use-transaction-handler';
 
 function TransactionProgressModal({
   terminalId,
@@ -37,10 +37,10 @@ function TransactionProgressModal({
 }: TransactionProgressModalProps): React.ReactElement {
   const classes = useStyles();
   const dispatch = useDispatch();
-  const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const selectedTerminal = useSelector(selectSelectedTerminal);
+  const transactionHandler = useTransactionHandler(selectedTerminal);
   const awaitingSignatureCheck = useAppSelector(terminalTxFlowAwaitingSignatureTracker(terminalId));
-  const { handlePreAuthActions } = usePreAuthActions(currentTerminal);
+  const { handlePreAuthActions } = usePreAuthActions(transactionHandler?.txFlow);
   const txMessage = useAppSelector(terminalTxMessage(terminalId));
   const modalTitle =
     transactionType === SPI_TRANSACTION_TYPES.CashoutOnly ? TEXT_CASHOUT.toUpperCase() : transactionType.toUpperCase();
@@ -115,7 +115,7 @@ function TransactionProgressModal({
                   In progress
                 </Typography>
                 <Typography variant="body2" className={classes.modalDescription}>
-                  {getTxFlowMessage(currentTerminal?.txFlow, txMessage)}
+                  {getTxFlowMessage(transactionHandler?.txFlow, txMessage)}
                 </Typography>
               </div>
             </>
@@ -133,7 +133,7 @@ function TransactionProgressModal({
                 {modalTitle}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                {currentTerminal?.txFlow?.response?.data?.hostResponseText?.toUpperCase()}
+                {transactionHandler?.txFlow?.response?.data?.hostResponseText?.toUpperCase()}
               </Typography>
             </>
           )}
@@ -150,7 +150,7 @@ function TransactionProgressModal({
                 {modalTitle}
               </Typography>
               <Typography variant="body2" className={classes.modalSubHeading}>
-                {currentTerminal?.txFlow?.success?.toUpperCase()}
+                {transactionHandler?.txFlow?.success?.toUpperCase()}
               </Typography>
               <Typography className={classes.modalDescription}>{transactionDesc}</Typography>
             </>
