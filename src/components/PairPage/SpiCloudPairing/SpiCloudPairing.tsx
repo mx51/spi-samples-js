@@ -40,7 +40,7 @@ export const SpiCloudPairing: React.FC = () => {
         throw new Error(response.statusText);
       }
       const result = await response.json();
-      dispatch({ type: 'success', payload: { pairingResponse: result, posNickname: data.posNickname } });
+      dispatch({ type: 'success', payload: { pairingResponse: result, posNickname: data.posNickname, env } });
     } catch (error) {
       dispatch({ type: 'error' });
       // eslint-disable-next-line no-console
@@ -58,6 +58,7 @@ export const SpiCloudPairing: React.FC = () => {
     }
     const {
       pairing_id: pairingId,
+      key_id: keyId,
       signing_secret_part_b: signingSecretPartB,
       spi_cloud_api_base_url: spiCloudApiBaseUrl,
       tid,
@@ -65,12 +66,16 @@ export const SpiCloudPairing: React.FC = () => {
 
     const hexCode = `#${pairingId.slice(-6)}`;
 
+    // TODO: Update ENV to be the env returned from pairing response instead of maintaining this in reducer.
+    const signingSecret = `${spiCloudSettings[state.env].secretPartA}${signingSecretPartB}`;
+
     // TODO: env, tenant and tid still to be implemented.
     globalDispatch(
       addPairing({
         posNickname: state.posNickname,
+        keyId,
         pairingId,
-        signingSecretPartB,
+        signingSecret,
         spiCloudApiBaseUrl,
         environment: '',
         tenant: '',

@@ -1,3 +1,5 @@
+import { SpiCloudEnvironment } from '../../../redux/reducers/SpiCloudSettingsSlice/interfaces';
+
 export interface PairingResponse {
   data: {
     confirmation_code: string;
@@ -15,10 +17,11 @@ export interface State {
   showErrorSnackbar: boolean;
   isLoading: boolean;
   posNickname: string;
+  env: SpiCloudEnvironment;
 }
 
 export type Action =
-  | { type: 'success'; payload: { pairingResponse: PairingResponse; posNickname: string } }
+  | { type: 'success'; payload: { pairingResponse: PairingResponse; posNickname: string; env: SpiCloudEnvironment } }
   | { type: 'error' }
   | { type: 'loading' }
   | { type: 'errorComplete' }
@@ -31,6 +34,7 @@ export const initialState = {
   showErrorSnackbar: false,
   showSuccessSnackbar: false,
   posNickname: '',
+  env: '' as SpiCloudEnvironment,
 };
 
 export function reducer(state: State, action: Action) {
@@ -42,6 +46,7 @@ export function reducer(state: State, action: Action) {
         isLoading: false,
         pairingResponse: action.payload.pairingResponse,
         posNickname: action.payload.posNickname,
+        env: action.payload.env,
       };
     case 'loading':
       return { ...state, isLoading: true };

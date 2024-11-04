@@ -18,6 +18,10 @@ const CurrentEnvInitializer = () => {
       } catch (e) {
         console.error('Cannot read current env', e);
       }
+    } else if (process.env.NODE_ENV === 'development') {
+      dispatch(setCurrentEnv('DEV'));
+    } else {
+      console.error('Cannot find script tag with data-inline-id="env"');
     }
   }, [dispatch]);
 
