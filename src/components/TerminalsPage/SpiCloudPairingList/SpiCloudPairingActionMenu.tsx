@@ -2,16 +2,11 @@ import { IconButton, Menu, MenuItem, Typography } from '@material-ui/core';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import * as React from 'react';
 import { useDispatch } from 'react-redux';
-import { useReducer } from 'react';
 import { SpiCloudPairing } from '../../../redux/reducers/PairingSlice/interfaces';
 import { ReactComponent as MoreverticalIcon } from '../../../images/MoreVerticalcon.svg';
 import { removePairing } from '../../../redux/reducers/PairingSlice/pairingSlice';
-import { signRequest } from '../../../utils/common/signRequest';
-import {
-  spiCloudPairingListReducer as reducer,
-  SpiCloudPairingListReducerActions,
-  spiCloudPairingListReducerInitialState as initialState,
-} from './SpiCloudPairingListReducer';
+import { signedRequestInit } from '../../../utils/common/signRequest';
+import { SpiCloudPairingListReducerActions } from './SpiCloudPairingListReducer';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -45,7 +40,7 @@ const SpiCloudPairingActionMenu = ({
   const globalDispatch = useDispatch();
 
   const classes = useStyles();
-  const open = Boolean(anchorEl);
+  const isOpen = Boolean(anchorEl);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -56,14 +51,15 @@ const SpiCloudPairingActionMenu = ({
 
   const handleUnpair = async () => {
     dispatch({ type: 'loading' });
+
+    const url = `${pairing.spiCloudApiBaseUrl}/api/v1/unpair`;
+
     try {
-      const response = await signRequest(
-        pairing.keyId,
-        pairing.signingSecret,
-        `${pairing.spiCloudApiBaseUrl}/api/v1/unpair`,
-        {},
-        'POST'
-      );
+      const signedRequest = await signedRequestInit(pairing.keyId, pairing.signingSecret, url, {}, 'POST');
+
+      const response = await fetch(url, {
+        ...signedRequest,
+      });
 
       if (!response.ok) {
         dispatch({ type: 'error' });
@@ -89,16 +85,16 @@ const SpiCloudPairingActionMenu = ({
         id={`pairing-action-button-${pairing.pairingId}`}
         onClick={handleClick}
         aria-label="pairing action menu"
-        aria-controls={open ? 'basic-menu' : undefined}
+        aria-controls={isOpen ? 'basic-menu' : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={isOpen ? 'true' : undefined}
       >
         <MoreverticalIcon />
       </IconButton>
       <Menu
         classes={{ paper: classes.menuPaper }}
         anchorEl={anchorEl}
-        open={open}
+        open={isOpen}
         onClose={handleClose}
         MenuListProps={{
           'aria-labelledby': 'basic-button',

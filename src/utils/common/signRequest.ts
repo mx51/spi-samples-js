@@ -18,13 +18,13 @@ async function createSignature(data: string, secret: string): Promise<string> {
   return btoa(String.fromCharCode(...Array.from(new Uint8Array(signature))));
 }
 
-export const signRequest = async (
+export const signedRequestInit = async (
   keyId: string,
   signingSecret: string,
   endpoint: string,
   requestBody: unknown,
   method: string
-) => {
+): Promise<RequestInit> => {
   const url = new URL(endpoint);
   const now = Math.floor(Date.now() / 1000);
   const signatureInput = `("@method" "@authority" "@request-target" "content-digest");created=${now};alg="hmac-sha256";keyid="${keyId}"`;
@@ -43,14 +43,18 @@ export const signRequest = async (
     `"@signature-params": ${signatureInput}`;
   const signature = await createSignature(dataToEncrypt, signingSecret);
 
-  return fetch(url, {
+  const headers = {
+    'Content-Type': 'application/json',
+    Signature: `sig1=:${signature}:`,
+    'Signature-Input': `sig1=${signatureInput}`,
+    'Content-Digest': `sha-256=:${contentDigest}:`,
+  };
+
+  const requestInit: RequestInit = {
     method,
-    headers: {
-      'Content-Type': 'application/json',
-      Signature: `sig1=:${signature}:`,
-      'Signature-Input': `sig1=${signatureInput}`,
-      'Content-Digest': `sha-256=:${contentDigest}:`,
-    },
+    headers,
     body: JSON.stringify(requestBody),
-  });
+  };
+
+  return requestInit;
 };

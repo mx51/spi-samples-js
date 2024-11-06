@@ -66,10 +66,10 @@ export const SpiCloudPairing: React.FC = () => {
 
     const hexCode = `#${pairingId.slice(-6)}`;
 
-    // TODO: Update ENV to be the env returned from pairing response instead of maintaining this in reducer.
+    // TODO: [FE-69] Update ENV to be the env returned from pairing response instead of maintaining this in reducer.
     const signingSecret = `${spiCloudSettings[state.env].secretPartA}${signingSecretPartB}`;
 
-    // TODO: env, tenant and tid still to be implemented.
+    // TODO: [FE-69] env, tenant and tid still to be implemented.
     globalDispatch(
       addPairing({
         posNickname: state.posNickname,
