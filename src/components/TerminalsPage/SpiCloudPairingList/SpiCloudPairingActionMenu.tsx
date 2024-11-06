@@ -55,11 +55,9 @@ const SpiCloudPairingActionMenu = ({
     const url = `${pairing.spiCloudApiBaseUrl}/api/v1/unpair`;
 
     try {
-      const signedRequest = await signedRequestInit(pairing.keyId, pairing.signingSecret, url, {}, 'POST');
+      const signedRequest = await signedRequestInit(pairing.keyId, pairing.signingSecret, url, 'POST', {});
 
-      const response = await fetch(url, {
-        ...signedRequest,
-      });
+      const response = await fetch(url, signedRequest);
 
       if (!response.ok) {
         dispatch({ type: 'error' });

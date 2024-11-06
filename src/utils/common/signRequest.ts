@@ -22,8 +22,8 @@ export const signedRequestInit = async (
   keyId: string,
   signingSecret: string,
   endpoint: string,
-  requestBody: unknown,
-  method: string
+  method: 'POST' | 'PUT' | 'PATCH',
+  requestBody: unknown
 ): Promise<RequestInit> => {
   const url = new URL(endpoint);
   const now = Math.floor(Date.now() / 1000);
