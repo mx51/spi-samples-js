@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.15] - 2024-11-04
+
+## Added
+
+- [FE-19](https://mx51.atlassian.net/browse/FE-19) Add unpairing functionality to SPI Cloud pairings table
+
 ## [1.7.14] - 2024-10-16
 
 ### Fixed

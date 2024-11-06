@@ -9,7 +9,7 @@ import { terminalList } from '../../redux/reducers/TerminalSlice/terminalsSliceS
 import useStyles from './index.styles';
 import TerminalList from './TerminalList';
 import { pairingsList } from '../../redux/reducers/PairingSlice/pairingSelectors';
-import SpiCloudTerminalList from './SpiCloudTerminalList/SpiCloudTerminalList';
+import SpiCloudPairingList from './SpiCloudPairingList/SpiCloudPairingList';
 
 const Terminals: React.FC = () => {
   const classes = useStyles();
@@ -56,7 +56,7 @@ const Terminals: React.FC = () => {
           <Tab label={getTabLabel('SPI Cloud', spiCloudTerminals.length)} />
         </Tabs>
         {tabIndex === 0 && <TerminalList terminals={terminals} />}
-        {tabIndex === 1 && <SpiCloudTerminalList pairings={spiCloudTerminals} />}
+        {tabIndex === 1 && <SpiCloudPairingList pairings={spiCloudTerminals} />}
       </Container>
     </Layout>
   );

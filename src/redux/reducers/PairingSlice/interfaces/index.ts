@@ -5,7 +5,8 @@ export interface SpiCloudPairing {
   tenant: string;
   environment: string;
   pairingId: string;
-  signingSecretPartB: string;
+  keyId: string;
+  signingSecret: string;
   spiCloudApiBaseUrl: string;
 }
 

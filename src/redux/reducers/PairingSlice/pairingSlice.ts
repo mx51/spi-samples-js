@@ -17,6 +17,6 @@ const pairingSlice = createSlice({
   },
 });
 
-export const { resetPairingSlice, addPairing } = pairingSlice.actions;
+export const { resetPairingSlice, addPairing, removePairing } = pairingSlice.actions;
 
 export default pairingSlice.reducer;
