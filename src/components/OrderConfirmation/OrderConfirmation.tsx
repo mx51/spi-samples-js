@@ -71,7 +71,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const dispatch = useDispatch();
   const classes = useStyles();
   const terminals = useSelector(pairedConnectedTerminalList);
-  const cloudPairings = useSelector(selectCloudPairings);
+  const cloudPairings = useSelector(selectCloudPairings());
   const selectedTerminalState = useSelector(selectSelectedTerminal);
   const transactionHandler = useTransactionHandler(selectedTerminalState);
   const { receipt, txFlow } = transactionHandler;

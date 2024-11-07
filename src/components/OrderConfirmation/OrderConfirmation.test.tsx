@@ -16,6 +16,7 @@ import mockWithRedux, {
 } from '../../utils/tests/common';
 
 const defaultState = {
+  currentEnv: { env: 'DEV' },
   common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
   pairForm: defaultMockPairFormParams,
   terminals: pairedMockTerminals,

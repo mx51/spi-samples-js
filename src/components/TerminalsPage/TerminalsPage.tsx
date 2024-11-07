@@ -14,7 +14,7 @@ import SpiCloudPairingList from './SpiCloudPairingList/SpiCloudPairingList';
 const Terminals: React.FC = () => {
   const classes = useStyles();
   const terminals = useSelector(terminalList);
-  const spiCloudTerminals = useSelector(selectCloudPairings);
+  const spiCloudTerminals = useSelector(selectCloudPairings({ force: true }));
   const [tabIndex, setActiveTab] = useState(0);
 
   const handleTabChange = (event: React.ReactNode, newValue: number) => {
