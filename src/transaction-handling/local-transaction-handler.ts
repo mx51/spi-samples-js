@@ -19,7 +19,7 @@ export class LocalTransactionHandler extends TransactionHandler<ITerminalProps> 
   }
 
   get txFlow(): ITxFlow | undefined {
-    // Doing this for now because the type on terminal is ItxFlow | null
+    // TODO: FE-20 - Doing this for now because the type on terminal is ItxFlow | null
     if (this.terminal?.txFlow) {
       return this.terminal.txFlow;
     }

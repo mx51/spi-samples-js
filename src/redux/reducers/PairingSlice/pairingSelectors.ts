@@ -18,7 +18,10 @@ export const pairingsMap = (state: RootState): SpiCloudPairingState => {
 };
 
 export const selectCloudPairings = (options?: { force?: boolean }): ((state: RootState) => SpiCloudPairing[]) => {
-  // TODO: Remove this check to "release" to production - Always return cloud pairings and remove force override.
+  // TODO: FE-20 - Remove this check to "release" to production
+  //    - Always return cloud pairings
+  //    - Remove force override and options object
+  //    - Update usages from selectCloudPairings() to selectCloudPairings
   if (options?.force) {
     return createSelector(pairingsMap, (pairings) => Object.values(pairings));
   }

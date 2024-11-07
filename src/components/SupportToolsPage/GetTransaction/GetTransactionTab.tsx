@@ -13,7 +13,7 @@ export const GetTransactionTab: React.FC<{ tabIndex: number }> = ({ tabIndex }) 
   const classes = useStyles();
   const [receipt, setReceipt] = React.useState('');
   const [hasSearched, setHasSearched] = React.useState(false);
-  // TODO: Check cloud pairings too?
+  // TODO: FE-20 - Add support for cloud pairing terminals here
   const isTerminalPaired: boolean = useSelector(selectHasPairedTerminals);
 
   const gridComponents = () => {

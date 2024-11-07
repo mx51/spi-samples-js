@@ -21,7 +21,7 @@ const PayAtTable: React.FC = () => {
   const classes = usePayAtTableStyles();
   const tables = useAppSelector(getAllTables);
   const dispatch = useDispatch();
-  // TODO: Check cloud pairings too
+  // TODO: FE-20 - Add support for cloud pairing terminals here
   const isTerminalPaired: boolean = useSelector(selectHasPairedTerminals);
 
   return (

@@ -74,9 +74,8 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const cloudPairings = useSelector(selectCloudPairings());
   const selectedTerminalState = useSelector(selectSelectedTerminal);
   const transactionHandler = useTransactionHandler(selectedTerminalState);
-  const { receipt, txFlow } = transactionHandler;
-  const isFinished = txFlow?.finished ?? false;
-  const successStatus = txFlow?.success;
+  const isFinished = transactionHandler?.txFlow?.finished ?? false;
+  const successStatus = transactionHandler?.txFlow?.success;
   const isUnknownState = isFinished && successStatus === TxFlowState.Unknown;
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
   const [showTransactionProgressModal, setShowTransactionProgressModal] = useState<boolean>(false);
@@ -86,12 +85,12 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   const refundAmount: number = useSelector(orderRefundAmountSelector);
   const cashoutAmount: number = useSelector(orderCashoutAmountSelector);
   const totalAmount = useSelector(orderTotalSelector);
-  const isOverride = txFlow?.override;
+  const isOverride = transactionHandler?.txFlow?.override;
   const hasPairedTerminals: boolean = useSelector(selectHasPairedTerminals);
   const hasCloudPairings = useSelector(selectHasCloudPairings);
   const hasPairings = hasPairedTerminals || hasCloudPairings;
 
-  const { handleKeypadUpdate } = usePreAuthActions(txFlow);
+  const { handleKeypadUpdate } = usePreAuthActions(transactionHandler?.txFlow);
 
   const clearProductsOnlyAction = () => {
     dispatch(clearProductsOnly());
@@ -104,11 +103,11 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
   function updateUnknownTerminalState(success: string) {
     setTerminalToIdle(selectedTerminalState.id);
     setShowUnknownTransactionModal(false);
-    if (txFlow !== undefined) {
+    if (transactionHandler?.txFlow !== undefined) {
       dispatch(
         updateTxFlowWithSideEffect({
           id: selectedTerminalState.id,
-          txFlow: { ...txFlow, finished: true, success, override: true },
+          txFlow: { ...transactionHandler.txFlow, finished: true, success, override: true },
         })
       );
     }
@@ -301,8 +300,8 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
             {showTransactionProgressModal && (!isUnknownState || toShowUnknownTransaction) && (
               <TransactionProgressModal
                 terminalId={selectedTerminalState.id}
-                transactionType={txFlow?.type ?? ''}
-                transactionDesc={isOverride ? '' : receipt?.hostResponseText ?? ''}
+                transactionType={transactionHandler?.txFlow?.type ?? ''}
+                transactionDesc={isOverride ? '' : transactionHandler?.receipt?.hostResponseText ?? ''}
                 isFinished={isFinished}
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {

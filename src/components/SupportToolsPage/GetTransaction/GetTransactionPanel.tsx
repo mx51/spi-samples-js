@@ -56,7 +56,7 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
   };
 
   const onSelectTerminal = (terminalId: string) => {
-    // TODO: Hard coded to local terminal here
+    // TODO: FE-20 - Add support for cloud pairing terminals here
     dispatch(updateSelectedTerminal({ id: terminalId, connection: 'local' }));
   };
 
