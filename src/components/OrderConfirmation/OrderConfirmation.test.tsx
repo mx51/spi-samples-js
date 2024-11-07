@@ -10,6 +10,7 @@ import mockWithRedux, {
   defaultMockPairFormParams,
   mockReceiptResponse,
   mockRefundTxFlow,
+  mockSpiCloudPairing,
   mockTerminalInstanceId,
   pairedMockTerminals,
 } from '../../utils/tests/common';
@@ -32,7 +33,7 @@ const defaultState = {
     surcharge: 200,
     verified: true,
   },
-  pairings: {},
+  pairings: { [mockSpiCloudPairing.pairingId]: mockSpiCloudPairing },
 };
 
 describe('Test <OrderConfirmation />', () => {
@@ -101,6 +102,23 @@ describe('Test <OrderConfirmation />', () => {
         connection: 'local',
       },
       type: 'selectedTerminal/updateSelectedTerminal',
+    });
+  });
+
+  describe('when a cloud pairing is selected from the list', () => {
+    test('should dispatch an action to update selected terminal', () => {
+      mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal={false} />, customStore);
+
+      fireEvent.click(screen.getByText(mockSpiCloudPairing.posNickname));
+
+      expect(dispatch.mock.calls.length).toBe(1);
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        payload: {
+          id: mockSpiCloudPairing.pairingId,
+          connection: 'cloud',
+        },
+        type: 'selectedTerminal/updateSelectedTerminal',
+      });
     });
   });
 

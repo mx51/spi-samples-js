@@ -16,6 +16,7 @@ import ReduxProvider from '../../redux/ReduxProvider';
 import { store } from '../../redux/store';
 import { ITerminal } from '../../services/interfaces';
 import { TerminalConnection } from '../../transaction-handling/terminal-connection';
+import { SpiCloudPairing } from '../../redux/reducers/PairingSlice/interfaces';
 
 export const mockPosRefId = 'mock-pos-ref-id-01';
 export const mockPurchaseAmount = 100;
@@ -486,6 +487,18 @@ export const mockReceiptResponse = {
   success: true,
   terminalId: 'string',
   transactionRange: 'string',
+};
+
+export const mockSpiCloudPairing: SpiCloudPairing = {
+  posNickname: 'Front of house',
+  hexCode: '#FF69B4',
+  tid: '1234',
+  tenant: 'mx51',
+  environment: 'mock',
+  pairingId: 'pid_1234',
+  keyId: 'kid_1234',
+  signingSecret: '123456789',
+  spiCloudApiBaseUrl: 'https://mock-api.mx51.io',
 };
 
 // mock container with redux provider
