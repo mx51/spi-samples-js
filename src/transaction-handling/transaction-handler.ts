@@ -9,6 +9,7 @@ export abstract class TransactionHandler<TTerminal> {
   abstract get receipt(): ITerminalReceiptFormatProps | undefined;
   abstract get txFlow(): ITxFlow | undefined;
 
+  abstract cancelTransaction(): Promise<void>;
   abstract initiatePurchase(
     purchaseAmount: number,
     tipAmount: number,

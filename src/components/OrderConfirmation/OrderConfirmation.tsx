@@ -44,7 +44,7 @@ import {
 } from '../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { selectCloudPairings, selectHasCloudPairings } from '../../redux/reducers/PairingSlice/pairingSelectors';
 import currencyFormat from '../../utils/common/intl/currencyFormatter';
-import { cancelTransaction, setTerminalToIdle } from '../../utils/common/purchase/purchaseHelper';
+import { setTerminalToIdle } from '../../utils/common/purchase/purchaseHelper';
 import KeyPad from '../KeyPad';
 import TransactionProgressModal from '../TransactionProgressModal';
 import UnknownTransactionModal from '../UnknownTransactionModal';
@@ -305,7 +305,7 @@ function OrderConfirmation({ title, pathname, editSubtotal }: IOrderConfirmation
                 isFinished={isFinished}
                 isSuccess={successStatus === 'Success'}
                 onCancelTransaction={() => {
-                  cancelTransaction(selectedTerminalState.id);
+                  transactionHandler?.cancelTransaction();
                 }}
                 onRetryTransaction={() => {
                   setShowTransactionProgressModal(false);

@@ -4,6 +4,7 @@ import { ITerminalProps, ITerminalReceiptFormatProps, ITxFlow } from '../redux/r
 import { terminalInstance } from '../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import { messageEvents } from '../definitions/constants/commonConfigs';
 import spiService from '../services/spiService';
+import { cancelTransaction } from '../utils/common/purchase/purchaseHelper';
 
 export class LocalTransactionHandler extends TransactionHandler<ITerminalProps> {
   get terminalId(): string | undefined {
@@ -25,6 +26,10 @@ export class LocalTransactionHandler extends TransactionHandler<ITerminalProps> 
     }
 
     return undefined;
+  }
+
+  async cancelTransaction(): Promise<void> {
+    cancelTransaction(this.terminalId!);
   }
 
   async initiatePurchase(
