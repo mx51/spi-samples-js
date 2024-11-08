@@ -21,6 +21,7 @@ import {
   defaultMockPreAuthState,
   defaultMockPayAtTableState,
 } from '../../../utils/tests/common';
+import { TerminalConnection } from '../../../transaction-handling/terminal-connection';
 
 const mockStoreState = {
   currentEnv: { env: 'DEV' },
@@ -248,7 +249,7 @@ describe('Test terminals slice selectors', () => {
           posVersion: '',
         },
       },
-      selectedTerminal: { selectedTerminalId: '' },
+      selectedTerminal: { id: '', connection: 'local' as TerminalConnection },
       preAuth: defaultMockPreAuthState,
       payAtTable: defaultMockPayAtTableState,
     };

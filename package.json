@@ -1,6 +1,6 @@
 {
   "name": "spi-sample-pos-2",
-  "version": "1.7.15",
+  "version": "1.7.16",
   "private": true,
   "engines": {
     "node": ">=16"
@@ -39,6 +39,7 @@
     "test:watch": "react-scripts test",
     "test:deploy": "npm test -- --reporters=jest-junit --reporters=default --coverage --coverageReporters=cobertura --coverageReporters=html",
     "test:coverage": "react-scripts test --env=jsdom --watchAll=false --coverage",
+    "test:update-snapshots": "npm run test -- -u",
     "eject": "react-scripts eject",
     "prepare": "husky install",
     "check-prettier": "prettier --check . --config .prettierrc",

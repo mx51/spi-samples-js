@@ -29,14 +29,16 @@ import {
   InitiatePreAuthReduceTx,
   InitiatePreAuthTopupTx,
 } from '../../utils/common/purchase/purchaseHelper';
-import { SPI_PAIR_STATUS } from '../../definitions/constants/commonConfigs';
 import { IProps } from './interfaces';
 import { IPreAuthValues } from '../../redux/reducers/PreAuth/interfaces';
 import { RootState } from '../../redux/store';
 import KeyPad from '../KeyPad';
 import { usePreAuthActions } from '../../hooks/usePreAuthActions';
 
-const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactionProgressModal, selectedTerminal }) => {
+const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({
+  setShowTransactionProgressModal,
+  transactionHandler,
+}) => {
   const classes = useStyles();
   const openPreAuths = useSelector(selectAllPreAuths);
   const [selectedPreAuthId, setSelectedPreAuthId] = useState('');
@@ -45,9 +47,9 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
   );
   const keypadAmount = useSelector(selectPreAuthKeyPadAmount);
   const [displayKeypad, setDisplayKeypad] = useState<boolean>(false);
-  const { handleSurchargeUpdate } = usePreAuthActions(selectedTerminal);
+  const { handleSurchargeUpdate } = usePreAuthActions(transactionHandler?.txFlow);
 
-  const terminalId = selectedTerminal?.serialNumber;
+  const terminalId = transactionHandler?.terminalId;
   const handlePreAuthTxs = (type: string) => {
     if (selectedPreAuth && terminalId) {
       const { preAuthRef, surcharge } = selectedPreAuth;
@@ -73,10 +75,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
     }
   };
 
-  const isDisabled = useMemo(
-    () => !selectedTerminal || selectedTerminal.status !== SPI_PAIR_STATUS.PairedConnected,
-    [selectedTerminal]
-  );
+  const isDisabled = useMemo(() => !transactionHandler?.isTerminalConnected, [transactionHandler]);
 
   return (
     <>
@@ -164,7 +163,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
               setShowTransactionProgressModal(true);
-              InitiateAccountVerifyTx(selectedTerminal?.serialNumber ?? '');
+              InitiateAccountVerifyTx(transactionHandler?.terminalId ?? '');
             }}
           >
             Verify
@@ -178,7 +177,7 @@ const PreAuthOrderConfirmationComponent: React.FC<IProps> = ({ setShowTransactio
             classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
             onClick={() => {
               setShowTransactionProgressModal(true);
-              InitiatePreAuthOpenTx(selectedTerminal?.serialNumber ?? '', keypadAmount);
+              InitiatePreAuthOpenTx(transactionHandler?.terminalId ?? '', keypadAmount);
             }}
           >
             Open

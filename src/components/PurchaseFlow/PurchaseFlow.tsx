@@ -12,10 +12,10 @@ import currencyFormat from '../../utils/common/intl/currencyFormatter';
 
 export default function PurchaseFlow(): React.ReactElement {
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const totalAmount = useSelector(terminalTxTotalAmount(selectedTerminal));
-  const isSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal));
-  const awaitingSignatureCheck = useSelector(terminalTxFlowAwaitingSignatureTracker(selectedTerminal));
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal.id)) as ITerminalProps;
+  const totalAmount = useSelector(terminalTxTotalAmount(selectedTerminal.id));
+  const isSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminal.id));
+  const awaitingSignatureCheck = useSelector(terminalTxFlowAwaitingSignatureTracker(selectedTerminal.id));
   const statusInformation = (spi: ITerminalProps) =>
     awaitingSignatureCheck
       ? `

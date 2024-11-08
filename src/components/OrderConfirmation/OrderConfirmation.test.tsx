@@ -10,11 +10,13 @@ import mockWithRedux, {
   defaultMockPairFormParams,
   mockReceiptResponse,
   mockRefundTxFlow,
+  mockSpiCloudPairing,
   mockTerminalInstanceId,
   pairedMockTerminals,
 } from '../../utils/tests/common';
 
 const defaultState = {
+  currentEnv: { env: 'DEV' },
   common: { showFlowPanel: false, acquireConfirmPairingFlow: false },
   pairForm: defaultMockPairFormParams,
   terminals: pairedMockTerminals,
@@ -25,13 +27,14 @@ const defaultState = {
     cashoutAmount: 1000,
     products: [],
   },
-  selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+  selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
   preAuth: {
     preAuthRef: 'Test',
     amount: 1000,
     surcharge: 200,
     verified: true,
   },
+  pairings: { [mockSpiCloudPairing.pairingId]: mockSpiCloudPairing },
 };
 
 describe('Test <OrderConfirmation />', () => {
@@ -79,7 +82,10 @@ describe('Test <OrderConfirmation />', () => {
     // Assert
     expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({
-      payload: '123-123-123',
+      payload: {
+        id: '123-123-123',
+        connection: 'local',
+      },
       type: 'selectedTerminal/updateSelectedTerminal',
     });
   });
@@ -92,8 +98,28 @@ describe('Test <OrderConfirmation />', () => {
     // Assert
     expect(dispatch.mock.calls.length).toBe(1);
     expect(dispatch.mock.calls[0][0]).toEqual({
-      payload: '123-123-123',
+      payload: {
+        id: '123-123-123',
+        connection: 'local',
+      },
       type: 'selectedTerminal/updateSelectedTerminal',
+    });
+  });
+
+  describe('when a cloud pairing is selected from the list', () => {
+    test('should dispatch an action to update selected terminal', () => {
+      mockWithRedux(<OrderConfirmation title="title" pathname={PATH_PAY_NOW} editSubtotal={false} />, customStore);
+
+      fireEvent.click(screen.getByText(mockSpiCloudPairing.posNickname));
+
+      expect(dispatch.mock.calls.length).toBe(1);
+      expect(dispatch.mock.calls[0][0]).toEqual({
+        payload: {
+          id: mockSpiCloudPairing.pairingId,
+          connection: 'cloud',
+        },
+        type: 'selectedTerminal/updateSelectedTerminal',
+      });
     });
   });
 
@@ -141,7 +167,7 @@ describe('Test <OrderConfirmation />', () => {
           subtotalAmount: 500,
           products: [],
         },
-        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
         preAuth: {
           preAuthRef: 'Test',
           amount: 1000,
@@ -217,13 +243,14 @@ describe('Test <OrderConfirmation />', () => {
           cashoutAmount: 0,
           products: [],
         },
-        selectedTerminal: { selectedTerminalId: mockTerminalInstanceId },
+        selectedTerminal: { id: mockTerminalInstanceId, connection: 'local' },
         preAuth: {
           preAuthRef: 'Test',
           amount: 1000,
           surcharge: 200,
           verified: true,
         },
+        pairings: {},
       }),
     });
     const mockTerminals = {

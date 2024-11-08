@@ -30,7 +30,7 @@ export const pairedConnectedTerminalList = createSelector(terminalList, (termina
   terminals.filter((terminal: ITerminalProps) => terminal.status === SPI_PAIR_STATUS.PairedConnected)
 );
 
-export const isPaired = createSelector(
+export const selectHasPairedTerminals = createSelector(
   pairedConnectedTerminalList,
   (terminals: Array<ITerminalProps>) => terminals.length > 0
 );

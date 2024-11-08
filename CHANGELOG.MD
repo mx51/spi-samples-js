@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.16] - 2024-11-08
+
+## Added
+
+- [FE-20](https://mx51.atlassian.net/browse/FE-20) Add cloud pairing transaction initialisation
+
 ## [1.7.15] - 2024-11-04
 
 ## Added

@@ -9,6 +9,7 @@ import pairFormReducer from '../../redux/reducers/PairFormSlice/pairFormSlice';
 import produceReducer from '../../redux/reducers/ProductSlice/productSlice';
 import terminalReducer from '../../redux/reducers/TerminalSlice/terminalsSlice';
 import selectedTerminalReducer from '../../redux/reducers/SelectedTerminalSlice/selectedTerminalSlice';
+import pairingsReducer from '../../redux/reducers/PairingSlice/pairingSlice';
 import { preAuthReducer } from '../../redux/reducers/PreAuth/preAuthSlice';
 import { payAtTableReducer } from '../../redux/reducers/PayAtTableSlice/payAtTableSlice';
 
@@ -20,6 +21,7 @@ const rootReducer = combineReducers({
   selectedTerminal: selectedTerminalReducer,
   preAuth: preAuthReducer,
   payAtTable: payAtTableReducer,
+  pairings: pairingsReducer,
 });
 
 function setupStore(preloadedState?: Partial<RootState>) {

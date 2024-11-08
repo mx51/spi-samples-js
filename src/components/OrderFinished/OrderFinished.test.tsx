@@ -13,7 +13,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a successful purchase transaction', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -41,7 +41,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a successful purchase transaction with tip', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -70,7 +70,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a successful purchase transaction with surcharge', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -99,7 +99,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a successful purchase transaction with cashout', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -128,7 +128,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a failed purchase transaction', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -156,7 +156,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for an override purchase transaction', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -187,7 +187,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a successful refund transaction', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -216,7 +216,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a failed refund transaction', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -246,7 +246,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a successful cashout only transaction', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -278,7 +278,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth account verify', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -309,7 +309,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth open', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -339,7 +339,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth extend', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -368,7 +368,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth cancel', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -399,7 +399,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth topup', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -433,7 +433,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth reduce', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,
@@ -462,7 +462,7 @@ describe('Page: /order-finished', () => {
   test('render correctly for a pre-auth complete', () => {
     renderWithProviders(<OrderFinished />, {
       preloadedState: {
-        selectedTerminal: { selectedTerminalId: terminalId },
+        selectedTerminal: { id: terminalId, connection: 'local' },
         terminals: {
           [terminalId]: generateTerminalMockData({
             terminalId,

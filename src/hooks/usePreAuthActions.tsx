@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { ITerminalProps } from '../redux/reducers/TerminalSlice/interfaces';
+import { ITxFlow } from '../redux/reducers/TerminalSlice/interfaces';
 import {
   addPreAuth,
   clearPreAuth,
@@ -16,22 +16,22 @@ type IPreAuthActionsType = {
   handleSurchargeUpdate: (surchageAmount: number, preAuthId: string) => void;
 };
 
-export const usePreAuthActions = (currentTerminal?: ITerminalProps): IPreAuthActionsType => {
+export const usePreAuthActions = (txFlow?: ITxFlow): IPreAuthActionsType => {
   const dispatch = useDispatch();
 
   const preAuthValues = {
     preAuth: {
-      preAuthRef: currentTerminal?.txFlow?.response?.data?.preAuthId ?? '-',
-      preAuthAmount: currentTerminal?.txFlow?.response?.data?.preAuthAmount ?? 0,
-      topupAmount: currentTerminal?.txFlow?.response?.data?.topupAmount ?? 0,
-      reduceAmount: currentTerminal?.txFlow?.response?.data?.reduceAmount ?? 0,
-      surcharge: currentTerminal?.txFlow?.response?.data?.surchargeAmount ?? 0,
-      verified: currentTerminal?.txFlow?.success === 'Success',
+      preAuthRef: txFlow?.response?.data?.preAuthId ?? '-',
+      preAuthAmount: txFlow?.response?.data?.preAuthAmount ?? 0,
+      topupAmount: txFlow?.response?.data?.topupAmount ?? 0,
+      reduceAmount: txFlow?.response?.data?.reduceAmount ?? 0,
+      surcharge: txFlow?.response?.data?.surchargeAmount ?? 0,
+      verified: txFlow?.success === 'Success',
     },
   };
 
   const handlePreAuthActions = () => {
-    const transactionType = currentTerminal?.txFlow?.response?.data?.transactionType;
+    const transactionType = txFlow?.response?.data?.transactionType;
     if (transactionType === 'PRE-AUTH') {
       dispatch(addPreAuth(preAuthValues));
     }

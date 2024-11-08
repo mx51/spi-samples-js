@@ -34,13 +34,14 @@ import {
   clearProductsOnly,
   togglePromptForCashout,
 } from '../../../redux/reducers/ProductSlice/productSlice';
-import { isPaired } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
+import { selectHasPairedTerminals } from '../../../redux/reducers/TerminalSlice/terminalsSliceSelectors';
 import currencyFormat from '../../../utils/common/intl/currencyFormatter';
 import KeyPad from '../../KeyPad';
 import OrderLineItem from '../../OrderLineItem';
 import OrderSubTotal from '../../OrderSubTotal';
 import useStyles from './index.styles';
 import { IOrderProps } from './interface';
+import { selectHasCloudPairings } from '../../../redux/reducers/PairingSlice/pairingSelectors';
 
 function Order({ disablePayNow, isSubtotalEditable, bottomButton }: IOrderProps): React.ReactElement {
   const SURCHARGE_AMOUNT = 'SURCHARGE_AMOUNT';
@@ -50,7 +51,8 @@ function Order({ disablePayNow, isSubtotalEditable, bottomButton }: IOrderProps)
 
   const dispatch = useDispatch();
 
-  const isTerminalPaired: boolean = useSelector(isPaired);
+  const hasPairedTerminals = useSelector(selectHasPairedTerminals);
+  const hasCloudPairings = useSelector(selectHasCloudPairings);
   const products: Array<IProductSelector> = useSelector(productsSelector);
   const subtotalAmount: number = useSelector(productSubTotalSelector);
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
@@ -60,6 +62,8 @@ function Order({ disablePayNow, isSubtotalEditable, bottomButton }: IOrderProps)
 
   const [keypadType, setKeypadType] = useState<string>('');
   const totalAmount: number = useSelector(orderTotalSelector);
+
+  const hasNoPairings = !hasPairedTerminals && !hasCloudPairings;
 
   const clearAllProductsAction = () => {
     dispatch(clearAllProducts());
@@ -214,7 +218,7 @@ function Order({ disablePayNow, isSubtotalEditable, bottomButton }: IOrderProps)
             variant="contained"
             color="primary"
             size="large"
-            disabled={!isTerminalPaired || subtotalAmount === 0}
+            disabled={hasNoPairings || subtotalAmount === 0}
             classes={{ root: classes.payNowBtn, label: classes.actionBtnLabel }}
             component={LinkRouter}
             to={PATH_PAY_NOW}

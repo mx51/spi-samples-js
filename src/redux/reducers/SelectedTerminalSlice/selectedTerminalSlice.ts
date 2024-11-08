@@ -1,16 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { ISelectedTerminalState } from './interface';
 
-const initialState: ISelectedTerminalState = { selectedTerminalId: '' };
+const initialState: ISelectedTerminalState = { id: '', connection: 'local' };
 
 const selectedTerminalSlice = createSlice({
   name: 'selectedTerminal',
   initialState,
   reducers: {
-    updateSelectedTerminal(state: ISelectedTerminalState, action: PayloadAction<string>) {
-      const terminalId = action.payload;
-
-      state.selectedTerminalId = terminalId;
+    updateSelectedTerminal(state: ISelectedTerminalState, action: PayloadAction<ISelectedTerminalState>) {
+      state.id = action.payload.id;
+      state.connection = action.payload.connection;
     },
   },
 });

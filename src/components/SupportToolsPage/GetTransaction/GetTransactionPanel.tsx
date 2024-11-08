@@ -37,7 +37,7 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
   const pairedConnectedTerminals = useSelector(pairedConnectedTerminalList);
   const selectedTerminalId = useSelector(selectedTerminalIdSelector);
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal.id)) as ITerminalProps;
 
   useEffect(() => {
     if (hasSearched) {
@@ -51,16 +51,17 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
 
   const onSubmitBtnClick = async () => {
     setReceipt('');
-    await spiService.initiateGetTransaction(selectedTerminalId, posRefId);
+    await spiService.initiateGetTransaction(selectedTerminalId.id, posRefId);
     setHasSearched(true);
   };
 
   const onSelectTerminal = (terminalId: string) => {
-    dispatch(updateSelectedTerminal(terminalId));
+    // TODO: FE-20 - Add support for cloud pairing terminals here
+    dispatch(updateSelectedTerminal({ id: terminalId, connection: 'local' }));
   };
 
   const isTerminalSelectedAndPaired = () => {
-    const userSelectedTerminal = pairedConnectedTerminals.find((terminal) => terminal.id === selectedTerminal);
+    const userSelectedTerminal = pairedConnectedTerminals.find((terminal) => terminal.id === selectedTerminal.id);
     return userSelectedTerminal?.status === 'PairedConnected';
   };
 
@@ -96,7 +97,7 @@ export const GetTransactionPanel = ({ setReceipt, hasSearched, setHasSearched }:
                     <ListItemIcon>
                       <Radio
                         className={classes.radioBtn}
-                        checked={terminal.id === selectedTerminalId}
+                        checked={terminal.id === selectedTerminalId.id}
                         value={terminal.id}
                         name="terminal"
                       />

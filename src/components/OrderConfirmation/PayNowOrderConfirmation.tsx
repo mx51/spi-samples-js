@@ -10,11 +10,11 @@ import {
   orderTipAmountSelector,
   productSubTotalSelector,
 } from '../../redux/reducers/ProductSlice/productSelector';
-import { initiateMotoPurchase, initiatePurchase } from '../../utils/common/purchase/purchaseHelper';
+import { initiateMotoPurchase } from '../../utils/common/purchase/purchaseHelper';
 import { IProps } from './interfaces';
 import { PATH_SPLIT } from '../../definitions/constants/routerConfigs';
 
-export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal, selectedTerminal }) => {
+export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionProgressModal, transactionHandler }) => {
   const classes = useStyles();
   const surchargeAmount: number = useSelector(orderSurchargeAmountSelector);
   const tipAmount: number = useSelector(orderTipAmountSelector);
@@ -22,18 +22,20 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
   const subtotalAmount = useSelector(productSubTotalSelector);
   const promptForCashout = useSelector(orderPromptForCashoutSelector);
 
-  const selectedTerminalId = selectedTerminal?.serialNumber;
+  const selectedTerminalId = transactionHandler?.terminalId;
 
-  const isCardDisabled = useMemo(() => !selectedTerminal || subtotalAmount <= 0, [selectedTerminal, subtotalAmount]);
+  const isCardDisabled = useMemo(
+    () => !transactionHandler || subtotalAmount <= 0,
+    [transactionHandler, subtotalAmount]
+  );
   const isMotoDisabled = useMemo(
-    () => !selectedTerminal || subtotalAmount <= 0 || cashoutAmount > 0 || tipAmount > 0,
-    [selectedTerminal, subtotalAmount, cashoutAmount, tipAmount]
+    () => !transactionHandler || subtotalAmount <= 0 || cashoutAmount > 0 || tipAmount > 0,
+    [transactionHandler, subtotalAmount, cashoutAmount, tipAmount]
   );
   const isSplitDisabled = useMemo(
-    () => !selectedTerminal || subtotalAmount <= 0 || surchargeAmount > 0 || cashoutAmount > 0 || tipAmount > 0,
-    [selectedTerminal, subtotalAmount, surchargeAmount, cashoutAmount, tipAmount]
+    () => !transactionHandler || subtotalAmount <= 0 || surchargeAmount > 0 || cashoutAmount > 0 || tipAmount > 0,
+    [transactionHandler, subtotalAmount, surchargeAmount, cashoutAmount, tipAmount]
   );
-
   return (
     <>
       <Typography className={classes.label}>Select payment method</Typography>
@@ -48,8 +50,7 @@ export const PayNowOrderConfirmation: React.FC<IProps> = ({ setShowTransactionPr
           classes={{ root: classes.paymentTypeBtn, label: classes.paymentTypeBtnLabel }}
           onClick={() => {
             setShowTransactionProgressModal(true);
-            initiatePurchase(
-              selectedTerminalId!,
+            transactionHandler?.initiatePurchase(
               subtotalAmount,
               tipAmount,
               cashoutAmount,

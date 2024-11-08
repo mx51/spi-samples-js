@@ -16,8 +16,8 @@ import { clearAllProducts } from '../../redux/reducers/ProductSlice/productSlice
 
 function OrderFinished(): React.ReactElement {
   const selectedTerminal = useSelector(selectedTerminalIdSelector);
-  const currentTerminal = useSelector(terminalInstance(selectedTerminal)) as ITerminalProps;
-  const { typePath } = useSelector(terminalTransactionTypeObject(selectedTerminal));
+  const currentTerminal = useSelector(terminalInstance(selectedTerminal.id)) as ITerminalProps;
+  const { typePath } = useSelector(terminalTransactionTypeObject(selectedTerminal.id));
   const dispatch = useDispatch();
 
   useEffect(() => {

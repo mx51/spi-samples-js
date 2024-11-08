@@ -56,9 +56,9 @@ export const SplitPage: React.FC = () => {
   const promptForCashout = useSelector(orderPromptForCashoutSelector);
 
   const selectedTerminalId = useSelector(selectedTerminalIdSelector);
-  const selectedTerminal = useSelector(terminalInstance(selectedTerminalId)) as ITerminalProps;
-  const isTxFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminalId)) ?? false;
-  const isTxSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminalId));
+  const selectedTerminal = useSelector(terminalInstance(selectedTerminalId.id)) as ITerminalProps;
+  const isTxFinished = useSelector(terminalTxFlowFinishedTracker(selectedTerminalId.id)) ?? false;
+  const isTxSuccess = useSelector(isTerminalTxFlowSuccess(selectedTerminalId.id));
 
   const backToPurchase = () => {
     history.push(PATH_PURCHASE);
@@ -71,7 +71,7 @@ export const SplitPage: React.FC = () => {
       const currentSplitAmount = action.splitMode === 'splitEvenly' ? splitAmountArray[0] : action.splitAmount;
 
       if (action.splitMode === 'splitByAmount') {
-        initiatePurchase(selectedTerminalId, currentSplitAmount, 0, 0, 0, promptForCashout);
+        initiatePurchase(selectedTerminalId.id, currentSplitAmount, 0, 0, 0, promptForCashout);
       }
 
       return {
@@ -85,7 +85,7 @@ export const SplitPage: React.FC = () => {
       };
     }
     if (action.type === 'startTransaction') {
-      initiatePurchase(selectedTerminalId, action.currentSplitAmount, 0, 0, 0, promptForCashout);
+      initiatePurchase(selectedTerminalId.id, action.currentSplitAmount, 0, 0, 0, promptForCashout);
 
       return {
         ...currentState,
@@ -180,17 +180,17 @@ export const SplitPage: React.FC = () => {
 
       {state.showModal && (
         <TransactionProgressModal
-          terminalId={selectedTerminalId}
+          terminalId={selectedTerminalId.id}
           transactionType={SPI_TRANSACTION_TYPES.Purchase}
           transactionDesc=""
           isFinished={isTxFinished}
           isSuccess={isTxSuccess}
           onCancelTransaction={() => {
-            cancelTransaction(selectedTerminalId);
+            cancelTransaction(selectedTerminalId.id);
             backToPurchase();
           }}
           onRetryTransaction={() => {
-            initiatePurchase(selectedTerminalId, state.currentSplitAmount, 0, 0, 0, promptForCashout);
+            initiatePurchase(selectedTerminalId.id, state.currentSplitAmount, 0, 0, 0, promptForCashout);
           }}
           onDone={() => {
             if (isTxSuccess) {
